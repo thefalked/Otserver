@@ -1,5 +1,6 @@
 <?PHP
-if(!headers_sent()) header('Content-Type: text/html; charset=UTF-8');
+if (!headers_sent())
+	header('Content-Type: text/html; charset=UTF-8');
 // ###################### CONFIG ########################
 //load page config file
 $config['site'] = parse_ini_file('config/config.ini');
@@ -547,34 +548,39 @@ if (($config['status']['serverStatus_lastCheck'] ?? 0) + $statustimeout < time()
 		$config['status']['serverStatus_players'] = 0;
 		$config['status']['serverStatus_playersMax'] = 0;
 	}
-	$file = fopen("config/serverstatus", "w");
-	$file_data = '';
-	foreach ($config['status'] as $param => $data) {
-		$file_data .= $param . ' = "' . str_replace('"', '', $data) . '"
+	$file = @fopen("config/serverstatus", "w");
+	if ($file !== false) {
+		$file_data = '';
+		foreach ($config['status'] as $param => $data) {
+			$file_data .= $param . ' = "' . str_replace('"', '', $data) . '"
 ';
+		}
+		fwrite($file, $file_data);
+		fclose($file);
 	}
-	rewind($file);
-	fwrite($file, $file_data);
-	fclose($file);
 }
 
 //PAGE VIEWS COUNTER :)
 $views_counter = "usercounter.dat";
 // checking if the file exists
 if (file_exists($views_counter)) {
-	// het bestand bestaat, waarde + 1
-	$actie = fopen($views_counter, "r+");
-	$page_views = fgets($actie, 9);
-	$page_views++;
-	rewind($actie);
-	fputs($actie, $page_views, 9);
-	fclose($actie);
+	$actie = @fopen($views_counter, "r+");
+	if ($actie !== false) {
+		$page_views = fgets($actie, 9);
+		$page_views++;
+		rewind($actie);
+		fputs($actie, $page_views, 9);
+		fclose($actie);
+	} else {
+		$page_views = 0;
+	}
 } else {
-	// the file doesn't exist, creating a new one with value 1
-	$actie = fopen($views_counter, "w");
+	$actie = @fopen($views_counter, "w");
 	$page_views = 1;
-	fputs($actie, $page_views, 9);
-	fclose($actie);
+	if ($actie !== false) {
+		fputs($actie, $page_views, 9);
+		fclose($actie);
+	}
 }
 
 function makeOrder($arr, $order, $default)
