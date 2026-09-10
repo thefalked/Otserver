@@ -307,7 +307,7 @@ if($action  == 'show_thread')
                     $main_content .= $rank->getName().' of <a href="?subtopic=guilds&action=show&guild='.$guild->getId().'">'.$guild->getName().'</a><br />';
             }
             $posts = $SQL->query("SELECT COUNT(`id`) AS 'posts' FROM `z_forum` WHERE `author_aid`=".(int) $thread['account_id'])->fetch();
-            $main_content .= '<br />Posts: '.(int) $posts['posts'].'<br /></font></td><td valign="top">'.showPost(htmlspecialchars($thread['?']), htmlspecialchars($thread['post_text']), $thread['post_smile']).'</td></tr>
+            $main_content .= '<br />Posts: '.(int) $posts['posts'].'<br /></font></td><td valign="top">'.showPost(htmlspecialchars($thread['post_topic']), htmlspecialchars($thread['post_text']), $thread['post_smile']).'</td></tr>
             <tr bgcolor="'.$bgcolor.'"><td><font size="1">'.date('d.m.y H:i:s', $thread['post_date']);
             if($thread['edit_date'] > 0)
             {
