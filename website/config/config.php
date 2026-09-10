@@ -84,6 +84,7 @@ $config['site']['smtp_pass'] = '';
 
 // ACC MAKER OPTIONS config
 $config['site']['access_news'] = 3; // access level needed to edit news
+$config['site']['access_tickers'] = 3; // access level needed to add/hide news tickers
 $config['site']['access_admin_panel'] = 3; // access level needed to open admin panel
 $config['site']['news_big_limit'] = 3; // limit of news on latest news page
 $config['site']['news_ticks_limit'] = 5; // limit of ticker news on latest news page
