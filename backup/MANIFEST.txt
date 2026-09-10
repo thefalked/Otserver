@@ -1,0 +1,17 @@
+Otserver backup — cleaned 2026-09-10
+
+Kept (reference / disaster recovery only — not used by docker compose):
+  reference/[8.60] Baiakzik Vip9   Latest original Windows pack (Jul 2015)
+  sql-imports/04-*.sql, 05-*.sql   One-time Baiak DB import dumps (already applied)
+
+Removed in cleanup (were redundant with live server/ + website/):
+  from-tibia-rar/TIBIA/            Nested OT + bots (~1.5G)
+  from-tibia-rar/extracted/xampp*  Full XAMPP trees
+  from-tibia-rar/extracted/xpeb    Older Baiakzik (Jul 5)
+  from-tibia-rar/.../Gesior*       Older website packs
+  _backup-20260910-033825/         Superseded by server/data
+  windows-root/                    Windows DLLs / bats
+  doc/, schemas+Database/          Available under src/ if needed
+  TIBIA.rar                        Deleted earlier by user
+
+Baiakzik date note: non-xpeb pack is newer than xpeb (kept the newer one only).
