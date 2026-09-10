@@ -508,8 +508,19 @@ foreach (explode("*", str_replace(" ", "", $config['server']['statusTimeout'])) 
 	if ($status_var > 0)
 		$statustimeout = $statustimeout * $status_var;
 $statustimeout = $statustimeout / 1000;
-$config['status'] = parse_ini_file('config/serverstatus');
-if ($config['status']['serverStatus_lastCheck'] + $statustimeout < time()) {
+$config['status'] = @parse_ini_file('config/serverstatus');
+if (!is_array($config['status'])) {
+	$config['status'] = array(
+		'serverStatus_lastCheck' => 0,
+		'serverStatus_checkInterval' => $statustimeout + 3,
+		'serverStatus_online' => 0,
+		'serverStatus_players' => 0,
+		'serverStatus_playersMax' => 0,
+		'serverStatus_uptime' => '0h 0m',
+		'serverStatus_monsters' => 0,
+	);
+}
+if (($config['status']['serverStatus_lastCheck'] ?? 0) + $statustimeout < time()) {
 	$config['status']['serverStatus_checkInterval'] = $statustimeout + 3;
 	$config['status']['serverStatus_lastCheck'] = time();
 	$info = chr(6) . chr(0) . chr(255) . chr(255) . 'info';

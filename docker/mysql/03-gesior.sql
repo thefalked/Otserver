@@ -356,3 +356,11 @@ CREATE TABLE IF NOT EXISTS `z_bug_tracker` (
   `tag` int(11) NOT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Used by website latestnews/lottery + server data/globalevents/scripts/lottery.lua
+CREATE TABLE IF NOT EXISTS `lottery` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `item` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

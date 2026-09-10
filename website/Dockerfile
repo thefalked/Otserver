@@ -17,10 +17,13 @@ RUN printf '%s\n' \
   'log_errors = On' \
   'error_log = /proc/self/fd/2' \
   'default_charset = UTF-8' \
-  'mbstring.internal_encoding = UTF-8' \
   'session.cookie_httponly = 1' \
   'session.use_strict_mode = 1' \
   > /usr/local/etc/php/conf.d/aac.ini
+
+RUN printf '%s\n' 'ServerName baiakvip9.thefalked.dev' \
+  > /etc/apache2/conf-available/servername.conf \
+  && a2enconf servername
 
 COPY docker/render-config.sh /usr/local/bin/render-config.sh
 COPY website/docker-entrypoint.sh /usr/local/bin/website-entrypoint.sh

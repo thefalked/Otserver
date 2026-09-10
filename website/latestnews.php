@@ -75,10 +75,12 @@ if ($logged) {
 $time = time();
 $tickers_to_add = '';
 $lottery = $SQL->query('SELECT id, name, item FROM lottery ORDER BY id DESC LIMIT 1;');
-foreach ($lottery as $result) {
+if ($lottery) {
+  foreach ($lottery as $result) {
   $main_content .= '<center><h1>Loteria</h1></center>
 <center>A cada 30 minutos, um jogador aleatório ganha um item aleatório!<br/>
 Último ganhador: <a href="?subtopic=characters&name=' . urlencode($result['name']) . '">' . $result['name'] . '</a> Item: <i>' . $result['item'] . '</i> Parabéns!</center>';
+  }
 }
 //##################### ADD NEW TICKER #####################
 if ($action == "newticker") {
