@@ -122,6 +122,11 @@ PagSeguro donate is **disabled by design** (`donate.php` early-returns; shop sti
 2. Open **Admin Panel** → **Grant points**.
 3. Enter account name or id and a +/- points amount.
 
+## Future / TODO
+
+- Smoke/CI baseline: add `scripts/smoke.sh` (compose health, HTTP 200, CSRF reject, `render-config.sh`) and optional CI.
+- Upgrade/replace vendored PHPMailer 5.1 under `website/phpmailer/` before re-enabling email.
+
 ## Reference pack
 
 Original Windows Baiakzik tree: `backup/reference/[8.60] Baiakzik Vip9`  
