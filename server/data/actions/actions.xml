@@ -395,8 +395,8 @@
 <action uniqueid="10005" script="quests/Soft Boots.lua"/>
 <action uniqueid="10006" script="quests/Stuffed Dragon.lua"/>
 <action uniqueid="10007" script="quests/Teddy Bear.lua"/>
-<action uniqueid="10008" script="quests/golden helmet.lua"/>
-<action uniqueid="10009" script="quests/emerald sword.lua"/>
+<action uniqueid="10008" script="quests/Golden Helmet.lua"/>
+<action uniqueid="10009" script="quests/Emerald Sword.lua"/>
 <action uniqueid="10010" script="quests/spellbook of dark mysteries.lua"/>
 <action uniqueid="10011" script="quests/master archer's armor.lua"/>
 <action uniqueid="10012" script="quests/robe of the underworld.lua"/>
@@ -451,7 +451,7 @@
 <action uniqueid="9966" script="quests/quest level.lua" />
 
 <!-- demon oak -->
-<action itemid="8293" script="tools/Hallowed Axe.lua"/>
+<action itemid="8293" script="tools/hallowed axe.lua"/>
 <action uniqueid="12901" script="quests/DOQChests.lua" />
 <action uniqueid="12902" script="quests/DOQChests.lua" />
 <action uniqueid="12903" script="quests/DOQChests.lua" />
