@@ -18,14 +18,14 @@ $config_ini = parse_ini_file('../config/config.ini');
 $account = strtoupper(trim($_REQUEST['account']));
 if(empty($account))
 {
-	echo '<font color="red">Please enter an account number.</font>';
+	echo '<font color="red">Por favor digite um nome de conta.</font>';
 	exit;
 }
 	if(strlen($account) > 0 && strlen($account) < 32)
 	{
 		if(!check_account_name($account))
 		{
-			echo '<font color="red">Invalid account name format. Use only A-Z and numbers 0-9.</font>';
+			echo '<font color="red">Formato de nome de conta inválido. Use apenas A-Z e números 0-9.</font>';
 			exit;
 		}
 			//connect to DB
@@ -59,12 +59,12 @@ if(empty($account))
 			$account_db = new OTS_Account();
 			$account_db->find($account);
 			if($account_db->isLoaded())
-				echo '<font color="red">Account with this name already exist.</font>';
+				echo '<font color="red">Já existe uma conta com este nome.</font>';
 			else
-				echo '<font color="green">Good account name ( '.$account.' ). You can create account.</font>';
+				echo '<font color="green">Bom nome de conta ( '.$account.' ). Você pode criar a conta.</font>';
 		
 	}
 	else
-		echo '<font color="red">Account name is too long (max. 32 chars).</font>';
+		echo '<font color="red">Nome da conta muito longo (máx. 32 caracteres).</font>';
 
 ?>

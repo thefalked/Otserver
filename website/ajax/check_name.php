@@ -5,7 +5,7 @@ include('../config/config.php');
 $name = strtolower(stripslashes(trim($_REQUEST['name'])));
 if(empty($name))
 {
-	echo '<font color="red">Please enter new character name.</font>';
+	echo '<font color="red">Por favor digite o nome do novo personagem.</font>';
 	exit;
 }
 
@@ -130,7 +130,7 @@ else
 		$name_db = new OTS_Player();
 		$name_db->find($name);
 		if($name_db->isLoaded())
-			echo '<font color="red"><b>Player with this name already exist.</b></font>';
+			echo '<font color="red"><b>Já existe um personagem com este nome.</b></font>';
 		else
 			echo '<font color="green">Good. Your name will be:<br />"<b>'.ucwords($name).'</b>"</font>';
 

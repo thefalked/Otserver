@@ -410,6 +410,38 @@ body {
   left: 42px;
 }
 
+.LabelText {
+  background-image: none !important;
+  color: #f0d1a4;
+  font: bold 12px Verdana, Arial, sans-serif;
+  line-height: 22px;
+  text-shadow: 1px 1px 0 #000;
+  letter-spacing: 0.5px;
+}
+
+#Loginbox .LoginstatusTextLabel {
+  background-image: none !important;
+  color: #f0d1a4;
+  font: bold 10px Verdana, Arial, sans-serif;
+  line-height: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#Loginbox .LoginstatusTextHover {
+  color: #fff6d5;
+}
+
+#Loginbox #LoginButton #ButtonText.LoginButtonLabel {
+  background-image: none !important;
+  color: #f0d1a4;
+  font: bold 11px Verdana, Arial, sans-serif;
+  line-height: 22px;
+  text-align: center;
+  text-shadow: 1px 1px 0 #000;
+}
+
 /* Submenus(items) */
 
 .LeftChain {

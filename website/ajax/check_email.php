@@ -6,7 +6,7 @@ include('../config/config.php');
 $email = trim($_REQUEST['email']);
 if(empty($email))
 {
-	echo '<font color="red">Please enter an e-mail.</font>';
+	echo '<font color="red">Por favor digite um e-mail.</font>';
 	exit;
 }
 if(strlen($email) < 255)
@@ -46,17 +46,17 @@ if(strlen($email) < 255)
 			$email_db = new OTS_Account();
 			$email_db->findByEMail($email);
 			if($email_db->isLoaded())
-				echo '<font color="red">Account with this e-mail already exist.</font>';
+				echo '<font color="red">Já existe uma conta com este e-mail.</font>';
 			else
-				echo '<font color="green">Good e-mail.</font>';
+				echo '<font color="green">E-mail válido.</font>';
 		}
 		else
-			echo '<font color="green">Good e-mail.</font>';
+			echo '<font color="green">E-mail válido.</font>';
 	}
 	else
-		echo '<font color="red">Wrong e-mail format.</font>';
+		echo '<font color="red">Formato de e-mail incorreto.</font>';
 }
 else
-	echo '<font color="red">E-mail is too long (max. 255 chars).</font>';
+	echo '<font color="red">E-mail muito longo (máx. 255 caracteres).</font>';
 
 ?>

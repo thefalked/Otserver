@@ -2,7 +2,7 @@
 $name = stripslashes(ucwords(strtolower(trim($_REQUEST['name'] ?? ''))));
 $number_of_rows = 0;
 if(empty($name)) {
-$main_content .= 'Aqui Você Pode Obter Informações Detalhadas Sobre Um Determinado Jogador Do '.$config['server']['serverName'].'.<BR> <FORM ACTION="?subtopic=characters" METHOD=post><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Procurar Player</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Nome:</TD><TD><INPUT NAME="name" VALUE=""SIZE=29 MAXLENGTH=29></TD><TD><INPUT TYPE=image NAME="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></TABLE></TD></TR></TABLE></FORM>';
+$main_content .= 'Aqui você pode obter informações detalhadas sobre um determinado jogador do '.$config['server']['serverName'].'.<BR> <FORM ACTION="?subtopic=characters" METHOD=post><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Procurar jogador</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Nome:</TD><TD><INPUT NAME="name" VALUE=""SIZE=29 MAXLENGTH=29></TD><TD><INPUT TYPE=image NAME="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></TABLE></TD></TR></TABLE></FORM>';
 }
 else
 {
@@ -11,7 +11,7 @@ $player = $ots->createObject('Player');
 $player->find($name);
 if($player->isLoaded()) {
 $account = $player->getAccount();
-$main_content .= '<TABLE border=0 cellpadding=0 width=100%><td VALIGN=top><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=2 CLASS=white><B>Informações Do Player</B></TD></TR>';
+$main_content .= '<TABLE border=0 cellpadding=0 width=100%><td VALIGN=top><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=2 CLASS=white><B>Informações do jogador</B></TD></TR>';
 if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
 $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD width=1><nobr>Nome:</TD><TD><font color="';
 $main_content .= ($player->isOnline()) ? 'green' : 'red';
@@ -27,7 +27,7 @@ if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } el
 if($player->isNameLocked())
 $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Proposition:</TD><TD>'.$player->getOldName().'</TD></TR>';
 else
-$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Antigo Nome:</TD><TD>'.$player->getOldName().'</TD></TR>';
+$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Antigo nome:</TD><TD>'.$player->getOldName().'</TD></TR>';
 }
 
 // BEGIN Position Showing *** Fixed by jerryb1988 from otfans.net
@@ -53,7 +53,7 @@ $main_content .= '</TD></TR>';
 if($config['site']['show_marriage_info'])
 {
 if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
-$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Estado Civil:</TD><TD>';
+$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Estado civil:</TD><TD>';
 $marriage = new OTS_Player();
 $marriage->load($player->getMarriage());
 if($marriage->isLoaded())
@@ -64,7 +64,7 @@ $main_content .= 'Solteiro</TD></TR>';
 if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
 $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Vocação:</TD><TD>'.$vocation_name[$player->getWorld()][$player->getPromotion()][$player->getVocation()].'</TD></TR>';
 if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
-$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Level:</TD><TD>'.$player->getLevel().'</TD></TR>';
+$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Nível:</TD><TD>'.$player->getLevel().'</TD></TR>';
 if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
 $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Mundo:</TD><TD>'.$config['site']['worlds'][$player->getWorld()].'</TD></TR>';
 if(!empty($towns_list[$player->getWorld()][$player->getTownId()]))
@@ -319,7 +319,7 @@ $main_content .= '<table cellspacing="0" cellpadding="2" border="0" width="200" 
 </table>
 <div table align="center">&nbsp;
 &nbsp;</div>';
-// Fim Das Skills No Site
+// Fim das skills no site
 if(!$player->getHideChar()) {
 $main_content .= '<TABLE BORDER=0><TR><TD></TD></TR></TABLE><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=2 CLASS=white><B>Informações da Conta</B></TD></TR>';
 if($account->getRLName())
@@ -340,16 +340,16 @@ $main_content .= '<TR BGCOLOR='.$config['site']['lightborder'].'><TD WIDTH=20%>U
 if($account->getCreated())
 {
 if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
-$main_content .= '<TR BGCOLOR='.$config['site']['darkborder'].'><TD WIDTH=20%>Conta Criada Em:</TD><TD>'.date("j F Y, g:i a", $account->getCreated()).'</TD></TR>';
+$main_content .= '<TR BGCOLOR='.$config['site']['darkborder'].'><TD WIDTH=20%>Conta criada em:</TD><TD>'.date("j F Y, g:i a", $account->getCreated()).'</TD></TR>';
 }
 if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['lightborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
-$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Status Da Conta:</TD><TD>';
+$main_content .= '<TR BGCOLOR="'.$bgcolor.'"><TD>Status da conta:</TD><TD>';
 $main_content .= ($account->isPremium()) ? '<b><font color="green">Conta Premium</font></b>' : '<b><font color="red">Conta Grátis</font></b>';
 if($account->isBanned())
 if($account->getBanTime() > 0)
 $main_content .= '<font color="red"> [Banido Até '.date("j F Y, G:i", $account->getBanTime()).']</font>';
 else
-$main_content .= '<font color="red"> [Banido Para Sempre]</font>';
+$main_content .= '<font color="red"> [Banido para sempre]</font>';
 $main_content .= '</TD></TR></TABLE>';
 $main_content .= '<br><TABLE BORDER=0><TR><TD></TD></TR></TABLE><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=5 CLASS=white><B>Chars</B></TD></TR>
 <TR BGCOLOR='.$config['site']['darkborder'].'><TD><B>Nome</B></TD><TD><B>World</B></TD><TD><B>Level</B></TD><TD><b>Status</b></TD><TD><B>*</B></TD></TR>';
@@ -376,21 +376,21 @@ $main_content .= '</NOBR></TD><TD WIDTH=15%>'.$config['site']['worlds'][$player_
 }
 $main_content .= '</TABLE></TD><TD><IMG SRC="'.$layout_name.'/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD></TR></TABLE>';
 }
-$main_content .= '<BR><BR><FORM ACTION="?subtopic=characters" METHOD=post><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Procurar Players</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Nome:</TD><TD><INPUT NAME="name" VALUE=""SIZE=29 MAXLENGTH=29></TD><TD><INPUT TYPE=image NAME="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></TABLE></TD></TR></TABLE></FORM>';
+$main_content .= '<BR><BR><FORM ACTION="?subtopic=characters" METHOD=post><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Procurar jogadors</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Nome:</TD><TD><INPUT NAME="name" VALUE=""SIZE=29 MAXLENGTH=29></TD><TD><INPUT TYPE=image NAME="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></TABLE></TD></TR></TABLE></FORM>';
 $main_content .= '</TABLE>';
 }
 else
 $search_errors[] = 'Char <b>'.$name.'</b> Não Existe.';
 }
 else
-$search_errors[] = 'Este Nome Contem Letras Inválidas. Por Favor Use Apenas: A-Z, a-z e Espaço.';
+$search_errors[] = 'Este nome contém letras inválidas. Por favor use apenas: A-Z, a-z e Espaço.';
 if(!empty($search_errors))
 {
-$main_content .= '<div class="SmallBox" > <div class="MessageContainer" >	<div class="BoxFrameHorizontal" style="background-image:url('.$layout_name.'/images/content/box-frame-horizontal.gif);" /></div>	<div class="BoxFrameEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div>	<div class="BoxFrameEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div>	<div class="ErrorMessage" >	<div class="BoxFrameVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></div>	<div class="BoxFrameVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></div>	<div class="AttentionSign" style="background-image:url('.$layout_name.'/images/content/attentionsign.gif);" /></div><b>Os Seguintes Erros Ocorreram:</b><br/>';
+$main_content .= '<div class="SmallBox" > <div class="MessageContainer" >	<div class="BoxFrameHorizontal" style="background-image:url('.$layout_name.'/images/content/box-frame-horizontal.gif);" /></div>	<div class="BoxFrameEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div>	<div class="BoxFrameEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div>	<div class="ErrorMessage" >	<div class="BoxFrameVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></div>	<div class="BoxFrameVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></div>	<div class="AttentionSign" style="background-image:url('.$layout_name.'/images/content/attentionsign.gif);" /></div><b>Os seguintes erros ocorreram:</b><br/>';
 foreach($search_errors as $search_error)
 $main_content .= '<li>'.$search_error;
 $main_content .= '</div>	<div class="BoxFrameHorizontal" style="background-image:url('.$layout_name.'/images/content/box-frame-horizontal.gif);" /></div>	<div class="BoxFrameEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div>	<div class="BoxFrameEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></div> </div></div><br/>';
-$main_content .= '<BR><FORM ACTION="?subtopic=characters" METHOD=post><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Procurar Players</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Nome:</TD><TD><INPUT NAME="name" VALUE=""SIZE=29 MAXLENGTH=29></TD><TD><INPUT TYPE=image NAME="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></TABLE></TD></TR></TABLE></FORM>';
+$main_content .= '<BR><FORM ACTION="?subtopic=characters" METHOD=post><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Procurar jogadors</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Nome:</TD><TD><INPUT NAME="name" VALUE=""SIZE=29 MAXLENGTH=29></TD><TD><INPUT TYPE=image NAME="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></TABLE></TD></TR></TABLE></FORM>';
 }
 }
 ?>
