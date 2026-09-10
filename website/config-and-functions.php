@@ -114,6 +114,20 @@ function h($s)
 	return htmlspecialchars((string) $s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+/** Allow only http(s) URLs for href/src attributes. */
+function safe_http_url($url)
+{
+	$url = trim(html_entity_decode((string) $url, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+	$url = preg_replace('/[\x00-\x1F\x7F\s]+/', '', $url);
+	if ($url === '' || preg_match('#^(javascript|data|vbscript|file):#i', $url)) {
+		return '';
+	}
+	if (preg_match('#^https?://[a-z0-9][a-z0-9.\-]*(:\d+)?(/|\?|#|$)#i', $url)) {
+		return $url;
+	}
+	return '';
+}
+
 function csrf_token()
 {
 	if (empty($_SESSION['csrf_token'])) {
@@ -127,9 +141,19 @@ function csrf_field()
 	return '<input type="hidden" name="csrf_token" value="' . h(csrf_token()) . '">';
 }
 
+function csrf_query()
+{
+	return 'csrf_token=' . rawurlencode(csrf_token());
+}
+
 function csrf_ok()
 {
-	$token = isset($_POST['csrf_token']) ? (string) $_POST['csrf_token'] : '';
+	$token = '';
+	if (isset($_POST['csrf_token'])) {
+		$token = (string) $_POST['csrf_token'];
+	} elseif (isset($_GET['csrf_token'])) {
+		$token = (string) $_GET['csrf_token'];
+	}
 	return $token !== '' && isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
 
@@ -158,16 +182,18 @@ function rate_limit($bucket, $max = 10, $window_sec = 60)
 	$_SESSION[$key][] = $now;
 	return true;
 }
-//return password to db
+// Hash password the same way the OT server stores it (sha1/md5). Never store plaintext.
 function password_ency($password)
 {
-	$ency = $GLOBALS['passwordency'];
-	if ($ency == 'sha1')
+	$ency = strtolower((string) ($GLOBALS['passwordency'] ?? ''));
+	if ($ency === 'sha1') {
 		return sha1($password);
-	elseif ($ency == 'md5')
+	}
+	if ($ency === 'md5') {
 		return md5($password);
-	elseif ($ency == '')
-		return $password;
+	}
+	// Fail closed: empty/unknown encryptionType must not store raw passwords.
+	return sha1($password);
 }
 //delete player with name
 function delete_player($name)
@@ -625,7 +651,7 @@ function parsesmileys($message)
 	return $message;
 }
 
-// Parse bbcode into HTML code
+// Parse bbcode into HTML code (URLs restricted to http/https)
 function parseubb($text)
 {
 	global $account_logged;
@@ -636,10 +662,29 @@ function parseubb($text)
 	$text = preg_replace('#\[s\](.*?)\[/s\]#si', '<s>\1</s>', $text);
 	$text = preg_replace('#\[center\](.*?)\[/center\]#si', '<center>\1</center>', $text);
 
-	$text = preg_replace_callback('#\[url\]([\r\n\s]*)(http://|ftp://|https://|ftps://)([^\s\'\"\+\(\)]*?)([\r\n\s]*)\[/url\]#si', function($m){ $u=str_replace('<br>','',$m[2].$m[3]); return '<a href=\''.$u.'\' target=\'_blank\' title=\''.$u.'\'>'.$u.'</a>'; }, $text);
-	$text = preg_replace_callback('#\[url\] ([\r\n]*)([^\s\'\"\+\(\)]*?)([\r\n]*) \[/url\]#si', function($m){ $u=str_replace('<br>','',$m[2]); return '<a href=\'http://'.$u.'\' target=\'_blank\' title=\''.$u.'\'>'.$u.'</a>'; }, $text);
-	$text = preg_replace_callback('#\[url=([\r\n]*)(http://|ftp://|https://|ftps://)([^\s\'\"\+\(\)]*?)\](.*?)([\r\n]*)\[/url\]#si', function($m){ $u=str_replace('<br>','',$m[2].$m[3]); return '<a href=\''.$u.'\' target=\'_blank\' title=\''.$u.'\'>'.$m[4].'</a>'; }, $text);
-	$text = preg_replace_callback('#\[url=([\r\n]*)([^\s\'\"\+\(\)]*?)\](.*?)([\r\n]*)\[/url\]#si', function($m){ $u=str_replace('<br>','',$m[2]); return '<a href=\'http://'.$u.'\' target=\'_blank\' title=\''.$u.'\'>'.$m[3].'</a>'; }, $text);
+	$linkify = function ($url, $label) {
+		$u = safe_http_url(str_replace('<br>', '', $url));
+		if ($u === '') {
+			return h($label);
+		}
+		return '<a href="' . h($u) . '" target="_blank" rel="noopener noreferrer">' . h(strip_tags($label)) . '</a>';
+	};
+	$text = preg_replace_callback('#\[url\](.*?)\[/url\]#si', function ($m) use ($linkify) {
+		$raw = trim(str_replace('<br>', '', $m[1]));
+		$u = safe_http_url($raw);
+		if ($u === '' && $raw !== '' && !preg_match('#^[a-z][a-z0-9+.-]*:#i', $raw)) {
+			$u = safe_http_url('http://' . $raw);
+		}
+		return $u === '' ? h($raw) : $linkify($u, $raw);
+	}, $text);
+	$text = preg_replace_callback('#\[url=(.*?)\](.*?)\[/url\]#si', function ($m) use ($linkify) {
+		$raw = trim(str_replace('<br>', '', $m[1]));
+		$u = safe_http_url($raw);
+		if ($u === '' && $raw !== '' && !preg_match('#^[a-z][a-z0-9+.-]*:#i', $raw)) {
+			$u = safe_http_url('http://' . $raw);
+		}
+		return $u === '' ? h($m[2]) : $linkify($u, $m[2]);
+	}, $text);
 
 	$text = preg_replace('#\[mail\]([\r\n]*)([^\s\'\";:\+]*?)([\r\n]*)\[/mail\]#si', '<a href=\'mailto:\2\'>\2</a>', $text);
 	$text = preg_replace('#\[mail=([\r\n]*)([^\s\'\";:\+]*?)\](.*?)([\r\n]*)\[/mail\]#si', '<a href=\'mailto:\2\'>\2</a>', $text);
@@ -655,8 +700,15 @@ function parseubb($text)
 	$text = preg_replace('#\[marquee=(left|down|up|right)\](.*?)\[/marquee\]#si', '<marquee direction=\'\1\'>\2</marquee>', $text);
 	$text = preg_replace('#\[marquee=(left|down|up|right):(scroll|slide|alternate)\](.*?)\[/marquee\]#si', '<marquee direction=\'\1\' behavior=\'\2\'>\3</marquee>', $text);
 
-	$text = preg_replace('#\[flash width=([0-9]*?) height=([0-9]*?)\]([^\s\'\";:\+]*?)(\.swf)\[/flash\]#si', '<object classid=\'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\' codebase=\'http://active.macromedia.com/flash6/cabs/swflash.cab#version=6,0,0,0\' id=\'\3\4\' width=\'\1\' height=\'\2\'><param name=movie value=\'\3\4\'><param name=\'quality\' value=\'high\'><param name=\'bgcolor\' value=\'#ffffff\'><embed src=\'\3\4\' quality=\'high\' bgcolor=\'#ffffff\' width=\'\1\' height=\'\2\' type=\'application/x-shockwave-flash\' pluginspage=\'http://www.macromedia.com/go/getflashplayer\'></embed></object>', $text);
-	$text = preg_replace_callback('#\[img\]((http|ftp|https|ftps)://)(.*?)(\.(jpg|jpeg|gif|png|JPG|JPEG|GIF|PNG))\[/img\]#si', function($m){ $path=str_replace(array('.php','?','&','='),'',$m[3]); return '<img src=\''.$m[1].$path.$m[4].'\' style=\'border:0px\' alt=\'\''; }, $text);
+	// Flash embeds removed (obsolete + XSS risk)
+	$text = preg_replace('#\[flash[^\]]*\].*?\[/flash\]#si', '', $text);
+	$text = preg_replace_callback('#\[img\](.*?)\[/img\]#si', function ($m) {
+		$u = safe_http_url(trim(str_replace('<br>', '', $m[1])));
+		if ($u === '' || !preg_match('#\.(jpe?g|gif|png)(\?.*)?$#i', $u)) {
+			return '';
+		}
+		return '<img src="' . h($u) . '" style="border:0px" alt="">';
+	}, $text);
 
 	$qcount = substr_count($text, "[quote]");
 	for ($i = 0; $i < $qcount; $i++)

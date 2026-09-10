@@ -39,6 +39,16 @@ $threads_per_page = 20;
       $sections = array(1 => 'Novidades', 2 => '<b>Reclama&ccedil;&otilde;es ou d&uacute;vidas</b>', 3 => 'Tutoriais', 4 => 'Imagens', 5 => 'Bug Report', 6 => 'Geral', 7 => 'Trade');
 $sections_desc = array(1 => 'Veja as novidades.', 2 => 'Poste suas reclama&ccedil;&otilde;es ou d&uacute;vidas aqui.', 3 => 'Poste seus tutorias.', 4 => 'Poste suas imagens aqui', 5 => 'Report os bugs para melhoramos cada vez mais.', 6 => 'Assuntos aleat&oacute;rios.', 7 => 'Compra e venda de items.');
 // END
+$_forum_mut = array('stick_post', 'close_thread', 'remove_post', 'moved_thread');
+if (in_array($action, $_forum_mut, true)) {
+    csrf_require();
+}
+if (in_array($action, array('new_post', 'edit_post', 'new_topic'), true) && isset($_REQUEST['save'])) {
+    csrf_require();
+}
+if ($action == 'move_thread' && isset($_REQUEST['section'])) {
+    // display-only; submit goes to moved_thread (CSRF-gated)
+}
 function canPost($account)
 {
     if($account->isLoaded())
@@ -80,23 +90,30 @@ function replaceAll($text, $smile)
     {
         $quote = substr($text, stripos($text, '[quote]')+7, stripos($text, '[/quote]') - stripos($text, '[quote]') - 7);
         if(!is_int($rows / 2)) { $bgcolor = 'AAAAAA'; } else { $bgcolor = 'CCCCCC'; } $rows++;
-        $text = str_ireplace('[quote]'.$quote.'[/quote]', '<table cellpadding="0" style="background-color: #'.$bgcolor.'; width: 480px; border-style: dotted; border-color: #007900; border-width: 2px"><tr><td>'.$quote.'</td></tr></table>', $text);
+        $text = str_ireplace('[quote]'.$quote.'[/quote]', '<table cellpadding="0" style="background-image:none;background-color: #'.$bgcolor.'; width: 480px; border-style: dotted; border-color: #007900; border-width: 2px"><tr><td>'.$quote.'</td></tr></table>', $text);
     }
     $rows = 0;
     while(stripos($text, '[url]') !== false && stripos($text, '[/url]') !== false )
     {
         $url = substr($text, stripos($text, '[url]')+5, stripos($text, '[/url]') - stripos($text, '[url]') - 5);
-        $text = str_ireplace('[url]'.$url.'[/url]', '<a href="'.$url.'" target="_blank">'.$url.'</a>', $text);
+        $safe = safe_http_url(html_entity_decode($url, ENT_QUOTES, 'UTF-8'));
+        if ($safe === '' && $url !== '' && !preg_match('#^[a-z][a-z0-9+.-]*:#i', html_entity_decode($url, ENT_QUOTES, 'UTF-8'))) {
+            $safe = safe_http_url('http://' . html_entity_decode($url, ENT_QUOTES, 'UTF-8'));
+        }
+        $repl = ($safe === '') ? h($url) : '<a href="'.h($safe).'" target="_blank" rel="noopener noreferrer">'.h($url).'</a>';
+        $text = str_ireplace('[url]'.$url.'[/url]', $repl, $text);
     }
     while(stripos($text, '[player]') !== false && stripos($text, '[/player]') !== false )
     {
         $player = substr($text, stripos($text, '[player]')+8, stripos($text, '[/player]') - stripos($text, '[player]') - 8);
-        $text = str_ireplace('[player]'.$player.'[/player]', '<a href="?subtopic=characters&name='.urlencode($player).'">'.$player.'</a>', $text);
+        $text = str_ireplace('[player]'.$player.'[/player]', '<a href="?subtopic=characters&name='.urlencode(html_entity_decode($player, ENT_QUOTES, 'UTF-8')).'">'.h($player).'</a>', $text);
     }
     while(stripos($text, '[img]') !== false && stripos($text, '[/img]') !== false )
     {
         $img = substr($text, stripos($text, '[img]')+5, stripos($text, '[/img]') - stripos($text, '[img]') - 5);
-        $text = str_ireplace('[img]'.$img.'[/img]', '<img src="'.$img.'">', $text);
+        $safe = safe_http_url(html_entity_decode($img, ENT_QUOTES, 'UTF-8'));
+        $repl = ($safe === '' || !preg_match('#\.(jpe?g|gif|png)(\?.*)?$#i', $safe)) ? '' : '<img src="'.h($safe).'" alt="">';
+        $text = str_ireplace('[img]'.$img.'[/img]', $repl, $text);
     }
     while(stripos($text, '[b]') !== false && stripos($text, '[/b]') !== false )
     {
@@ -197,10 +214,10 @@ if (strlen($_text) > 50) //Char Limit Config for the Posts
     $_text = substr($_text, 0, strrpos(substr($_text, 0, 50), ' ')) . '...';
 
 $main_content .= '<tr bgcolor="'.$bgcolor.'">
-<td><img src="http://otland.net/images/galaxy/misc/multipage.gif"> "'.$_text.'"</span><br/><img src="http://otland.net/images/galaxy/buttons/firstnew.gif"><b><a href="?subtopic=forum&action=show_thread&id='.urlencode($post['first_post']).'"><font size="1"><span class="Style1"> '.$_thread[0].'</a></b></span></td>
-<td style="text-align: right;"><font size="1"><span class="Style1">'.date("F d (H:m)", $post[post_date]).' <br/>by <strong>'.$_name[0].' </strong></span><a href="?subtopic=forum&action=show_thread&id='.urlencode($post['first_post']).'"><img src="http://otland.net/images/galaxy/buttons/lastpost.gif" style="border: none;"></a></td>
-<td><center><span class="Style1">'.$_replies[0].'</center></span></td>
-<td><center><span class="Style1">'.$_views[0].'</center></span></td>
+<td><img src="http://otland.net/images/galaxy/misc/multipage.gif"> "'.h($_text).'"</span><br/><img src="http://otland.net/images/galaxy/buttons/firstnew.gif"><b><a href="?subtopic=forum&action=show_thread&id='.urlencode($post['first_post']).'"><font size="1"><span class="Style1"> '.h($_thread[0]).'</a></b></span></td>
+<td style="text-align: right;"><font size="1"><span class="Style1">'.date("F d (H:m)", $post[post_date]).' <br/>by <strong>'.h($_name[0]).' </strong></span><a href="?subtopic=forum&action=show_thread&id='.urlencode($post['first_post']).'"><img src="http://otland.net/images/galaxy/buttons/lastpost.gif" style="border: none;"></a></td>
+<td><center><span class="Style1">'.h($_replies[0]).'</center></span></td>
+<td><center><span class="Style1">'.h($_views[0]).'</center></span></td>
 <td><span class="Short">'.$sections[$post[section]].'</span></td></tr>';
     }
 $main_content .= '</table>';
@@ -231,7 +248,7 @@ if($action == 'show_board')
             $stick = ""; $stix = '<span style="color:blue">[STICK]</span>'; if ( $thread['sticky'] == 1 ) { $stick = '<strong>STICKY: </strong>'; $stix = '<span style="color:orange">[UNSTICK]</span>'; }
 			$closed = '<span style="color:purple">[CLOSE]</span>'; if ( $thread['closed'] == 1 ) { $closed = '<span style="color:purple">[OPEN]</span>'; }
             if($logged && $group_id_of_acc_logged >= $group_not_blocked)
-                $main_content .= '<a href="?subtopic=forum&action=close_thread&id='.$thread['id'].'")">'.$closed.'</a> <a href="?subtopic=forum&action=stick_post&id='.$thread['id'].'")">'.$stix.'</a> <a href="?subtopic=forum&action=move_thread&id='.$thread['id'].'"\')"><span style="color:darkgreen">[MOVE]</span></a> <a href="?subtopic=forum&action=remove_post&id='.$thread['id'].'" onclick="return confirm(\'Are you sure you want remove thread > '.$thread['post_topic'].' <?\')"><span style="color:red">[REMOVE]</span></a><br/>';
+                $main_content .= '<a href="?subtopic=forum&action=close_thread&id='.$thread['id'].'&'.csrf_query().'")">'.$closed.'</a> <a href="?subtopic=forum&action=stick_post&id='.$thread['id'].'&'.csrf_query().'")">'.$stix.'</a> <a href="?subtopic=forum&action=move_thread&id='.$thread['id'].'"\')"><span style="color:darkgreen">[MOVE]</span></a> <a href="?subtopic=forum&action=remove_post&id='.$thread['id'].'&'.csrf_query().'" onclick="return confirm(\'Are you sure you want remove thread > '.$thread['post_topic'].' <?\')"><span style="color:red">[REMOVE]</span></a><br/>';
                 $main_content .= '<b>'.$stick.'<a STYLE="text-decoration:none" href="?subtopic=forum&action=show_thread&id='.$thread['id'].'">'.htmlspecialchars($thread['post_topic']).'</a></b><br /><small>'.htmlspecialchars(substr($thread['post_text'], 0, 50)).'...</small></td><td><a href="?subtopic=characters&name='.urlencode($thread['name']).'">'.$thread['name'].'</a></td><td>'.(int) $thread['replies'].'</td><td>'.(int) $thread['views'].'</td><td>';
             if($thread['last_post'] > 0)
             {
@@ -303,9 +320,9 @@ if($action  == 'show_thread')
             $main_content .= '</font></td><td>';
             if($logged && $group_id_of_acc_logged >= $group_not_blocked)
                 if($thread['first_post'] != $thread['id'])
-                    $main_content .= '<a href="?subtopic=forum&action=remove_post&id='.$thread['id'].'" onclick="return confirm(\'Are you sure you want remove post of '.$thread['name'].'?\')"><font color="red">REMOVE POST</font></a>';
+                    $main_content .= '<a href="?subtopic=forum&action=remove_post&id='.$thread['id'].'&'.csrf_query().'" onclick="return confirm(\'Are you sure you want remove post of '.$thread['name'].'?\')"><font color="red">REMOVE POST</font></a>';
                 else
-                    $main_content .= '<a href="?subtopic=forum&action=remove_post&id='.$thread['id'].'" onclick="return confirm(\'Are you sure you want remove thread > '.$thread['post_topic'].' <?\')"><font color="red">REMOVE THREAD</font></a>';
+                    $main_content .= '<a href="?subtopic=forum&action=remove_post&id='.$thread['id'].'&'.csrf_query().'" onclick="return confirm(\'Are you sure you want remove thread > '.$thread['post_topic'].' <?\')"><font color="red">REMOVE THREAD</font></a>';
             if($logged && ($thread['account_id'] == $account_logged->getId() || $group_id_of_acc_logged >= $group_not_blocked))
 
             //OPEN|CLOSE FUNCTION
@@ -409,6 +426,7 @@ if($action == 'move_thread')
 				<FORM ACTION="" METHOD="GET">
 				<input type="hidden" name="subtopic" value="forum" />
 				<input type="hidden" name="action" value="moved_thread" />
+				<input type="hidden" name="csrf_token" value="'.h(csrf_token()).'" />
 				<input type="hidden" name="id" value="'.$post['id'].'" />
 				<strong>THREAD:</strong> '.$post['post_topic'].'
 				<br/><strong>AUTHOR:</strong> '.$name[0].'
@@ -554,7 +572,7 @@ if($action  == 'new_post')
                             $main_content .= '<br />* '.$error;
                         $main_content .= '</font><br />';
                     }
-                    $main_content .= '<form action="?" method="POST"><input type="hidden" name="action" value="new_post" /><input type="hidden" name="thread_id" value="'.$thread_id.'" /><input type="hidden" name="subtopic" value="forum" /><input type="hidden" name="save" value="save" /><table width="100%"><tr bgcolor="'.$config['site']['vdarkborder'].'"><td colspan="2"><font color="white"><b>Nova Resposta</b></font></td></tr><tr bgcolor="'.$config['site']['darkborder'].'"><td width="180"><b>Character:</b></td><td><select name="char_id"><option value="0">(Escolha o personagem)</option>';
+                    $main_content .= '<form action="?" method="POST">'.csrf_field().'<input type="hidden" name="action" value="new_post" /><input type="hidden" name="thread_id" value="'.$thread_id.'" /><input type="hidden" name="subtopic" value="forum" /><input type="hidden" name="save" value="save" /><table width="100%"><tr bgcolor="'.$config['site']['vdarkborder'].'"><td colspan="2"><font color="white"><b>Nova Resposta</b></font></td></tr><tr bgcolor="'.$config['site']['darkborder'].'"><td width="180"><b>Character:</b></td><td><select name="char_id"><option value="0">(Escolha o personagem)</option>';
                     foreach($players_from_account as $player)
                     {
                         $main_content .= '<option value="'.$player['id'].'"';
@@ -671,7 +689,7 @@ if($action  == 'edit_post')
                                 $main_content .= '<br />* '.$error;
                             $main_content .= '</font>';
                         }
-                        $main_content .= '<br /><form action="?" method="POST"><input type="hidden" name="action" value="edit_post" /><input type="hidden" name="id" value="'.$post_id.'" /><input type="hidden" name="subtopic" value="forum" /><input type="hidden" name="save" value="save" /><table width="100%"><tr bgcolor="'.$config['site']['vdarkborder'].'"><td colspan="2"><font color="white"><b>Edit Post</b></font></td></tr><tr bgcolor="'.$config['site']['darkborder'].'"><td width="180"><b>Character:</b></td><td><select name="char_id"><option value="0">(Escolha o personagem)</option>';
+                        $main_content .= '<br /><form action="?" method="POST">'.csrf_field().'<input type="hidden" name="action" value="edit_post" /><input type="hidden" name="id" value="'.$post_id.'" /><input type="hidden" name="subtopic" value="forum" /><input type="hidden" name="save" value="save" /><table width="100%"><tr bgcolor="'.$config['site']['vdarkborder'].'"><td colspan="2"><font color="white"><b>Edit Post</b></font></td></tr><tr bgcolor="'.$config['site']['darkborder'].'"><td width="180"><b>Character:</b></td><td><select name="char_id"><option value="0">(Escolha o personagem)</option>';
                         foreach($players_from_account as $player)
                         {
                             $main_content .= '<option value="'.$player['id'].'"';
@@ -777,7 +795,7 @@ if($action == 'new_topic')
                             $main_content .= '<br />* '.$error;
                         $main_content .= '</font><br />';
                     }
-                    $main_content .= '<form action="?" method="POST"><input type="hidden" name="action" value="new_topic" /><input type="hidden" name="section_id" value="'.$section_id.'" /><input type="hidden" name="subtopic" value="forum" /><input type="hidden" name="save" value="save" /><table width="100%"><tr bgcolor="'.$config['site']['vdarkborder'].'"><td colspan="2"><font color="white"><b>Nova Resposta</b></font></td></tr><tr bgcolor="'.$config['site']['darkborder'].'"><td width="180"><b>Character:</b></td><td><select name="char_id"><option value="0">(Escolha o personagem)</option>';
+                    $main_content .= '<form action="?" method="POST">'.csrf_field().'<input type="hidden" name="action" value="new_topic" /><input type="hidden" name="section_id" value="'.$section_id.'" /><input type="hidden" name="subtopic" value="forum" /><input type="hidden" name="save" value="save" /><table width="100%"><tr bgcolor="'.$config['site']['vdarkborder'].'"><td colspan="2"><font color="white"><b>Nova Resposta</b></font></td></tr><tr bgcolor="'.$config['site']['darkborder'].'"><td width="180"><b>Character:</b></td><td><select name="char_id"><option value="0">(Escolha o personagem)</option>';
                     foreach($players_from_account as $player)
                     {
                         $main_content .= '<option value="'.$player['id'].'"';

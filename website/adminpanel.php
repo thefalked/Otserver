@@ -184,17 +184,18 @@ showednewnews_state = "0";
       }
     }
     if ($_REQUEST['savespell'] == "yes") {
+      csrf_require();
       if (!empty($_REQUEST['spell_name'])) {
         if ($_REQUEST['visible'] == "yes") {
           try {
-            $SQL->query('UPDATE z_spells SET hide_spell = 0 WHERE name = "' . $_REQUEST['spell_name'] . '"');
+            $SQL->query('UPDATE z_spells SET hide_spell = 0 WHERE name = ' . $SQL->quote($_REQUEST['spell_name']));
           } catch (PDOException $error) {
           }
           $main_content .= "<b>'" . $_REQUEST['spell_name'] . "'</b> is now VISIBLE!";
         }
         if ($_REQUEST['visible'] == "no") {
           try {
-            $SQL->query('UPDATE z_spells SET hide_spell = "1" WHERE name = "' . $_REQUEST['spell_name'] . '"');
+            $SQL->query('UPDATE z_spells SET hide_spell = 1 WHERE name = ' . $SQL->quote($_REQUEST['spell_name']));
           } catch (PDOException $error) {
           }
           $main_content .= "<b>'" . $_REQUEST['spell_name'] . "'</b> is now HIDDEN!";
@@ -205,7 +206,7 @@ showednewnews_state = "0";
       $spells = $SQL->query('SELECT * FROM z_spells ORDER BY name');
     } catch (PDOException $error) {
     }
-    $main_content .= '<FORM ACTION="?subtopic=adminpanel&action=editspells" METHOD=post><input type="hidden" name="savespell" value="yes">
+    $main_content .= '<FORM ACTION="?subtopic=adminpanel&action=editspells" METHOD=post>'.csrf_field().'<input type="hidden" name="savespell" value="yes">
 <TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
 <TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD CLASS=white><B>Set spell visible or hidden</B></TD></TR>
 <TR BGCOLOR=' . $config['site']['darkborder'] . '><TD><b>Spell: </b><SELECT NAME="spell_name">';
