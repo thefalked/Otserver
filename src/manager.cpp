@@ -252,6 +252,8 @@ void ProtocolManager::parsePacket(NetworkMessage& msg)
 				output->put<char>(MP_MSG_FAILURE);
 				output->putString("Player not found");
 			}
+
+			break;
 		}
 
 		case MP_MSG_CHAT_REQUEST:

@@ -51,7 +51,6 @@ docker compose up --build -d otserver
 ## Logins from imported DB
 
 - Account `1` / password `1` (admin panel access)
-- Account `god` / password `lolszpalomasz` (has `[ADM] Socks`)
 
 ## Reference pack
 

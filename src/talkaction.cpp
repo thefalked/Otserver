@@ -17,6 +17,7 @@
 #include "otpch.h"
 #include "talkaction.h"
 
+#include <sstream>
 #include <boost/config.hpp>
 #include <boost/version.hpp>
 
@@ -1101,12 +1102,14 @@ bool TalkAction::banishmentInfo(Creature* creature, const std::string&, const st
 	if(deletion)
 		end = what + (std::string)" won't be undeleted";
 
-	char buffer[500 + ban.comment.length()];
-	sprintf(buffer, "%s has been %s at:\n%s by: %s,\nfor the following reason:\n%s.\nThe action taken was:\n%s.\nThe comment given was:\n%s.\n%s%s.",
-		what.c_str(), (deletion ? "deleted" : "banished"), formatDateEx(ban.added, "%d %b %Y").c_str(), admin.c_str(), getReason(ban.reason).c_str(),
-		getAction(ban.action, false).c_str(), ban.comment.c_str(), end.c_str(), (deletion ? "." : formatDateEx(ban.expires).c_str()));
+	std::ostringstream ss;
+	ss << what << " has been " << (deletion ? "deleted" : "banished") << " at:\n"
+		<< formatDateEx(ban.added, "%d %b %Y") << " by: " << admin << ",\nfor the following reason:\n"
+		<< getReason(ban.reason) << ".\nThe action taken was:\n" << getAction(ban.action, false)
+		<< ".\nThe comment given was:\n" << ban.comment << ".\n" << end
+		<< (deletion ? "." : formatDateEx(ban.expires));
 
-	player->sendFYIBox(buffer);
+	player->sendFYIBox(ss.str());
 	return true;
 }
 
