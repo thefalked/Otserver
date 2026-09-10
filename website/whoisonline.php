@@ -98,19 +98,20 @@ $main_content .=
 							<td>';
 $f = 'cache/whoisonline-'.$_POST['world'].'-'.$order.'.tmp';
 $ff = 'cache/whoisonline-'.$_POST['world'].'-record.tmp';
+$cached = false;
+$n = 0;
+$c = '';
 if(file_exists($f) && filemtime($f) > (time() - $cache_sec)) {
 	$cp = file_get_contents($f);
-	$cached = null;
-	if(file_exists($f) && filemtime($f) > (time() - $cache_sec)) {
+	if(file_exists($ff) && filemtime($ff) > (time() - $cache_sec)) {
 		$e = explode('|', file_get_contents($ff));
-		$n = $e[0];
-		$c = $e[1];
+		$n = $e[0] ?? 0;
+		$c = $e[1] ?? '';
 		$cached = true;
 	}
 }
 else {
 	$cp = '';
-	$n = 0;
 	$q = 'SELECT name,level,vocation,promotion FROM players WHERE world_id='.$id.' AND online=1';
 	if(in_array($order, array('name_asc','name_desc','level_asc','level_desc')))
 		$q .= ' ORDER BY '.str_replace('_', ' ', $order);
@@ -147,7 +148,7 @@ else {
 					$cp .= '<a name="'.$tmp.'"></a>';
 				}
 			}
-			$cp .= '<a href="?subtopic=characters&name='.urlencode($p['name']).'">'.h($p['name']).'</a></td><td style="width:10%">'.h($p['level']).'</td><td style="width:20%">'.h(str_replace(' ','*',($vocation_name[$id][$p['promotion']][$p['d']] ?? ''))).'</td></tr>';
+			$cp .= '<a href="?subtopic=characters&name='.urlencode($p['name']).'">'.h($p['name']).'</a></td><td style="width:10%">'.h($p['level']).'</td><td style="width:20%">'.h(str_replace(' ','*',($vocation_name[$id][$p['promotion']][$p['vocation']] ?? ''))).'</td></tr>';
 		}
 	}
 	file_put_contents($f, $cp);

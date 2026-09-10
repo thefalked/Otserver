@@ -1,7 +1,9 @@
 <?PHP
-$page = $_REQUEST['page'];
-$action = $_REQUEST['action'];
-$id = $_REQUEST['id'];
+$page = (int)($_REQUEST['page'] ?? 0);
+$action = $_REQUEST['action'] ?? '';
+$id = $_REQUEST['id'] ?? '';
+$change_rows = '';
+$show_link_to_next_page = false;
 $limit = 20;
 $offset = $page * $limit;
 $change_data = $SQL->query('SELECT * FROM z_changelog ORDER BY id DESC LIMIT ' . $limit . ' OFFSET ' . $offset . '');
