@@ -591,7 +591,7 @@ if($action  == 'new_post')
                     foreach($threads as $thread)
                     {
                         if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
-                        $main_content .= '<tr bgcolor="'.$bgcolor.'"><td>'.$thread['name'].'</td><td>'.showPost($thread['post_topic'], $thread['post_text'], $thread['post_smile']).'</td></tr>';
+                        $main_content .= '<tr bgcolor="'.$bgcolor.'"><td>'.h($thread['name']).'</td><td>'.showPost(htmlspecialchars($thread['post_topic']), htmlspecialchars($thread['post_text']), $thread['post_smile']).'</td></tr>';
                     }
                     $main_content .= '</table>';
                 }
