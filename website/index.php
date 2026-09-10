@@ -47,7 +47,9 @@ if(isset($_SESSION['account'])) {
 $login_account = isset($_POST['account_login']) ? strtoupper(trim($_POST['account_login'])) : '';
 $login_password = isset($_POST['password_login']) ? trim($_POST['password_login']) : '';
 if(!$logged && $login_account !== '' && $login_password !== '') {
-	if (!rate_limit('login', 15, 60)) {
+	if (!csrf_ok()) {
+		$logged = FALSE;
+	} elseif (!rate_limit('login', 15, 60)) {
 		$logged = FALSE;
 	} else {
 	$login_password_hash = password_ency($login_password);
