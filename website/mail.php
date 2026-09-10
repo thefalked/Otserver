@@ -1,14 +1,14 @@
 <?PHP
 if($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
 $email = $SQL->query('SELECT * FROM '.$SQL->tableName('accounts').' WHERE email != "";');
-$mail_content = stripslashes(trim($_POST['mail_content']));
-$subject = stripslashes(ucwords(strtolower(trim($_REQUEST['subject']))));
+$mail_content = stripslashes(trim($_POST['mail_content'] ?? ''));
+$subject = stripslashes(ucwords(strtolower(trim($_REQUEST['subject'] ?? ''))));
 if(empty($mail_content)) {
-if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !empty($_POST['mail_content'])) { csrf_require(); }
 $main_content .= '<form action="" method="post">' . csrf_field() . '<b>Subject Title:</b><input type="textbox" name="subject"><br>
 <b>Mail Content:</b><textarea name="mail_content" rows="3" cols="45"></textarea><br><input type="submit" value="Send emails">
 </form>';
 } else {
+csrf_require();
 require("phpmailer/class.phpmailer.php");
 $mail = new PHPMailer();
 foreach($email  as $emails) {
