@@ -20,8 +20,8 @@ $config['site']['email_days_to_change'] = 0; // how many days user need to chang
 $config['site']['newaccount_premdays'] = 999; // how many days receive new account
 
 //Forum
-$config['site']['forum_sections'] = array(1 => 'News', 2 => 'Staff Complaints', 3 => 'Tutorials', 4 => 'Pictures', 5 => 'Bug Report', 6 => 'Miscellaneous', 7 => 'Trade');
-$config['site']['forum_sections_desc'] = array(1 => 'Here you can comment on the news.', 2 => 'Here you can report complaints about Staff Members.', 3 => 'Here you will find tutorials on things.', 4 => 'This board is all about pictures!', 5 => 'Report bugs in this forum.', 6 => 'Anything that doesn\'t already have a designated forum.', 7 => 'Buy and sell things.');
+$config['site']['forum_sections'] = array(1 => 'Notícias', 2 => 'Reclamações da Staff', 3 => 'Tutoriais', 4 => 'Imagens', 5 => 'Reportar Bugs', 6 => 'Diversos', 7 => 'Trocas');
+$config['site']['forum_sections_desc'] = array(1 => 'Aqui você pode comentar as notícias.', 2 => 'Aqui você pode registrar reclamações sobre membros da Staff.', 3 => 'Aqui você encontra tutoriais sobre o jogo.', 4 => 'Este fórum é para imagens!', 5 => 'Reporte bugs neste fórum.', 6 => 'Qualquer assunto que ainda não tenha um fórum próprio.', 7 => 'Compre e venda itens.');
 $config['site']['forum_level_limit'] = 30; // minimum 1 character with 50 lvl on account to post
 $config['site']['forum_post_interval'] = 20; // 30 seconds between posts
 $config['site']['forum_group_not_blocked'] = 1; // group id of player that can always post, remove post, remove threads
@@ -121,7 +121,7 @@ $config['site']['number_of_advances'] = 5; // number of latest skill advances to
 
 // PagSeguro — cleared (callback disabled). Leave empty unless you re-enable payments.
 $config['pagseguro']['email'] = '';
-$config['pagseguro']['produtoNome'] = 'Premium Points';
+$config['pagseguro']['produtoNome'] = 'Pontos Premium';
 $config['pagseguro']['Token'] = '';
 $config['pagseguro']['produtoValor'] = '100';
 $config['pagseguro']['enabled'] = 0;

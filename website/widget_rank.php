@@ -52,7 +52,7 @@ $skills = $SQL->query('SELECT * FROM players WHERE deleted = 0 AND group_id < '.
       echo '<div align="left"><a href="?subtopic=characters&name='.$skill['name'].'" class="topfont">
         <font color="#CCC">&nbsp;&nbsp;&nbsp;&nbsp;'.$a.' - </font>'.$skill['name'].'
         <br>
-        <small><font color="white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level: ('.$skill['level'].')</font></small>
+        <small><font color="white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nível: ('.$skill['level'].')</font></small>
         <br>
       </a>
       </div>';

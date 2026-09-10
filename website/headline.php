@@ -1,7 +1,11 @@
 <?PHP
 $text = isset($_GET['text']) ? (string) $_GET['text'] : '';
-// Letters/digits/spaces only — blocks path traversal and control chars
-if ($text === '' || mb_strlen($text) > 80 || !preg_match('/^[\p{L}\p{N}][\p{L}\p{N} _\-?]{0,79}$/u', $text)) {
+if (!mb_check_encoding($text, 'UTF-8')) {
+	$text = mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1');
+}
+$text = trim($text);
+// Letters/digits/spaces — Unicode letters allowed (pt-BR accents)
+if ($text === '' || mb_strlen($text, 'UTF-8') > 80 || !preg_match('/^[\p{L}\p{N}][\p{L}\p{N} _\-?]{0,79}$/u', $text)) {
 	http_response_code(400);
 	exit;
 }
@@ -10,27 +14,54 @@ if ($dir === false || !is_dir($dir)) {
 	http_response_code(500);
 	exit;
 }
-$path = $dir . DIRECTORY_SEPARATOR . $text . '.png';
-$parent = realpath(dirname($path));
-if ($parent === false || strpos($parent, $dir) !== 0) {
-	http_response_code(400);
+// Hash cache name avoids broken filenames when filesystem/encoding mangles accents
+$cacheName = 'h_' . md5($text) . '.png';
+$path = $dir . DIRECTORY_SEPARATOR . $cacheName;
+$legacyPath = $dir . DIRECTORY_SEPARATOR . $text . '.png';
+
+$fontCandidates = array(
+	$dir . '/DejaVuSerif-Bold.ttf',
+	$dir . '/martel.ttf',
+	'/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf',
+);
+$font = null;
+foreach ($fontCandidates as $candidate) {
+	if (is_file($candidate)) {
+		$font = $candidate;
+		break;
+	}
+}
+$base = $dir . '/headline.png';
+if ($font === null || !is_file($base)) {
+	http_response_code(500);
 	exit;
 }
-if (!file_exists($path))
-{
-	$font = $dir . '/martel.ttf';
-	$base = $dir . '/headline.png';
-	if (!is_file($font) || !is_file($base)) {
+
+if (!file_exists($path)) {
+	// Prefer regenerating over legacy caches (often drawn with fonts missing accents)
+	$image = imagecreatefrompng($base);
+	if ($image === false) {
 		http_response_code(500);
 		exit;
 	}
-	$image = imagecreatefrompng($base);
-	imagettftext($image, 18, 0, 4, 20, imagecolorallocate($image, 240, 209, 164), $font, $text);
+	imagealphablending($image, true);
+	imagesavealpha($image, true);
+	$color = imagecolorallocate($image, 240, 209, 164);
+	imagettftext($image, 14, 0, 4, 20, $color, $font, $text);
 	imagepng($image, $path);
 	imagedestroy($image);
+	if (is_file($legacyPath) && realpath($legacyPath) !== realpath($path)) {
+		@unlink($legacyPath);
+	}
 }
+
 $pic = imagecreatefrompng($path);
-header('Content-type: image/png');
+if ($pic === false) {
+	http_response_code(500);
+	exit;
+}
+header('Content-Type: image/png');
+header('Cache-Control: public, max-age=86400');
 imagepng($pic);
 imagedestroy($pic);
 ?>

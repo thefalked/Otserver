@@ -16,6 +16,8 @@ RUN printf '%s\n' \
   'display_errors = Off' \
   'log_errors = On' \
   'error_log = /proc/self/fd/2' \
+  'default_charset = UTF-8' \
+  'mbstring.internal_encoding = UTF-8' \
   'session.cookie_httponly = 1' \
   'session.use_strict_mode = 1' \
   > /usr/local/etc/php/conf.d/aac.ini

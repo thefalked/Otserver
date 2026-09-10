@@ -3,7 +3,7 @@ if($config['site']['send_emails'])
 {
 	if($action == '')
 	{
-		$main_content .= 'The Lost Account Interface pode ajuda-lo a obter de volta o seu nome de conta e senha. Por favor, insira o nome do personagem e selecionar o que voce quer fazer.<BR>
+		$main_content .= 'The Lost Account Interface pode ajuda-lo a obter de volta o seu nome de conta e senha. Por favor, insira o nome do personagem e selecionar o que você quer fazer.<BR>
 		<FORM ACTION="?subtopic=lostaccount&action=step1" METHOD=post>
 		<INPUT TYPE=hidden NAME="character" VALUE="">
 		<TABLE CELLSPACING=1 CELLPADDING=4 BORDER=0 WIDTH=100%>
@@ -13,7 +13,7 @@ if($config['site']['send_emails'])
 		</TD></TR>
 		</TABLE>
 		<TABLE CELLSPACING=1 CELLPADDING=4 BORDER=0 WIDTH=100%>
-		<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>O que voce quer?</B></TD></TR>
+		<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>O que você quer?</B></TD></TR>
 		<TR><TD BGCOLOR="'.$config['site']['darkborder'].'">
 		<INPUT TYPE=radio NAME="action_type" VALUE="email"> Envie-me uma nova senha e meu nome de conta para conta de e-mail adress.<BR>
 		<INPUT TYPE=radio NAME="action_type" VALUE="reckey"> Eu tenho <b>chave de recuperacao</b> e quer definir uma nova senha e e-mail adress para a minha conta.<BR>

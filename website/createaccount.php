@@ -11,7 +11,7 @@ function checkAccount()
 {
 	if(document.getElementById("account_name").value=="")
 	{
-		document.getElementById("acc_name_check").innerHTML = \'<b><font color="red">Please enter account name.</font></b>\';
+		document.getElementById("acc_name_check").innerHTML = \'<b><font color="red">Por favor digite o nome da conta.</font></b>\';
 		return;
 	}
 	accountHttp=GetXmlHttpObject();
@@ -41,7 +41,7 @@ function checkEmail()
 {
 	if(document.getElementById("email").value=="")
 	{
-		document.getElementById("email_check").innerHTML = \'<b><font color="red">Please enter e-mail.</font></b>\';
+		document.getElementById("email_check").innerHTML = \'<b><font color="red">Por favor digite o e-mail.</font></b>\';
 		return;
 	}
 	emailHttp=GetXmlHttpObject();
@@ -90,47 +90,47 @@ function EmailStateChanged()
 	{
 	with (thisform)
 	{
-	if (validate_required(account_name,"Please enter name of new account!")==false)
+	if (validate_required(account_name,"Por favor digite o nome da nova conta!")==false)
 	  {account_name.focus();return false;}
-	if (validate_required(email,"Please enter your e-mail!")==false)
+	if (validate_required(email,"Por favor digite seu e-mail!")==false)
 	  {email.focus();return false;}
-	if (validate_email(email,"Invalid e-mail format!")==false)
+	if (validate_email(email,"Formato de e-mail inválido!")==false)
 	  {email.focus();return false;}
 	if (verifpass==1) {
-	if (validate_required(passor,"Please enter password!")==false)
+	if (validate_required(passor,"Por favor digite a senha!")==false)
 	  {passor.focus();return false;}
-	if (validate_required(passor2,"Please repeat password!")==false)
+	if (validate_required(passor2,"Por favor repita a senha!")==false)
 	  {passor2.focus();return false;}
 	if (passor2.value!=passor.value)
-	  {alert(\'Repeated password is not equal to password!\');return false;}
+	  {alert(\'A senha repetida não é igual à senha!\');return false;}
 	}
 	if (verifya==1) {
-	if (validate_required(verify,"Please enter verification code!")==false)
+	if (validate_required(verify,"Por favor digite o código de verificação!")==false)
 	  {verify.focus();return false;}
 	}
 	if(rules.checked==false)
-	  {alert(\'To create account you must accept server rules!\');return false;}
+	  {alert(\'Para criar a conta você deve aceitar as regras do servidor!\');return false;}
 	}
 	}
 	</script>';
-	$main_content .= 'Para jogar em'.$config['server']['serverName'].' voce precisa de uma conta. 
-						Tudo que voce tem que fazer para criar sua nova conta e digitar o seu endere�o de e-mail, senha para nova conta, codigo de verificacao de imagem e concordar com os termos apresentados abaixo.
-						Se voce tiver feito isso, o nome da conta, senha e endereco de e-mail serao mostrados na pagina seguinte e sua conta e sua senha sera enviada para seu endereco
-						 de e-mail junto com instrucoes adicionais.<BR><BR>
+	$main_content .= 'Para jogar em '.$config['server']['serverName'].' você precisa de uma conta. 
+						Tudo que você tem que fazer para criar sua nova conta é digitar o seu endereço de e-mail, senha para nova conta, código de verificação de imagem e concordar com os termos apresentados abaixo.
+						Se você tiver feito isso, o nome da conta, senha e endereço de e-mail serão mostrados na página seguinte e sua conta e sua senha serão enviadas para seu endereço
+						 de e-mail junto com instruções adicionais.<BR><BR>
 						<FORM ACTION="?subtopic=createaccount&action=saveaccount" onsubmit="return validate_form(this)" METHOD=post>' . csrf_field() . '
 						<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
-						<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Create a '.$config['server']['serverName'].' Account</B></TD></TR>
+						<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Criar uma conta '.$config['server']['serverName'].'</B></TD></TR>
 						<TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLSPACING=8 CELLPADDING=0>
 						  <TR><TD>
 						    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=0>';
 	$main_content .= '<TR><TD width="150" valign="top"><B>Nome da conta: </B></TD><TD colspan="2"><INPUT id="account_name" NAME="reg_name" onkeyup="checkAccount();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Digite seu novo nome de conta)</font></TD></TR>
-					  <TR><TD width="150"><b>Status do Nome:</b></TD><TD colspan="2"><b><div id="acc_name_check">Por favor, insira o nome da conta.</div></b></TD></TR>
-					<TR><TD width="150" valign="top"><B>Endereco de email: </B></TD><TD colspan="2"><INPUT id="email" NAME="reg_email" onkeyup="checkEmail();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Seu e-mail e necessario para a recuperacaoo de uma Conta '.$config['server']['serverName'].')</font></TD></TR>
-					  <TR><TD width="150"><b>Status do Email:</b></TD><TD colspan="2"><b><div id="email_check">Digite seu e-mail.</div></b></TD></TR>';
-                               $main_content .= '<TR><TD width="150"><b>Selecione o Pais:</b></TD><TD colspan="2"><b><select name="country">
-                    <option value="">Por Favor Escolha</option><option value="af"> Afghanistan </option><option value="al"> Albania </option><option value="dz"> Algeria </option><option value="as"> American Samoa </option><option value="ad"> Andorra </option><option value="ao"> Angola </option><option value="ai"> Anguilla </option><option value="aq"> Antarctica </option><option value="ag"> Antigua and Barbuda </option><option value="ar"> Argentina </option>
+					  <TR><TD width="150"><b>Status do nome:</b></TD><TD colspan="2"><b><div id="acc_name_check">Por favor, insira o nome da conta.</div></b></TD></TR>
+					<TR><TD width="150" valign="top"><B>Endereço de e-mail: </B></TD><TD colspan="2"><INPUT id="email" NAME="reg_email" onkeyup="checkEmail();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Seu e-mail é necessário para a recuperação de uma conta '.$config['server']['serverName'].')</font></TD></TR>
+					  <TR><TD width="150"><b>Status do e-mail:</b></TD><TD colspan="2"><b><div id="email_check">Digite seu e-mail.</div></b></TD></TR>';
+                               $main_content .= '<TR><TD width="150"><b>Selecione o país:</b></TD><TD colspan="2"><b><select name="country">
+                    <option value="">Por favor escolha</option><option value="af"> Afghanistan </option><option value="al"> Albania </option><option value="dz"> Algeria </option><option value="as"> American Samoa </option><option value="ad"> Andorra </option><option value="ao"> Angola </option><option value="ai"> Anguilla </option><option value="aq"> Antarctica </option><option value="ag"> Antigua and Barbuda </option><option value="ar"> Argentina </option>
 
-                    <option value="am"> Armenia </option><option value="aw"> Aruba </option><option value="au"> Australia </option><option value="at"> Austria </option><option value="az"> Azerbaijan </option><option value="bs"> Bahamas </option><option value="bh"> Bahrain </option><option value="bd"> Bangladesh </option><option value="bb"> Barbados </option><option value="by"> Belarus </option><option value="be"> Belgium </option><option value="bz"> Belize </option><option value="bj"> Benin </option><option value="bm"> Bermuda </option><option value="bt"> Bhutan </option><option value="bo"> Bolivia </option><option value="ba"> Bosnia and Herzegowina </option><option value="bw"> Botswana </option><option value="bv"> Bouvet Island </option><option value="br"> Brazil </option><option value="io"> British Indian Ocean Territory </option><option value="bn"> Brunei Darussalam </option><option value="bg"> Bulgaria </option><option value="bf"> Burkina Faso </option><option value="bi"> Burundi </option>                                     <option value="kh"> Cambodia </option><option value="cm"> Cameroon </option><option value="ca"> Canada </option><option value="cv"> Cape Verde </option><option value="ky"> Cayman Islands </option><option value="cf"> Central African Republic </option><option value="td"> Chad </option><option value="cl"> Chile </option><option value="cn"> China </option><option value="cx"> Christmas Island </option><option value="cc"> Cocos Islands </option><option value="co"> Colombia </option><option value="km"> Comoros </option><option value="cd"> Congo </option><option value="cg"> Congo </option><option value="ck"> Cook Islands </option><option value="cr"> Costa Rica </option><option value="ci"> Cote DIvoire </option><option value="hr"> Croatia </option><option value="cu"> Cuba </option><option value="cy"> Cyprus </option><option value="cz"> Czech Republic </option><option value="dk"> Denmark </option><option value="dj"> Djibouti </option><option value="dm"> Dominica </option>
+                    <option value="am"> Armenia </option><option value="aw"> Aruba </option><option value="au"> Australia </option><option value="at"> Austria </option><option value="az"> Azerbaijan </option><option value="bs"> Bahamas </option><option value="bh"> Bahrain </option><option value="bd"> Bangladesh </option><option value="bb"> Barbados </option><option value="by"> Belarus </option><option value="be"> Belgium </option><option value="bz"> Belize </option><option value="bj"> Benin </option><option value="bm"> Bermuda </option><option value="bt"> Bhutan </option><option value="bo"> Bolivia </option><option value="ba"> Bosnia and Herzegowina </option><option value="bw"> Botswana </option><option value="bv"> Bouvet Island </option><option value="br"> Brasil </option><option value="io"> British Indian Ocean Territory </option><option value="bn"> Brunei Darussalam </option><option value="bg"> Bulgaria </option><option value="bf"> Burkina Faso </option><option value="bi"> Burundi </option>                                     <option value="kh"> Cambodia </option><option value="cm"> Cameroon </option><option value="ca"> Canada </option><option value="cv"> Cape Verde </option><option value="ky"> Cayman Islands </option><option value="cf"> Central African Republic </option><option value="td"> Chad </option><option value="cl"> Chile </option><option value="cn"> China </option><option value="cx"> Christmas Island </option><option value="cc"> Cocos Islands </option><option value="co"> Colombia </option><option value="km"> Comoros </option><option value="cd"> Congo </option><option value="cg"> Congo </option><option value="ck"> Cook Islands </option><option value="cr"> Costa Rica </option><option value="ci"> Cote DIvoire </option><option value="hr"> Croatia </option><option value="cu"> Cuba </option><option value="cy"> Cyprus </option><option value="cz"> Czech Republic </option><option value="dk"> Denmark </option><option value="dj"> Djibouti </option><option value="dm"> Dominica </option>
 
                     <option value="do"> Dominican Republic </option><option value="tp"> East Timor </option><option value="ec"> Ecuador </option><option value="eg"> Egypt </option><option value="sv"> El Salvador </option><option value="gq"> Equatorial Guinea </option><option value="er"> Eritrea </option><option value="ee"> Estonia </option><option value="et"> Ethiopia </option><option value="fk"> Falkland Islands </option><option value="fo"> Faroe Islands </option><option value="fj"> Fiji </option><option value="fi"> Finland </option><option value="fr"> France </option><option value="gf"> French Guiana </option><option value="pf"> French Polynesia </option><option value="tf"> French Southern Territories </option><option value="ga"> Gabon </option><option value="gm"> Gambia </option><option value="ge"> Georgia </option><option value="de"> Germany </option><option value="gh"> Ghana </option><option value="gi"> Gibraltar </option><option value="gr"> Greece </option>
 
@@ -152,8 +152,8 @@ function EmailStateChanged()
 
 	if(!$config['site']['create_account_verify_mail'])
 	$main_content .= '<script type="text/javascript">var verifpass=1;</script>
-						<TR><TD width="150" valign="top"><B>Senha: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Aqui escrever sua senha para uma nova conta no '.$config['server']['serverName'].')</font></TD></TR>
-					  <TR><TD width="150" valign="top"><B>Repita a Senha: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Repita sua Senha)</font></TD></TR>';
+						<TR><TD width="150" valign="top"><B>Senha: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Digite sua senha para a nova conta no '.$config['server']['serverName'].')</font></TD></TR>
+					  <TR><TD width="150" valign="top"><B>Repita a senha: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Repita sua senha)</font></TD></TR>';
 	else
 {
 }
@@ -167,8 +167,8 @@ function EmailStateChanged()
 					      <INPUT TYPE="checkbox" NAME="rules" id="rules" value="true" /><label for="rules"><u> Eu concordo com o '.$config['server']['serverName'].' Regras.</u></lable><BR>
 					    </TD></TR>
 					    <TR><TD>
-					      Se voce totalmente de acordo com estes termos, clique no botao "Concordo", a fim de criar uma conta '.$config['server']['serverName'].'.<BR>
-					      Se voce nao concorda com esses termos, ou nao deseja criar uma conta '.$config['server']['serverName'].' por favor clique no botao "Cancelar".
+					      Se você totalmente de acordo com estes termos, clique no botao "Concordo", a fim de criar uma conta '.$config['server']['serverName'].'.<BR>
+					      Se você nao concorda com esses termos, ou nao deseja criar uma conta '.$config['server']['serverName'].' por favor clique no botao "Cancelar".
 					    </TD></TR></TABLE>
 					  </TD></TR>
 					</TABLE></TD></TR>
@@ -197,7 +197,7 @@ function EmailStateChanged()
 if($action == "saveaccount") {
 	$reg_form_errors = array();
 	if (!csrf_ok()) {
-		$reg_form_errors[] = "Invalid security token. Please try again.";
+		$reg_form_errors[] = "Token de segurança inválido. Tente novamente.";
 	} elseif (!rate_limit('create_account', 5, 300)) {
 		$reg_form_errors[] = "Too many account creation attempts. Wait a few minutes.";
 	}
@@ -218,7 +218,7 @@ if($action == "saveaccount") {
 	else
 	{
 		if(!check_mail($reg_email))
-			$reg_form_errors[] = "Endere�o de e-mail nao esta correto.";
+			$reg_form_errors[] = "Endereço de e-mail nao esta correto.";
 	}
 	}
 	if($config['site']['verify_code'])
@@ -245,12 +245,12 @@ if($action == "saveaccount") {
 			//load account with this e-mail
 			$test_email_account->findByEmail($reg_email);
 			if($test_email_account->isLoaded())
-				$reg_form_errors[] = "Conta com este endere�o de e-mail j� existe no banco de dados.";
+				$reg_form_errors[] = "Conta com este endereço de e-mail já existe no banco de dados.";
 		}
 		$account_db = new OTS_Account();
 		$account_db->find($reg_name);
 		if($account_db->isLoaded())
-			$reg_form_errors[] = 'Conta com este nome j� existe.';
+			$reg_form_errors[] = 'Conta com este nome já existe.';
 	}
 	// ----------creates account-------------(save in database)
 	if(empty($reg_form_errors))
@@ -285,7 +285,7 @@ if($action == "saveaccount") {
 			<p>Nome da conta: <b>'.$reg_name.'</b></p>
 			<p>senha: <b>'.trim($reg_password).'</b></p>
 			<br />
-			<p>Apos o login, voc� pode:</p>
+			<p>Apos o login, você pode:</p>
 			<li>Criar novos personagens
 			<li>Alterar sua senha atual
 			<li>Mude o seu atual e-mail
@@ -311,16 +311,16 @@ if($action == "saveaccount") {
 			$mail->Body = $mailBody;
 			if($mail->Send())
 			{
-				$main_content .= 'Sua conta foi criada. Verifique se o seu e-mail. Nos Vemos no Ot!<BR><BR>';
+				$main_content .= 'Sua conta foi criada. Verifique se o seu e-mail. Nos vemos no OT!<BR><BR>';
 				$main_content .= '<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
-				<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Account Created</B></TD></TR>
+				<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Conta criada</B></TD></TR>
 				<TR><TD BGCOLOR="'.$config['site']['darkborder'].'">
 				  <TABLE BORDER=0 CELLPADDING=1><TR><TD>
 				    <BR>Your account name is <b>'.$reg_name.'</b>.
 					<BR><b><i>Voce recebera e-mail (<b>'.$reg_email.'</b>) com a sua senha.</b></i><br>';
-				$main_content .= 'Voce vai precisar do nome da conta e sua senha para jogar no '.$config['server']['serverName'].'.
+				$main_content .= 'Você vai precisar do nome da conta e sua senha para jogar no '.$config['server']['serverName'].'.
 				    Por favor, mantenha o seu nome de usuario e senha em um lugar seguro e
-				    nunca dar o seu nome conta ou senha para ninguem.<BR><BR>';
+				    nunca dê o nome da conta ou a senha para ninguém.<BR><BR>';
 				$main_content .= '<br /><small>Estas informacoes foram enviar em e-mail <b>'.$reg_email.'</b>. Por favor, verifique sua caixa de entrada / pasta de spam.';
 			}
 			else
@@ -331,24 +331,24 @@ if($action == "saveaccount") {
 		}
 		else
 		{
-			$main_content .= 'Sua conta foi criada. Agora voce pode acessar e criar seu primeiro personagem. Nos Vemos no Ot!<BR><BR>';
+			$main_content .= 'Sua conta foi criada. Agora você pode acessar e criar seu primeiro personagem. Nos vemos no OT!<BR><BR>';
 			$main_content .= '<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
-			<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Conta Criada</B></TD></TR>
+			<TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Conta criada</B></TD></TR>
 			<TR><TD BGCOLOR="'.$config['site']['darkborder'].'">
 			  <TABLE BORDER=0 CELLPADDING=1><TR><TD>
-			    <BR>O nome da conta e <b>'.$reg_name.'</b><br>Voce vai precisar do nome da conta e sua senha para jogar no '.$config['server']['serverName'].'.
+			    <BR>O nome da conta e <b>'.$reg_name.'</b><br>Você vai precisar do nome da conta e sua senha para jogar no '.$config['server']['serverName'].'.
 			    Por favor, mantenha o seu nome de usuario e senha em um lugar seguro e
-			    nunca dar o seu nome conta ou senha para ninguem.<BR><BR>';
+			    nunca dê o nome da conta ou a senha para ninguém.<BR><BR>';
 			if($config['site']['send_emails'] && $config['site']['send_register_email'])
 			{
 				$mailBody = '<html>
 				<body>
 				<h3>O nome da conta e senha!</h3>
 				<p>Voce ou alguem registado no servidor <a href="'.$config['server']['url'].'"><b>'.$config['server']['serverName'].'</b></a> com este e-mail.</p>
-				<p>Nome da Conta: <b>'.$reg_name.'</b></p>
+				<p>Nome da conta: <b>'.$reg_name.'</b></p>
 				<p>Senha: <b>'.trim($reg_password).'</b></p>
 				<br />
-				<p>Apos o login, voce pode:</p>
+				<p>Apos o login, você pode:</p>
 				<li>Criar novos personagens
 				<li>Alterar sua senha atual
 				<li>Mudar o seu atual e-mail

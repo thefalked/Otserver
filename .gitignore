@@ -17,3 +17,6 @@ src/config.status
 src/config.log
 src/libtool
 src/stamp-h1
+
+# Generated headline caches
+website/images/head/h_*.png

@@ -31,7 +31,7 @@ $main_content .= '<h2><center><b>Ninguem esta banido no Momento no '.$config['se
         $players_rows .= '<TR BGCOLOR='.$bgcolor.'><TD WIDTH=15%><A HREF="?subtopic=characters&name='.$nick['name'].'">'.$nick['name'].'</A></TD><TD WIDTH=5%>'.$ban_reason[$player['reason']].'</TD><TD WIDTH=15%>'.$player['comment'].'</TD><TD>'.$banby.'</TD><TD>'.$expires.'</TD></TR>';
     }
     //list of players
-    $main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD CLASS=white><b><center>Jogador Banido</center></b></TD><TD class="white"><b><center>Motivo</center></b></TD><TD class="white"><b><center>Comentário</center></b></TD><TD class="white"><b><center>Banido Por</center></b></TD><TD class="white"><b><center>Expira</center></b></TD></TR>'.$players_rows.'</TABLE>';
+    $main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR="'.$config['site']['vdarkborder'].'"><TD CLASS=white><b><center>Jogador banido</center></b></TD><TD class="white"><b><center>Motivo</center></b></TD><TD class="white"><b><center>Comentário</center></b></TD><TD class="white"><b><center>Banido por</center></b></TD><TD class="white"><b><center>Expira</center></b></TD></TR>'.$players_rows.'</TABLE>';
 }
 ;
 ?>

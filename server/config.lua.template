@@ -67,7 +67,8 @@ squareColor = 0
 allowFightback = true
 
 worldId = 0
-ip = "${OT_IP}"  -- from .env OT_IP; advertise to clients
+-- advertise to clients (from .env OT_IP)
+ip = "${OT_IP}"
 bindOnlyConfiguredIpAddress = false
 loginPort = 7171
 gamePort = 7172

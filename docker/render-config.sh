@@ -35,8 +35,10 @@ if [ ! -f "$TEMPLATE" ]; then
 	exit 1
 fi
 
-umask 077
+# 644 so website (www-data) can read the rendered file; not host-mounted.
+umask 022
 envsubst '$MYSQL_HOST $MYSQL_PORT $MYSQL_USER $MYSQL_PASSWORD $MYSQL_DATABASE $OT_IP' \
 	< "$TEMPLATE" > "$OUT"
+chmod 644 "$OUT"
 
 echo "render-config: wrote $OUT"
