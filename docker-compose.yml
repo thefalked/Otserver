@@ -1,6 +1,16 @@
+# Standalone / local compose for this repo.
+# Production + Traefik wrapper: home-server/otserver/docker-compose.yml
+# Keep service definitions, SQL mounts, and ports in sync with that file.
+# Do not run this stack and the home-server wrapper at the same time.
+#
+# Website: host port WEBSITE_PORT (default 8080).
+# Game: host TCP 7171/7172 on otserver (raw OT protocol).
+# Clients: set OT_IP in .env to the hostname/IP clients should use after login.
+
 services:
   mysql:
     image: mysql:8.4
+    container_name: otserver-mysql
     restart: unless-stopped
     command:
       [
@@ -9,18 +19,22 @@ services:
         "--sql-mode=NO_ENGINE_SUBSTITUTION",
         "--log-bin-trust-function-creators=1",
       ]
+    env_file: .env
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-otroot}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-ot}
-      MYSQL_USER: ${MYSQL_USER:-ot}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-otserver}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./src/schemas/mysql.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./docker/mysql/02-custom.sql:/docker-entrypoint-initdb.d/02-custom.sql:ro
       - ./docker/mysql/03-gesior.sql:/docker-entrypoint-initdb.d/03-gesior.sql:ro
       - ./docker/mysql/06-gesior-player-cols.sql:/docker-entrypoint-initdb.d/06-gesior-player-cols.sql:ro
+      - ./docker/mysql/07-lottery.sql:/docker-entrypoint-initdb.d/07-lottery.sql:ro
       - ./docker/mysql/08-god-energy.sql:/docker-entrypoint-initdb.d/08-god-energy.sql:ro
+    mem_limit: 4g
+    memswap_limit: 4g
     healthcheck:
       test:
         [
@@ -34,26 +48,26 @@ services:
     networks:
       - otnet
 
-  # Uses prebuilt server/theforgottenserver (no compile on up).
+  # Prebuilt server/theforgottenserver (no compile on up).
   # Rebuild binary only when sources change: ./server/compile.sh
-  # config.lua is rendered at start from server/config.lua.template + .env
   otserver:
     build:
       context: .
       dockerfile: server/Dockerfile
-    image: otserver:0.4-ubuntu2604
+    container_name: otserver
     restart: unless-stopped
     depends_on:
       mysql:
         condition: service_healthy
     working_dir: /ot
+    env_file: .env
     environment:
-      MYSQL_HOST: ${MYSQL_HOST:-mysql}
-      MYSQL_PORT: ${MYSQL_PORT:-3306}
-      MYSQL_USER: ${MYSQL_USER:-ot}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-otserver}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-ot}
-      OT_IP: ${OT_IP:-127.0.0.1}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      OT_IP: ${OT_IP}
       CONFIG_TEMPLATE: /ot/config.lua.template
       CONFIG_OUT: /ot/config.lua
     volumes:
@@ -62,8 +76,10 @@ services:
       - ./server/mods:/ot/mods
       - ot_logs:/ot/logs
     ports:
-      - "${LOGIN_PORT:-7171}:7171"
-      - "${GAME_PORT:-7172}:7172"
+      - "7171:7171" # login — host publish (OTClient / raw TCP)
+      - "7172:7172" # game
+    mem_limit: 6g
+    memswap_limit: 6g
     networks:
       - otnet
 
@@ -72,18 +88,19 @@ services:
     build:
       context: .
       dockerfile: website/Dockerfile
-    image: otserver-website:baiak-gesior
+    container_name: otserver-website
     restart: unless-stopped
     depends_on:
       mysql:
         condition: service_healthy
+    env_file: .env
     environment:
-      MYSQL_HOST: ${MYSQL_HOST:-mysql}
-      MYSQL_PORT: ${MYSQL_PORT:-3306}
-      MYSQL_USER: ${MYSQL_USER:-ot}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-otserver}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-ot}
-      OT_IP: ${OT_IP:-127.0.0.1}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      OT_IP: ${OT_IP}
       CONFIG_TEMPLATE: /ot/config.lua.template
       CONFIG_OUT: /ot/config.lua
     volumes:
@@ -92,8 +109,11 @@ services:
       - ./server/data:/ot/data:ro
     ports:
       - "${WEBSITE_PORT:-8080}:80"
+    mem_limit: 2g
+    memswap_limit: 2g
     networks:
       - otnet
+    # No in-container HTTP probe: php:apache image has no curl/wget.
 
 networks:
   otnet:

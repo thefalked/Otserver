@@ -17,7 +17,7 @@ cp otserver/.env.example otserver/.env   # set MYSQL_* / OT_IP
 cd otserver && docker compose up -d --build
 ```
 
-That compose builds from this checkout (`../../Otserver`), puts MySQL/logs under `home-server/otserver/otserver_data/`, exposes the Gesior site via Traefik (`baiakvip9.thefalked.dev`), and routes login/game TCP through Traefik on host **7171** / **7172**. Do **not** run this repo’s `docker compose up` and the home-server wrapper at the same time (port and image conflicts). C++ rebuilds still use `./server/compile.sh` here. Recreate Traefik after enabling the wrapper so the new entrypoints bind.
+That compose builds from this checkout (`../../Otserver`), puts MySQL/logs under `home-server/otserver/otserver_data/`, exposes the Gesior site via Traefik (`baiakvip9.thefalked.dev`), and publishes login/game TCP **7171** / **7172** on the `otserver` container (raw OT protocol — not Traefik). Do **not** run this repo’s `docker compose up` and the home-server wrapper at the same time (port and container-name conflicts). C++ rebuilds still use `./server/compile.sh` here. Keep this repo’s `docker-compose.yml` service/SQL/port layout in sync with `home-server/otserver/docker-compose.yml`.
 
 ## Quick start
 
@@ -61,13 +61,14 @@ Copy `.env.example` → `.env`. Compose and the containers read these values:
 
 | Variable | Default | Purpose |
 | ---------- | --------- | --------- |
-| `MYSQL_ROOT_PASSWORD` | `otroot` | MySQL root |
+| `MYSQL_ROOT_PASSWORD` | *(required)* | MySQL root — set in `.env` |
 | `MYSQL_DATABASE` | `ot` | Database name |
-| `MYSQL_USER` / `MYSQL_PASSWORD` | `ot` / `otserver` | App DB user |
+| `MYSQL_USER` / `MYSQL_PASSWORD` | `ot` / *(required)* | App DB user |
 | `MYSQL_HOST` / `MYSQL_PORT` | `mysql` / `3306` | Host inside Docker network |
 | `OT_IP` | `127.0.0.1` | IP advertised to game clients |
-| `LOGIN_PORT` / `GAME_PORT` | `7171` / `7172` | Host port mappings |
-| `WEBSITE_PORT` | `8080` | Host port for the website |
+| `WEBSITE_PORT` | `8080` | Host port for the website (standalone only) |
+
+Login/game are fixed at host **7171** / **7172** (same as home-server). Compose requires a `.env` file (`cp .env.example .env`).
 
 **Important:** set `OT_IP` to the address players (and you) use to reach the server. `127.0.0.1` only works for a client on the same machine.
 
