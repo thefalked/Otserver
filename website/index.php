@@ -1,0 +1,358 @@
+<?PHP
+if (PHP_VERSION_ID >= 70300) {
+	session_set_cookie_params(array(
+		'lifetime' => 0,
+		'path' => '/',
+		'httponly' => true,
+		'samesite' => 'Lax',
+	));
+}
+session_start();
+if(function_exists("ob_gzhandler")) { @ob_start("ob_gzhandler"); } else { ob_start(); }
+//require('./exaBD.php');
+function microtime_float() {
+	list($usec, $sec) = explode(" ", microtime());
+	return ((float)$usec + (float)$sec);
+}
+$time_start = microtime_float();
+
+//##### CONFIG #####
+include('config-and-functions.php');
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+
+//##### LOGOUT #####
+if($action == "logout") {
+	unset($_SESSION['account']);
+	unset($_SESSION['password']); // legacy key cleanup
+}
+
+//##### LOGIN #####
+$logged = FALSE;
+$group_id_of_acc_logged = 0;
+if(isset($_SESSION['account'])) {
+	$account_logged = $ots->createObject('Account');
+	$account_logged->load((int) $_SESSION['account']);
+	if($account_logged->isLoaded()) {
+		$logged = TRUE;
+		$group_id_of_acc_logged = $account_logged->getPageAccess();
+	} else {
+		$logged = FALSE;
+		unset($_SESSION['account']);
+		unset($account_logged);
+	}
+}
+$login_account = isset($_POST['account_login']) ? strtoupper(trim($_POST['account_login'])) : '';
+$login_password = isset($_POST['password_login']) ? trim($_POST['password_login']) : '';
+if(!$logged && $login_account !== '' && $login_password !== '') {
+	if (!rate_limit('login', 15, 60)) {
+		$logged = FALSE;
+	} else {
+	$login_password_hash = password_ency($login_password);
+	$account_logged = $ots->createObject('Account');
+	$account_logged->find($login_account);
+	if($account_logged->isLoaded()) {
+		if($login_password_hash == $account_logged->getPassword()) {
+			session_regenerate_id(true);
+			$_SESSION['account'] = $account_logged->getId();
+			unset($_SESSION['password']);
+			$logged = TRUE;
+			$account_logged->setCustomField("page_lastday", time());
+			$group_id_of_acc_logged = $account_logged->getPageAccess();
+		} else
+			$logged = FALSE;
+	}
+	}
+}
+
+//#### LOAD PAGE ##########
+if(empty($_REQUEST['subtopic'])) {
+	$_REQUEST['subtopic'] = "latestnews";
+	$subtopic = "latestnews";
+}
+$main_content = '';
+$topic = '';
+$subtopic = isset($_REQUEST['subtopic']) ? $_REQUEST['subtopic'] : 'latestnews';
+switch($_REQUEST['subtopic']) {
+
+        case "latestnews":
+                $topic = "Últimas Notícias";
+                $subtopic = "latestnews";
+                include("latestnews.php");
+        break;
+       
+	case "lottery";
+          $topic = "Lottery System";
+          $subtopic = "lottery";
+          include("lottery.php");
+        break; 
+
+	case "restarter":
+		$topic = "Restarter";
+		$subtopic = "restarter";
+		include("restarter.php");
+	break;
+
+        case "creatures";
+                $topic = "Criaturas";
+                $subtopic = "creatures";
+                include("creatures.php");
+        break;
+       
+case "scrollnews"; 
+              $topic = "Scroll News"; 
+             $subtopic = "scrollnews"; 
+             include("scrollnews.php"); 
+    break;  
+
+        case "spells";
+                $topic = "Magias";
+                $subtopic = "spells";
+                include("spells.php");
+        break;
+       
+ 	case "bugtracker";
+  	        $topic = "Reportar Bugs";
+ 	        $subtopic = "bugtracker";
+ 	        include("bug.php");
+	break;  
+
+        case "experiencetable";
+                $topic = "Tabela de Experiência";
+                $subtopic = "experiencetable";
+                include("experiencetable.php");
+        break;
+       
+        case "characters";
+                $topic = "Personagens";
+                $subtopic = "characters";
+                include("characters.php");
+        break;
+       
+        case "whoisonline";
+                $topic = "Quem está Online";
+                $subtopic = "whoisonline";
+                include("whoisonline.php");
+        break;
+       
+        case "highscores";
+                $topic = "Recordes";
+                $subtopic = "highscores";
+                include("highscores.php");
+        break;
+       
+        case "killstatistics";
+                $topic = "Últimas Mortes";
+                $subtopic = "killstatistics";
+                include("killstatistics.php");
+        break;
+       
+        case "guilds";
+                $topic = "Guildas";
+                $subtopic = "guilds";
+                include("guilds.php");
+        break;
+       
+        case "frags";
+              $topic = "Top Frags";
+              $subtopic = "frags";
+              include("frags.php");
+       break;  
+
+        case "topguilds";
+               $topic = "Top Guildas";
+               $subtopic = "topguilds";
+               include("topguild.php");
+        break; 
+
+        case "accountmanagement";
+                $topic = "Minha Conta";
+                $subtopic = "accountmanagement";
+                include("accountmanagement.php");
+        break;
+       
+        case "createaccount";
+                $topic = "Criar Conta";
+                $subtopic = "createaccount";
+                include("createaccount.php");
+        break;
+
+        case "tibiarules";
+                $topic = "Regras do Server";
+                $subtopic = "tibiarules";
+                include("tibiarules.php");
+        break;
+
+        case "adminpanel":
+                $topic = "Admin Panel";
+                $subtopic = "adminpanel";
+                include("adminpanel.php");
+        break;
+
+        case "retpagseguro":
+                include("retpagseguro.php");
+                exit;
+        break;
+        break;
+
+        case "vantagens":
+                $topic = "Vantagens";
+                $subtopic = "vantagens";
+                include("vantagens.php");
+        break;
+       
+        case "forum":
+                $topic = "Fórum";
+                $subtopic = "forum";
+                include("forum.php");
+        break;
+       
+        case "team";
+                $subtopic = "team";
+                $topic = "Suporte";
+                include("team.php");
+        break;
+
+        case "downloads";
+                $subtopic = "downloads";
+                $topic = "Downloads";
+                include("downloads.php");
+        break;
+
+        case "serverinfo";
+                $subtopic = "serverinfo";
+                $topic = "Info do Servidor";
+                include("serverinfo.php");
+        break;
+
+        case "shopsystem";
+                $subtopic = "shopsystem";
+                $topic = "Loja";
+                include("shopsystem.php");
+        break;
+       
+        case "donate";
+                $subtopic = "donate";
+                $topic = "Doar";
+                include("donate.php");
+        break;
+
+        case "gallery";
+                $subtopic = "gallery";
+                $topic = "Galeria";
+                include("gallery.php");
+        break;
+       
+        case "namelock";
+                $subtopic = "namelock";
+                $topic = "Namelock Manager";
+                include("namelocks.php");
+        break;
+       
+        case "archive";
+                $subtopic = "archive";
+                $topic = "Arquivo";
+                include("archive.php");
+        break;
+       
+        case "mail";
+                $subtopic = "mail";
+                $topic = "Mass emails sender";
+                include("mail.php");
+        break;
+
+	case "shopadmin";
+		$subtopic = "shopadmin";
+		$topic = "Shop Admin";
+		include("shopadmin.php");
+	break;
+
+	case "records";
+		$subtopic = "records";
+		$topic = "Players Online Records";
+		include("records.php");
+	break;
+
+	case "bans";
+		$subtopic = "bans";
+		$topic = "Banimentos";
+		include("bans.php");
+	break;
+
+  	case "polls";
+		$topic = "Enquetes";
+		$subtopic = "polls";
+		include("polls.php");
+	break; 	
+
+	case "changelog";
+   		 $topic = "Atualizações";
+  		 $subtopic = "changelog";
+  		 include("changelog.php");
+	break; 
+	
+	case "fragers";
+   		 $topic = "Top Fragers";
+  		 $subtopic = "fragers";
+  		 include("fragers.php");
+	break;
+		case "war";
+		$subtopic = "war";
+		$topic = "Guerras de Guildas";
+		include("war.php");
+    break;  
+	case "pag_retorno";
+		$topic = "Pag_retorno";
+		$subtopic = "pag_retorno";
+		include("pag_retorno.php");
+		exit;
+	break;
+}
+
+if(empty($topic)) {
+	$title = $GLOBALS['config']['server']["serverName"]." - OTS";
+	$main_content .= 'Invalid subtopic. Can\'t load page.';
+} else {
+	$title = $GLOBALS['config']['server']["serverName"]." - ".$topic;
+}
+
+//#####LAYOUT#####
+$layout_header = '<script type=\'text/javascript\'>
+function GetXmlHttpObject()
+{
+var xmlHttp=null;
+try
+  {
+  xmlHttp=new XMLHttpRequest();
+  }
+catch (e)
+  {
+  try
+    {
+    xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+    }
+  catch (e)
+    {
+    xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+  }
+return xmlHttp;
+}
+
+function MouseOverBigButton(source)
+{
+  source.firstChild.style.visibility = "visible";
+}
+function MouseOutBigButton(source)
+{
+  source.firstChild.style.visibility = "hidden";
+}
+function BigButtonAction(path)
+{
+  window.location = path;
+}
+var';
+if($logged) { $layout_header .= "loginStatus=1; loginStatus='true';"; } else { $layout_header .= "loginStatus=0; loginStatus='false';"; };
+$layout_header .= " var activeSubmenuItem='".$subtopic."';</script>";
+include($layout_name."/layout.php");
+ob_end_flush();
+?>

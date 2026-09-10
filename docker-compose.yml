@@ -1,0 +1,83 @@
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+        "--sql-mode=NO_ENGINE_SUBSTITUTION",
+        "--log-bin-trust-function-creators=1",
+      ]
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-otroot}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-ot}
+      MYSQL_USER: ${MYSQL_USER:-ot}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-otserver}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./src/schemas/mysql.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./docker/mysql/02-custom.sql:/docker-entrypoint-initdb.d/02-custom.sql:ro
+      - ./docker/mysql/03-gesior.sql:/docker-entrypoint-initdb.d/03-gesior.sql:ro
+      - ./docker/mysql/06-gesior-player-cols.sql:/docker-entrypoint-initdb.d/06-gesior-player-cols.sql:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'mysqladmin ping -h 127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 60s
+    networks:
+      - otnet
+
+  # Uses prebuilt server/theforgottenserver (no compile on up).
+  # Rebuild binary only when sources change: ./server/compile.sh
+  otserver:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: otserver:0.4-ubuntu2604
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    working_dir: /ot
+    volumes:
+      - ./server/config.lua:/ot/config.lua:ro
+      - ./server/data:/ot/data
+      - ./server/mods:/ot/mods
+      - ot_logs:/ot/logs
+    ports:
+      - "${LOGIN_PORT:-7171}:7171"
+      - "${GAME_PORT:-7172}:7172"
+    networks:
+      - otnet
+
+  # GesiorACC — account maker / downloads site
+  website:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    image: otserver-website:baiak-gesior
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./website:/var/www/html
+      - ./server/config.lua:/ot/config.lua:ro
+      - ./server/data:/ot/data:ro
+    ports:
+      - "${WEBSITE_PORT:-8080}:80"
+    networks:
+      - otnet
+
+networks:
+  otnet:
+
+volumes:
+  mysql_data:
+  ot_logs:

@@ -1,0 +1,17 @@
+# Runtime / local
+.env
+website/config/config.local.php
+website/cache/*.tmp
+server/data/logs/**/*.log
+*.log
+
+# Accidental local builds under src/
+src/theforgottenserver
+src/*.o
+src/*.exe
+src/.deps/
+src/Makefile
+src/config.status
+src/config.log
+src/libtool
+src/stamp-h1

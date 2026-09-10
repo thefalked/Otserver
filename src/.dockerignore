@@ -1,0 +1,14 @@
+# Exclude heavy / non-source paths from build context
+data/
+mods/
+schemas/
+theforgottenserver
+*.otbm
+*.s3db
+*.exe
+*.o
+*.a
+.dev/
+dev-cpp/
+cb/
+doc/

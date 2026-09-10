@@ -1,0 +1,6 @@
+data
+mods
+logs
+*.log
+compile.sh
+.dockerignore
