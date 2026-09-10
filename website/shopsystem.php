@@ -6,6 +6,24 @@ if($logged)
   $user_premium_points = $account_logged->getCustomField('premium_points');
 else
   $user_premium_points = 'Login first';
+
+/** Atomically debit premium_points. Returns false if insufficient balance. */
+function shop_try_debit_premium_points($account_logged, &$user_premium_points, $cost)
+{
+  global $SQL;
+  $cost = (int) $cost;
+  $id = (int) $account_logged->getId();
+  if ($cost < 0) {
+    return false;
+  }
+  $stmt = $SQL->query('UPDATE ' . $SQL->tableName('accounts') . ' SET ' . $SQL->fieldName('premium_points') . ' = ' . $SQL->fieldName('premium_points') . ' - ' . $cost . ' WHERE ' . $SQL->fieldName('id') . ' = ' . $id . ' AND ' . $SQL->fieldName('premium_points') . ' >= ' . $cost);
+  if (!$stmt || $stmt->rowCount() < 1) {
+    return false;
+  }
+  $user_premium_points = (int) $account_logged->getCustomField('premium_points');
+  return true;
+}
+
 function getItemByID($id)
 {
   $id = (int) $id;
@@ -389,30 +407,36 @@ elseif($action == 'confirm_transaction') {
 		$buy_player->find($buy_name);
 		if($buy_player->isLoaded()) {
 		 $buy_player_account = $buy_player->getAccount();
-		 if($_SESSION['viewed_confirmation_page'] == 'yes' && $_POST['buy_confirmed'] == 'yes') {
+		 $self_only = in_array($buy_offer['type'], array('changename', 'redskull', 'itemlogout'), true);
+		 if($self_only && (int) $buy_player_account->getId() !== (int) $account_logged->getId()) {
+		  $main_content .= '<center><b>You can only buy this offer for characters on your own account.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+		 } elseif($_SESSION['viewed_confirmation_page'] == 'yes' && $_POST['buy_confirmed'] == 'yes') {
 		  if($buy_offer['type'] == 'pacc') {
+		   if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+		    $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+		   } else {
 		   $player_premdays = $buy_player_account->getCustomField('premdays');
 		   $player_lastlogin = $buy_player_account->getCustomField('lastday');
 		   $save_transaction = 'INSERT INTO '.$SQL->tableName('z_shop_history_pacc').' (id, to_name, to_account, from_nick, from_account, price, pacc_days, trans_state, trans_start, trans_real) VALUES (NULL, '.$SQL->quote($buy_player->getName()).', '.$SQL->quote($buy_player_account->getId()).', '.$SQL->quote($buy_from).',  '.$SQL->quote($account_logged->getId()).', '.$SQL->quote($buy_offer['points']).', '.$SQL->quote($buy_offer['days']).', \'realized\', '.$SQL->quote(time()).', '.$SQL->quote(time()).');';
 		   $SQL->query($save_transaction);
 		   $buy_player_account->setCustomField('premdays', $player_premdays+$buy_offer['days']);
-		   $account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-		   $user_premium_points = $user_premium_points - $buy_offer['points'];
-		  
 		   $main_content .= '<center><h2>VIP account added!</h2><b>'.$buy_offer['days'].' days</b> of VIP account added to the account of player <b>'.$buy_player->getName().'</b> for <b>'.$buy_offer['points'].' premium points</b> from your account.<br />Now you have <b>'.$user_premium_points.' premium points</b>.<br><br><a href="index.php?subtopic=shopsystem">Go to Shop Site</a><br>';
+		   }
 		   }
 		  elseif($buy_offer['type'] == 'unban') {
 		   $my_acc_id = $account_logged->getCustomField('id');
 		   $datadata = $SQL->query('SELECT * FROM '.$SQL->tableName('bans').' WHERE value = '.$my_acc_id.';')->fetch();
-			if($datadata['value'] == $my_acc_id) {
+			if($datadata && $datadata['value'] == $my_acc_id) {
+			 if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+			  $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+			 } else {
 			 if($SQL->query('DELETE FROM bans WHERE value= '.$my_acc_id.' LIMIT 1;')) {
 			 } else {
 			  $SQL->query('DELETE FROM bans WHERE account= '.$my_acc_id.' LIMIT 1;');
 			 }
-			 $account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-			 $user_premium_points = $user_premium_points - $buy_offer['points'];
 			 $main_content .= '<center><h2>Ban Deleted!</h2><b>Your account has been unbanned for '.$buy_offer['points'].' premium points</b> from your account.
 			  <br>Now you have <b>'.$user_premium_points.' premium points</b>.<br><br><a href="index.php?subtopic=shopsystem">Go to Shop Site</a><br>';
+			 }
 			} else {
 			 $main_content .= '<center><b>You don\'t have any bans in your account!</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
 			}
@@ -424,14 +448,16 @@ elseif($action == 'confirm_transaction') {
 		   $playerslot = $SQL->query('SELECT * FROM '.$SQL->tableName('player_items').' WHERE player_id = '.$my_acc_id.';')->fetch();
 		   if($playerinfo['online'] == '0') {
 			if ($playerslot['pid'] != '10') {
-			 if ($datadata['cap'] >= $SQL->quote($buy_offer['free_cap'])) {
+			 if ((int) $playerinfo['cap'] >= (int) $buy_offer['free_cap']) {
+			  if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+			   $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+			  } else {
 			  $SQL->query('INSERT INTO player_items (player_id, pid, itemtype, count) VALUES ('.$my_acc_id.', '.$SQL->quote($buy_offer['pid']).', '.$SQL->quote($buy_offer['item_id']).', '.$SQL->quote($buy_offer['count1']).');');
-			  $account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-			  $user_premium_points = $user_premium_points - $buy_offer['points'];
 			  $main_content .= '<h2>Item received to player: '.$buy_player->getName().'!</h2><br>Now you have <b>'.$user_premium_points.' premium points</b>.
 			   <br><a href="index.php?subtopic=shopsystem">Go to Shop Site</a>';
+			  }
 			 } else {
-			  $main_content .= '<b>You need '.$SQL->quote($buy_offer['free_cap']).' or more of cap!</b><br><a href="index.php?subtopic=shopsystem">Go back</a>';
+			  $main_content .= '<b>You need '.(int)$buy_offer['free_cap'].' or more of cap!</b><br><a href="index.php?subtopic=shopsystem">Go back</a>';
 			 }
 			} else {
 			 $main_content .= '<b>Please leave the arrow slot in blank to receive item!</b><br><a href="index.php?subtopic=shopsystem">Go back</a>';
@@ -447,11 +473,13 @@ elseif($action == 'confirm_transaction') {
 		   $checkname = $SQL->query('SELECT * FROM '.$SQL->tableName('players').' WHERE '.$SQL->fieldName('name').' = '. $SQL->quote($buy_from) .';')->fetch();
 			if($playerinfo['online'] == '0') {
 			if($checkname == false) {
+			 if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+			  $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+			 } else {
 			 $SQL->query('UPDATE `players` SET `name` = '. $SQL->quote($buy_from) .' WHERE `id` = '. $my_acc_id.' ;');
-			 $account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-			 $user_premium_points = $user_premium_points - $buy_offer['points'];
 			 $main_content .= '<center><h2>Your name has been changed to '.$buy_from.'.</h2><br><b>You have '.$user_premium_points.' premium points left</b>.
 			  <br><br><a href="index.php?subtopic=shopsystem">Go to Shop Site</a><br>';
+			 }
 			} else {
 			 $main_content .= '<center><h2>Sorry, the name "<i>'.$buy_from.'</i>" does already exist.<br>Please select another name.</h2><br>';
 			}
@@ -464,54 +492,63 @@ elseif($action == 'confirm_transaction') {
 		   $my_acc_id = $buy_player->getCustomField('id');
 		   $playerinfo = $SQL->query('SELECT * FROM '.$SQL->tableName('players').' WHERE '.$SQL->fieldName('id').' = '.$my_acc_id.';')->fetch();
 		   if($playerinfo['skull'] == '4' AND $playerinfo['online'] >= '0' AND $playerinfo['skulltime'] > '0') {
+			if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+			 $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+			} else {
 			$SQL->query('UPDATE killers SET unjustified=0 WHERE id IN (SELECT kill_id FROM player_killers WHERE player_id='. $my_acc_id .');');
 			$SQL->query('UPDATE players SET skulltime=0, skull=0 WHERE id='. $my_acc_id .';');
-			$account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-			$user_premium_points = $user_premium_points - $buy_offer['points'];
 			$main_content .= '<center><h2>RedSkull Removed!</h2><br><b>Your redskull has been removed from the player '.$buy_player->getName().'.</b>
 			 <br>Now you have<b> '.$user_premium_points.' premium points</b>.<br><br><a href="index.php?subtopic=shopsystem">Go to Shop Site</a><br>';
+			}
 		   } else {
 			$main_content .= '<center><b>'.$buy_player->getName().' has to be offline or have redskull to complete transaction!.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
 		   }
 		  }
 		  //////////////////////////
 		  elseif($buy_offer['type'] == 'item') {
+		   if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+		    $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+		   } else {
 		   $sql = 'INSERT INTO '.$SQL->tableName('z_ots_comunication').' (id, name, type, action, param1, param2, param3, param4, param5, param6, param7, delete_it) VALUES (NULL, '.$SQL->quote($buy_player->getName()).', \'login\', \'give_item\', '.$SQL->quote($buy_offer['item_id']).', '.$SQL->quote($buy_offer['item_count']).', \'\', \'\', \'item\', '.$SQL->quote($buy_offer['name']).', \'\', \'1\');';
 		   $SQL->query($sql);
 		   $save_transaction = 'INSERT INTO '.$SQL->tableName('z_shop_history_item').' (id, to_name, to_account, from_nick, from_account, price, offer_id, trans_state, trans_start, trans_real) VALUES ('.$SQL->lastInsertId().', '.$SQL->quote($buy_player->getName()).', '.$SQL->quote($buy_player_account->getId()).', '.$SQL->quote($buy_from).',  '.$SQL->quote($account_logged->getId()).', '.$SQL->quote($buy_offer['points']).', '.$SQL->quote($buy_offer['name']).', \'wait\', '.$SQL->quote(time()).', \'0\');';
 		   $SQL->query($save_transaction);
-		   $account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-		   $user_premium_points = $user_premium_points - $buy_offer['points'];
 		   $main_content .= '<center><h2>Item added!</h2><b>'.$buy_offer['name'].'</b> added to player <b>'.$buy_player->getName().'</b> for <b>'.$buy_offer['points'].' premium points</b> from your account.<br>Now you have <b>'.$user_premium_points.' premium points</b>.<br><br><a href="index.php?subtopic=shopsystem">GO TO MAIN SHOP SITE</a><br>';
+		   }
 		  }
 																				if($buy_offer['type'] == 'vipdays') {
+		   if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+		    $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+		   } else {
 																					  $player_premdays = $buy_player_account->getCustomField('premdays');
 		   $player_lastlogin = $buy_player_account->getCustomField('lastday');
 		   $save_transaction = 'INSERT INTO '.$SQL->tableName('z_shop_history_pacc').' (id, to_name, to_account, from_nick, from_account, price, pacc_days, trans_state, trans_start, trans_real) VALUES (NULL, '.$SQL->quote($buy_player->getName()).', '.$SQL->quote($buy_player_account->getId()).', '.$SQL->quote($buy_from).',  '.$SQL->quote($account_logged->getId()).', '.$SQL->quote($buy_offer['points']).', '.$SQL->quote($buy_offer['days']).', \'realized\', '.$SQL->quote(time()).', '.$SQL->quote(time()).');';
 		   $SQL->query($save_transaction);
 		   $buy_player_account->setCustomField('premdays', $player_premdays+$buy_offer['days']);
-		   $account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-		   $user_premium_points = $user_premium_points - $buy_offer['points'];
-		  
 		   $main_content .= '<center><h2>VIP account added!</h2><b>'.$buy_offer['days'].' days</b> of VIP account added to the account of player <b>'.$buy_player->getName().'</b> for <b>'.$buy_offer['points'].' premium points</b> from your account.<br />Now you have <b>'.$user_premium_points.' premium points</b>.<br><br><a href="index.php?subtopic=shopsystem">Go to Shop Site</a><br>';
 		   }
+		   }
 		  elseif($buy_offer['type'] == 'itemvip') {
+		   if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+		    $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+		   } else {
 		   $sql = 'INSERT INTO '.$SQL->tableName('z_ots_comunication').' (id, name, type, action, param1, param2, param3, param4, param5, param6, param7, delete_it) VALUES (NULL, '.$SQL->quote($buy_player->getName()).', \'login\', \'give_item\', '.$SQL->quote($buy_offer['item_id']).', '.$SQL->quote($buy_offer['megaitems_count']).', \'\', \'\', \'megaitems\', '.$SQL->quote($buy_offer['name']).', \'\', \'1\');';
 		   $SQL->query($sql);
 		   $save_transaction = 'INSERT INTO '.$SQL->tableName('z_shop_history_item').' (id, to_name, to_account, from_nick, from_account, price, offer_id, trans_state, trans_start, trans_real) VALUES ('.$SQL->lastInsertId().', '.$SQL->quote($buy_player->getName()).', '.$SQL->quote($buy_player_account->getId()).', '.$SQL->quote($buy_from).',  '.$SQL->quote($account_logged->getId()).', '.$SQL->quote($buy_offer['points']).', '.$SQL->quote($buy_offer['name']).', \'wait\', '.$SQL->quote(time()).', \'0\');';
 		   $SQL->query($save_transaction);
-		   $account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-		   $user_premium_points = $user_premium_points - $buy_offer['points'];
 		   $main_content .= '<center><h2>Item added!</h2><b>'.$buy_offer['name'].'</b> added to player <b>'.$buy_player->getName().'</b> for <b>'.$buy_offer['points'].' premium points</b> from your account.<br>Now you have <b>'.$user_premium_points.' premium points</b>.<br><br><a href="index.php?subtopic=shopsystem">GO TO MAIN SHOP SITE</a><br>';
+		   }
 		  }
 		  elseif($buy_offer['type'] == 'container') {
+		   if (!shop_try_debit_premium_points($account_logged, $user_premium_points, $buy_offer['points'])) {
+		    $main_content .= '<center><b>Not enough premium points.</b><br><br><a href="index.php?subtopic=shopsystem">Go back</a><br>';
+		   } else {
 		   $sql = 'INSERT INTO '.$SQL->tableName('z_ots_comunication').' (id, name, type, action, param1, param2, param3, param4, param5, param6, param7, delete_it) VALUES (NULL, '.$SQL->quote($buy_player->getName()).', \'login\', \'give_item\', '.$SQL->quote($buy_offer['item_id']).', '.$SQL->quote($buy_offer['item_count']).', '.$SQL->quote($buy_offer['container_id']).', '.$SQL->quote($buy_offer['container_count']).', \'container\', '.$SQL->quote($buy_offer['name']).', \'\', \'1\');';
 		   $SQL->query($sql);
 		   $save_transaction = 'INSERT INTO '.$SQL->tableName('z_shop_history_item').' (id, to_name, to_account, from_nick, from_account, price, offer_id, trans_state, trans_start, trans_real) VALUES ('.$SQL->lastInsertId().', '.$SQL->quote($buy_player->getName()).', '.$SQL->quote($buy_player_account->getId()).', '.$SQL->quote($buy_from).',  '.$SQL->quote($account_logged->getId()).', '.$SQL->quote($buy_offer['points']).', '.$SQL->quote($buy_offer['name']).', \'wait\', '.$SQL->quote(time()).', \'0\');';
 		   $SQL->query($save_transaction);
-		   $account_logged->setCustomField('premium_points', $user_premium_points-$buy_offer['points']);
-		   $user_premium_points = $user_premium_points - $buy_offer['points'];
 		   $main_content .= '<center><h2>Container of items added!</h2><b>'.$buy_offer['name'].'</b> added to player <b>'.$buy_player->getName().'</b> for <b>'.$buy_offer['points'].' premium points</b> from your account.<br />Now you have <b>'.$user_premium_points.' premium points</b>.<br><br><a href="index.php?subtopic=shopsystem">GO TO MAIN SHOP SITE</a><br>';
+		   }
 		  }
 		 } else {
 		  if($buy_offer['type'] != 'changename') {
