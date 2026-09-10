@@ -46,7 +46,7 @@ Default admin accounts from the imported DB:
 | Account | Password | Notes |
 |---------|----------|--------|
 | **1** | **1** | Gesior `page_access` admin; sample vocation templates |
-| **god** | **godadmin** | Backup-derived ADM; character **Energy** (group ADM) plus Test / Smartbox Test |
+| **god** | **godadmin** | Backup-derived ADM; character **[ADM] Energy** (group ADM) plus Test / Smartbox Test |
 
 Stop / tear down:
 
