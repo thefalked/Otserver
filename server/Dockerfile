@@ -8,6 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	ca-certificates \
+	gettext-base \
 	libboost-thread1.90.0 \
 	libboost-regex1.90.0 \
 	libboost-filesystem1.90.0 \
@@ -22,6 +23,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /ot
 COPY theforgottenserver /usr/local/bin/theforgottenserver
+COPY docker/render-config.sh docker/entrypoint-otserver.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/render-config.sh /usr/local/bin/entrypoint-otserver.sh
 
 EXPOSE 7171 7172
+ENTRYPOINT ["entrypoint-otserver.sh"]
 CMD ["theforgottenserver"]
