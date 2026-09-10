@@ -1,6 +1,7 @@
 # Runtime / local
 .env
 website/config/config.local.php
+website/config/serverstatus
 website/cache/*.tmp
 server/data/logs/**/*.log
 # Generated from config.lua.template + .env (see docker/render-config.sh)
