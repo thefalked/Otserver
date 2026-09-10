@@ -114,6 +114,14 @@ backup/               reference Baiakzik pack + optional SQL dumps (not used at 
 - Sessions store account id only; login / create-account are rate-limited; CSRF on shop buy, account mutations, and create account.
 - Helpers: `h()`, `csrf_field()`, `rate_limit()` in `website/config-and-functions.php`.
 
+## Shop / premium points
+
+PagSeguro donate is **disabled by design** (`donate.php` early-returns; shop still spends `accounts.premium_points`). To fund the shop for testing or ops:
+
+1. Log in as an AAC admin (`page_access` ≥ `access_admin_panel`, default seed **1** / **1**).
+2. Open **Admin Panel** → **Grant points**.
+3. Enter account name or id and a +/- points amount.
+
 ## Reference pack
 
 Original Windows Baiakzik tree: `backup/reference/[8.60] Baiakzik Vip9`  
