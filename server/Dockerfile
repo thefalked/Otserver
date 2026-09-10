@@ -1,5 +1,6 @@
-# Runtime-only image: uses prebuilt binary from this directory.
+# Runtime-only image: uses prebuilt binary from server/.
 # Rebuild the binary with: ./server/compile.sh
+# Build from repo root: docker compose build otserver
 
 FROM ubuntu:26.04
 
@@ -22,10 +23,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /ot
-COPY theforgottenserver /usr/local/bin/theforgottenserver
+COPY server/theforgottenserver /usr/local/bin/theforgottenserver
 COPY docker/render-config.sh docker/entrypoint-otserver.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/render-config.sh /usr/local/bin/entrypoint-otserver.sh
+RUN chmod +x /usr/local/bin/render-config.sh /usr/local/bin/entrypoint-otserver.sh \
+	&& ln -sf entrypoint-otserver.sh /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 7171 7172
 ENTRYPOINT ["entrypoint-otserver.sh"]
-CMD ["theforgottenserver"]

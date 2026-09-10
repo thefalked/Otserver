@@ -44,9 +44,14 @@ docker compose up --build -d otserver
 
 ## Config
 
-- `server/config.lua` — Vip9 config with Docker MySQL (`sqlHost=mysql`, user/pass `ot`/`otserver`)
-- `docker/config.lua` — symlink to `server/config.lua`
-- Website `server_path=/ot/` mounts the same config + data
+Secrets and DB connection come from **`.env`** (see `.env.example`).
+
+- `server/config.lua.template` — Vip9 game settings (tracked; no passwords)
+- At container start, `docker/render-config.sh` writes `/ot/config.lua` via `envsubst`
+- Local (non-Docker) render: `./docker/render-config.sh` → `server/config.lua` (gitignored)
+- Website `server_path=/ot/` uses the rendered file inside the container
+
+Env vars used in the template: `MYSQL_HOST`, `MYSQL_PORT`, `MYSQL_USER`, `MYSQL_PASSWORD`, `MYSQL_DATABASE`, `OT_IP`.
 
 ## Logins from imported DB
 
