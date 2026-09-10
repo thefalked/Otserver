@@ -1,7 +1,10 @@
+# Build from repo root: docker compose build website
+
 FROM php:8.5-apache
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends libpng-dev libjpeg62-turbo-dev libfreetype6-dev \
+ && apt-get install -y --no-install-recommends \
+	libpng-dev libjpeg62-turbo-dev libfreetype6-dev gettext-base \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install pdo pdo_mysql gd \
  && a2enmod rewrite headers \
@@ -17,4 +20,9 @@ RUN printf '%s\n' \
   'session.use_strict_mode = 1' \
   > /usr/local/etc/php/conf.d/aac.ini
 
+COPY docker/render-config.sh /usr/local/bin/render-config.sh
+COPY website/docker-entrypoint.sh /usr/local/bin/website-entrypoint.sh
+RUN chmod +x /usr/local/bin/render-config.sh /usr/local/bin/website-entrypoint.sh
+
 WORKDIR /var/www/html
+ENTRYPOINT ["website-entrypoint.sh"]

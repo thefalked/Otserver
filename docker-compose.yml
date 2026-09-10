@@ -35,18 +35,28 @@ services:
 
   # Uses prebuilt server/theforgottenserver (no compile on up).
   # Rebuild binary only when sources change: ./server/compile.sh
+  # config.lua is rendered at start from server/config.lua.template + .env
   otserver:
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: server/Dockerfile
     image: otserver:0.4-ubuntu2604
     restart: unless-stopped
     depends_on:
       mysql:
         condition: service_healthy
     working_dir: /ot
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_USER: ${MYSQL_USER:-ot}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-otserver}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-ot}
+      OT_IP: ${OT_IP:-127.0.0.1}
+      CONFIG_TEMPLATE: /ot/config.lua.template
+      CONFIG_OUT: /ot/config.lua
     volumes:
-      - ./server/config.lua:/ot/config.lua:ro
+      - ./server/config.lua.template:/ot/config.lua.template:ro
       - ./server/data:/ot/data
       - ./server/mods:/ot/mods
       - ot_logs:/ot/logs
@@ -59,16 +69,25 @@ services:
   # GesiorACC — account maker / downloads site
   website:
     build:
-      context: ./website
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: website/Dockerfile
     image: otserver-website:baiak-gesior
     restart: unless-stopped
     depends_on:
       mysql:
         condition: service_healthy
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_USER: ${MYSQL_USER:-ot}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-otserver}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-ot}
+      OT_IP: ${OT_IP:-127.0.0.1}
+      CONFIG_TEMPLATE: /ot/config.lua.template
+      CONFIG_OUT: /ot/config.lua
     volumes:
       - ./website:/var/www/html
-      - ./server/config.lua:/ot/config.lua:ro
+      - ./server/config.lua.template:/ot/config.lua.template:ro
       - ./server/data:/ot/data:ro
     ports:
       - "${WEBSITE_PORT:-8080}:80"

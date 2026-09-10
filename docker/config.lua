@@ -1,1 +1,1 @@
-../server/config.lua
+../server/config.lua.template

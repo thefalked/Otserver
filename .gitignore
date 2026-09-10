@@ -3,6 +3,8 @@
 website/config/config.local.php
 website/cache/*.tmp
 server/data/logs/**/*.log
+# Generated from config.lua.template + .env (see docker/render-config.sh)
+server/config.lua
 *.log
 
 # Accidental local builds under src/
