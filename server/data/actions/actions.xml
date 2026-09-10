@@ -17,7 +17,7 @@
 	<action itemid="2553" script="tools/pick.lua"/>
 	<action itemid="5942" script="tools/blessed_wooden_stake.lua"/>
 	<action itemid="5908" script="tools/obsidian_knife.lua"/>
-	<action actionid="12349" event="script" value="WarArenaLever.lua"/>
+	<action actionid="12349" event="script" value="war_arena_lever.lua"/>
 
 	<!-- Mount System -->
     <action itemid="5810" event="script" value="mount.lua"/>
@@ -84,16 +84,16 @@
 	<action itemid="7159" script="other/food.lua"/>
 	<action itemid="8840" script="other/food.lua"/>
 	<action fromid="7372" toid="7377" script="other/food.lua"/>
-	<action uniqueid="9057" script="quest vips/New baiak armor.lua"/>
-	<action uniqueid="9053" script="quest vips/New Baiak axe.lua"/>
-	<action uniqueid="9056" script="quest vips/New Baiak helmet.lua"/>
-	<action uniqueid="9058" script="quest vips/New baiak legs.lua"/>
-	<action uniqueid="9054" script="quest vips/New baiak mace.lua"/>
-	<action uniqueid="9055" script="quest vips/New baiak shield.lua"/>
-	<action uniqueid="9051" script="quest vips/New baiak spear.lua"/>
-	<action uniqueid="9050" script="quest vips/New Baiak Staff.lua"/>
-	<action uniqueid="9052" script="quest vips/new baiak sword.lua"/>
-	<action uniqueid="9059" script="quest vips/vip nove stone.lua"/>
+	<action uniqueid="9057" script="quest_vips/new_baiak_armor.lua"/>
+	<action uniqueid="9053" script="quest_vips/new_baiak_axe.lua"/>
+	<action uniqueid="9056" script="quest_vips/new_baiak_helmet.lua"/>
+	<action uniqueid="9058" script="quest_vips/new_baiak_legs.lua"/>
+	<action uniqueid="9054" script="quest_vips/new_baiak_mace.lua"/>
+	<action uniqueid="9055" script="quest_vips/new_baiak_shield.lua"/>
+	<action uniqueid="9051" script="quest_vips/new_baiak_spear.lua"/>
+	<action uniqueid="9050" script="quest_vips/new_baiak_staff.lua"/>
+	<action uniqueid="9052" script="quest_vips/new_baiak_sword.lua"/>
+	<action uniqueid="9059" script="quest_vips/vip_nove_stone.lua"/>
 
 
 	<!-- Increase/Decrease ItemId -->
@@ -216,7 +216,7 @@
 	<action fromid="8541" toid="8558" script="other/doors.lua"/>
 	<action fromid="9165" toid="9184" script="other/doors.lua"/>
 	<action fromid="9267" toid="9186" script="other/doors.lua"/>
-	<action itemid="8982" script="other/Vip7.lua"/>
+	<action itemid="8982" script="other/vip7.lua"/>
 	<action itemid="8985" script="other/vip8.lua"/>	
 	<action itemid="5809" script="other/vip9.lua"/>
 	<action itemid="5791" script="other/stuffeddragon.lua"/>
@@ -247,7 +247,7 @@
 	<action itemid="1871" script="tapestries.lua"  />
 	<action itemid="1879" script="tapestries.lua"  />
 	<action itemid="5615" script="tapestries.lua"  />
-	<action uniqueid="9090" script="Axe.lua" />
+	<action uniqueid="9090" script="axe.lua" />
 	<action uniqueid="9010" script="fogo.lua" />
 	<action uniqueid="9011" script="gelo.lua" />
 	<action uniqueid="9012" script="terra.lua" />
@@ -387,27 +387,27 @@
 <action uniqueid="5955" script="quests/poichest.lua"/>
 <action uniqueid="5954" script="quests/poichest.lua"/>
 <action uniqueid="5953" script="quests/poichest.lua"/>
-<action uniqueid="10000" script="quests/Avenger.lua"/>
-<action uniqueid="10001" script="quests/Arcane Staff.lua"/>
-<action uniqueid="10002" script="quests/Arbalest.lua"/>
-<action uniqueid="10003" script="quests/Backpack of Holding.lua"/>
-<action uniqueid="10004" script="quests/Money.lua"/>
-<action uniqueid="10005" script="quests/Soft Boots.lua"/>
-<action uniqueid="10006" script="quests/Stuffed Dragon.lua"/>
-<action uniqueid="10007" script="quests/Teddy Bear.lua"/>
-<action uniqueid="10008" script="quests/Golden Helmet.lua"/>
-<action uniqueid="10009" script="quests/Emerald Sword.lua"/>
-<action uniqueid="10010" script="quests/spellbook of dark mysteries.lua"/>
-<action uniqueid="10011" script="quests/master archer's armor.lua"/>
-<action uniqueid="10012" script="quests/robe of the underworld.lua"/>
-<action uniqueid="10013" script="quests/fireborn giant armor.lua"/>
-<action uniqueid="10014" script="quests/obsidian truncher.lua"/>
-<action uniqueid="10015" script="quests/royal crossbow.lua"/>
-<action uniqueid="10016" script="quests/warsinger bow.lua"/>
-<action uniqueid="10017" script="quests/hellforged axe.lua"/>
-<action uniqueid="10018" script="quests/Baiak Helmet.lua"/>
-<action uniqueid="10019" script="quests/Baiak of Boots.lua"/>
-<action uniqueid="10020" script="quests/Baiak Armor.lua"/>
+<action uniqueid="10000" script="quests/avenger.lua"/>
+<action uniqueid="10001" script="quests/arcane_staff.lua"/>
+<action uniqueid="10002" script="quests/arbalest.lua"/>
+<action uniqueid="10003" script="quests/backpack_of_holding.lua"/>
+<action uniqueid="10004" script="quests/money.lua"/>
+<action uniqueid="10005" script="quests/soft_boots.lua"/>
+<action uniqueid="10006" script="quests/stuffed_dragon.lua"/>
+<action uniqueid="10007" script="quests/teddy_bear.lua"/>
+<action uniqueid="10008" script="quests/golden_helmet.lua"/>
+<action uniqueid="10009" script="quests/emerald_sword.lua"/>
+<action uniqueid="10010" script="quests/spellbook_of_dark_mysteries.lua"/>
+<action uniqueid="10011" script="quests/master_archers_armor.lua"/>
+<action uniqueid="10012" script="quests/robe_of_the_underworld.lua"/>
+<action uniqueid="10013" script="quests/fireborn_giant_armor.lua"/>
+<action uniqueid="10014" script="quests/obsidian_truncher.lua"/>
+<action uniqueid="10015" script="quests/royal_crossbow.lua"/>
+<action uniqueid="10016" script="quests/warsinger_bow.lua"/>
+<action uniqueid="10017" script="quests/hellforged_axe.lua"/>
+<action uniqueid="10018" script="quests/baiak_helmet.lua"/>
+<action uniqueid="10019" script="quests/baiak_of_boots.lua"/>
+<action uniqueid="10020" script="quests/baiak_armor.lua"/>
 <action uniqueid="7000" script="quests/anihi.lua" />
 <action uniqueid="5952" script="quests/begin_chest.lua"/>
 <action uniqueid="5951" script="quests/begin_chest.lua"/>
@@ -416,12 +416,12 @@
 <action uniqueid="5948" script="quests/begin_chest.lua"/>
 <action uniqueid="5947" script="quests/begin_chest.lua"/>
 <action uniqueid="5946" script="quests/begin_chest.lua"/>
-<action uniqueid="5990" script="quests/grin armor.lua"/>
+<action uniqueid="5990" script="quests/grin_armor.lua"/>
 <action uniqueid="5901" script="quests/robe.lua"/>
 <action uniqueid="5910" script="quests/ele.lua"/>
-<action uniqueid="5991" script="quests/grim quest.lua"/>
-<action uniqueid="5992" script="quests/frost quest.lua"/>
-<action uniqueid="5433" script="quests/frost cap.lua"/>
+<action uniqueid="5991" script="quests/grim_quest.lua"/>
+<action uniqueid="5992" script="quests/frost_quest.lua"/>
+<action uniqueid="5433" script="quests/frost_cap.lua"/>
 <action uniqueid="15873" script="quests/blessed.lua"/>
 <action uniqueid="5970" script="quests/dez.lua"/>
 <action itemid="10022" script="other/firewalker.lua"/>
@@ -448,15 +448,15 @@
 <action uniqueid="6010" script="quests/warlord.lua" />
 <action uniqueid="6011" script="quests/warlord.lua" />
 <action uniqueid="6012" script="quests/warlord.lua" />
-<action uniqueid="9966" script="quests/quest level.lua" />
+<action uniqueid="9966" script="quests/quest_level.lua" />
 
 <!-- demon oak -->
-<action itemid="8293" script="tools/hallowed axe.lua"/>
-<action uniqueid="12901" script="quests/DOQChests.lua" />
-<action uniqueid="12902" script="quests/DOQChests.lua" />
-<action uniqueid="12903" script="quests/DOQChests.lua" />
-<action uniqueid="12904" script="quests/DOQChests.lua" />
-<action uniqueid="5908" script="quests/DOQgravestone.lua"/>
+<action itemid="8293" script="tools/hallowed_axe.lua"/>
+<action uniqueid="12901" script="quests/doq_chests.lua" />
+<action uniqueid="12902" script="quests/doq_chests.lua" />
+<action uniqueid="12903" script="quests/doq_chests.lua" />
+<action uniqueid="12904" script="quests/doq_chests.lua" />
+<action uniqueid="5908" script="quests/doq_gravestone.lua"/>
 <action uniqueid="3561" script="quests/estatua.lua" />
 
 <!-- POI -->
@@ -545,7 +545,7 @@
 <action actionid="6567" event="script" value="casino.lua"/>
 <action actionid="6568" event="script" value="casssino.lua"/>
 <action actionid="35400" event="script" value="vipname.lua"/>
-<action uniqueid="55100" event="script" value="demonOakGravestone.lua" />
+<action uniqueid="55100" event="script" value="demon_oak_gravestone.lua" />
 <action itemid="8306" script="other/upgrade.lua"/>
 <action itemid="1967" script="scroll.lua"/>
 <action itemid="5080" script="tp2.lua" />

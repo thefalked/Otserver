@@ -8,9 +8,9 @@
 	<movevent type="StepIn" itemid="4828-4831" event="script" value="swimming.lua"/>
 	<movevent type="StepIn" itemid="7943-7954" event="script" value="swimming.lua"/>
                <movevent type="StepIn" actionid="5555" event="script" value="onenter.lua"/>
-               <movevent type="StepOut" actionid="12350" event="script" value="WarArenaMovement1.lua"/>
-               <movevent type="StepIn" actionid="12351" event="script" value="WarArenaMovement2.lua"/>
-               <movevent type="StepIn" actionid="12352" event="script" value="WarArenaMovement3.lua"/>
+               <movevent type="StepOut" actionid="12350" event="script" value="war_arena_movement1.lua"/>
+               <movevent type="StepIn" actionid="12351" event="script" value="war_arena_movement2.lua"/>
+               <movevent type="StepIn" actionid="12352" event="script" value="war_arena_movement3.lua"/>
                <movevent type="StepIn" actionid="2020" event="script" value="changetile.lua"/>
                <movevent type="StepIn" actionid="2021" event="script" value="changetilee.lua"/>
 
@@ -809,8 +809,8 @@
         <movevent type="StepIn" uniqueid="13700" event="script" value="vipe.lua"/>
         <movevent type="StepIn" uniqueid="13540" event="script" value="vip.lua"/>
         <movevent type="StepIn" uniqueid="15967" event="script" value="masvip.lua"/>
-        <movevent type="StepIn" uniqueid="13000" event="script" value="Red.lua"/>
-        <movevent type="StepIn" uniqueid="13001" event="script" value="Green.lua"/>
+        <movevent type="StepIn" uniqueid="13000" event="script" value="red.lua"/>
+        <movevent type="StepIn" uniqueid="13001" event="script" value="green.lua"/>
         <movevent type="StepIn" uniqueid="13539" event="script" value="vip2.lua"/>
         <movevent type="StepIn" uniqueid="13550" event="script" value="level.lua"/>
         <movevent type="StepIn" uniqueid="5721" event="script" value="vip3.lua"/>

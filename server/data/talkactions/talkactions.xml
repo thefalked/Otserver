@@ -78,7 +78,7 @@
 	<talkaction words="!serverinfo" event="script" value="serverinfo.lua"/>
 	<talkaction words="/commands" event="script" value="commands.lua"/>
 	<talkaction words="!addon" event="script" value="addondoll.lua"/>
-	<talkaction words="!reparar;/reparar" script="Repair.lua"/>
+	<talkaction words="!reparar;/reparar" script="repair.lua"/>
   	<talkaction words="!vipdays;!buyvip;/checkvip;/;/delvip" script="systemvip.lua"/>
 	<talkaction words="!party" event="script" value="party.lua"/>
 	<talkaction words="!changeoutfit" script="guild.lua"/>
@@ -114,10 +114,10 @@
 	
 	<!-- Custom systems -->
 	<talkaction words="!notice" event="script" value="notice.lua"/>
-	<talkaction words="!jail" script="Cadeia.lua"/>
-	<talkaction words="!unjail" script="Cadeia.lua"/>
-	<talkaction words="/jail" script="Cadeia.lua"/>
-	<talkaction words="/unjail" script="Cadeia.lua"/>
+	<talkaction words="!jail" script="cadeia.lua"/>
+	<talkaction words="!unjail" script="cadeia.lua"/>
+	<talkaction words="/jail" script="cadeia.lua"/>
+	<talkaction words="/unjail" script="cadeia.lua"/>
 	<talkaction words="!necromancer" script="demonic.lua"/>
 	<talkaction words="!nightmare" script="love.lua"/> 
     <talkaction filter="word" words="/guild" script="guildcast.lua"/>
@@ -125,14 +125,14 @@
 	<talkaction words="!treinando" event="script" value="treinando.lua"/>
 
 	<!-- pollsystem talkactions -->
-	<talkaction words="!createpoll" event="script" value="PollSystem.lua"/>
-	<talkaction words="!activatepoll" event="script" value="PollSystem.lua"/>
-	<talkaction words="!cancelpoll" event="script" value="PollSystem.lua"/>
-	<talkaction words="!seepoll" event="script" value="PollSystem.lua"/>
-	<talkaction words="!seeresults" event="script" value="PollSystem.lua"/>
-	<talkaction words="!remvotes" event="script" value="PollSystem.lua"/>
-	<talkaction words="!rempoll" event="script" value="PollSystem.lua"/>
-	<talkaction words="!votepoll" event="script" value="PollSystem.lua"/>
+	<talkaction words="!createpoll" event="script" value="poll_system.lua"/>
+	<talkaction words="!activatepoll" event="script" value="poll_system.lua"/>
+	<talkaction words="!cancelpoll" event="script" value="poll_system.lua"/>
+	<talkaction words="!seepoll" event="script" value="poll_system.lua"/>
+	<talkaction words="!seeresults" event="script" value="poll_system.lua"/>
+	<talkaction words="!remvotes" event="script" value="poll_system.lua"/>
+	<talkaction words="!rempoll" event="script" value="poll_system.lua"/>
+	<talkaction words="!votepoll" event="script" value="poll_system.lua"/>
 	<talkaction words="love" script="love.lua"/>
 	<talkaction words="!attackguild" event="script" value="attackguild.lua"/>
 	<talkaction words="/addvip" script="addvip2.lua"/>

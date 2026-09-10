@@ -135,7 +135,7 @@ checkCorpseOwner = true
 hotkeyAimbotEnabled = true
 maximumDoorLevel = 500
 
-mapName = "Baiak Yurots.otbm"
+mapName = "baiak_yurots.otbm"
 mapAuthor = "[ADM] Energy"
 randomizeTiles = true
 useHouseDataStorage = false

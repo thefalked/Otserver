@@ -9,15 +9,15 @@
    	<event type="death" name="teleportmonster" script="tpmonster.lua"/>
    	<event type="death" name="tpdruid" event="script" value="tpdruid.lua"/>
    	<event type="preparedeath" name="onPrepareDeath" event="script" value="preparedeath.lua"/>
-   	<event type="death" name="DeathTeam1" event="script" value="WarArenaDeathTeam1.lua"/> 
-    <event type="death" name="DeathTeam2" event="script" value="WarArenaDeathTeam2.lua"/> 
+   	<event type="death" name="DeathTeam1" event="script" value="war_arena_death_team1.lua"/> 
+    <event type="death" name="DeathTeam2" event="script" value="war_arena_death_team2.lua"/> 
 	<event type="think" name="Idle" event="script" value="idle.lua"/>
 	<event type="think" name="SkullCheck" event="script" value="skullcheck.lua"/>
 	<event type="death" name="PlayerDeath" event="script" value="playerdeath.lua"/>
 	<event type="login" name="FirstItems" event="script" value="firstitems.lua"/>
 	<event type="PrepareDeath" name="pvparena" script="pvparena.lua"/>
 	<event type="attack" name="attackguild" script="attackguild.lua"/>
-	<event type="death" name="incendio" script="incendioMonster.lua"/>
+	<event type="death" name="incendio" script="incendio_monster.lua"/>
    	<event type="preparedeath" name="onPrepareDeath" event="script" value="preparedeath.lua"/>
 	<event type="advance" name="PlayerAdvance" event="script" value="playeradvance.lua"/>
 	<event type="login" name="MutePlayer" event="script" value="mute_check.lua"/>

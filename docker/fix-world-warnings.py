@@ -7,10 +7,10 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-WORLD = ROOT / "data" / "world"
-HOUSE_XML = WORLD / "Baiak Yurots-house.xml"
-SPAWN_XML = WORLD / "Baiak Yurots-spawn.xml"
-OTBM = WORLD / "Baiak Yurots.otbm"
+WORLD = ROOT / "server" / "data" / "world"
+HOUSE_XML = WORLD / "baiak_yurots-house.xml"
+SPAWN_XML = WORLD / "baiak_yurots-spawn.xml"
+OTBM = WORLD / "baiak_yurots.otbm"
 
 START, END, ESCAPE = 0xFE, 0xFF, 0xFD
 OTBM_ROOTV1 = 1

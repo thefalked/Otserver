@@ -1,4 +1,4 @@
-dofile("./GuildWar.lua")
+dofile("./guild_war.lua")
 
 function onSay(cid, words, param)
         if getPlayerGuildLevel(cid) == GUILDLEVEL_LEADER then
