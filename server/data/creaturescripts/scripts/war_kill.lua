@@ -1,4 +1,4 @@
-dofile("./GuildWar.lua")
+dofile("./guild_war.lua")
 
 local PZ = createConditionObject(CONDITION_INFIGHT)
 setConditionParam(PZ, CONDITION_PARAM_TICKS, getConfigInfo('whiteSkullTime'))
