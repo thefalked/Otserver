@@ -1,5 +1,6 @@
--- Apply on already-initialized MySQL volumes (init scripts only run once):
---   docker exec -i otserver-mysql mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" < docker/mysql/07-lottery.sql
+-- Kept for manual repair / docs. Prefer website container startup:
+--   docker/ensure-schema.php (CREATE TABLE IF NOT EXISTS via website entrypoint)
+-- Fresh MySQL volumes also get this from 03-gesior.sql.
 CREATE TABLE IF NOT EXISTS `lottery` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',

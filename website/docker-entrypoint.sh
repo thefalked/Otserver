@@ -2,6 +2,9 @@
 set -eu
 /usr/local/bin/render-config.sh
 
+# Idempotent DB fixes (initdb scripts do not re-run on existing volumes).
+php /usr/local/bin/ensure-schema.php || true
+
 # Bind-mounted website tree is often root-owned on the host; Apache runs as www-data.
 # Ensure runtime cache files are writable so status/counter updates do not 500.
 WEBROOT="${APACHE_DOCUMENT_ROOT:-/var/www/html}"
