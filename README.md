@@ -41,7 +41,12 @@ Then open the site and connect the client:
 | Login | TCP **7171** |
 | Game | TCP **7172** |
 
-Default admin account from the imported DB: **1** / **1**.
+Default admin accounts from the imported DB:
+
+| Account | Password | Notes |
+|---------|----------|--------|
+| **1** | **1** | Gesior `page_access` admin; sample vocation templates |
+| **god** | **godadmin** | Backup-derived ADM; character **Energy** (group ADM) plus Test / Smartbox Test |
 
 Stop / tear down:
 
@@ -125,6 +130,7 @@ backup/               reference Baiakzik pack + optional SQL dumps (not used at 
 - `install.php`, `signature.php`, and PagSeguro callbacks are disabled.
 - Sessions store account id only; login / create-account are rate-limited; CSRF on shop buy, account mutations, and create account.
 - Helpers: `h()`, `csrf_field()`, `rate_limit()` in `website/config-and-functions.php`.
+- Runtime writes (bind-mount owned by host): `website/docker-entrypoint.sh` chowns/chmods `config/`, `images/head/`, `cache/`, `guilds/`, `bdsave/`, and `usercounter.dat` for `www-data`. After changing the entrypoint, **rebuild** the website image (`docker compose up --build -d website`). Headline PNGs fall back to streaming if the cache dir is still not writable.
 
 ## Shop / premium points
 

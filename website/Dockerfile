@@ -28,7 +28,10 @@ RUN printf '%s\n' 'ServerName baiakvip9.thefalked.dev' \
 COPY docker/render-config.sh /usr/local/bin/render-config.sh
 COPY docker/ensure-schema.php /usr/local/bin/ensure-schema.php
 COPY website/docker-entrypoint.sh /usr/local/bin/website-entrypoint.sh
-RUN chmod +x /usr/local/bin/render-config.sh /usr/local/bin/website-entrypoint.sh
+RUN mkdir -p /usr/local/share/otserver \
+ && chmod +x /usr/local/bin/render-config.sh /usr/local/bin/website-entrypoint.sh
+COPY docker/mysql/07-lottery.sql /usr/local/share/otserver/07-lottery.sql
+COPY docker/mysql/08-god-energy.sql /usr/local/share/otserver/08-god-energy.sql
 
 WORKDIR /var/www/html
 ENTRYPOINT ["website-entrypoint.sh"]
