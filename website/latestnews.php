@@ -278,36 +278,42 @@ showednewnews_state = "0";
 $zapytanie = $SQL->query("SELECT `z_forum`.`icon_id`, `z_forum`.`post_topic`, `z_forum`.`author_guid`, `z_forum`.`post_date`, `z_forum`.`post_text`, `z_forum`.`id`, `z_forum`.`replies`, `players`.`name` FROM `z_forum`, `players` WHERE `section` = '1' AND `z_forum`.`id` = `first_post` AND `players`.`id` = `z_forum`.`author_guid` ORDER BY `post_date` DESC LIMIT 3;")->fetchAll();
 foreach ($zapytanie as $row)
 {
+         $safeText = h($row['post_text']);
          $BB = array(
-		'/\[youtube\](.*?)\[\/youtube\]/is' => '<center><object width="500" height="405"><param name="movie" value="http://www.youtube.com/v/$1&hl=pt-br&fs=1&rel=0&color1=0x3a3a3a&color2=0x999999&border=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/$1&hl=pt-br&fs=1&rel=0&color1=0x3a3a3a&color2=0x999999&border=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="500" height="405"></embed></object></center>',
 		'/\[b\](.*?)\[\/b\]/is' => '<strong>$1</strong>',
 		'/\[center\](.*?)\[\/center\]/is' => '<center>$1</center>',
 		'/\[quote\](.*?)\[\/quote\]/is' => '<table cellpadding="0" style="background-color: #c4c4c4; width: 480px; border-style: dotted; border-color: #007900; border-width: 2px"><tr><td>$1</td></tr></table>',
 		'/\[u\](.*?)\[\/u\]/is' => '<u>$1</u>',
 		'/\[i\](.*?)\[\/i\]/is' => '<i>$1</i>',
-		'/\[letter\](.*?)\[\/letter\]/is' => '<img src=images/letters/$1.gif alt=$1 />',
-		'/\[url](.*?)\[\/url\]/is' => '<a href=$1>$1</a>',
-		'/\[color\=(.*?)\](.*?)\[\/color\]/is' => '<span style="color: $1;">$2</span>',
-		'/\[img\](.*?)\[\/img\]/is' => '<img src=$1 alt=$1 />',
-		'/\[player\](.*?)\[\/player\]/is' => '<a href='.$server['ip'].'?subtopic=characters&amp;name=$1>$1</a>',
+		'/\[letter\]([A-Za-z0-9])\[\/letter\]/is' => '<img src="images/letters/$1.gif" alt="$1" />',
+		'/\[color\=(black|blue|brown|cyan|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|violet|white|yellow)\](.*?)\[\/color\]/is' => '<span style="color: $1;">$2</span>',
+		'/\[player\](.*?)\[\/player\]/is' => '<a href="?subtopic=characters&amp;name=$1">$1</a>',
 		'/\[code\](.*?)\[\/code\]/is' => '<div dir="ltr" style="margin: 0px;padding: 2px;border: 1px inset;width: 500px;height: 290px;text-align: left;overflow: auto"><code style="white-space:nowrap">$1</code></div>'
 		);
-		$message = preg_replace(array_keys($BB), array_values($BB), nl2br($row['post_text']));
+		$message = preg_replace(array_keys($BB), array_values($BB), nl2br($safeText));
+		$message = preg_replace_callback('/\[url\](.*?)\[\/url\]/is', function ($m) {
+			$u = safe_http_url(html_entity_decode($m[1], ENT_QUOTES, 'UTF-8'));
+			return $u === '' ? h($m[1]) : '<a href="'.h($u).'" rel="noopener noreferrer">'.h($m[1]).'</a>';
+		}, $message);
+		$message = preg_replace_callback('/\[img\](.*?)\[\/img\]/is', function ($m) {
+			$u = safe_http_url(html_entity_decode($m[1], ENT_QUOTES, 'UTF-8'));
+			return ($u === '' || !preg_match('#\.(jpe?g|gif|png)(\?.*)?$#i', $u)) ? '' : '<img src="'.h($u).'" alt="">';
+		}, $message);
         $main_content .= '<div class=\'NewsHeadline\'>
 		<div class=\'NewsHeadlineBackground\' style=\'background-image:url('.$layout_name.'/images/content/title-background-green.gif)\'>
 		<table border=0><tr><td><img src="'.$layout_name.'/images/news/icon_'.$row['icon_id'].'.gif" class=\'NewsHeadlineIcon\' alt=\'\' />
-		</td><td><font color="'.$layout_ini['news_title_color'].'">'.date('d.m.y H:i:s', $row['post_date']).' - <b>'.$row['post_topic'].'</b></font></td></tr></table>
+		</td><td><font color="'.$layout_ini['news_title_color'].'">'.date('d.m.y H:i:s', $row['post_date']).' - <b>'.h($row['post_topic']).'</b></font></td></tr></table>
 		</div>
 		</div>
 		<table style=\'clear:both\' border=0 cellpadding=0 cellspacing=0 width=\'100%\'><tr>
 		<td><img src="'.$layout_name.'/images/global/general/blank.gif" width=10 height=1 border=0 alt=\'\' /></td>';
 		if($group_id_of_acc_logged >= $config['site']['access_admin_panel'])
 		{
-			$main_content .='<td width="100%">'.$message.'<br><h6><i>Posted by </i><font color="green">'.$row['name'].'</font></h6><p align="right"><a href="?subtopic=forum&action=remove_post&id='.$row['id'].'"><font color="red">[Delete this news]</font></a>  <a href="?subtopic=forum&action=edit_post&id='.$row['id'].'"><font color="green">[Edit this news]</font></a>      <a href="?subtopic=forum&action=show_thread&id='.$row['id'].'">Comments: '.$row['replies'].'</a></p>';
+			$main_content .='<td width="100%">'.$message.'<br><h6><i>Posted by </i><font color="green">'.h($row['name']).'</font></h6><p align="right"><a href="?subtopic=forum&action=remove_post&id='.$row['id'].'&'.csrf_query().'"><font color="red">[Delete this news]</font></a>  <a href="?subtopic=forum&action=edit_post&id='.$row['id'].'"><font color="green">[Edit this news]</font></a>      <a href="?subtopic=forum&action=show_thread&id='.$row['id'].'">Comments: '.$row['replies'].'</a></p>';
 		}
 		else		
 		{
-			$main_content .='<td width="100%">'.$message.'<br><h6><i>Posted by </i><font color="green">'.$row['name'].'</font></h6><p align="right"><a href="?subtopic=forum&action=show_thread&id='.$row['id'].'">Comments: '.$row['replies'].'</a></p>';		
+			$main_content .='<td width="100%">'.$message.'<br><h6><i>Posted by </i><font color="green">'.h($row['name']).'</font></h6><p align="right"><a href="?subtopic=forum&action=show_thread&id='.$row['id'].'">Comments: '.$row['replies'].'</a></p>';		
 		}
 		$main_content .= '</td>
 		<td><img src="'.$layout_name.'/images/global/general/blank.gif" width=10 height=1 border=0 alt=\'\' /></td>

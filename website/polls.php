@@ -46,7 +46,7 @@ if($logged)
         if(is_int($number_of_rows / 2)) { $bgcolor = $dark; } else { $bgcolor = $light; } $number_of_rows++;
         foreach($active as $poll)
         {
-            $main_content .= '<tr BGCOLOR="'.$bgcolor.'"><td><a href="?subtopic='.$link.'&id='.$poll['id'].'">'.$poll['question'].'</a></td><td>'.date("jS F Y", $poll['end']).'</td></tr>';
+            $main_content .= '<tr BGCOLOR="'.$bgcolor.'"><td><a href="?subtopic='.$link.'&id='.$poll['id'].'">'.h($poll['question']).'</a></td><td>'.date("jS F Y", $poll['end']).'</td></tr>';
             $empty_active = true;
         }
         
@@ -63,7 +63,7 @@ if($logged)
         if(is_int($number_of_rows / 2)) { $bgcolor = $dark; } else { $bgcolor = $light; } $number_of_rows++;
         foreach($closed as $poll)
         {
-            $main_content .= '<tr BGCOLOR="'.$bgcolor.'"><td><a href="?subtopic='.$link.'&id='.$poll['id'].'">'.$poll['question'].'</a></td><td>'.date("jS F Y", $poll['end']).'</td></tr>';
+            $main_content .= '<tr BGCOLOR="'.$bgcolor.'"><td><a href="?subtopic='.$link.'&id='.$poll['id'].'">'.h($poll['question']).'</a></td><td>'.date("jS F Y", $poll['end']).'</td></tr>';
             $empty_closed = true;
         }
         
@@ -112,10 +112,11 @@ if($logged)
                         {
                             if(isset($_POST['continue']))
                             {
-                                $vote = addslashes(htmlspecialchars(trim($_REQUEST['id'])));
+                                csrf_require();
+                                $vote = (int)$_REQUEST['id'];
                                 $account_logged->setCustomField("vote", $vote);
-                                $UPDATE_poll = $SQL->query('UPDATE `z_polls` SET `votes_all` = `votes_all` + 1 where `id` = '.addslashes(htmlspecialchars(trim($_REQUEST['id']))).'');
-                                $UPDATE_answer = $SQL->query('UPDATE `z_polls_answers` SET `votes` = `votes` + 1 where `answer_id` = '.addslashes(htmlspecialchars(trim($_POST['answer']))).' and`poll_id` = '.addslashes(htmlspecialchars(trim($_REQUEST['id']))).'');
+                                $UPDATE_poll = $SQL->query('UPDATE `z_polls` SET `votes_all` = `votes_all` + 1 where `id` = '.$vote);
+                                $UPDATE_answer = $SQL->query('UPDATE `z_polls_answers` SET `votes` = `votes` + 1 where `answer_id` = '.(int)$_POST['answer'].' and `poll_id` = '.$vote);
                                 header('Location: index.php?subtopic='.$link.'&id='.$_REQUEST['id'].'');
                             }
                         }
@@ -128,8 +129,8 @@ if($logged)
                     if($account_logged->getCustomField('vote') < $_REQUEST['id'] and $allow == true)
                     {
                         $main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=2 CLASS=white><B>Vote</B></TD></TR>';
-                        $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=2><b>'.$POLL['question'].'</b></td></tr>
-                        <form action="index.php?subtopic='.$link.'&id='.$_REQUEST['id'].'&vote=true" method="POST"> ';
+                        $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=2><b>'.h($POLL['question']).'</b></td></tr>
+                        <form action="index.php?subtopic='.$link.'&id='.$_REQUEST['id'].'&vote=true" method="POST">' . csrf_field() . ' ';
                         $ANSWERS_input = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$_REQUEST['id'].' order by `answer_id`');
                         $i=1;
                         foreach($ANSWERS_input as $answer)
@@ -154,7 +155,7 @@ if($logged)
                     $result[] = '<br>All players with a character of at least level '.$level.' may vote.<br>';
 
                     $main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=3 CLASS=white><B>Results</B></TD></TR>';
-                    $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=3><b>'.$POLL['question'].'</b></td></tr>';
+                    $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=3><b>'.h($POLL['question']).'</b></td></tr>';
                     $ANSWERS_show = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$_REQUEST['id'].' order by `answer_id`');
                     $i=1;
                     foreach($ANSWERS_show as $answer)
@@ -185,7 +186,7 @@ if($logged)
                 else // closed poll
                 {
                     $main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=3 CLASS=white><B>Results</B></TD></TR>';
-                    $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=3 CLASS=white><b>'.$POLL['question'].'</b></td></tr>';
+                    $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=3 CLASS=white><b>'.h($POLL['question']).'</b></td></tr>';
                     $ANSWERS_show = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$_REQUEST['id'].' order by `answer_id`');
                     $i=1;
                     foreach($ANSWERS_show as $answer)
@@ -284,6 +285,6 @@ if($logged)
 }
 else
 {
-        $main_content .= 'Please enter your account name and your password.<br/><a href="?subtopic=createaccount" >Create an account</a> if you do not have one yet.<br/><br/><form action="?subtopic=polls" method="post" ><div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <div class="Text" >Account Login</div>        <span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td class="LabelV" ><span >Account Name:</span></td><td style="width:100%;" ><input type="password" name="account_login" SIZE="10" maxlength="10" ></td></tr><tr><td class="LabelV" ><span >Password:</span></td><td><input type="password" name="password_login" size="30" maxlength="29" ></td></tr>          </table>        </div>  </table></div></td></tr><br/><table width="100%" ><tr align="center" ><td><table border="0" cellspacing="0" cellpadding="0" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Submit" alt="Submit" src="'.$layout_name.'/images/buttons/_sbutton_submit.gif" ></div></div></td><tr></form></table></td><td><table border="0" cellspacing="0" cellpadding="0" ><form action="?subtopic=lostaccount" method="post" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Account lost?" alt="Account lost?" src="'.$layout_name.'/images/buttons/_sbutton_accountlost.gif" ></div></div></td></tr></form></table></td></tr></table>';
+        $main_content .= 'Please enter your account name and your password.<br/><a href="?subtopic=createaccount" >Create an account</a> if you do not have one yet.<br/><br/><form action="?subtopic=polls" method="post" >' . csrf_field() . '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionBorderTop" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionVerticalLeft" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <div class="Text" >Account Login</div>        <span class="CaptionVerticalRight" style="background-image:url('.$layout_name.'/images/content/box-frame-vertical.gif);" /></span>        <span class="CaptionBorderBottom" style="background-image:url('.$layout_name.'/images/content/table-headline-border.gif);" ></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td class="LabelV" ><span >Account Name:</span></td><td style="width:100%;" ><input type="password" name="account_login" SIZE="10" maxlength="10" ></td></tr><tr><td class="LabelV" ><span >Password:</span></td><td><input type="password" name="password_login" size="30" maxlength="29" ></td></tr>          </table>        </div>  </table></div></td></tr><br/><table width="100%" ><tr align="center" ><td><table border="0" cellspacing="0" cellpadding="0" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Submit" alt="Submit" src="'.$layout_name.'/images/buttons/_sbutton_submit.gif" ></div></div></td><tr></form></table></td><td><table border="0" cellspacing="0" cellpadding="0" ><form action="?subtopic=lostaccount" method="post" >' . csrf_field() . '<tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Account lost?" alt="Account lost?" src="'.$layout_name.'/images/buttons/_sbutton_accountlost.gif" ></div></div></td></tr></form></table></td></tr></table>';
 }    
 ?> 

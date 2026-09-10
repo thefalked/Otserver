@@ -475,8 +475,11 @@ $main_content .= "Error. Name contain illegal characters.";
 //### NEW NICK - set new nick proposition ###
 if($action == "newnick")
 {
-$name = $_GET['name'];
-$name_new = stripslashes(ucwords(strtolower(trim($_GET['name_new']))));
+if (!csrf_ok()) {
+$main_content .= 'Invalid security token. Go back and try again.';
+} else {
+$name = $_GET['name'] ?? '';
+$name_new = stripslashes(ucwords(strtolower(trim($_GET['name_new'] ?? ''))));
 if(!empty($name) && !empty($name_new))
 {
 if(check_name_new_char($name_new))
@@ -511,6 +514,7 @@ $main_content .= 'Name contain illegal characters. Invalid format or lenght.';
 else
 $main_content .= 'Please enter new char name.';
 $main_content .= '<br><center><table border="0" cellspacing="0" cellpadding="0" ><form action="?subtopic=accountmanagement" method="post" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/buttons/_sbutton_back.gif" ></div></div></td></tr></form></table></center>';
+}
 }
 //### DELETE character from account ###
 if($action == "deletecharacter") {
@@ -696,7 +700,16 @@ $main_content .= '<form action="?subtopic=accountmanagement&action=charactertran
 <div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/buttons/_sbutton_back.gif" ></div></div></td></tr></form></table></td></tr></td></tr></table><div></div>';
 }
 if (($_REQUEST["page"] ?? "") == 'transfer') {
-$SQL->query('UPDATE `players` SET `world_id` = '.$world_id.', `worldtransfer` = '.$SQL->quote(time()).' WHERE `id` = '.$playerid.';');
+$playerid = (int) $playerid;
+$world_id = (int) $world_id;
+$player = $ots->createObject('Player');
+$player->load($playerid);
+if(!$player->isLoaded() || $player->getAccount()->getId() != $account_logged->getId()) {
+$main_content .= 'Invalid character.';
+} elseif(!isset($config['site']['worlds'][$world_id])) {
+$main_content .= 'Invalid target world.';
+} else {
+$SQL->query('UPDATE `players` SET `world_id` = '.$world_id.', `worldtransfer` = '.$SQL->quote(time()).' WHERE `id` = '.$playerid.' AND `account_id` = '.(int)$account_logged->getId().';');
 $account_logged->setPremiumPoints($user_premium_points-$config['site']['worldtransferprice']);
 $account_logged->save();
 $main_content .= '<form action="?subtopic=accountmanagement&action=charactertransfer" method="post" ><div class="TableContainer" ><table class="Table4" cellpadding="0" cellspacing="0" ><div class="CaptionContainer" ><div class="CaptionInnerContainer" ><span class="CaptionEdgeLeftTop" style="background-image:url('.$layout_name.'/images/content/box-frame-edge.gif);" /></span>
@@ -710,6 +723,7 @@ $main_content .= '<form action="?subtopic=accountmanagement&action=charactertran
 </table></div></div><div class="TableShadowContainer" ><div class="TableBottomShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bm.gif);" ><div class="TableBottomLeftShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-bl.gif);" ></div><div class="TableBottomRightShadow" style="background-image:url('.$layout_name.'/images/content/table-shadow-br.gif);" ></div>
 </div></div></td></tr></td></tr></table></div></table></div></td></tr><br/><table style="width:100%;" ><tr align="center" ><td><table border="0" cellspacing="0" cellpadding="0" ><tr><td style="border:0px;" ><div class="BigButton" style="background-image:url('.$layout_name.'/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" >
 <div class="BigButtonOver" style="background-image:url('.$layout_name.'/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="'.$layout_name.'/images/buttons/_sbutton_back.gif" ></div></div></td></tr></form></table></td></tr></table><div></div>';
+}
 }
 }
 } else {

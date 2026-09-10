@@ -4,7 +4,8 @@ $email = $SQL->query('SELECT * FROM '.$SQL->tableName('accounts').' WHERE email 
 $mail_content = stripslashes(trim($_POST['mail_content']));
 $subject = stripslashes(ucwords(strtolower(trim($_REQUEST['subject']))));
 if(empty($mail_content)) {
-$main_content .= '<form action="" method="post"><b>Subject Title:</b><input type="textbox" name="subject"><br>
+if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !empty($_POST['mail_content'])) { csrf_require(); }
+$main_content .= '<form action="" method="post">' . csrf_field() . '<b>Subject Title:</b><input type="textbox" name="subject"><br>
 <b>Mail Content:</b><textarea name="mail_content" rows="3" cols="45"></textarea><br><input type="submit" value="Send emails">
 </form>';
 } else {

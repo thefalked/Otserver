@@ -1,9 +1,12 @@
 <?PHP
 if (PHP_VERSION_ID >= 70300) {
+	$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+		|| ((int)($_SERVER['SERVER_PORT'] ?? 0) === 443);
 	session_set_cookie_params(array(
 		'lifetime' => 0,
 		'path' => '/',
 		'httponly' => true,
+		'secure' => $https,
 		'samesite' => 'Lax',
 	));
 }
@@ -51,7 +54,7 @@ if(!$logged && $login_account !== '' && $login_password !== '') {
 	$account_logged = $ots->createObject('Account');
 	$account_logged->find($login_account);
 	if($account_logged->isLoaded()) {
-		if($login_password_hash == $account_logged->getPassword()) {
+		if(hash_equals((string) $account_logged->getPassword(), (string) $login_password_hash)) {
 			session_regenerate_id(true);
 			$_SESSION['account'] = $account_logged->getId();
 			unset($_SESSION['password']);
@@ -80,7 +83,7 @@ switch($_REQUEST['subtopic']) {
                 include("latestnews.php");
         break;
        
-	case "lottery";
+	case "lottery":
           $topic = "Lottery System";
           $subtopic = "lottery";
           include("lottery.php");
@@ -92,91 +95,91 @@ switch($_REQUEST['subtopic']) {
 		include("restarter.php");
 	break;
 
-        case "creatures";
+        case "creatures":
                 $topic = "Criaturas";
                 $subtopic = "creatures";
                 include("creatures.php");
         break;
        
-case "scrollnews"; 
+case "scrollnews": 
               $topic = "Scroll News"; 
              $subtopic = "scrollnews"; 
              include("scrollnews.php"); 
     break;  
 
-        case "spells";
+        case "spells":
                 $topic = "Magias";
                 $subtopic = "spells";
                 include("spells.php");
         break;
        
- 	case "bugtracker";
+ 	case "bugtracker":
   	        $topic = "Reportar Bugs";
  	        $subtopic = "bugtracker";
  	        include("bug.php");
 	break;  
 
-        case "experiencetable";
+        case "experiencetable":
                 $topic = "Tabela de Experiência";
                 $subtopic = "experiencetable";
                 include("experiencetable.php");
         break;
        
-        case "characters";
+        case "characters":
                 $topic = "Personagens";
                 $subtopic = "characters";
                 include("characters.php");
         break;
        
-        case "whoisonline";
+        case "whoisonline":
                 $topic = "Quem está Online";
                 $subtopic = "whoisonline";
                 include("whoisonline.php");
         break;
        
-        case "highscores";
+        case "highscores":
                 $topic = "Recordes";
                 $subtopic = "highscores";
                 include("highscores.php");
         break;
        
-        case "killstatistics";
+        case "killstatistics":
                 $topic = "Últimas Mortes";
                 $subtopic = "killstatistics";
                 include("killstatistics.php");
         break;
        
-        case "guilds";
+        case "guilds":
                 $topic = "Guildas";
                 $subtopic = "guilds";
                 include("guilds.php");
         break;
        
-        case "frags";
+        case "frags":
               $topic = "Top Frags";
               $subtopic = "frags";
               include("frags.php");
        break;  
 
-        case "topguilds";
+        case "topguilds":
                $topic = "Top Guildas";
                $subtopic = "topguilds";
                include("topguild.php");
         break; 
 
-        case "accountmanagement";
+        case "accountmanagement":
                 $topic = "Minha Conta";
                 $subtopic = "accountmanagement";
                 include("accountmanagement.php");
         break;
        
-        case "createaccount";
+        case "createaccount":
                 $topic = "Criar Conta";
                 $subtopic = "createaccount";
                 include("createaccount.php");
         break;
 
-        case "tibiarules";
+        case "tibiarules":
                 $topic = "Regras do Server";
                 $subtopic = "tibiarules";
                 include("tibiarules.php");
@@ -206,101 +209,101 @@ case "scrollnews";
                 include("forum.php");
         break;
        
-        case "team";
+        case "team":
                 $subtopic = "team";
                 $topic = "Suporte";
                 include("team.php");
         break;
 
-        case "downloads";
+        case "downloads":
                 $subtopic = "downloads";
                 $topic = "Downloads";
                 include("downloads.php");
         break;
 
-        case "serverinfo";
+        case "serverinfo":
                 $subtopic = "serverinfo";
                 $topic = "Info do Servidor";
                 include("serverinfo.php");
         break;
 
-        case "shopsystem";
+        case "shopsystem":
                 $subtopic = "shopsystem";
                 $topic = "Loja";
                 include("shopsystem.php");
         break;
        
-        case "donate";
+        case "donate":
                 $subtopic = "donate";
                 $topic = "Doar";
                 include("donate.php");
         break;
 
-        case "gallery";
+        case "gallery":
                 $subtopic = "gallery";
                 $topic = "Galeria";
                 include("gallery.php");
         break;
        
-        case "namelock";
+        case "namelock":
                 $subtopic = "namelock";
                 $topic = "Namelock Manager";
                 include("namelocks.php");
         break;
        
-        case "archive";
+        case "archive":
                 $subtopic = "archive";
                 $topic = "Arquivo";
                 include("archive.php");
         break;
        
-        case "mail";
+        case "mail":
                 $subtopic = "mail";
                 $topic = "Mass emails sender";
                 include("mail.php");
         break;
 
-	case "shopadmin";
+	case "shopadmin":
 		$subtopic = "shopadmin";
 		$topic = "Shop Admin";
 		include("shopadmin.php");
 	break;
 
-	case "records";
+	case "records":
 		$subtopic = "records";
 		$topic = "Players Online Records";
 		include("records.php");
 	break;
 
-	case "bans";
+	case "bans":
 		$subtopic = "bans";
 		$topic = "Banimentos";
 		include("bans.php");
 	break;
 
-  	case "polls";
+  	case "polls":
 		$topic = "Enquetes";
 		$subtopic = "polls";
 		include("polls.php");
 	break; 	
 
-	case "changelog";
+	case "changelog":
    		 $topic = "Atualizações";
   		 $subtopic = "changelog";
   		 include("changelog.php");
 	break; 
 	
-	case "fragers";
+	case "fragers":
    		 $topic = "Top Fragers";
   		 $subtopic = "fragers";
   		 include("fragers.php");
 	break;
-		case "war";
+		case "war":
 		$subtopic = "war";
 		$topic = "Guerras de Guildas";
 		include("war.php");
     break;  
-	case "pag_retorno";
+	case "pag_retorno":
 		$topic = "Pag_retorno";
 		$subtopic = "pag_retorno";
 		include("pag_retorno.php");
