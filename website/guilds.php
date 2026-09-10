@@ -2,6 +2,9 @@
 if (($_REQUEST['todo'] ?? '') === 'save') {
 	csrf_require();
 }
+if (in_array($action ?? '', array('deleterank', 'addrank', 'saveranks'), true)) {
+	csrf_require();
+}
 if($action == 'login')
 {
 	if(check_guild_name($_REQUEST['guild']))
@@ -1146,7 +1149,7 @@ if($action == 'manager')
 				foreach($rank_list as $rank)
 				{
 					if(is_int($number_of_rows / 2)) { $bgcolor = $config['site']['darkborder']; } else { $bgcolor = $config['site']['lightborder']; } $number_of_rows++;
-					$main_content .= '<tr bgcolor="'.$bgcolor.'"><td align="center"><a href="?subtopic=guilds&guild='.$guild_name.'&action=deleterank&rankid='.$rank->getId().'" border="0"><img src="'.$layout_name.'/images/news/delete.png" border="0" alt="Delete Rank"></a></td><td><input type="text" name="'.$rank->getId().'_name" value="'.$rank->getName().'" size="35"></td><td align="center"><input type="radio" name="'.$rank->getId().'_level" value="3"';
+					$main_content .= '<tr bgcolor="'.$bgcolor.'"><td align="center"><a href="?subtopic=guilds&guild='.$guild_name.'&action=deleterank&rankid='.$rank->getId().'&' . csrf_query() . '" border="0"><img src="'.$layout_name.'/images/news/delete.png" border="0" alt="Delete Rank"></a></td><td><input type="text" name="'.$rank->getId().'_name" value="'.$rank->getName().'" size="35"></td><td align="center"><input type="radio" name="'.$rank->getId().'_level" value="3"';
 					if($rank->getLevel() == 3)
 						$main_content .= ' checked="checked"';
 					$main_content .= ' /></td><td align="center"><input type="radio" name="'.$rank->getId().'_level" value="2"';
