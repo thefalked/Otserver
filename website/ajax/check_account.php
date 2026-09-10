@@ -15,6 +15,7 @@ function check_account_name($name)//sprawdza name
 
 echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>';
 $config_ini = parse_ini_file('../config/config.ini');
+include('../parse_config_lua.php');
 $account = strtoupper(trim($_REQUEST['account']));
 if(empty($account))
 {
@@ -29,7 +30,7 @@ if(empty($account))
 			exit;
 		}
 			//connect to DB
-			$server_config = parse_ini_file($config_ini['server_path'].'config.lua');
+			$server_config = parse_config_lua($config_ini['server_path'].'config.lua');
 			if(isset($server_config['mysqlHost']))
 			{
 				//new (0.2.6+) ots config.lua file

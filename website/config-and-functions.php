@@ -10,29 +10,8 @@ if ($config['site']['install'] != "no") {
 	exit;
 }
 //load server config
-// Load TFS config.lua on Linux (simple key = value parser; avoids parse_ini_file Lua breakage)
-$config['server'] = array();
-$_cfg_lua = @file($config['site']['server_path'] . 'config.lua');
-if (is_array($_cfg_lua)) {
-	foreach ($_cfg_lua as $_line) {
-		$_line = trim($_line);
-		if ($_line === '' || substr($_line, 0, 2) === '--')
-			continue;
-		if (!preg_match('/^([A-Za-z0-9_]+)\s*=\s*(.+)$/', $_line, $_m))
-			continue;
-		$_k = $_m[1];
-		$_v = trim($_m[2]);
-		if (preg_match('/^"(.*)"$/', $_v, $_q))
-			$_v = $_q[1];
-		elseif (preg_match("/^'(.*)'$/", $_v, $_q))
-			$_v = $_q[1];
-		elseif (in_array(strtolower((string) $_v), array('true', 'false'), true))
-			$_v = (strtolower($_v) === 'true');
-		elseif (is_numeric($_v))
-			$_v = $_v + 0;
-		$config['server'][$_k] = $_v;
-	}
-}
+include_once(__DIR__ . '/parse_config_lua.php');
+$config['server'] = parse_config_lua($config['site']['server_path'] . 'config.lua');
 if (empty($config['server']['sqlHost'])) {
 	die('Cannot read sqlHost from ' . $config['site']['server_path'] . 'config.lua');
 }
