@@ -1,5 +1,10 @@
 <?PHP
-$lottery = $SQL->query('SELECT id, name, item FROM lottery ORDER BY id DESC LIMIT 1;');
+$lottery = false;
+try {
+	$lottery = $SQL->query('SELECT id, name, item FROM lottery ORDER BY id DESC LIMIT 1;');
+} catch (PDOException $e) {
+	$lottery = false;
+}
 if ($lottery) {
 	foreach ($lottery as $result) {
 		$main_content .= '<center><h1>Loteria</h1></center>

@@ -614,5 +614,5 @@
 <monster name="diseased fred" file="Outlaws/bandit.xml"/>
 <monster name="Capeta" file="Ziks/Capeta.xml"/>
 <monster name="Morte" file="Ziks/Morte.xml"/>
-</monsters>
 	<monster name="Training Monk" file="Custom Monsters by amour/Training Monk.xml"/>
+</monsters>
