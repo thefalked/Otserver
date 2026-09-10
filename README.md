@@ -7,6 +7,18 @@ Dockerized **The Forgotten Server 0.4** (Baiakzik Vip9 / 8.60) with MySQL and a 
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2
 - A Tibia **8.60** client pointed at your host IP (ports **7171** / **7172**)
 
+## Home-server (optional)
+
+When this repo sits next to [home-server](https://github.com/thefalked/home-server) (`tests/Otserver` beside `tests/home-server`), you can run the stack from home-server’s thin wrapper:
+
+```bash
+# from home-server
+cp otserver/.env.example otserver/.env   # set MYSQL_* / OT_IP
+cd otserver && docker compose up -d --build
+```
+
+That compose builds from this checkout (`../../Otserver`), puts MySQL/logs under `home-server/otserver/otserver_data/`, exposes the Gesior site via Traefik (`otserver.thefalked.dev`), and publishes login/game TCP on the host. Do **not** run this repo’s `docker compose up` and the home-server wrapper at the same time (port and image conflicts). C++ rebuilds still use `./server/compile.sh` here.
+
 ## Quick start
 
 ```bash
