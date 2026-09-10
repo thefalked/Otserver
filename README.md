@@ -17,7 +17,7 @@ cp otserver/.env.example otserver/.env   # set MYSQL_* / OT_IP
 cd otserver && docker compose up -d --build
 ```
 
-That compose builds from this checkout (`../../Otserver`), puts MySQL/logs under `home-server/otserver/otserver_data/`, exposes the Gesior site via Traefik (`otserver.thefalked.dev`), and publishes login/game TCP on the host. Do **not** run this repo’s `docker compose up` and the home-server wrapper at the same time (port and image conflicts). C++ rebuilds still use `./server/compile.sh` here.
+That compose builds from this checkout (`../../Otserver`), puts MySQL/logs under `home-server/otserver/otserver_data/`, exposes the Gesior site via Traefik (`baiakvip9.thefalked.dev`), and routes login/game TCP through Traefik on host **7171** / **7172**. Do **not** run this repo’s `docker compose up` and the home-server wrapper at the same time (port and image conflicts). C++ rebuilds still use `./server/compile.sh` here. Recreate Traefik after enabling the wrapper so the new entrypoints bind.
 
 ## Quick start
 
