@@ -1,6 +1,9 @@
 <?PHP
-$list = $_REQUEST['list'];
-$page = $_REQUEST['page'];
+$list = $_REQUEST['list'] ?? '';
+$page = (int)($_REQUEST['page'] ?? 0);
+$number_of_rows = 0;
+$show_link_to_next_page = false;
+$worlds = '';
 switch($list)
 {
   case "fist":
@@ -45,18 +48,13 @@ if(count($config['site']['worlds']) > 1)
 	$worlds .= '<i>Select world:</i> ';
 	foreach($config['site']['worlds'] as $idd => $world_n)
 	{
-		if($idd == (int) $_GET['world'])
+		if($idd == (int)($_GET['world'] ?? -1))
 		{
 			$world_id = $idd;
 			$world_name = $world_n;
 		}
 	}
 }
-		if($idd == (int) $_GET['world'])
-		{
-			$world_id = $idd;
-			$world_name = $world_n;
-		}
 if(!isset($world_id))
 {
 	$world_id = 0;

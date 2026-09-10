@@ -152,6 +152,7 @@ if($action == '')
     $counters = array();
     foreach($info as $data)
         $counters[$data['section']] = array('threads' => $data['threads'], 'posts' => $data['replies'] + $data['threads']);
+    $number_of_rows = 0;
     foreach($sections as $id => $section)
     {
         $last_post = $SQL->query("SELECT `players`.`name`, `z_forum`.`post_date` FROM `players`, `z_forum` WHERE `z_forum`.`section` = ".(int) $id." AND `players`.`id` = `z_forum`.`author_guid` ORDER BY `post_date` DESC LIMIT 1")->fetch();

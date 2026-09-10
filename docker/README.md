@@ -22,7 +22,7 @@ Ports:
 
 - **7171** login
 - **7172** game
-- **8080** Gesior website (**PHP 8.2** Apache)
+- **8080** Gesior website (**PHP 8.5** Apache)
 
 ## Website security notes
 

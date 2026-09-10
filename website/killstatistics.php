@@ -1,6 +1,7 @@
 <?PHP
 $players_deaths = $SQL->query('SELECT `player_deaths`.`id`, `player_deaths`.`date`, `player_deaths`.`level`, `players`.`name`, `players`.`world_id` FROM `player_deaths` LEFT JOIN `players` ON `player_deaths`.`player_id` = `players`.`id` ORDER BY `date` DESC LIMIT 0,'.$config['site']['last_deaths_limit']);
 $players_deaths_count = 0;
+$players_rows = '';
 if(!empty($players_deaths))
 {
 	foreach($players_deaths as $death)

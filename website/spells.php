@@ -1,7 +1,8 @@
 <?PHP
 $allowed_order_by = array('name', 'spell', 'spell_type', 'mana', 'lvl', 'mlvl', 'soul');
-$vocation_id = $_REQUEST['vocation_id'];
-$order = $_REQUEST['order'];
+$vocation_id = $_REQUEST['vocation_id'] ?? '';
+$order = $_REQUEST['order'] ?? '';
+$number_of_rows = 0;
 if(in_array($order, $allowed_order_by))
 	$orderby = $order;
 else
@@ -60,7 +61,7 @@ else
 		foreach($spell_vocations as $voc)
 		{
 			$voc_info = explode(";", $voc);
-			if(!empty($vocation_name[0][$voc_info[0]][$voc_info[1]]))
+			if(isset($voc_info[0], $voc_info[1]) && !empty($vocation_name[0][$voc_info[0]][$voc_info[1]]))
 			{
 				$vocs .= $vocation_name[0][$voc_info[0]][$voc_info[1]];
 				if($showed_vocations != count($spell_vocations))

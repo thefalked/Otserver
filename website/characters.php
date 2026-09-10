@@ -1,5 +1,6 @@
 <?PHP
-$name = stripslashes(ucwords(strtolower(trim($_REQUEST['name']))));
+$name = stripslashes(ucwords(strtolower(trim($_REQUEST['name'] ?? ''))));
+$number_of_rows = 0;
 if(empty($name)) {
 $main_content .= 'Aqui Você Pode Obter Informações Detalhadas Sobre Um Determinado Jogador Do '.$config['server']['serverName'].'.<BR> <FORM ACTION="?subtopic=characters" METHOD=post><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="'.$config['site']['vdarkborder'].'" CLASS=white><B>Procurar Player</B></TD></TR><TR><TD BGCOLOR="'.$config['site']['darkborder'].'"><TABLE BORDER=0 CELLPADDING=1><TR><TD>Nome:</TD><TD><INPUT NAME="name" VALUE=""SIZE=29 MAXLENGTH=29></TD><TD><INPUT TYPE=image NAME="Submit" SRC="'.$layout_name.'/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></TABLE></TD></TR></TABLE></FORM>';
 }
