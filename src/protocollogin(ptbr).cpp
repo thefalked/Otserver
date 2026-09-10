@@ -88,7 +88,7 @@ bool ProtocolLogin::parseFirstPacket(NetworkMessage& msg)
 	{
 		if(!g_config.getBool(ConfigManager::ACCOUNT_MANAGER))
 		{
-			disconnectClient(0x0A, "Nome da conta inválido");
+			disconnectClient(0x0A, "Nome da conta invï¿½lido");
 			return false;
 		}
 
@@ -104,19 +104,19 @@ bool ProtocolLogin::parseFirstPacket(NetworkMessage& msg)
 
 	if(g_game.getGameState() < GAMESTATE_NORMAL)
 	{
-		disconnectClient(0x0A, "O servidor está iniciando, por favor espere.");
+		disconnectClient(0x0A, "O servidor estï¿½ iniciando, por favor espere.");
 		return false;
 	}
 
 	if(g_game.getGameState() == GAMESTATE_MAINTAIN)
 	{
-		disconnectClient(0x0A, "O servidor está em manutenção, por favor reconecte-se mais tarde.");
+		disconnectClient(0x0A, "O servidor estï¿½ em manutenï¿½ï¿½o, por favor reconecte-se mais tarde.");
 		return false;
 	}
 
 	if(ConnectionManager::getInstance()->isDisabled(clientIp, protocolId))
 	{
-		disconnectClient(0x0A, "Muitas conecções vindo do seu IP, por favor tente novamente mais tarde.");
+		disconnectClient(0x0A, "Muitas conecï¿½ï¿½es vindo do seu IP, por favor tente novamente mais tarde.");
 		return false;
 	}
 
@@ -130,7 +130,7 @@ bool ProtocolLogin::parseFirstPacket(NetworkMessage& msg)
 	if(!IOLoginData::getInstance()->getAccountId(name, id))
 	{
 		ConnectionManager::getInstance()->addAttempt(clientIp, protocolId, false);
-		disconnectClient(0x0A, "Nome de conta inválida");
+		disconnectClient(0x0A, "Nome de conta invï¿½lida");
 		return false;
 	}
 
@@ -138,7 +138,7 @@ bool ProtocolLogin::parseFirstPacket(NetworkMessage& msg)
 	if(!encryptTest(account.salt + password, account.password))
 	{
 		ConnectionManager::getInstance()->addAttempt(clientIp, protocolId, false);
-		disconnectClient(0x0A, "Senha inválida");
+		disconnectClient(0x0A, "Senha invï¿½lida");
 		return false;
 	}
 
@@ -155,14 +155,15 @@ bool ProtocolLogin::parseFirstPacket(NetworkMessage& msg)
 		else
 			IOLoginData::getInstance()->getNameByGuid(ban.adminId, name_, true);
 
-		char buffer[500 + ban.comment.length()];
-		sprintf(buffer, "Your account has been %s at:\n%s by: %s,\nfor the following reason:\n%s.\nThe action taken was:\n%s.\nThe comment given was:\n%s.\nYour %s%s.",
-			(deletion ? "deleted" : "banished"), formatDateEx(ban.added, "%d %b %Y").c_str(), name_.c_str(),
-			getReason(ban.reason).c_str(), getAction(ban.action, false).c_str(), ban.comment.c_str(),
-			(deletion ? "account won't be undeleted" : "banishment will be lifted at:\n"),
-			(deletion ? "" : formatDateEx(ban.expires).c_str()));
+		std::ostringstream ss;
+		ss << "Your account has been " << (deletion ? "deleted" : "banished") << " at:\n"
+			<< formatDateEx(ban.added, "%d %b %Y") << " by: " << name_ << ",\nfor the following reason:\n"
+			<< getReason(ban.reason) << ".\nThe action taken was:\n" << getAction(ban.action, false)
+			<< ".\nThe comment given was:\n" << ban.comment << ".\nYour "
+			<< (deletion ? "account won't be undeleted" : "banishment will be lifted at:\n")
+			<< (deletion ? "" : formatDateEx(ban.expires));
 
-		disconnectClient(0x0A, buffer);
+		disconnectClient(0x0A, ss.str().c_str());
 		return false;
 	}
 

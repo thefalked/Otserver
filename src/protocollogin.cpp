@@ -155,14 +155,15 @@ bool ProtocolLogin::parseFirstPacket(NetworkMessage& msg)
 		else
 			IOLoginData::getInstance()->getNameByGuid(ban.adminId, name_, true);
 
-		char buffer[500 + ban.comment.length()];
-		sprintf(buffer, "Your account has been %s at:\n%s by: %s,\nfor the following reason:\n%s.\nThe action taken was:\n%s.\nThe comment given was:\n%s.\nYour %s%s.",
-			(deletion ? "deleted" : "banished"), formatDateEx(ban.added, "%d %b %Y").c_str(), name_.c_str(),
-			getReason(ban.reason).c_str(), getAction(ban.action, false).c_str(), ban.comment.c_str(),
-			(deletion ? "account won't be undeleted" : "banishment will be lifted at:\n"),
-			(deletion ? "" : formatDateEx(ban.expires).c_str()));
+		std::ostringstream ss;
+		ss << "Your account has been " << (deletion ? "deleted" : "banished") << " at:\n"
+			<< formatDateEx(ban.added, "%d %b %Y") << " by: " << name_ << ",\nfor the following reason:\n"
+			<< getReason(ban.reason) << ".\nThe action taken was:\n" << getAction(ban.action, false)
+			<< ".\nThe comment given was:\n" << ban.comment << ".\nYour "
+			<< (deletion ? "account won't be undeleted" : "banishment will be lifted at:\n")
+			<< (deletion ? "" : formatDateEx(ban.expires));
 
-		disconnectClient(0x0A, buffer);
+		disconnectClient(0x0A, ss.str().c_str());
 		return false;
 	}
 
