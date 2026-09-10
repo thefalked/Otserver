@@ -36,6 +36,10 @@ showednewnews_state = "0";
 <tr bgcolor=' . $config['site']['lightborder'] . '><td><div id="newtickerform"></div><div id="jajo"><div class="BigButton" style="background-image:url(' . $layout_name . '/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url(' . $layout_name . '/images/buttons/sbutton_over.gif);" ></div><img class="ButtonText" id="AddTicker" src="' . $layout_name . '/images/buttons/_sbutton_submit.gif" onClick="showNewTickerForm()" alt="AddTicker" /></div></div></div></td><td><b>Press "Submit" to add new ticker.</b></td></tr>
 <tr bgcolor=' . $config['site']['lightborder'] . '><td width="150"><b><a href="?subtopic=latestnews">Edit/Delete</a></b></td><td><b>Here you can edit and delete news.</b></td></tr>/
 </table>';
+    $main_content .= '<center><h2>Shop / Premium points</h2></center>PagSeguro donations are disabled. Grant points to an account here for shop purchases.<br/><table style=\'clear:both\' border=0 cellpadding=0 cellspacing=0 width=\'100%\'>
+<tr bgcolor=' . $config['site']['darkborder'] . '><td width="150"><font color="red"><b>Option</b></font></td><td><font color="red"><b>Description</b></font></td></tr>
+<tr bgcolor=' . $config['site']['lightborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=grantpoints">Grant points</a></b></td><td><b>Add premium points to an account by name or id.</b></td></tr>
+</table>';
     $main_content .= '<center><h2>Load configurations</h2></center>Here you can choose what configuration you want to reload. It load configuration from OTS files.<br/><table style=\'clear:both\' border=0 cellpadding=0 cellspacing=0 width=\'100%\'>
 <tr bgcolor=' . $config['site']['darkborder'] . '><td width="150"><font color="red"><b>Option</b></font></td><td><font color="red"><b>Description</b></font></td></tr>
 <tr bgcolor=' . $config['site']['lightborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_monsters&' . csrf_query() . '">Reload Monsters</a></b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
@@ -473,6 +477,52 @@ showednewnews_state = "0";
     }
     $main_content .= '<center><form action="?subtopic=adminpanel" METHOD=post><div class="BigButton" style="background-image:url(' . $layout_name . '/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url(' . $layout_name . '/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="' . $layout_name . '/images/buttons/_sbutton_back.gif" ></div></div></form></center>';
   }
+
+  if ($action == 'grantpoints') {
+    $grant_msg = '';
+    if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['grant_save'])) {
+      csrf_require();
+      $account_key = trim((string) ($_POST['account_key'] ?? ''));
+      $points = (int) ($_POST['points'] ?? 0);
+      if ($account_key === '' || $points === 0) {
+        $grant_msg = '<font color="red">Enter an account name/id and a non-zero points amount.</font>';
+      } else {
+        $acc = new OTS_Account();
+        if (ctype_digit($account_key)) {
+          $acc->load((int) $account_key);
+        }
+        if (!$acc->isLoaded()) {
+          $acc->find($account_key);
+        }
+        if (!$acc->isLoaded()) {
+          $grant_msg = '<font color="red">Account not found.</font>';
+        } else {
+          $current = (int) $acc->getCustomField('premium_points');
+          $new = $current + $points;
+          if ($new < 0) {
+            $grant_msg = '<font color="red">Resulting balance would be negative.</font>';
+          } else {
+            $acc->setCustomField('premium_points', $new);
+            $grant_msg = '<font color="green">Account <b>' . h($acc->getName()) . '</b> (id ' . (int) $acc->getId() . '): ' . $current . ' → ' . $new . ' premium points.</font>';
+          }
+        }
+      }
+    }
+    $main_content .= '<center><h2>Grant premium points</h2></center>';
+    if ($grant_msg !== '') {
+      $main_content .= '<p>' . $grant_msg . '</p>';
+    }
+    $main_content .= '<form action="?subtopic=adminpanel&action=grantpoints" method="post">' . csrf_field() . '
+<input type="hidden" name="grant_save" value="1">
+<table style=\'clear:both\' border=0 cellpadding=4 cellspacing=0 width=\'100%\'>
+<tr bgcolor=' . $config['site']['darkborder'] . '><td colspan="2"><font color="white"><b>Credit / debit points</b></font></td></tr>
+<tr bgcolor=' . $config['site']['lightborder'] . '><td width="180"><b>Account name or id</b></td><td><input type="text" name="account_key" size="30" maxlength="32"></td></tr>
+<tr bgcolor=' . $config['site']['darkborder'] . '><td><b>Points (+/-)</b></td><td><input type="number" name="points" value="100"></td></tr>
+<tr bgcolor=' . $config['site']['lightborder'] . '><td colspan="2"><input type="submit" value="Apply"></td></tr>
+</table></form>
+<br/><center><form action="?subtopic=adminpanel" METHOD=post><div class="BigButton" style="background-image:url(' . $layout_name . '/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url(' . $layout_name . '/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="' . $layout_name . '/images/buttons/_sbutton_back.gif" ></div></div></form></center>';
+  }
+
 
 } else {
   $main_content .= 'You don\'t have admin access.';
