@@ -63,54 +63,54 @@ if($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
 				<input name="submit" type="submit" value="Reset" /></form>';
 			$main_content .= '<form action="?subtopic=shopadmin" method="post" >'.csrf_field().'<input name="submit" type="submit" value="Back" title="Back"/></form>';
 		} else {
-			$shop_points = stripslashes(trim($_POST['shop_points']));
+			$shop_points = (int) $_POST['shop_points'];
 			$shop_offer_type = stripslashes(trim($_REQUEST['offer_type']));
-			$shop_itemid1 = stripslashes(trim($_POST['shop_itemid1']));
-			$shop_count1 = stripslashes(trim($_POST['shop_count1']));
-			$shop_itemid2 = stripslashes(trim($_POST['shop_itemid2']));
-			$shop_count2 = stripslashes(trim($_POST['shop_count2']));
-			$shop_offer_description = stripslashes(trim($_POST['shop_offer_description']));
-			$shop_offer_name = stripslashes(trim($_POST['shop_offer_name']));
+			$shop_itemid1 = (int) ($_POST['shop_itemid1'] ?? 0);
+			$shop_count1 = (int) ($_POST['shop_count1'] ?? 0);
+			$shop_itemid2 = (int) ($_POST['shop_itemid2'] ?? 0);
+			$shop_count2 = (int) ($_POST['shop_count2'] ?? 0);
+			$shop_offer_description = stripslashes(trim($_POST['shop_offer_description'] ?? ''));
+			$shop_offer_name = stripslashes(trim($_POST['shop_offer_name'] ?? ''));
 			$SQL->query('INSERT INTO `z_shop_offer` (id, points, itemid1, count1, itemid2, count2, offer_type, offer_description, offer_name, pid) VALUES (NULL, '.$SQL->quote($shop_points).', '.$SQL->quote($shop_itemid1).', '.$SQL->quote($shop_count1).', '.$SQL->quote($shop_itemid2).', '.$SQL->quote($shop_count2).', '.$SQL->quote($shop_offer_type).', '.$SQL->quote($shop_offer_description).', '.$SQL->quote($shop_offer_name).', 0)');
 			$main_content .= '<center><h2><font color="red">Added to Shop:</font></h2></center><hr/>
 				<tr><td align="center" ><b>Points:</b></td>
-				<td>'.$shop_points.'</td></tr><br>';
+				<td>'.h($shop_points).'</td></tr><br>';
 			if($shop_offer_type == 'container'){
 				$main_content .= '<tr><td align="center" ><b>Container ID:</b></td>
-					<td>'.$shop_itemid1.'</td></tr><br>
+					<td>'.h($shop_itemid1).'</td></tr><br>
 					<tr><td align="center" ><b>Count Container:</b></td>
-					<td>'.$shop_count1.'</td></tr><br>
+					<td>'.h($shop_count1).'</td></tr><br>
 					<tr><td align="center" ><b> Item ID (in Container):</b></td>
-					<td>'.$shop_itemid2.'</td></tr><br>
+					<td>'.h($shop_itemid2).'</td></tr><br>
 					<tr><td align="center" ><b>Count Item (in Container):</b></td>
-					<td>'.$shop_count2.'</td></tr><br>';
+					<td>'.h($shop_count2).'</td></tr><br>';
 			}
 			if ($shop_offer_type == 'item'){
 				$main_content .= '<tr><td align="center" ><b>Item ID:</b></td>
-					<td>'.$shop_itemid1.'</td></tr><br>
+					<td>'.h($shop_itemid1).'</td></tr><br>
 					<tr><td align="center" ><b>Count Item:</b></td>
-					<td>'.$shop_count1.'</td></tr><br>';
+					<td>'.h($shop_count1).'</td></tr><br>';
 			}
 			if ($shop_offer_type == 'itemvip'){
 				$main_content .= '<tr><td align="center" ><b>Item ID:</b></td>
-					<td>'.$shop_itemid1.'</td></tr><br>
+					<td>'.h($shop_itemid1).'</td></tr><br>
 					<tr><td align="center" ><b>Count Item:</b></td>
-					<td>'.$shop_count1.'</td></tr><br>';
+					<td>'.h($shop_count1).'</td></tr><br>';
 			}
 			if ($shop_offer_type == 'pacc'){
 				$main_content .= '<tr><td align="center" ><b>Days:</b></td>
-					<td>'.$shop_count1.'</td></tr><br>';
+					<td>'.h($shop_count1).'</td></tr><br>';
 			}
 			if ($shop_offer_type == 'vipdays'){
 				$main_content .= '<tr><td align="center" ><b>Days:</b></td>
-					<td>'.$shop_count1.'</td></tr><br>';
+					<td>'.h($shop_count1).'</td></tr><br>';
 			}
 			$main_content .= '<tr><td align="center" ><b>Offer Type:</b></td>
-				<td>'.$shop_offer_type.'</td></tr><br>
+				<td>'.h($shop_offer_type).'</td></tr><br>
 				<tr><td align="center" ><b>Offer Description:</b></td>
-				<td>'.$shop_offer_description.'</td></tr><br>
+				<td>'.h($shop_offer_description).'</td></tr><br>
 				<tr><td align="center" ><b>Offer Name:</b></td>
-				<td>'.$shop_offer_name.'</td></tr>
+				<td>'.h($shop_offer_name).'</td></tr>
 				<br><form action="?subtopic=shopadmin&action=addoffer" method="post" >'.csrf_field().'<input name="submit" type="submit" value="Back" title="Back"/></form>';
 		}
 	}
@@ -136,12 +136,13 @@ if($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
 			} else {
 				$main_content .= '<td align="center">'.$shop['itemid2'].'<br>(' . $itemList[(int)$shop['itemid2']] . ')</td>';
 			}
-			$main_content .= '<td align="center">'.$shop['count2'].'</td><td align="center">'.$shop['offer_type'].'</td><td align="left">'.$shop['offer_description'].'</td><td align="left">'.$shop['offer_name'].'</td>';
-			$main_content .= '<td align="center"><a href="?subtopic=shopadmin&action=editoffer&id='.$shop['id'].'"><img src="'.$layout_name.'/images/news/edit_news.png" border="0"></a><br><br><a href="?subtopic=shopadmin&action=deleteoffer&id='.$shop['id'].'"><img src="'.$layout_name.'/images/news/delete_news.png" border="0"></a></td>';
+			$main_content .= '<td align="center">'.$shop['count2'].'</td><td align="center">'.h($shop['offer_type']).'</td><td align="left">'.h($shop['offer_description']).'</td><td align="left">'.h($shop['offer_name']).'</td>';
+			$main_content .= '<td align="center"><a href="?subtopic=shopadmin&action=editoffer&id='.(int)$shop['id'].'"><img src="'.$layout_name.'/images/news/edit_news.png" border="0"></a><br><br><form action="?subtopic=shopadmin&action=deleteoffer&id='.(int)$shop['id'].'" method="post" style="display:inline">'.csrf_field().'<button type="submit" style="border:0;background:transparent;padding:0;cursor:pointer"><img src="'.$layout_name.'/images/news/delete_news.png" border="0"></button></form></td>';
 		}
 		$main_content .= '</td></tr></TABLE><br><form action="?subtopic=shopadmin" method="post" >'.csrf_field().'<input name="submit" type="submit" value="Back" title="Back"/></form>';
 	}
 	if($action == "deleteoffer") {
+		csrf_require();
 		$id = (int) $_REQUEST['id'];
 		$SQL->query('DELETE FROM z_shop_offer WHERE id = '.$id.' LIMIT 1;');
 		$main_content .= '<center>Shop offer has been deleted.</center><br><center><form action="?subtopic=shopadmin&action=viewoffer" method="post" >'.csrf_field().'<input name="submit" type="submit" value="Back" title="Back"/></form></center>';
@@ -151,7 +152,7 @@ if($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
 		$shopoffers = $SQL->query('SELECT * FROM z_shop_offer WHERE id = '.$id.' LIMIT 1;');
 		foreach($shopoffers as $shop) {
 			$main_content .= '<form action="?subtopic=shopadmin&action=edited&id='.$id.'" method="post" >'.csrf_field().'<table border="0"><tr><td align="center" ><b>Points:</b></td>
-				<td><input type="textbox" name="shop_points" maxlenght="7" value="'.$shop['points'].'" style="width: 70px"></td></tr>';
+				<td><input type="textbox" name="shop_points" maxlenght="7" value="'.h($shop['points']).'" style="width: 70px"></td></tr>';
 			if($shop['offer_type'] == 'container'){
 				$main_content .= '<tr><td align="center" ><b>Container ID:</b></td>
 					<td><input type="text" name="shop_itemid1" maxlenght="7" value="'.$shop['itemid1'].'" style="width: 70px" ></td></tr>
@@ -183,25 +184,25 @@ if($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
 					<td><input type="text" name="shop_count1" maxlenght="7" style="width: 70px" ></td></tr>';
 			}
 			$main_content .= '<tr><td align="center" ><b>Offer Type:</b></td>
-				<td><input type="text" name="shop_offer_type" value="'.$shop['offer_type'].'" maxlenght="40" style="width: 200px" ></td></tr>
+				<td><input type="text" name="shop_offer_type" value="'.h($shop['offer_type']).'" maxlenght="40" style="width: 200px" ></td></tr>
 				<tr><td align="center" ><b>Offer Description:</b></td>
-				<td ><textarea name="shop_offer_description" rows="2" cols="35">'.$shop['offer_description'].'</textarea></td></tr>
+				<td ><textarea name="shop_offer_description" rows="2" cols="35">'.h($shop['offer_description']).'</textarea></td></tr>
 				<tr><td align="center" ><b>Offer Name:</b></td>
-				<td><input type="text" name="shop_offer_name" value="'.$shop['offer_name'].'" maxlenght="40" style="width: 200px" ></td></tr>
+				<td><input type="text" name="shop_offer_name" value="'.h($shop['offer_name']).'" maxlenght="40" style="width: 200px" ></td></tr>
 				<tr><td><input name="submit" type="submit" value="Submit" /></form></td><td></td></tr></table>';
 			$main_content .= '<form action="?subtopic=shopadmin&action=viewoffer" method="post" >'.csrf_field().'<input name="submit" type="submit" value="Back" title="Back"/></form>';
 		}
 	}
 	if($action == "edited") {
 		$id = (int) $_REQUEST['id'];
-		$shop_points = stripslashes(trim($_POST['shop_points']));
-		$shop_offer_type = stripslashes(trim($_POST['shop_offer_type']));
-		$shop_itemid1 = stripslashes(trim($_POST['shop_itemid1']));
-		$shop_count1 = stripslashes(trim($_POST['shop_count1']));
-		$shop_itemid2 = stripslashes(trim($_POST['shop_itemid2']));
-		$shop_count2 = stripslashes(trim($_POST['shop_count2']));
-		$shop_offer_description = stripslashes(trim($_POST['shop_offer_description']));
-		$shop_offer_name = stripslashes(trim($_POST['shop_offer_name']));
+		$shop_points = (int) ($_POST['shop_points'] ?? 0);
+		$shop_offer_type = stripslashes(trim($_POST['shop_offer_type'] ?? ''));
+		$shop_itemid1 = (int) ($_POST['shop_itemid1'] ?? 0);
+		$shop_count1 = (int) ($_POST['shop_count1'] ?? 0);
+		$shop_itemid2 = (int) ($_POST['shop_itemid2'] ?? 0);
+		$shop_count2 = (int) ($_POST['shop_count2'] ?? 0);
+		$shop_offer_description = stripslashes(trim($_POST['shop_offer_description'] ?? ''));
+		$shop_offer_name = stripslashes(trim($_POST['shop_offer_name'] ?? ''));
 		$SQL->query('UPDATE `z_shop_offer` SET `points` = '.$shop_points.', `itemid1` = '.$SQL->quote($shop_itemid1).', `count1` = '.$SQL->quote($shop_count1).', `itemid2` = '.$SQL->quote($shop_itemid2).', `count2` = '.$SQL->quote($shop_count2).', `offer_type` = '.$SQL->quote($shop_offer_type).', `offer_description` = '.$SQL->quote($shop_offer_description).', `offer_name` = '.$SQL->quote($shop_offer_name).' WHERE `id` = '.$id.';');
 		$main_content .= '<b><center>Shop offer successfully edited.</b><br><br><form action="?subtopic=shopadmin&action=viewoffer" method="post" >'.csrf_field().'<input name="submit" type="submit" value="Back" title="Back"/></form><meta http-equiv="refresh" content="1;url=/?subtopic=shopadmin&action=viewoffer" />';
 	}
