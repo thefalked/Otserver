@@ -20,6 +20,7 @@ services:
       - ./docker/mysql/02-custom.sql:/docker-entrypoint-initdb.d/02-custom.sql:ro
       - ./docker/mysql/03-gesior.sql:/docker-entrypoint-initdb.d/03-gesior.sql:ro
       - ./docker/mysql/06-gesior-player-cols.sql:/docker-entrypoint-initdb.d/06-gesior-player-cols.sql:ro
+      - ./docker/mysql/08-god-energy.sql:/docker-entrypoint-initdb.d/08-god-energy.sql:ro
     healthcheck:
       test:
         [

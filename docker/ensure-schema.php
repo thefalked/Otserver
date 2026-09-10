@@ -1,6 +1,6 @@
 <?php
 /**
- * Idempotent schema fixes for already-initialized MySQL volumes.
+ * Idempotent schema / seed fixes for already-initialized MySQL volumes.
  * docker-entrypoint-initdb.d only runs on first volume create.
  */
 declare(strict_types=1);
@@ -16,25 +16,33 @@ if ($db === '' || $user === '') {
 	exit(0);
 }
 
-$dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
-$sql = <<<'SQL'
-CREATE TABLE IF NOT EXISTS `lottery` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `item` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-SQL;
+$files = [
+	'/usr/local/share/otserver/07-lottery.sql',
+	'/usr/local/share/otserver/08-god-energy.sql',
+];
 
+$dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
 $attempts = 15;
 $last = null;
+
 for ($i = 1; $i <= $attempts; $i++) {
 	try {
 		$pdo = new PDO($dsn, $user, $pass, [
 			PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+			PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
 		]);
-		$pdo->exec($sql);
-		fwrite(STDOUT, "ensure-schema: lottery table ready\n");
+		foreach ($files as $path) {
+			if (!is_readable($path)) {
+				fwrite(STDERR, "ensure-schema: missing {$path}, skipping file\n");
+				continue;
+			}
+			$sql = file_get_contents($path);
+			if ($sql === false || trim($sql) === '') {
+				continue;
+			}
+			$pdo->exec($sql);
+			fwrite(STDOUT, 'ensure-schema: applied ' . basename($path) . "\n");
+		}
 		exit(0);
 	} catch (Throwable $e) {
 		$last = $e;
@@ -44,4 +52,4 @@ for ($i = 1; $i <= $attempts; $i++) {
 }
 
 fwrite(STDERR, "ensure-schema: gave up: " . ($last ? $last->getMessage() : 'unknown') . "\n");
-exit(0); // do not block Apache; PHP pages still guard missing tables
+exit(0);
