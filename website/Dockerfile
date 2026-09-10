@@ -26,6 +26,7 @@ RUN printf '%s\n' 'ServerName baiakvip9.thefalked.dev' \
   && a2enconf servername
 
 COPY docker/render-config.sh /usr/local/bin/render-config.sh
+COPY docker/ensure-schema.php /usr/local/bin/ensure-schema.php
 COPY website/docker-entrypoint.sh /usr/local/bin/website-entrypoint.sh
 RUN chmod +x /usr/local/bin/render-config.sh /usr/local/bin/website-entrypoint.sh
 
