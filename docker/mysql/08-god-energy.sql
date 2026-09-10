@@ -1,5 +1,5 @@
 -- God account from Baiak backup (account id 5 / characters), adapted for Docker seed.
--- Password: godadmin (SHA1). Admin character renamed to Energy (was [ADM] Socks).
+-- Password: godadmin (SHA1). Admin character renamed to [ADM] Energy (was [ADM] Socks).
 -- Idempotent: safe on existing volumes via website ensure-schema / re-run.
 
 -- Account
@@ -16,7 +16,7 @@ SET
   `flag` = 'unknown'
 WHERE `name` = 'god';
 
--- Energy (ADM) — from backup [ADM] Socks on account god
+-- [ADM] Energy — from backup [ADM] Socks on account god
 INSERT INTO `players` (
   `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`,
   `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`,
@@ -26,20 +26,25 @@ INSERT INTO `players` (
   `loss_containers`, `loss_items`, `premend`, `online`, `marriage`, `promotion`, `deleted`, `description`
 )
 SELECT
-  'Energy', 0, 7, a.`id`, 845, 1,
+  '[ADM] Energy', 0, 7, a.`id`, 845, 1,
   7003535, 7003535, 2147483647, 94, 94, 94, 94, 300, 3,
   0, 42020135, 42020135, 0, 100, 1, 155, 57, 6, '',
   14007099, 1, 0, 0, 1, 0, 0, 0, '', 0,
   31, 1000000, 151200000, 2, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, ''
 FROM `accounts` a
 WHERE a.`name` = 'god'
-  AND NOT EXISTS (SELECT 1 FROM `players` p WHERE p.`name` = 'Energy');
+  AND NOT EXISTS (SELECT 1 FROM `players` p WHERE p.`name` = '[ADM] Energy');
 
--- Rename leftover backup name if present on god account
+-- Rename leftover backup / previous seed names if present on god account
 UPDATE `players` p
 INNER JOIN `accounts` a ON a.`id` = p.`account_id` AND a.`name` = 'god'
-SET p.`name` = 'Energy', p.`group_id` = 7
+SET p.`name` = '[ADM] Energy', p.`group_id` = 7
 WHERE p.`name` = '[ADM] Socks';
+
+UPDATE `players` p
+INNER JOIN `accounts` a ON a.`id` = p.`account_id` AND a.`name` = 'god'
+SET p.`name` = '[ADM] Energy', p.`group_id` = 7
+WHERE p.`name` = 'Energy';
 
 INSERT INTO `players` (
   `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`,
@@ -77,7 +82,7 @@ FROM `accounts` a
 WHERE a.`name` = 'god'
   AND NOT EXISTS (SELECT 1 FROM `players` p WHERE p.`name` = 'Smartbox Test');
 
--- Default skills for Energy / Test / Smartbox Test when missing
+-- Default skills for [ADM] Energy / Test / Smartbox Test when missing
 INSERT INTO `player_skills` (`player_id`, `skillid`, `value`, `count`)
 SELECT p.`id`, s.`skillid`, s.`value`, s.`count`
 FROM `players` p
@@ -91,7 +96,7 @@ CROSS JOIN (
   UNION ALL SELECT 5, 10, 0
   UNION ALL SELECT 6, 10, 0
 ) AS s
-WHERE p.`name` IN ('Energy', 'Test', 'Smartbox Test')
+WHERE p.`name` IN ('[ADM] Energy', 'Test', 'Smartbox Test')
   AND NOT EXISTS (
     SELECT 1 FROM `player_skills` ps
     WHERE ps.`player_id` = p.`id` AND ps.`skillid` = s.`skillid`
