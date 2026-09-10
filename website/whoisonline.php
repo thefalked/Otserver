@@ -151,12 +151,12 @@ else {
 			$cp .= '<a href="?subtopic=characters&name='.urlencode($p['name']).'">'.h($p['name']).'</a></td><td style="width:10%">'.h($p['level']).'</td><td style="width:20%">'.h(str_replace(' ','*',($vocation_name[$id][$p['promotion']][$p['vocation']] ?? ''))).'</td></tr>';
 		}
 	}
-	file_put_contents($f, $cp);
+	@file_put_contents($f, $cp);
 }
 if(!$cached) {
 	$r=$SQL->query('SELECT MAX(record) as r,MAX(timestamp) as t FROM server_record WHERE world_id='.$id)->fetch();
 	$c = $r['r'].' players (on '.date('d/M/Y,H:i:s T', $r['t']).')';
-	file_put_contents($ff, $n.'|'.$c);
+	@file_put_contents($ff, $n.'|'.$c);
 }
 $main_content .= $n.'</td>
 						</tr>
