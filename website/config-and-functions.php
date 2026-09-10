@@ -78,15 +78,18 @@ function isPremium($premdays, $lastday)
 //save config in ini file
 function saveconfig_ini($config)
 {
-	$file = fopen("config/config.ini", "w");
+	$file = @fopen("config/config.ini", "w");
+	if ($file === false) {
+		return false;
+	}
 	$file_data = '';
 	foreach ($config as $param => $data) {
 		$file_data .= $param . ' = "' . str_replace('"', '', $data) . '"
 ';
 	}
-	rewind($file);
 	fwrite($file, $file_data);
 	fclose($file);
+	return true;
 }
 
 function h($s)

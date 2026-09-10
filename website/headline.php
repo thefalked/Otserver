@@ -37,31 +37,36 @@ if ($font === null || !is_file($base)) {
 	exit;
 }
 
-if (!file_exists($path)) {
-	// Prefer regenerating over legacy caches (often drawn with fonts missing accents)
-	$image = imagecreatefrompng($base);
-	if ($image === false) {
-		http_response_code(500);
+header('Content-Type: image/png');
+header('Cache-Control: public, max-age=86400');
+
+if (is_file($path)) {
+	$pic = @imagecreatefrompng($path);
+	if ($pic !== false) {
+		imagepng($pic);
+		imagedestroy($pic);
 		exit;
 	}
-	imagealphablending($image, true);
-	imagesavealpha($image, true);
-	$color = imagecolorallocate($image, 240, 209, 164);
-	imagettftext($image, 14, 0, 4, 20, $color, $font, $text);
-	imagepng($image, $path);
-	imagedestroy($image);
+}
+
+$image = imagecreatefrompng($base);
+if ($image === false) {
+	http_response_code(500);
+	exit;
+}
+imagealphablending($image, true);
+imagesavealpha($image, true);
+$color = imagecolorallocate($image, 240, 209, 164);
+imagettftext($image, 14, 0, 4, 20, $color, $font, $text);
+
+// Prefer disk cache when the bind-mount is writable; otherwise stream only.
+if (is_writable($dir)) {
+	@imagepng($image, $path);
 	if (is_file($legacyPath) && realpath($legacyPath) !== realpath($path)) {
 		@unlink($legacyPath);
 	}
 }
 
-$pic = imagecreatefrompng($path);
-if ($pic === false) {
-	http_response_code(500);
-	exit;
-}
-header('Content-Type: image/png');
-header('Cache-Control: public, max-age=86400');
-imagepng($pic);
-imagedestroy($pic);
+imagepng($image);
+imagedestroy($image);
 ?>
