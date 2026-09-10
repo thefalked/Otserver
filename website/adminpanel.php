@@ -38,8 +38,8 @@ showednewnews_state = "0";
 </table>';
     $main_content .= '<center><h2>Load configurations</h2></center>Here you can choose what configuration you want to reload. It load configuration from OTS files.<br/><table style=\'clear:both\' border=0 cellpadding=0 cellspacing=0 width=\'100%\'>
 <tr bgcolor=' . $config['site']['darkborder'] . '><td width="150"><font color="red"><b>Option</b></font></td><td><font color="red"><b>Description</b></font></td></tr>
-<tr bgcolor=' . $config['site']['lightborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_monsters">Reload Monsters</a></b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
-<tr bgcolor=' . $config['site']['darkborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_spells">Reload Spells</a></b></td><td><b>Load information about spells from file "your_server_path/data/spells/spells.xml". Delete old spells configuration!</b></td></tr>
+<tr bgcolor=' . $config['site']['lightborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_monsters&' . csrf_query() . '">Reload Monsters</a></b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
+<tr bgcolor=' . $config['site']['darkborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_spells&' . csrf_query() . '">Reload Spells</a></b></td><td><b>Load information about spells from file "your_server_path/data/spells/spells.xml". Delete old spells configuration!</b></td></tr>
 </table>';
   }
 
@@ -47,8 +47,8 @@ showednewnews_state = "0";
   if ($action == "reloadconfigs") {
     $main_content .= '<center><h2>Load configurations</h2></center>Here you can choose what configuration you want to reload. It load configuration from OTS files.<br/><table style=\'clear:both\' border=0 cellpadding=0 cellspacing=0 width=\'100%\'>
 <tr bgcolor=' . $config['site']['darkborder'] . '><td width="150"><font color="red"><b>Option</b></font></td><td><font color="red"><b>Description</b></font></td></tr>
-<tr bgcolor=' . $config['site']['lightborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_monsters">Reload Monsters</a></b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
-<tr bgcolor=' . $config['site']['darkborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_spells">Reload Spells</a></b></td><td><b>Load information about spells from file "your_server_path/data/spells/spells.xml". Delete old spells configuration!</b></td></tr>
+<tr bgcolor=' . $config['site']['lightborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_monsters&' . csrf_query() . '">Reload Monsters</a></b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
+<tr bgcolor=' . $config['site']['darkborder'] . '><td width="150"><b><a href="?subtopic=adminpanel&action=install_spells&' . csrf_query() . '">Reload Spells</a></b></td><td><b>Load information about spells from file "your_server_path/data/spells/spells.xml". Delete old spells configuration!</b></td></tr>
 </table>';
     $main_content .= '<br/><center><form action="?subtopic=adminpanel" METHOD=post><div class="BigButton" style="background-image:url(' . $layout_name . '/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url(' . $layout_name . '/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="' . $layout_name . '/images/buttons/_sbutton_back.gif" ></div></div></form></center>';
   }
@@ -57,6 +57,7 @@ showednewnews_state = "0";
   if ($action == "editmonsters") {
 
     if ($_REQUEST['todo'] == "setall") {
+      csrf_require();
       $visibility = $_REQUEST['visibility'];
       if ($visibility == "visible") {
         try {
@@ -82,20 +83,22 @@ showednewnews_state = "0";
           $monster = $SQL->query('SELECT * FROM z_monsters WHERE name = ' . $SQL->quote($monster_name) . ';')->fetch();
         } catch (PDOException $error) {
         }
-        $main_content .= '<center><h2>Edit link</h2></center><b>Link to image: </b>' . $config['server']['url'] . '/monsters/<form action="?subtopic=adminpanel&action=editmonsters&todo=editgfxlink" method=POST><input type="hidden" name="savenewgfxlink" value="yes"><input type="hidden" name="monster" value="' . $monster_name . '"><input type="text" name="new_link" value="' . $monster['gfx_name'] . '"><input type="submit" value="Save"></form>';
+        $main_content .= '<center><h2>Edit link</h2></center><b>Link to image: </b>' . $config['server']['url'] . '/monsters/<form action="?subtopic=adminpanel&action=editmonsters&todo=editgfxlink" method=POST>' . csrf_field() . '<input type="hidden" name="savenewgfxlink" value="yes"><input type="hidden" name="monster" value="' . h($monster_name) . '"><input type="text" name="new_link" value="' . h($monster['gfx_name']) . '"><input type="submit" value="Save"></form>';
       } else {
+        csrf_require();
         try {
           $SQL->query('UPDATE z_monsters SET gfx_name = ' . $SQL->quote($new_link) . ' WHERE name = ' . $SQL->quote($monster_name) . ';');
         } catch (PDOException $error) {
         }
-        $main_content .= 'New link <b>' . $new_link . '</b> to <b>' . $monster_name . '</b> has been saved.<br/>';
+        $main_content .= 'New link <b>' . h($new_link) . '</b> to <b>' . h($monster_name) . '</b> has been saved.<br/>';
       }
     }
 
     if ($_REQUEST['todo'] == "hide_monsters") {
+      csrf_require();
       $main_content .= '<center><h2>Hide monsters</h2></center>Monsters:<b>';
       foreach ($_REQUEST['hide_array'] as $monster_to_hide) {
-        $main_content .= '<li>' . $monster_to_hide;
+        $main_content .= '<li>' . h($monster_to_hide);
         try {
           $SQL->query('UPDATE z_monsters SET hide_creature = 1 WHERE name = ' . $SQL->quote(stripslashes($monster_to_hide)) . ';');
         } catch (PDOException $error) {
@@ -105,9 +108,10 @@ showednewnews_state = "0";
     }
 
     if ($_REQUEST['todo'] == "show_monsters") {
+      csrf_require();
       $main_content .= '<center><h2>Show monsters</h2></center>Monsters:<b>';
       foreach ($_REQUEST['show_array'] as $monster_to_hide) {
-        $main_content .= '<li>' . $monster_to_hide;
+        $main_content .= '<li>' . h($monster_to_hide);
         try {
           $SQL->query('UPDATE z_monsters SET hide_creature = 0 WHERE name = ' . $SQL->quote(stripslashes($monster_to_hide)) . ';');
         } catch (PDOException $error) {
@@ -122,7 +126,7 @@ showednewnews_state = "0";
         $monsters = $SQL->query('SELECT * FROM z_monsters WHERE hide_creature != 1 ORDER BY name');
       } catch (PDOException $error) {
       }
-      $main_content .= '<center><h2>Edit monsters</h2></center><h3>Visible monsters</h3><h4><a href="?subtopic=adminpanel&action=editmonsters&todo=setall&visibility=hidden">Set all monsters HIDDEN</a></h4><form action="?subtopic=adminpanel&action=editmonsters&todo=hide_monsters" method=POST><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD CLASS=white width="200"><B><font CLASS=white>Photo</B></TD><TD CLASS=white width="200"><B><font CLASS=white>Edit photo</B></TD><TD CLASS=white width="200"><B><font CLASS=white>Name</B></TD><TD CLASS=white><B><font CLASS=white>Health</B></TD><TD CLASS=white><B><font CLASS=white>Experience</B></TD><TD CLASS=white><B><font CLASS=white>Hide Creature</B></TD></TR>';
+      $main_content .= '<center><h2>Edit monsters</h2></center><h3>Visible monsters</h3><h4><a href="?subtopic=adminpanel&action=editmonsters&todo=setall&visibility=hidden&' . csrf_query() . '">Set all monsters HIDDEN</a></h4><form action="?subtopic=adminpanel&action=editmonsters&todo=hide_monsters" method=POST>' . csrf_field() . '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD CLASS=white width="200"><B><font CLASS=white>Photo</B></TD><TD CLASS=white width="200"><B><font CLASS=white>Edit photo</B></TD><TD CLASS=white width="200"><B><font CLASS=white>Name</B></TD><TD CLASS=white><B><font CLASS=white>Health</B></TD><TD CLASS=white><B><font CLASS=white>Experience</B></TD><TD CLASS=white><B><font CLASS=white>Hide Creature</B></TD></TR>';
       foreach ($monsters as $monster) {
         if (is_int($number_of_rows / 2)) {
           $bgcolor = $config['site']['lightborder'];
@@ -145,7 +149,7 @@ showednewnews_state = "0";
         $monsters = $SQL->query('SELECT * FROM z_monsters WHERE hide_creature != 0 ORDER BY name');
       } catch (PDOException $error) {
       }
-      $main_content .= '<h3>Hidden monsters:</h3><h4><a href="?subtopic=adminpanel&action=editmonsters&todo=setall&visibility=visible">Set all monsters VISIBLE</a></h4><form action="?subtopic=adminpanel&action=editmonsters&todo=show_monsters" method=POST><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD CLASS=white width="200"><B><font CLASS=white>Photo</B></TD><TD CLASS=white width="200"><B><font CLASS=white>Edit photo</B></TD><TD CLASS=white width="200"><B><font CLASS=white>Name</B></TD><TD CLASS=white><B><font CLASS=white>Health</B></TD><TD CLASS=white><B><font CLASS=white>Experience</B></TD><TD CLASS=white><B><font CLASS=white>Hide Creature</B></TD></TR>';
+      $main_content .= '<h3>Hidden monsters:</h3><h4><a href="?subtopic=adminpanel&action=editmonsters&todo=setall&visibility=visible&' . csrf_query() . '">Set all monsters VISIBLE</a></h4><form action="?subtopic=adminpanel&action=editmonsters&todo=show_monsters" method=POST>' . csrf_field() . '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD CLASS=white width="200"><B><font CLASS=white>Photo</B></TD><TD CLASS=white width="200"><B><font CLASS=white>Edit photo</B></TD><TD CLASS=white width="200"><B><font CLASS=white>Name</B></TD><TD CLASS=white><B><font CLASS=white>Health</B></TD><TD CLASS=white><B><font CLASS=white>Experience</B></TD><TD CLASS=white><B><font CLASS=white>Hide Creature</B></TD></TR>';
       foreach ($monsters as $monster) {
         if (is_int($number_of_rows / 2)) {
           $bgcolor = $config['site']['lightborder'];
@@ -169,6 +173,7 @@ showednewnews_state = "0";
   //EDIT SPELLS
   if ($action == "editspells") {
     if (!empty($_REQUEST['allspells'])) {
+      csrf_require();
       if ($_REQUEST['allspells'] == 'visible') {
         try {
           $SQL->query('UPDATE z_spells SET hide_spell = "0"');
@@ -206,7 +211,7 @@ showednewnews_state = "0";
       $spells = $SQL->query('SELECT * FROM z_spells ORDER BY name');
     } catch (PDOException $error) {
     }
-    $main_content .= '<FORM ACTION="?subtopic=adminpanel&action=editspells" METHOD=post>'.csrf_field().'<input type="hidden" name="savespell" value="yes">
+    $main_content .= '<FORM ACTION="?subtopic=adminpanel&action=editspells" METHOD=post>' . csrf_field() . '<input type="hidden" name="savespell" value="yes">
 <TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
 <TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD CLASS=white><B>Set spell visible or hidden</B></TD></TR>
 <TR BGCOLOR=' . $config['site']['darkborder'] . '><TD><b>Spell: </b><SELECT NAME="spell_name">';
@@ -221,7 +226,7 @@ showednewnews_state = "0";
     $main_content .= '</SELECT><b>Visible:</b> Yes<input type="radio" name="visible" value="yes" />No<input type="radio" name="visible" value="no" />&nbsp;&nbsp;&nbsp;<INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="' . $layout_name . '/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD><TR>
 </TABLE></FORM>';
     //show visible spells
-    $main_content .= '<h3>Visible spells list:</h3><a href="?subtopic=adminpanel&action=editspells&allspells=hidden">Set all spells: HIDDEN</a><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD><B><font CLASS=white>Name</font></B></TD><TD><B><font CLASS=white>Sentence</font></a></B></TD><TD><B><font CLASS=white>Type<br/>(count)</font></B></TD><TD><B><font CLASS=white>Mana</font></B></TD><TD><B><font CLASS=white>Exp.<br/>Level</font></B></TD><TD><B><font CLASS=white>Magic<br/>Level</font></B></TD><TD><B><font CLASS=white>Soul</font></B></TD><TD CLASS=white><B>Need<br/>PACC?</B></TD></TR>';
+    $main_content .= '<h3>Visible spells list:</h3><a href="?subtopic=adminpanel&action=editspells&allspells=hidden&' . csrf_query() . '">Set all spells: HIDDEN</a><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD><B><font CLASS=white>Name</font></B></TD><TD><B><font CLASS=white>Sentence</font></a></B></TD><TD><B><font CLASS=white>Type<br/>(count)</font></B></TD><TD><B><font CLASS=white>Mana</font></B></TD><TD><B><font CLASS=white>Exp.<br/>Level</font></B></TD><TD><B><font CLASS=white>Magic<br/>Level</font></B></TD><TD><B><font CLASS=white>Soul</font></B></TD><TD CLASS=white><B>Need<br/>PACC?</B></TD></TR>';
     try {
       $spells = $SQL->query('SELECT * FROM z_spells ORDER BY name');
     } catch (PDOException $error) {
@@ -245,7 +250,7 @@ showednewnews_state = "0";
     }
     $main_content .= '</TABLE>';
     //show hidden spells
-    $main_content .= '<h3>Hidden spells list:</h3><a href="?subtopic=adminpanel&action=editspells&allspells=visible">Set all spells: VISIBLE</a><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD><B><font CLASS=white>Name</font></B></TD><TD><B><font CLASS=white>Sentence</font></a></B></TD><TD><B><font CLASS=white>Type<br/>(count)</font></B></TD><TD><B><font CLASS=white>Mana</font></B></TD><TD><B><font CLASS=white>Exp.<br/>Level</font></B></TD><TD><B><font CLASS=white>Magic<br/>Level</font></B></TD><TD><B><font CLASS=white>Soul</font></B></TD><TD CLASS=white><B>Need<br/>PACC?</B></TD></TR>';
+    $main_content .= '<h3>Hidden spells list:</h3><a href="?subtopic=adminpanel&action=editspells&allspells=visible&' . csrf_query() . '">Set all spells: VISIBLE</a><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' . $config['site']['vdarkborder'] . '><TD><B><font CLASS=white>Name</font></B></TD><TD><B><font CLASS=white>Sentence</font></a></B></TD><TD><B><font CLASS=white>Type<br/>(count)</font></B></TD><TD><B><font CLASS=white>Mana</font></B></TD><TD><B><font CLASS=white>Exp.<br/>Level</font></B></TD><TD><B><font CLASS=white>Magic<br/>Level</font></B></TD><TD><B><font CLASS=white>Soul</font></B></TD><TD CLASS=white><B>Need<br/>PACC?</B></TD></TR>';
     try {
       $spells = $SQL->query('SELECT * FROM z_spells ORDER BY name');
     } catch (PDOException $error) {
@@ -272,6 +277,7 @@ showednewnews_state = "0";
 
   //INSTALL MONSTERS
   if ($action == "install_monsters") {
+    csrf_require();
     try {
       $SQL->query("DELETE FROM " . $SQL->tableName('z_monsters') . ";");
     } catch (PDOException $error) {
@@ -355,6 +361,7 @@ showednewnews_state = "0";
 
   //SPELLS
   if ($action == "install_spells") {
+    csrf_require();
     try {
       $SQL->query('DELETE FROM ' . $SQL->tableName('z_spells') . ';');
     } catch (PDOException $error) {
