@@ -2,6 +2,7 @@
 $ok = "/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}/";
 echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>';
 $config['site_ini'] = parse_ini_file('../config/config.ini');
+include('../parse_config_lua.php');
 include('../config/config.php');
 $email = trim($_REQUEST['email']);
 if(empty($email))
@@ -16,7 +17,7 @@ if(strlen($email) < 255)
 		if($config['site']['one_email'])
 		{
 			//connect to DB
-			$server_config = parse_ini_file($config['site_ini']['server_path'].'config.lua');
+			$server_config = parse_config_lua($config['site_ini']['server_path'].'config.lua');
 			if(isset($server_config['mysqlHost']))
 			{
 				//new (0.2.6+) ots config.lua file

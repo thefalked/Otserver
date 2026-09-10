@@ -1,6 +1,7 @@
 <?PHP
 echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>';
 $config_ini = parse_ini_file('../config/config.ini');
+include('../parse_config_lua.php');
 include('../config/config.php');
 $name = strtolower(stripslashes(trim($_REQUEST['name'])));
 if(empty($name))
@@ -100,7 +101,7 @@ if(substr($name, -2, 1) == " ")
 }
 else
 		//connect to DB
-		$server_config = parse_ini_file($config_ini['server_path'].'config.lua');
+		$server_config = parse_config_lua($config_ini['server_path'].'config.lua');
 		if(isset($server_config['mysqlHost']))
 		{
 			//new (0.2.6+) ots config.lua file
