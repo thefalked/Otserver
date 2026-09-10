@@ -104,10 +104,10 @@ $news_content .= '<center><h2><font color="red">Added new ticker:</font></h2></c
     <div class="NewsTickerText">
       <span class="NewsTickerDate">'.date("j M Y", $time).' -</span>
       <div id="TickerEntry-1-ShortText" class="NewsTickerShortText">';
-$news_content .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$time.'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
+$news_content .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$time.'&'.csrf_query().'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
 $news_content .= short_text($ticker_text, 60).'</div>
       <div id="TickerEntry-1-FullText" class="NewsTickerFullText">';
-$news_content .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$time.'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
+$news_content .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$time.'&'.csrf_query().'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
 $news_content .= $ticker_text.'</div>
     </div>
   </div>
@@ -123,6 +123,7 @@ $news_content .= '<form action="?subtopic=latestnews" METHOD=post><div class="Bi
 //#################### DELETE (HIDE only!) TICKER ############################
 if($action == "deleteticker") {
 if($group_id_of_acc_logged >= $config['site']['access_tickers']) {
+csrf_require();
 header("Location: ");
 $date = (int) $_REQUEST['id'];
 $SQL->query('UPDATE '.$SQL->tableName('z_news_tickers').' SET hide_ticker = 1 WHERE '.$SQL->fieldName('date').' = '.$date.';');
@@ -151,13 +152,13 @@ $tickers_to_add .= '<div id="TickerEntry-'.$number_of_tickers.'" class="Row" onc
       <div id="TickerEntry-'.$number_of_tickers.'-ShortText" class="NewsTickerShortText">';
 //if admin show button to delete (hide) ticker
 if($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-$tickers_to_add .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$ticker['date'].'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
+$tickers_to_add .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$ticker['date'].'&'.csrf_query().'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
 }
 $tickers_to_add .= short_text(h($ticker['text']), 60).'</div>
       <div id="TickerEntry-'.$number_of_tickers.'-FullText" class="NewsTickerFullText">';
 //if admin show button to delete (hide) ticker
 if($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-$tickers_to_add .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$ticker['date'].'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
+$tickers_to_add .= '<a href="?subtopic=latestnews&action=deleteticker&id='.$ticker['date'].'&'.csrf_query().'"><img src="'.$layout_name.'/images/news/delete.png" border="0"></a>';
 }
 $tickers_to_add .= h($ticker['text']).'</div>
     </div>
