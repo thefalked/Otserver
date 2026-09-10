@@ -78,7 +78,7 @@
 	<talkaction words="!serverinfo" event="script" value="serverinfo.lua"/>
 	<talkaction words="/commands" event="script" value="commands.lua"/>
 	<talkaction words="!addon" event="script" value="addondoll.lua"/>
-	<talkaction words="!reparar;/reparar" script="repair.lua"/>
+	<talkaction words="!reparar;/reparar" script="Repair.lua"/>
   	<talkaction words="!vipdays;!buyvip;/checkvip;/;/delvip" script="systemvip.lua"/>
 	<talkaction words="!party" event="script" value="party.lua"/>
 	<talkaction words="!changeoutfit" script="guild.lua"/>

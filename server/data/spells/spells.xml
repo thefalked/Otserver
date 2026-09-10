@@ -58,7 +58,7 @@
                  <vocation id="6" />
 				 <vocation id="7" />
         </instant>
-        <instant name="gran trap" words="exevo gran trap" lvl="200" mana="1200" prem="1" aggressive="0" selftarget="1" exhaustion="3000" needlearn="0" script="trap.lua">
+        <instant name="gran trap" words="exevo gran trap" lvl="200" mana="1200" prem="1" aggressive="0" selftarget="1" exhaustion="3000" needlearn="0" script="Trap.lua">
                  <vocation id="1" />
                  <vocation id="2" />
                  <vocation id="3" />
