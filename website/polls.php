@@ -78,11 +78,12 @@ if($logged)
     
     if(!empty($_REQUEST['id']) and $_REQUEST['control'] != "true")
     {
+        $poll_id = (int) $_REQUEST['id'];
         foreach($POLLS as $POLL)
         {
-            if($_REQUEST['id'] == $POLL['id'])
+            if($poll_id === (int) $POLL['id'])
             {
-                $ANSWERS = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.addslashes(htmlspecialchars(trim($_REQUEST['id']))).' order by `answer_id`');
+                $ANSWERS = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$poll_id.' order by `answer_id`');
                 $votes_all = $POLL['votes_all'];
                 
                 if($votes_all == 0)
@@ -108,30 +109,30 @@ if($logged)
                 {
                     if($_REQUEST['vote'] == true and $allow == true)
                     {
-                        if($account_logged->getCustomField('vote') < $_REQUEST['id'] and !empty($_POST['answer']))
+                        if($account_logged->getCustomField('vote') < $poll_id and !empty($_POST['answer']))
                         {
                             if(isset($_POST['continue']))
                             {
                                 csrf_require();
-                                $vote = (int)$_REQUEST['id'];
+                                $vote = $poll_id;
                                 $account_logged->setCustomField("vote", $vote);
                                 $UPDATE_poll = $SQL->query('UPDATE `z_polls` SET `votes_all` = `votes_all` + 1 where `id` = '.$vote);
                                 $UPDATE_answer = $SQL->query('UPDATE `z_polls_answers` SET `votes` = `votes` + 1 where `answer_id` = '.(int)$_POST['answer'].' and `poll_id` = '.$vote);
-                                header('Location: index.php?subtopic='.$link.'&id='.$_REQUEST['id'].'');
+                                header('Location: index.php?subtopic='.$link.'&id='.$poll_id);
                             }
                         }
                         else
                         {
-                            header('Location: index.php?subtopic='.$link.'&id='.$_REQUEST['id'].'');
+                            header('Location: index.php?subtopic='.$link.'&id='.$poll_id);
                         }
                     }
                     
-                    if($account_logged->getCustomField('vote') < $_REQUEST['id'] and $allow == true)
+                    if($account_logged->getCustomField('vote') < $poll_id and $allow == true)
                     {
                         $main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=2 CLASS=white><B>Vote</B></TD></TR>';
                         $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=2><b>'.h($POLL['question']).'</b></td></tr>
-                        <form action="index.php?subtopic='.$link.'&id='.$_REQUEST['id'].'&vote=true" method="POST">' . csrf_field() . ' ';
-                        $ANSWERS_input = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$_REQUEST['id'].' order by `answer_id`');
+                        <form action="index.php?subtopic='.$link.'&id='.$poll_id.'&vote=true" method="POST">' . csrf_field() . ' ';
+                        $ANSWERS_input = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$poll_id.' order by `answer_id`');
                         $i=1;
                         foreach($ANSWERS_input as $answer)
                         {
@@ -142,12 +143,12 @@ if($logged)
                             {
                                 $bgcolor = $light;
                             }
-                            $main_content .= '<tr BGCOLOR="'.$bgcolor.'"><td><input type=radio name=answer value="'.$i.'">'.$answer['answer'].'</td></tr>';
+                            $main_content .= '<tr BGCOLOR="'.$bgcolor.'"><td><input type=radio name=answer value="'.$i.'">'.h($answer['answer']).'</td></tr>';
                             $i++;
                         }
                         $main_content .= '</table><input type="submit" name="continue" value="Submit" class="input2" /></form><br><br>';
                     }
-                    elseif($account_logged->getCustomField('vote') >= $_REQUEST['id'])
+                    elseif($account_logged->getCustomField('vote') >= $poll_id)
                     {
                         $result[] = '<br><b>You have already voted.</b><br>';
                     }
@@ -156,7 +157,7 @@ if($logged)
 
                     $main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=3 CLASS=white><B>Results</B></TD></TR>';
                     $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=3><b>'.h($POLL['question']).'</b></td></tr>';
-                    $ANSWERS_show = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$_REQUEST['id'].' order by `answer_id`');
+                    $ANSWERS_show = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$poll_id.' order by `answer_id`');
                     $i=1;
                     foreach($ANSWERS_show as $answer)
                     {
@@ -168,7 +169,7 @@ if($logged)
                             $bgcolor = $light;
                         }
                         $x=0;
-                        $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><td width=60%>'.$answer['answer'].'</td><td width=20%><img src="bar.php?long='.(int) $percent[$i].'"></td><td>'.$answer['votes'].'('.color($percent[$i], $color[0], $color[1], $color[2], $color[3]).')</td></tr>';
+                        $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><td width=60%>'.h($answer['answer']).'</td><td width=20%><img src="bar.php?long='.(int) $percent[$i].'"></td><td>'.$answer['votes'].'('.color($percent[$i], $color[0], $color[1], $color[2], $color[3]).')</td></tr>';
                         $i++;
                     }
                     $main_content .= '</table>';
@@ -187,7 +188,7 @@ if($logged)
                 {
                     $main_content .= '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR='.$config['site']['vdarkborder'].'><TD COLSPAN=3 CLASS=white><B>Results</B></TD></TR>';
                     $main_content .= '<TR BGCOLOR="'.$dark.'"><td COLSPAN=3 CLASS=white><b>'.h($POLL['question']).'</b></td></tr>';
-                    $ANSWERS_show = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$_REQUEST['id'].' order by `answer_id`');
+                    $ANSWERS_show = $SQL->query('SELECT * FROM '.$SQL->tableName('z_polls_answers').' where `poll_id` = '.$poll_id.' order by `answer_id`');
                     $i=1;
                     foreach($ANSWERS_show as $answer)
                     {
@@ -198,7 +199,7 @@ if($logged)
                         {
                             $bgcolor = $light;
                         }
-                        $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><td width=60%>'.$answer['answer'].'</td><td width=20%><img src="bar.php?long='.(int) $percent[$i].'"></td><td>'.$answer['votes'].'('.color($percent[$i], $color[0], $color[1], $color[2], $color[3]).')</td></tr>';
+                        $main_content .= '<TR BGCOLOR="'.$bgcolor.'"><td width=60%>'.h($answer['answer']).'</td><td width=20%><img src="bar.php?long='.(int) $percent[$i].'"></td><td>'.$answer['votes'].'('.color($percent[$i], $color[0], $color[1], $color[2], $color[3]).')</td></tr>';
                         $i++;
                     }
                     $main_content .= '</table><br><br>';
@@ -225,8 +226,9 @@ if($logged)
     {
         if(isset($_POST['submit']))
         {
-            $_SESSION['answers'] = $_POST['answers'];
-            $main_content .= '<form method="post" action=""><b><font size=3>Adding Poll</font></b><br><br>
+            csrf_require();
+            $_SESSION['answers'] = max(1, min(20, (int) $_POST['answers']));
+            $main_content .= '<form method="post" action="">'.csrf_field().'<b><font size=3>Adding Poll</font></b><br><br>
             <input type=text name=question value="" /> Question<br>
             <input type=text name=end value="" /> Time to end, in days<br>';
             
@@ -240,15 +242,17 @@ if($logged)
 
         if(isset($_POST['finish']))
         {
+                csrf_require();
                 $id = $SQL->query('SELECT MAX(id) FROM `z_polls`')->fetch();
-                $id_next = $id[0] + 1;
+                $id_next = (int) $id[0] + 1;
+                $answers_count = max(1, min(20, (int) ($_SESSION['answers'] ?? 0)));
                 
-                for( $x = 1; $x <= $_SESSION['answers']; $x++ )
+                for( $x = 1; $x <= $answers_count; $x++ )
                 {
-                    $INSERT_answer = $SQL->query('INSERT INTO `z_polls_answers` (`poll_id`,`answer_id`,`answer`) VALUES ('.$SQL->quote($id_next).','.$SQL->quote($x).','.$SQL->quote($_POST[$x]).')');
+                    $INSERT_answer = $SQL->query('INSERT INTO `z_polls_answers` (`poll_id`,`answer_id`,`answer`) VALUES ('.$SQL->quote($id_next).','.$SQL->quote($x).','.$SQL->quote($_POST[$x] ?? '').')');
                 }
-                $end = $time+24*60*60*$_POST['end'];
-                $INSERT_poll = $SQL->query('INSERT INTO `z_polls` (`id`,`question`,`end`,`answers`,`start`) VALUES ('.$SQL->quote($id_next).','.$SQL->quote($_POST['question']).','.$SQL->quote($end).','.$SQL->quote($_SESSION['answers']).','.$SQL->quote($time).')');
+                $end = $time+24*60*60*max(1, (int) $_POST['end']);
+                $INSERT_poll = $SQL->query('INSERT INTO `z_polls` (`id`,`question`,`end`,`answers`,`start`) VALUES ('.$SQL->quote($id_next).','.$SQL->quote($_POST['question'] ?? '').','.$SQL->quote($end).','.$SQL->quote($answers_count).','.$SQL->quote($time).')');
         }
             
         $POLLS_check = $SQL->query('SELECT MAX(end) FROM '.$SQL->tableName('z_polls').'');
@@ -263,7 +267,7 @@ if($logged)
         {
             if(!$check)
             {
-                $main_content .= '<form method="post" action=""><b><font size=3>Adding Poll</font></b><br><br>
+                $main_content .= '<form method="post" action="">'.csrf_field().'<b><font size=3>Adding Poll</font></b><br><br>
                 <input type=text name=answers value="" /> Number of Answers<br>
                 <input type="submit" name="submit" value="Submit" class="input2"/></form><br><br>';
             }
