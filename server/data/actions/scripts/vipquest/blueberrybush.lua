@@ -2,7 +2,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 	if item.itemid == ITEM_BLUEBERRYBUSH then
 		doTransformItem(item.uid, ITEM_BUSH)
 		doCreateItem(ITEM_BLUEBERRY, 3, fromPosition)
-		addEvent(transformBack, 300000, {position = fromPosition})
+		addEvent(transformBack, 300000, { position = fromPosition })
 	end
 	return TRUE
 end

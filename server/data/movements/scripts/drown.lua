@@ -4,7 +4,7 @@ setConditionParam(condition, CONDITION_PARAM_TICKS, -1)
 setConditionParam(condition, CONDITION_PARAM_TICKINTERVAL, 2000)
 
 function onStepIn(cid, item, position, fromPosition)
-	if(isPlayer(cid)) then
+	if isPlayer(cid) then
 		doAddCondition(cid, condition)
 	end
 	return true

@@ -2,7 +2,7 @@
 -- to make door for level x create door on map and set its actionid to x+1000
 
 function onUse(cid, item, frompos, item2, topos)
-	reqlevel = item.actionid - 1000	-- actionids below 100 are reserved
+	reqlevel = item.actionid - 1000 -- actionids below 100 are reserved
 
 	if reqlevel > 0 then
 		if getPlayerLevel(cid) >= reqlevel then
@@ -21,14 +21,14 @@ function onUse(cid, item, frompos, item2, topos)
 					pos.x = topos.x - 1
 				end
 			else
-				doPlayerSendTextMessage(cid,22,'Stand in front of the door.')
+				doPlayerSendTextMessage(cid, 22, "Stand in front of the door.")
 				return 1
 			end
 
-			doTeleportThing(cid,pos)
-			doSendMagicEffect(topos,12)
+			doTeleportThing(cid, pos)
+			doSendMagicEffect(topos, 12)
 		else
-			doPlayerSendTextMessage(cid,22,'You need level ' .. reqlevel .. ' to pass this door.')
+			doPlayerSendTextMessage(cid, 22, "You need level " .. reqlevel .. " to pass this door.")
 		end
 		return 1
 	else

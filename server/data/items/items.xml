@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <items>
 	<item id="100" name="void" />
 	<item id="101" name="earth" />
@@ -104,7 +104,8 @@
 		<attribute key="floorchange" value="down" />
 		<attribute key="decayTo" value="461" />
 		<attribute key="duration" value="120" />
-	</item>8
+	</item>
+	8
 	<item id="463" article="a" name="pedestal" />
 	<item id="464" article="a" name="sandstone wall" />
 	<item id="465" article="a" name="stone tile">
@@ -1881,12 +1882,12 @@
 		<attribute key="decayTo" value="10021" />
 		<attribute key="healthGain" value="100" />
 		<attribute key="healthTicks" value="5000" />
-                                   <attribute key="charges" value="40" />
+		<attribute key="charges" value="40" />
 		<attribute key="showcharges" value="1" />
 		<attribute key="manaGain" value="100" />
 		<attribute key="manaTicks" value="5000" />
 		<attribute key="showduration" value="1" />
-                                   <attribute key="charges" value="1" />
+		<attribute key="charges" value="1" />
 		<attribute key="preventDrop" value="1" />
 	</item>
 	<item id="2136" article="a" name="demonbone amulet">
@@ -2331,15 +2332,15 @@
 		<attribute key="weight" value="110" />
 		<attribute key="slotType" value="ring" />
 		<attribute key="decayTo" value="0" />
-                <attribute key="skillClub" value="80" />
-<attribute key="skillaxe" value="80" />
-<attribute key="skillsword" value="80" />
+		<attribute key="skillClub" value="80" />
+		<attribute key="skillaxe" value="80" />
+		<attribute key="skillsword" value="80" />
 		<attribute key="magiclevelpoints" value="80" />
 
 		<attribute key="transformDeEquipTo" value="2213" />
 		<attribute key="suppressDrunk" value="100" />
 		<attribute key="healthGain" value="200" />
-                <attribute key="speed" value="360" />
+		<attribute key="speed" value="360" />
 		<attribute key="healthTicks" value="1000" />
 		<attribute key="manaGain" value="200" />
 		<attribute key="manaTicks" value="1000" />
@@ -2516,10 +2517,10 @@
 	</item>
 	<item id="2275" article="an" name="life rune">
 		<attribute key="weight" value="120" />
-        </item>
-                <item id="2276" article="an" name="Mana Rune">
-		<attribute key="weight" value="120" /> 
-        </item>
+	</item>
+	<item id="2276" article="an" name="Mana Rune">
+		<attribute key="weight" value="120" />
+	</item>
 	<item id="2277" article="an" name="energy field rune">
 		<attribute key="runeSpellName" value="adevo grav vis" />
 		<attribute key="weight" value="120" />
@@ -2815,7 +2816,6 @@
 		<attribute key="ammoType" value="arrow" />
 		<attribute key="shootType" value="arrow" />
 		<attribute key="ammoAction" value="removecount" />
-
 	</item>
 	<item id="2353" article="a" name="burning heart">
 		<attribute key="description" value="It is still beating with unholy life. It seems to be rotting rapidly." />
@@ -3319,8 +3319,8 @@
 	</item>
 	<item id="2436" article="a" name="Skull Staff">
 		<attribute key="weight" value="2300" />
-		<attribute key="weaponType" value="wand" /> 
-		<attribute key="shootType" value="holy" /> 
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="holy" />
 		<attribute key="range" value="5" />
 	</item>
 	<item id="2437" article="a" name="light mace">
@@ -3426,8 +3426,8 @@
 	<item id="2453" article="a" name="Master Vip Staff">
 		<attribute key="description" value="a 2 melhor staff." />
 		<attribute key="weight" value="2300" />
-		<attribute key="weaponType" value="wand" /> 
-		<attribute key="shootType" value="holy" /> 
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="holy" />
 		<attribute key="range" value="5" />
 	</item>
 	<item id="2454" article="a" name="war axe">
@@ -7049,10 +7049,10 @@
 	<item id="3972" article="a" name="vip helmet">
 		<attribute key="weight" value="4600" />
 		<attribute key="armor" value="7" />
-                                   <attribute key="skillAxe" value="4" />
+		<attribute key="skillAxe" value="4" />
 		<attribute key="skillSword" value="4" />
 		<attribute key="skillClub" value="4" />
-                                   <attribute key="skillDist" value="4" />
+		<attribute key="skillDist" value="4" />
 		<attribute key="slotType" value="head" />
 	</item>
 	<item id="3973" article="a" name="tusk shield">
@@ -12113,7 +12113,7 @@
 		<attribute key="slotType" value="two-handed" />
 	</item>
 	<item id="7414" article="a" name="Vip Wand">
-		 <attribute key="weight" value="2300" />
+		<attribute key="weight" value="2300" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="death" />
 		<attribute key="range" value="3" />
@@ -12183,8 +12183,8 @@
 	<item id="7424" article="a" name="Baiakzik Staff">
 		<attribute key="description" value="a melhor staff." />
 		<attribute key="weight" value="2300" />
-		<attribute key="weaponType" value="wand" /> 
-		<attribute key="shootType" value="holy" /> 
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="holy" />
 		<attribute key="range" value="5" />
 	</item>
 	<item id="7425" article="a" name="Baiak Vip9 Mace">
@@ -12217,10 +12217,10 @@
 		<attribute key="slotType" value="two-handed" />
 	</item>
 	<item id="7429" article="a" name="Blessed Sceptre">
-	<attribute key="weight" value="2300" />
-	<attribute key="weaponType" value="wand" /> 
-	<attribute key="shootType" value="holy" /> 
-    <attribute key="range" value="5" />
+		<attribute key="weight" value="2300" />
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="holy" />
+		<attribute key="range" value="5" />
 	</item>
 	<item id="7430" article="a" name="dragonbone staff">
 		<attribute key="weight" value="1800" />
@@ -12965,8 +12965,8 @@
 	<item id="7754" article="a" name="Baiak Vip9 Staff">
 		<attribute key="description" value="a melhor staff." />
 		<attribute key="weight" value="2300" />
-		<attribute key="weaponType" value="wand" /> 
-		<attribute key="shootType" value="holy" /> 
+		<attribute key="weaponType" value="wand" />
+		<attribute key="shootType" value="holy" />
 		<attribute key="range" value="5" />
 	</item>
 	<item id="7755" article="a" name="crystal mace">
@@ -14078,7 +14078,7 @@
 		<attribute key="slotType" value="head" />
 	</item>
 	<item id="7958" article="a" name="Vip Rod">
-                                  <attribute key="weight" value="2300" />
+		<attribute key="weight" value="2300" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="death" />
 		<attribute key="range" value="3" />
@@ -16090,7 +16090,7 @@
 	<item id="9927" article="a" name="flower wreath">
 		<attribute key="weight" value="500" />
 	</item>
-		<item id="9928" name="Leaf Legs">
+	<item id="9928" name="Leaf Legs">
 		<attribute key="weight" value="5400" />
 		<attribute key="armor" value="32" />
 		<attribute key="slotType" value="legs" />
@@ -17438,7 +17438,7 @@
 		<attribute key="showattributes" value="1" />
 	</item>
 	<item id="12609" article="a" name="staff of baiak">
-                <attribute key="weight" value="2300" />
+		<attribute key="weight" value="2300" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="death" />
 		<attribute key="range" value="3" />

@@ -16,10 +16,10 @@ function onStepIn(cid, item, pos, fromPosition)
 			setPlayerStorageValue(cid, i, 0)
 		end
 	end
-	doPlayerSendTextMessage(cid,MESSAGE_STATUS_CONSOLE_ORANGE,'You left arena!')
+	doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "You left arena!")
 	doTeleportThing(cid, arenaKickPosition, TRUE)
-	setGlobalStorageValue(item.actionid-21, 0) -- free room
-	setPlayerStorageValue(cid, 42350, os.time()+5) -- time to kick 0
+	setGlobalStorageValue(item.actionid - 21, 0) -- free room
+	setPlayerStorageValue(cid, 42350, os.time() + 5) -- time to kick 0
 	setPlayerStorageValue(cid, 42352, 0) -- is not in arena
 	return TRUE
 end

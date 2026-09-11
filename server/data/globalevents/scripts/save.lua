@@ -1,16 +1,16 @@
 local config = {
-	broadcast = {240, 30},
+	broadcast = { 240, 30 },
 	shallow = "no",
 	delay = 120,
-	events = 30
+	events = 30,
 }
 
 config.shallow = getBooleanFromString(config.shallow)
 
 local function executeSave(seconds)
-	if(isInArray(config.broadcast, seconds)) then
+	if isInArray(config.broadcast, seconds) then
 		local text = ""
-		if(not config.shallow) then
+		if not config.shallow then
 			text = "Full s"
 		else
 			text = "S"
@@ -20,7 +20,7 @@ local function executeSave(seconds)
 		doBroadcastMessage(text)
 	end
 
-	if(seconds > 0) then
+	if seconds > 0 then
 		addEvent(executeSave, config.events * 1, seconds - config.events)
 	else
 		doSaveServer(config.shallow)
@@ -28,7 +28,7 @@ local function executeSave(seconds)
 end
 
 function onThink(interval, lastExecution, thinkInterval)
-	if(table.maxn(config.broadcast) == 0) then
+	if table.maxn(config.broadcast) == 0 then
 		doSaveServer(config.shallow)
 	else
 		executeSave(config.delay)

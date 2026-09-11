@@ -1,23 +1,23 @@
 -- [[ Area and Positions Infos ]] --
 areaplayersteam = {
-{1,1,1,1},
-{1,1,1,1},
-{1,1,1,1},
-{1,1,1,1},
-{1,1,1,1}
+	{ 1, 1, 1, 1 },
+	{ 1, 1, 1, 1 },
+	{ 1, 1, 1, 1 },
+	{ 1, 1, 1, 1 },
+	{ 1, 1, 1, 1 },
 }
-areateam1ext = {x=1344, y=1309, z=7} -- Ponta superior esquerda da area do time um
-areateam2ext = {x=1370, y=1309, z=7} -- Ponta superior esquerda da area do time dois
-leaderteam1pos = {x=1348, y=1319, z=7, stackpos=255} -- Posição do lider do time um (que puxara a alavanca)
-leaderteam2pos = {x=1353, y=1319, z=7, stackpos=255} -- Posição do lider do time dois (que puxara a alavanca)
-newplayersposteam1 = {x=1344, y=1302, z=7} -- Posição para onde os players do time um serao teleportados
-newplayersposteam2 = {x=1370, y=1302, z=7} -- Posição para onde os players do time dois serao teleportados
-team1leverpos = {x=1349, y=1319, z=7, stackpos=1} -- Posição da alavanca que o lider do time um puxara
-team2leverpos = {x=1352, y=1319, z=7, stackpos=1} -- Posição da alavanca que o lider do time dois puxara
+areateam1ext = { x = 1344, y = 1309, z = 7 } -- Ponta superior esquerda da area do time um
+areateam2ext = { x = 1370, y = 1309, z = 7 } -- Ponta superior esquerda da area do time dois
+leaderteam1pos = { x = 1348, y = 1319, z = 7, stackpos = 255 } -- PosiÃ§Ã£o do lider do time um (que puxara a alavanca)
+leaderteam2pos = { x = 1353, y = 1319, z = 7, stackpos = 255 } -- PosiÃ§Ã£o do lider do time dois (que puxara a alavanca)
+newplayersposteam1 = { x = 1344, y = 1302, z = 7 } -- PosiÃ§Ã£o para onde os players do time um serao teleportados
+newplayersposteam2 = { x = 1370, y = 1302, z = 7 } -- PosiÃ§Ã£o para onde os players do time dois serao teleportados
+team1leverpos = { x = 1349, y = 1319, z = 7, stackpos = 1 } -- PosiÃ§Ã£o da alavanca que o lider do time um puxara
+team2leverpos = { x = 1352, y = 1319, z = 7, stackpos = 1 } -- PosiÃ§Ã£o da alavanca que o lider do time dois puxara
 leverafter, leverbefore = 9825, 9826 -- Ids das alavancas antes de puxadas e depois, consecutivamente (9825 = antes; 9826 = depois)
-posbenterteam1 = {x=1356, y=1305, z=7} -- Posiçao do sqm antes de entrar na arena do time 1
-posbenterteam2 = {x=1358, y=1305, z=7} -- Posiçao do sqm antes de entrar na arena do time 2
-backteampos = {x=1357, y=1305, z=7}
+posbenterteam1 = { x = 1356, y = 1305, z = 7 } -- PosiÃ§ao do sqm antes de entrar na arena do time 1
+posbenterteam2 = { x = 1358, y = 1305, z = 7 } -- PosiÃ§ao do sqm antes de entrar na arena do time 2
+backteampos = { x = 1357, y = 1305, z = 7 }
 
 -- [[ Storage Infos ]] --
 team1leverstorage = 123497 -- Storage que sera usado quando puxarem a alavanca do time 1
@@ -41,101 +41,112 @@ needplayers = 6 -- Quantidade de players que cada time tem que ter.
 -- [[ Functions ]] --
 
 function getUidsFromArea(firstpos, area)
-    local result = {}
-    for i,x in pairs(area) do
-        for s,z in pairs(x) do
-            if isPlayer(getThingFromPos({x=firstpos.x+s-1, y=firstpos.y+i-1, z=firstpos.z, stackpos=255}).uid) then
-                table.insert(result, getThingFromPos({x=firstpos.x+s-1, y=firstpos.y+i-1, z=firstpos.z, stackpos=255}).uid)
-            end
-        end
-    end
-    return result
+	local result = {}
+	for i, x in pairs(area) do
+		for s, z in pairs(x) do
+			if
+				isPlayer(
+					getThingFromPos({ x = firstpos.x + s - 1, y = firstpos.y + i - 1, z = firstpos.z, stackpos = 255 }).uid
+				)
+			then
+				table.insert(
+					result,
+					getThingFromPos({ x = firstpos.x + s - 1, y = firstpos.y + i - 1, z = firstpos.z, stackpos = 255 }).uid
+				)
+			end
+		end
+	end
+	return result
 end
 
 function teleportUidsToPos(uids, pos)
-    for i,x in pairs(uids) do
-        doTeleportThing(x, pos)
-    end
+	for i, x in pairs(uids) do
+		doTeleportThing(x, pos)
+	end
 end
 
 function isAllUidsSameGuild(uids, guildid)
-    for i,x in pairs(uids) do
-        if not (getPlayerGuildId(x) == guildid) then
-            return false
-        end
-    end
-    return true
+	for i, x in pairs(uids) do
+		if not (getPlayerGuildId(x) == guildid) then
+			return false
+		end
+	end
+	return true
 end
 
 function isAllUidsLevel(uids, level)
-    for i,x in pairs(uids) do
-        if not (getPlayerLevel(x) >= level) then
-            return false
-        end
-    end
-    return true
+	for i, x in pairs(uids) do
+		if not (getPlayerLevel(x) >= level) then
+			return false
+		end
+	end
+	return true
 end
 
 function haveQuantPlayersInArea(firstpos, area, quant)
-    local result = 0
-    for i,x in pairs(area) do
-        for s,z in pairs(x) do
-            if isPlayer(getThingFromPos({x=firstpos.x+s-1, y=firstpos.y+i-1, z=firstpos.z, stackpos=255}).uid) then
-                result = result+1
-            end
-        end
-    end
-    return result >= quant
-end  
+	local result = 0
+	for i, x in pairs(area) do
+		for s, z in pairs(x) do
+			if
+				isPlayer(
+					getThingFromPos({ x = firstpos.x + s - 1, y = firstpos.y + i - 1, z = firstpos.z, stackpos = 255 }).uid
+				)
+			then
+				result = result + 1
+			end
+		end
+	end
+	return result >= quant
+end
 
 function addStorageToUids(uids, storage, value)
-    for i,x in pairs(uids) do
-        setPlayerStorageValue(x, storage, value)
-    end
+	for i, x in pairs(uids) do
+		setPlayerStorageValue(x, storage, value)
+	end
 end
 
 function checkPoses(pos1, pos2)
-    if pos1.x == pos2.x and pos1.y == pos2.y and pos1.z == pos2.z then
-        return true
-    end
-    return false
+	if pos1.x == pos2.x and pos1.y == pos2.y and pos1.z == pos2.z then
+		return true
+	end
+	return false
 end
 
 function startArena()
-    setGlobalStorageValue(storageleader1, getThingFromPos(leaderteam1pos).uid)
-    setGlobalStorageValue(storageleader2, getThingFromPos(leaderteam2pos).uid)
-    addStorageToUids(team1uids, storageplayersteam1, 1)
-    addStorageToUids(team2uids, storageplayersteam2, 1)
-    teleportUidsToPos(team1uids, newplayersposteam1)
-    teleportUidsToPos(team2uids, newplayersposteam2)
-    setGlobalStorageValue(storageteam1, #team1uids)
-    registerCreatureEventUids(team1uids, "DeathTeam1")
-    registerCreatureEventUids(team2uids, "DeathTeam2")
-    setGlobalStorageValue(storageteam2, #team2uids)
-    setGlobalStorageValue(haveteaminarena, 1)
-    setGlobalStorageValue(team1leverstorage, 0)
-    setGlobalStorageValue(team2leverstorage, 0)
-    doTransformItem(getThingFromPos(team1leverpos).uid, leverafter)
-    doTransformItem(getThingFromPos(team2leverpos).uid, leverafter)
+	setGlobalStorageValue(storageleader1, getThingFromPos(leaderteam1pos).uid)
+	setGlobalStorageValue(storageleader2, getThingFromPos(leaderteam2pos).uid)
+	addStorageToUids(team1uids, storageplayersteam1, 1)
+	addStorageToUids(team2uids, storageplayersteam2, 1)
+	teleportUidsToPos(team1uids, newplayersposteam1)
+	teleportUidsToPos(team2uids, newplayersposteam2)
+	setGlobalStorageValue(storageteam1, #team1uids)
+	registerCreatureEventUids(team1uids, "DeathTeam1")
+	registerCreatureEventUids(team2uids, "DeathTeam2")
+	setGlobalStorageValue(storageteam2, #team2uids)
+	setGlobalStorageValue(haveteaminarena, 1)
+	setGlobalStorageValue(team1leverstorage, 0)
+	setGlobalStorageValue(team2leverstorage, 0)
+	doTransformItem(getThingFromPos(team1leverpos).uid, leverafter)
+	doTransformItem(getThingFromPos(team2leverpos).uid, leverafter)
 end
 
 function haveTeamInArena()
-    return getGlobalStorageValue(haveteaminarena) == 1 and true or false
+	return getGlobalStorageValue(haveteaminarena) == 1 and true or false
 end
 
 function isSqmFromArea(firstpos, area, sqmpos)
-    for i,x in pairs(area) do
-        for s,z in pairs(x) do
-            if sqmpos.x == firstpos.x+s-1 and sqmpos.y == firstpos.y+i-1 and sqmpos.z == firstpos.z then
-                return true
-            end
-        end
-    end
-return false
+	for i, x in pairs(area) do
+		for s, z in pairs(x) do
+			if sqmpos.x == firstpos.x + s - 1 and sqmpos.y == firstpos.y + i - 1 and sqmpos.z == firstpos.z then
+				return true
+			end
+		end
+	end
+	return false
 end
 
 function registerCreatureEventUids(uids, event)
-    for i,x in pairs(uids) do
-        registerCreatureEvent(x, event)
-    end
+	for i, x in pairs(uids) do
+		registerCreatureEvent(x, event)
+	end
 end

@@ -7,20 +7,24 @@ function onUse(cid, item, frompos, item2, topos)
 
 	container = doPlayerAddItem(cid, 1988, 1)
 	if prize > 0 and prize < 7000 then
-		queststatus = getPlayerStorageValue(cid,prize)
+		queststatus = getPlayerStorageValue(cid, prize)
 
 		if queststatus == -1 then
 			if count > 1 then
-				doPlayerSendTextMessage(cid,22,'You have found backpack with '.. count ..' of ' .. getItemName(prize) .. '.')
+				doPlayerSendTextMessage(
+					cid,
+					22,
+					"You have found backpack with " .. count .. " of " .. getItemName(prize) .. "."
+				)
 				doAddContainerItem(container, prize, count)
-				setPlayerStorageValue(cid,prize,1)
+				setPlayerStorageValue(cid, prize, 1)
 			else
-				doPlayerSendTextMessage(cid,22,'You have found a backpack with a ' .. getItemName(prize) .. '.')
+				doPlayerSendTextMessage(cid, 22, "You have found a backpack with a " .. getItemName(prize) .. ".")
 				doAddContainerItem(container, prize, count)
-				setPlayerStorageValue(cid,prize,1)
+				setPlayerStorageValue(cid, prize, 1)
 			end
 		else
-			doPlayerSendTextMessage(cid,22,"It is empty.")
+			doPlayerSendTextMessage(cid, 22, "It is empty.")
 		end
 
 		return 1

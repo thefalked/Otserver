@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <mod name="Buy premium command" version="1.0" author="The Forgotten Server" contact="otland.net" enabled="yes">
 	<config name="buypremium_config"><![CDATA[
 		config = {
@@ -7,7 +7,10 @@
 			maxDays = 360
 		}
 	]]></config>
-	<talkaction words="!buypremium; !pacc" event="buffer"><![CDATA[
+	<talkaction
+		words="!buypremium; !pacc"
+		event="buffer"
+	><![CDATA[
 		domodlib('buypremium_config')
 		if(getPlayerPremiumDays(cid) > config.maxDays) then
 			doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "You can not buy more than " .. config.days + config.maxDays .. " days of Premium Account.")

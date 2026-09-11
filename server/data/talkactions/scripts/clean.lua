@@ -1,14 +1,14 @@
 local cleanEvent = 0
 
 function onSay(cid, words, param, channel)
-	if(param == '') then
+	if param == "" then
 		doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Collected " .. doCleanMap() .. " items.")
 		return true
 	end
 
-	if(param == 'tile') then
+	if param == "tile" then
 		local removeLoaded, t = false, string.explode(param, ",")
-		if(t[2]) then
+		if t[2] then
 			removeLoaded = getBooleanFromString(t[2])
 		end
 
@@ -16,7 +16,7 @@ function onSay(cid, words, param, channel)
 		return true
 	end
 
-	if(not tonumber(param)) then
+	if not tonumber(param) then
 		doPlayerSendCancel(cid, "Command requires numeric param.")
 		return true
 	end
@@ -27,14 +27,14 @@ function onSay(cid, words, param, channel)
 end
 
 function prepareClean(minutes, cid)
-	if(minutes == 0) then
-		if(isPlayer(cid)) then
+	if minutes == 0 then
+		if isPlayer(cid) then
 			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Cleaned " .. doCleanMap() .. " items.")
 		end
 
 		doBroadcastMessage("Game map cleaned.")
-	elseif(minutes > 0) then
-		if(minutes == 1) then
+	elseif minutes > 0 then
+		if minutes == 1 then
 			doBroadcastMessage("Game map cleaning in " .. minutes .. " minute, please pick up all your items.")
 		else
 			doBroadcastMessage("Game map cleaning in " .. minutes .. " minutes.")

@@ -1,21 +1,19 @@
-local playerPosition =
-{
-	{x = 32673, y = 32085, z = 8, stackpos = STACKPOS_TOP_CREATURE},
-	{x = 32669, y = 32089, z = 8, stackpos = STACKPOS_TOP_CREATURE},
-	{x = 32677, y = 32089, z = 8, stackpos = STACKPOS_TOP_CREATURE},
-	{x = 32673, y = 32093, z = 8, stackpos = STACKPOS_TOP_CREATURE}
+local playerPosition = {
+	{ x = 32673, y = 32085, z = 8, stackpos = STACKPOS_TOP_CREATURE },
+	{ x = 32669, y = 32089, z = 8, stackpos = STACKPOS_TOP_CREATURE },
+	{ x = 32677, y = 32089, z = 8, stackpos = STACKPOS_TOP_CREATURE },
+	{ x = 32673, y = 32093, z = 8, stackpos = STACKPOS_TOP_CREATURE },
 }
 
-local newPosition =
-{
-	{x = 32671, y = 32069, z = 8},
- 	{x = 32672, y = 32069, z = 8},
-	{x = 32671, y = 32070, z = 8},
-	{x = 32672, y = 32070, z = 8}
+local newPosition = {
+	{ x = 32671, y = 32069, z = 8 },
+	{ x = 32672, y = 32069, z = 8 },
+	{ x = 32671, y = 32070, z = 8 },
+	{ x = 32672, y = 32070, z = 8 },
 }
 
 -- Do not modify the declaration lines below.
-local player = {0, 0, 0, 0}
+local player = { 0, 0, 0, 0 }
 local failed = FALSE
 
 function onUse(cid, item, fromPosition, itemEx, toPosition)
