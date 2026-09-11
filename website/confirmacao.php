@@ -1,5 +1,4 @@
-<?PHP
-$main_content .= '
+<?php $main_content .= '
 <div align="center">
 <b>DESCUPE AINDA ESTAMOS CONSTRUINDO O SISTEMA DE PONTOS</b>.
 </div>

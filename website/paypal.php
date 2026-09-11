@@ -1,7 +1,7 @@
-<?PHP
-$content = file_get_contents("paypal/paypal.htm");
-if($content != FALSE)
+<?php $content = file_get_contents('paypal/paypal.htm');
+if ($content != false) {
 	$main_content .= $content;
-else
+} else {
 	$main_content .= 'Can not load file <b>paypal.htm</b> or file is empty.';
+}
 ?>

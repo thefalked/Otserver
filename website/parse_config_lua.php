@@ -1,8 +1,7 @@
-<?PHP
-/** Parse TFS config.lua (key = value). Avoids parse_ini_file Lua breakage. */
+<?php /** Parse TFS config.lua (key = value). Avoids parse_ini_file Lua breakage. */
 function parse_config_lua($path)
 {
-	$config = array();
+	$config = [];
 	$lines = @file($path);
 	if (!is_array($lines)) {
 		return $config;
@@ -21,8 +20,8 @@ function parse_config_lua($path)
 			$v = $q[1];
 		} elseif (preg_match("/^'(.*)'$/", $v, $q)) {
 			$v = $q[1];
-		} elseif (in_array(strtolower((string) $v), array('true', 'false'), true)) {
-			$v = (strtolower($v) === 'true');
+		} elseif (in_array(strtolower((string) $v), ['true', 'false'], true)) {
+			$v = strtolower($v) === 'true';
 		} elseif (is_numeric($v)) {
 			$v = $v + 0;
 		}
