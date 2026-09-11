@@ -10,5 +10,5 @@ addDamageCondition(condition, 10, 2000, -1)
 setCombatCondition(combat, condition)
 
 function onUseWeapon(cid, var)
-	return doCombat(cid, combat, var)
+    return doCombat(cid, combat, var)
 end

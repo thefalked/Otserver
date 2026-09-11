@@ -4,5 +4,5 @@ setCombatParam(combat, COMBAT_PARAM_AGGRESSIVE, 0)
 setCombatParam(combat, COMBAT_PARAM_DISPEL, CONDITION_ENERGY)
 
 function onCastSpell(cid, var)
-	return doCombat(cid, combat, var)
+    return doCombat(cid, combat, var)
 end

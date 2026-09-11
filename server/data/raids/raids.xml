@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <raids>
-	<!--
+    <!--
 		executed on average once every 2 minutes
 
 		<raid name="Example" file="example.xml" interval2="2" margin="0" reftype="single" ref="no"/>

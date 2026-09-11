@@ -1,4 +1,4 @@
 <?
 header ("Location: ../index.php");
 ?>
- ?>
+ ?> ?>

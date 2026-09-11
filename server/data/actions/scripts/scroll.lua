@@ -11,16 +11,16 @@ local level = 8 -- O level necessario para poder usar o item
 
 ----Estrutura
 function onUse(cid, item, frompos, item2, topos)
-	playerpos = getPlayerPosition(cid)
-	if item.itemid == itemID and getPlayerVocation(cid) == vocs and getPlayerLevel(cid) >= level then
-		doPlayerAddExp(cid, exp)
-		doSendMagicEffect(playerpos, 30)
-		doCreatureSay(cid, mensagem, 3)
-		doRemoveItem(cid, item.uid, 1)
-		doPlayerSendTextMessage(cid, 20, "Você ganhou " .. exp .. " de experiência.")
-	else
-		doPlayerSendCancel(cid, "Desculpe, mais apenas " .. voca .. " com level " .. level .. "+ pode usar este item.")
-	end
-	return 1
+    playerpos = getPlayerPosition(cid)
+    if item.itemid == itemID and getPlayerVocation(cid) == vocs and getPlayerLevel(cid) >= level then
+        doPlayerAddExp(cid, exp)
+        doSendMagicEffect(playerpos, 30)
+        doCreatureSay(cid, mensagem, 3)
+        doRemoveItem(cid, item.uid, 1)
+        doPlayerSendTextMessage(cid, 20, "Você ganhou " .. exp .. " de experiência.")
+    else
+        doPlayerSendCancel(cid, "Desculpe, mais apenas " .. voca .. " com level " .. level .. "+ pode usar este item.")
+    end
+    return 1
 end
 --------Criado por Baiak Lula---------

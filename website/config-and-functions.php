@@ -1,5 +1,5 @@
 <?php if (!headers_sent()) {
-	header('Content-Type: text/html; charset=UTF-8');
+    header('Content-Type: text/html; charset=UTF-8');
 }
 // ###################### CONFIG ########################
 //load page config file
@@ -7,557 +7,557 @@ $config['site'] = parse_ini_file('config/config.ini');
 include 'config/config.php';
 //check install
 if ($config['site']['install'] != 'no') {
-	header('Location: install.php');
-	exit();
+    header('Location: install.php');
+    exit();
 }
 //load server config
 include_once __DIR__ . '/parse_config_lua.php';
 $config['server'] = parse_config_lua($config['site']['server_path'] . 'config.lua');
 if (empty($config['server']['sqlHost'])) {
-	die('Cannot read sqlHost from ' . $config['site']['server_path'] . 'config.lua');
+    die('Cannot read sqlHost from ' . $config['site']['server_path'] . 'config.lua');
 }
 
 if (isset($config['server']['mysqlHost'])) {
-	//new (0.2.6+) ots config.lua file
-	$mysqlhost = $config['server']['mysqlHost'];
-	$mysqluser = $config['server']['mysqlUser'];
-	$mysqlpass = $config['server']['mysqlPass'];
-	$mysqldatabase = $config['server']['mysqlDatabase'];
+    //new (0.2.6+) ots config.lua file
+    $mysqlhost = $config['server']['mysqlHost'];
+    $mysqluser = $config['server']['mysqlUser'];
+    $mysqlpass = $config['server']['mysqlPass'];
+    $mysqldatabase = $config['server']['mysqlDatabase'];
 } elseif (isset($config['server']['sqlHost'])) {
-	//old (0.2.4) ots config.lua file
-	$mysqlhost = $config['server']['sqlHost'];
-	$mysqluser = $config['server']['sqlUser'];
-	$mysqlpass = $config['server']['sqlPass'];
-	$mysqldatabase = $config['server']['sqlDatabase'];
+    //old (0.2.4) ots config.lua file
+    $mysqlhost = $config['server']['sqlHost'];
+    $mysqluser = $config['server']['sqlUser'];
+    $mysqlpass = $config['server']['sqlPass'];
+    $mysqldatabase = $config['server']['sqlDatabase'];
 }
 $sqlitefile = isset($config['server']['sqliteDatabase'])
-	? $config['server']['sqliteDatabase']
-	: (isset($config['server']['sqlFile'])
-		? $config['server']['sqlFile']
-		: '');
+    ? $config['server']['sqliteDatabase']
+    : (isset($config['server']['sqlFile'])
+        ? $config['server']['sqlFile']
+        : '');
 $passwordency = '';
 if (isset($config['server']['encryptionType'])) {
-	if (strtolower($config['server']['encryptionType']) == 'md5') {
-		$passwordency = 'md5';
-	}
-	if (strtolower($config['server']['encryptionType']) == 'sha1') {
-		$passwordency = 'sha1';
-	}
+    if (strtolower($config['server']['encryptionType']) == 'md5') {
+        $passwordency = 'md5';
+    }
+    if (strtolower($config['server']['encryptionType']) == 'sha1') {
+        $passwordency = 'sha1';
+    }
 }
 // loads #####POT mainfile#####
 include 'pot/OTS.php';
 // PDO and POT connects to database
 $ots = POT::getInstance();
 if (strtolower($config['server']['sqlType']) == 'mysql') {
-	//connect to MySQL database
-	try {
-		$ots->connect(POT::DB_MYSQL, [
-			'host' => $mysqlhost,
-			'user' => $mysqluser,
-			'password' => $mysqlpass,
-			'database' => $mysqldatabase
-		]);
-	} catch (PDOException $error) {
-		echo 'Database error - can\'t connect to MySQL database. Possible reasons:<br>1. MySQL server is not running on host.<br>2. MySQL user, password, database or host isn\'t configured in: <b>' .
-			$config['site']['server_path'] .
-			'config.lua</b> .<br>3. MySQL user, password, database or host is wrong.';
-		exit();
-	}
+    //connect to MySQL database
+    try {
+        $ots->connect(POT::DB_MYSQL, [
+            'host' => $mysqlhost,
+            'user' => $mysqluser,
+            'password' => $mysqlpass,
+            'database' => $mysqldatabase
+        ]);
+    } catch (PDOException $error) {
+        echo 'Database error - can\'t connect to MySQL database. Possible reasons:<br>1. MySQL server is not running on host.<br>2. MySQL user, password, database or host isn\'t configured in: <b>' .
+            $config['site']['server_path'] .
+            'config.lua</b> .<br>3. MySQL user, password, database or host is wrong.';
+        exit();
+    }
 } elseif (strtolower($config['server']['sqlType']) == 'sqlite') {
-	//connect to SQLite database
-	$link_to_sqlitedatabase = $config['site']['server_path'] . $sqlitefile;
-	try {
-		$ots->connect(POT::DB_SQLITE, ['database' => $link_to_sqlitedatabase]);
-	} catch (PDOException $error) {
-		echo 'Database error - can\'t open SQLite database. Possible reasons:<br><b>' .
-			$link_to_sqlitedatabase .
-			'</b> - file isn\'t valid SQLite database.<br><b>' .
-			$link_to_sqlitedatabase .
-			'</b> - doesn\'t exist.<br><font color="red">Wrong PHP configuration. Default PHP does not work with SQLite databases!</font>';
-		exit();
-	}
+    //connect to SQLite database
+    $link_to_sqlitedatabase = $config['site']['server_path'] . $sqlitefile;
+    try {
+        $ots->connect(POT::DB_SQLITE, ['database' => $link_to_sqlitedatabase]);
+    } catch (PDOException $error) {
+        echo 'Database error - can\'t open SQLite database. Possible reasons:<br><b>' .
+            $link_to_sqlitedatabase .
+            '</b> - file isn\'t valid SQLite database.<br><b>' .
+            $link_to_sqlitedatabase .
+            '</b> - doesn\'t exist.<br><font color="red">Wrong PHP configuration. Default PHP does not work with SQLite databases!</font>';
+        exit();
+    }
 } else {
-	echo 'Database error. Unknown database type in <b>' .
-		$config['site']['server_path'] .
-		'config.lua</b> . Must be equal to: "<b>mysql</b>" or "<b>sqlite</b>". Now is: "<b>' .
-		strtolower($config['server']['sqlType']) .
-		'"</b>';
-	exit();
+    echo 'Database error. Unknown database type in <b>' .
+        $config['site']['server_path'] .
+        'config.lua</b> . Must be equal to: "<b>mysql</b>" or "<b>sqlite</b>". Now is: "<b>' .
+        strtolower($config['server']['sqlType']) .
+        '"</b>';
+    exit();
 }
 
 $SQL = POT::getInstance()->getDBHandle();
 $layout_name = 'layouts/' . ($layout_name = $config['site']['layout']);
 $layout_ini = parse_ini_file($layout_name . '/layout_config.ini');
 foreach ($layout_ini as $key => $value) {
-	$config['site'][$key] = $value;
+    $config['site'][$key] = $value;
 }
 //###################### FUNCTIONS ######################
 function isPremium($premdays, $lastday)
 {
-	return $premdays - (date('z', time()) + 365 * (date('Y', time()) - date('Y', $lastday)) - date('z', $lastday)) > 0;
+    return $premdays - (date('z', time()) + 365 * (date('Y', time()) - date('Y', $lastday)) - date('z', $lastday)) > 0;
 }
 //save config in ini file
 function saveconfig_ini($config)
 {
-	$file = @fopen('config/config.ini', 'w');
-	if ($file === false) {
-		return false;
-	}
-	$file_data = '';
-	foreach ($config as $param => $data) {
-		$file_data .=
-			$param .
-			' = "' .
-			str_replace('"', '', $data) .
-			'"
+    $file = @fopen('config/config.ini', 'w');
+    if ($file === false) {
+        return false;
+    }
+    $file_data = '';
+    foreach ($config as $param => $data) {
+        $file_data .=
+            $param .
+            ' = "' .
+            str_replace('"', '', $data) .
+            '"
 ';
-	}
-	fwrite($file, $file_data);
-	fclose($file);
-	return true;
+    }
+    fwrite($file, $file_data);
+    fclose($file);
+    return true;
 }
 
 function h($s)
 {
-	return htmlspecialchars((string) $s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    return htmlspecialchars((string) $s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
 /** Allow only http(s) URLs for href/src attributes. */
 function safe_http_url($url)
 {
-	$url = trim(html_entity_decode((string) $url, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
-	$url = preg_replace('/[\x00-\x1F\x7F\s]+/', '', $url);
-	if ($url === '' || preg_match('#^(javascript|data|vbscript|file):#i', $url)) {
-		return '';
-	}
-	if (preg_match('#^https?://[a-z0-9][a-z0-9.\-]*(:\d+)?(/|\?|#|$)#i', $url)) {
-		return $url;
-	}
-	return '';
+    $url = trim(html_entity_decode((string) $url, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+    $url = preg_replace('/[\x00-\x1F\x7F\s]+/', '', $url);
+    if ($url === '' || preg_match('#^(javascript|data|vbscript|file):#i', $url)) {
+        return '';
+    }
+    if (preg_match('#^https?://[a-z0-9][a-z0-9.\-]*(:\d+)?(/|\?|#|$)#i', $url)) {
+        return $url;
+    }
+    return '';
 }
 
 function csrf_token()
 {
-	if (empty($_SESSION['csrf_token'])) {
-		$_SESSION['csrf_token'] = bin2hex(random_bytes(16));
-	}
-	return $_SESSION['csrf_token'];
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+    }
+    return $_SESSION['csrf_token'];
 }
 
 function csrf_field()
 {
-	return '<input type="hidden" name="csrf_token" value="' . h(csrf_token()) . '">';
+    return '<input type="hidden" name="csrf_token" value="' . h(csrf_token()) . '">';
 }
 
 function csrf_query()
 {
-	return 'csrf_token=' . rawurlencode(csrf_token());
+    return 'csrf_token=' . rawurlencode(csrf_token());
 }
 
 function csrf_ok()
 {
-	$token = '';
-	if (isset($_POST['csrf_token'])) {
-		$token = (string) $_POST['csrf_token'];
-	} elseif (isset($_GET['csrf_token'])) {
-		$token = (string) $_GET['csrf_token'];
-	}
-	return $token !== '' && isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+    $token = '';
+    if (isset($_POST['csrf_token'])) {
+        $token = (string) $_POST['csrf_token'];
+    } elseif (isset($_GET['csrf_token'])) {
+        $token = (string) $_GET['csrf_token'];
+    }
+    return $token !== '' && isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
 
 function csrf_require()
 {
-	if (!csrf_ok()) {
-		http_response_code(403);
-		die('Invalid or missing CSRF token. Go back and try again.');
-	}
+    if (!csrf_ok()) {
+        http_response_code(403);
+        die('Invalid or missing CSRF token. Go back and try again.');
+    }
 }
 
 /** Simple per-session rate limit. Returns true if allowed. */
 function rate_limit($bucket, $max = 10, $window_sec = 60)
 {
-	$key = 'rl_' . $bucket;
-	$now = time();
-	if (!isset($_SESSION[$key]) || !is_array($_SESSION[$key])) {
-		$_SESSION[$key] = [];
-	}
-	$_SESSION[$key] = array_values(
-		array_filter($_SESSION[$key], function ($t) use ($now, $window_sec) {
-			return $now - (int) $t < $window_sec;
-		})
-	);
-	if (count($_SESSION[$key]) >= $max) {
-		return false;
-	}
-	$_SESSION[$key][] = $now;
-	return true;
+    $key = 'rl_' . $bucket;
+    $now = time();
+    if (!isset($_SESSION[$key]) || !is_array($_SESSION[$key])) {
+        $_SESSION[$key] = [];
+    }
+    $_SESSION[$key] = array_values(
+        array_filter($_SESSION[$key], function ($t) use ($now, $window_sec) {
+            return $now - (int) $t < $window_sec;
+        })
+    );
+    if (count($_SESSION[$key]) >= $max) {
+        return false;
+    }
+    $_SESSION[$key][] = $now;
+    return true;
 }
 // Hash password the same way the OT server stores it (sha1/md5). Never store plaintext.
 function password_ency($password)
 {
-	$ency = strtolower((string) ($GLOBALS['passwordency'] ?? ''));
-	if ($ency === 'sha1') {
-		return sha1($password);
-	}
-	if ($ency === 'md5') {
-		return md5($password);
-	}
-	// Fail closed: empty/unknown encryptionType must not store raw passwords.
-	return sha1($password);
+    $ency = strtolower((string) ($GLOBALS['passwordency'] ?? ''));
+    if ($ency === 'sha1') {
+        return sha1($password);
+    }
+    if ($ency === 'md5') {
+        return md5($password);
+    }
+    // Fail closed: empty/unknown encryptionType must not store raw passwords.
+    return sha1($password);
 }
 //delete player with name
 function delete_player($name)
 {
-	$SQL = $GLOBALS['SQL'];
-	$player = new OTS_Player();
-	$player->find($name);
-	if ($player->isLoaded()) {
-		try {
-			$SQL->query("DELETE FROM player_skills WHERE player_id = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		try {
-			$SQL->query("DELETE FROM guild_invites WHERE player_id = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		try {
-			$SQL->query("DELETE FROM player_items WHERE player_id = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		try {
-			$SQL->query("DELETE FROM player_depotitems WHERE player_id = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		try {
-			$SQL->query("DELETE FROM player_spells WHERE player_id = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		try {
-			$SQL->query("DELETE FROM player_storage WHERE player_id = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		try {
-			$SQL->query("DELETE FROM player_viplist WHERE player_id = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		try {
-			$SQL->query("DELETE FROM player_deaths WHERE player_id = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		try {
-			$SQL->query("DELETE FROM player_deaths WHERE killed_by = '" . $player->getId() . "';");
-		} catch (PDOException $error) {
-		}
-		$rank = $player->getRank();
-		if (!empty($rank)) {
-			$guild = $rank->getGuild();
-			if ($guild->getOwner()->getId() == $player->getId()) {
-				$rank_list = $guild->getGuildRanksList();
-				if (count($rank_list) > 0) {
-					$rank_list->orderBy('level');
-					foreach ($rank_list as $rank_in_guild) {
-						$players_with_rank = $rank_in_guild->getPlayersList();
-						$players_with_rank->orderBy('name');
-						$players_with_rank_number = count($players_with_rank);
-						if ($players_with_rank_number > 0) {
-							foreach ($players_with_rank as $player_in_guild) {
-								$player_in_guild->setRank();
-								$player_in_guild->save();
-							}
-						}
-						$rank_in_guild->delete();
-					}
-					$guild->delete();
-				}
-			}
-		}
-		$player->delete();
-		return true;
-	}
+    $SQL = $GLOBALS['SQL'];
+    $player = new OTS_Player();
+    $player->find($name);
+    if ($player->isLoaded()) {
+        try {
+            $SQL->query("DELETE FROM player_skills WHERE player_id = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        try {
+            $SQL->query("DELETE FROM guild_invites WHERE player_id = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        try {
+            $SQL->query("DELETE FROM player_items WHERE player_id = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        try {
+            $SQL->query("DELETE FROM player_depotitems WHERE player_id = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        try {
+            $SQL->query("DELETE FROM player_spells WHERE player_id = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        try {
+            $SQL->query("DELETE FROM player_storage WHERE player_id = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        try {
+            $SQL->query("DELETE FROM player_viplist WHERE player_id = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        try {
+            $SQL->query("DELETE FROM player_deaths WHERE player_id = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        try {
+            $SQL->query("DELETE FROM player_deaths WHERE killed_by = '" . $player->getId() . "';");
+        } catch (PDOException $error) {
+        }
+        $rank = $player->getRank();
+        if (!empty($rank)) {
+            $guild = $rank->getGuild();
+            if ($guild->getOwner()->getId() == $player->getId()) {
+                $rank_list = $guild->getGuildRanksList();
+                if (count($rank_list) > 0) {
+                    $rank_list->orderBy('level');
+                    foreach ($rank_list as $rank_in_guild) {
+                        $players_with_rank = $rank_in_guild->getPlayersList();
+                        $players_with_rank->orderBy('name');
+                        $players_with_rank_number = count($players_with_rank);
+                        if ($players_with_rank_number > 0) {
+                            foreach ($players_with_rank as $player_in_guild) {
+                                $player_in_guild->setRank();
+                                $player_in_guild->save();
+                            }
+                        }
+                        $rank_in_guild->delete();
+                    }
+                    $guild->delete();
+                }
+            }
+        }
+        $player->delete();
+        return true;
+    }
 }
 
 //delete guild with id
 function delete_guild($id)
 {
-	$guild = new OTS_Guild();
-	$guild->load($id);
-	if ($guild->isLoaded()) {
-		$rank_list = $guild->getGuildRanksList();
-		if (count($rank_list) > 0) {
-			$rank_list->orderBy('level');
-			foreach ($rank_list as $rank_in_guild) {
-				$players_with_rank = $rank_in_guild->getPlayersList();
-				if (count($players_with_rank) > 0) {
-					foreach ($players_with_rank as $player_in_guild) {
-						$player_in_guild->setRank();
-						$player_in_guild->save();
-					}
-				}
-				$rank_in_guild->delete();
-			}
-		}
-		$guild->delete();
-		return true;
-	} else {
-		return false;
-	}
+    $guild = new OTS_Guild();
+    $guild->load($id);
+    if ($guild->isLoaded()) {
+        $rank_list = $guild->getGuildRanksList();
+        if (count($rank_list) > 0) {
+            $rank_list->orderBy('level');
+            foreach ($rank_list as $rank_in_guild) {
+                $players_with_rank = $rank_in_guild->getPlayersList();
+                if (count($players_with_rank) > 0) {
+                    foreach ($players_with_rank as $player_in_guild) {
+                        $player_in_guild->setRank();
+                        $player_in_guild->save();
+                    }
+                }
+                $rank_in_guild->delete();
+            }
+        }
+        $guild->delete();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //is it valid nick?
 function check_name($name)
 {
-	//sprawdza name
-	$temp = strspn("$name", "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM- [ ] '");
-	if ($temp != strlen($name)) {
-		return false;
-	} else {
-		$ok = "/[a-zA-Z ']{1,25}/";
-		return preg_match($ok, $name) ? true : false;
-	}
+    //sprawdza name
+    $temp = strspn("$name", "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM- [ ] '");
+    if ($temp != strlen($name)) {
+        return false;
+    } else {
+        $ok = "/[a-zA-Z ']{1,25}/";
+        return preg_match($ok, $name) ? true : false;
+    }
 }
 
 //is it valid nick?
 function check_account_name($name)
 {
-	//sprawdza name
-	$temp = strspn("$name", 'QWERTYUIOPASDFGHJKLZXCVBNM0123456789');
-	if ($temp != strlen($name)) {
-		return false;
-	}
-	if (strlen($name) > 32) {
-		return false;
-	} else {
-		$ok = '/[A-Z0-9]/';
-		return preg_match($ok, $name) ? true : false;
-	}
+    //sprawdza name
+    $temp = strspn("$name", 'QWERTYUIOPASDFGHJKLZXCVBNM0123456789');
+    if ($temp != strlen($name)) {
+        return false;
+    }
+    if (strlen($name) > 32) {
+        return false;
+    } else {
+        $ok = '/[A-Z0-9]/';
+        return preg_match($ok, $name) ? true : false;
+    }
 }
 
 //is it valid nick for new char?
 function check_name_new_char($name)
 {
-	//sprawdza name
-	$name_to_check = strtolower($name);
-	//first word can't be:
-	//names blocked:
-	$names_blocked = ['gm', 'cm', 'god', 'tutor'];
-	$first_words_blocked = ['gm ', 'cm ', 'god ', 'tutor ', "'", '-'];
-	//name can't contain:
-	$words_blocked = [
-		'gamemaster',
-		'game master',
-		'game-master',
-		"game'master",
-		'--',
-		"''",
-		"' ",
-		" '",
-		'- ',
-		' -',
-		"-'",
-		"'-",
-		'fuck',
-		'sux',
-		'suck',
-		'noob',
-		'tutor'
-	];
-	foreach ($first_words_blocked as $word) {
-		if ($word == substr($name_to_check, 0, strlen($word))) {
-			return false;
-		}
-	}
-	if (substr($name_to_check, -1) == "'" || substr($name_to_check, -1) == '-') {
-		return false;
-	}
-	if (substr($name_to_check, 1, 1) == ' ') {
-		return false;
-	}
-	if (substr($name_to_check, -2, 1) == ' ') {
-		return false;
-	}
-	foreach ($names_blocked as $word) {
-		if ($word == $name_to_check) {
-			return false;
-		}
-	}
-	foreach ($GLOBALS['config']['site']['monsters'] as $word) {
-		if ($word == $name_to_check) {
-			return false;
-		}
-	}
-	foreach ($GLOBALS['config']['site']['npc'] as $word) {
-		if ($word == $name_to_check) {
-			return false;
-		}
-	}
-	for ($i = 0; $i < strlen($name_to_check); $i++) {
-		if ($name_to_check[$i - 1] == ' ' && $name_to_check[$i + 1] == ' ') {
-			return false;
-		}
-	}
-	foreach ($words_blocked as $word) {
-		if (!(strpos($name_to_check, $word) === false)) {
-			return false;
-		}
-	}
-	for ($i = 0; $i < strlen($name_to_check); $i++) {
-		if ($name_to_check[$i] == $name_to_check[$i + 1] && $name_to_check[$i] == $name_to_check[$i + 2]) {
-			return false;
-		}
-	}
-	for ($i = 0; $i < strlen($name_to_check); $i++) {
-		if ($name_to_check[$i - 1] == ' ' && $name_to_check[$i + 1] == ' ') {
-			return false;
-		}
-	}
-	$temp = strspn("$name", "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM- '");
-	if ($temp != strlen($name)) {
-		return false;
-	} else {
-		$ok = "/[a-zA-Z ']{1,25}/";
-		return preg_match($ok, $name) ? true : false;
-	}
+    //sprawdza name
+    $name_to_check = strtolower($name);
+    //first word can't be:
+    //names blocked:
+    $names_blocked = ['gm', 'cm', 'god', 'tutor'];
+    $first_words_blocked = ['gm ', 'cm ', 'god ', 'tutor ', "'", '-'];
+    //name can't contain:
+    $words_blocked = [
+        'gamemaster',
+        'game master',
+        'game-master',
+        "game'master",
+        '--',
+        "''",
+        "' ",
+        " '",
+        '- ',
+        ' -',
+        "-'",
+        "'-",
+        'fuck',
+        'sux',
+        'suck',
+        'noob',
+        'tutor'
+    ];
+    foreach ($first_words_blocked as $word) {
+        if ($word == substr($name_to_check, 0, strlen($word))) {
+            return false;
+        }
+    }
+    if (substr($name_to_check, -1) == "'" || substr($name_to_check, -1) == '-') {
+        return false;
+    }
+    if (substr($name_to_check, 1, 1) == ' ') {
+        return false;
+    }
+    if (substr($name_to_check, -2, 1) == ' ') {
+        return false;
+    }
+    foreach ($names_blocked as $word) {
+        if ($word == $name_to_check) {
+            return false;
+        }
+    }
+    foreach ($GLOBALS['config']['site']['monsters'] as $word) {
+        if ($word == $name_to_check) {
+            return false;
+        }
+    }
+    foreach ($GLOBALS['config']['site']['npc'] as $word) {
+        if ($word == $name_to_check) {
+            return false;
+        }
+    }
+    for ($i = 0; $i < strlen($name_to_check); $i++) {
+        if ($name_to_check[$i - 1] == ' ' && $name_to_check[$i + 1] == ' ') {
+            return false;
+        }
+    }
+    foreach ($words_blocked as $word) {
+        if (!(strpos($name_to_check, $word) === false)) {
+            return false;
+        }
+    }
+    for ($i = 0; $i < strlen($name_to_check); $i++) {
+        if ($name_to_check[$i] == $name_to_check[$i + 1] && $name_to_check[$i] == $name_to_check[$i + 2]) {
+            return false;
+        }
+    }
+    for ($i = 0; $i < strlen($name_to_check); $i++) {
+        if ($name_to_check[$i - 1] == ' ' && $name_to_check[$i + 1] == ' ') {
+            return false;
+        }
+    }
+    $temp = strspn("$name", "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM- '");
+    if ($temp != strlen($name)) {
+        return false;
+    } else {
+        $ok = "/[a-zA-Z ']{1,25}/";
+        return preg_match($ok, $name) ? true : false;
+    }
 }
 
 //is rank name valid?
 function check_rank_name($name)
 {
-	//sprawdza name
-	$temp = strspn("$name", 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789-[ ] ');
-	if ($temp != strlen($name)) {
-		return false;
-	} else {
-		$ok = '/[a-zA-Z ]{1,60}/';
-		return preg_match($ok, $name) ? true : false;
-	}
+    //sprawdza name
+    $temp = strspn("$name", 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789-[ ] ');
+    if ($temp != strlen($name)) {
+        return false;
+    } else {
+        $ok = '/[a-zA-Z ]{1,60}/';
+        return preg_match($ok, $name) ? true : false;
+    }
 }
 //is guild name valid?
 function check_guild_name($name)
 {
-	$temp = strspn("$name", 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789- ');
-	if ($temp != strlen($name)) {
-		return false;
-	} else {
-		$ok = '/[a-zA-Z ]{1,60}/';
-		return preg_match($ok, $name) ? true : false;
-	}
+    $temp = strspn("$name", 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789- ');
+    if ($temp != strlen($name)) {
+        return false;
+    } else {
+        $ok = '/[a-zA-Z ]{1,60}/';
+        return preg_match($ok, $name) ? true : false;
+    }
 }
 //is it valid password?
 function check_password($pass)
 {
-	//sprawdza haslo
-	$temp = strspn("$pass", 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890');
-	if ($temp != strlen($pass)) {
-		return false;
-	} else {
-		$ok = '/[a-zA-Z0-9]{1,40}/';
-		return preg_match($ok, $pass) ? true : false;
-	}
+    //sprawdza haslo
+    $temp = strspn("$pass", 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890');
+    if ($temp != strlen($pass)) {
+        return false;
+    } else {
+        $ok = '/[a-zA-Z0-9]{1,40}/';
+        return preg_match($ok, $pass) ? true : false;
+    }
 }
 //is it valid e-mail?
 function check_mail($email)
 {
-	//sprawdza mail
-	$ok = '/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}/';
-	return preg_match($ok, $email) ? true : false;
+    //sprawdza mail
+    $ok = '/[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,4}/';
+    return preg_match($ok, $email) ? true : false;
 }
 
 function items_on_player($characterid, $pid)
 {
-	global $SQL;
-	$item = $SQL
-		->query(
-			"SELECT `itemtype` FROM `player_items` WHERE `pid` = '" .
-				$pid .
-				"' AND `player_id` = '" .
-				$characterid .
-				"'"
-		)
-		->fetch();
-	return '<img src="images/items/' . $item['itemtype'] . '.gif" />';
+    global $SQL;
+    $item = $SQL
+        ->query(
+            "SELECT `itemtype` FROM `player_items` WHERE `pid` = '" .
+                $pid .
+                "' AND `player_id` = '" .
+                $characterid .
+                "'"
+        )
+        ->fetch();
+    return '<img src="images/items/' . $item['itemtype'] . '.gif" />';
 }
 
 function showCommentsCount($date)
 {
-	global $SQL;
-	$result = $SQL
-		->query('SELECT COUNT(*) as `count` FROM `z_news_comments` WHERE `news_date` = ' . (int) $date . ';')
-		->fetch();
-	return (int) $result['count'];
+    global $SQL;
+    $result = $SQL
+        ->query('SELECT COUNT(*) as `count` FROM `z_news_comments` WHERE `news_date` = ' . (int) $date . ';')
+        ->fetch();
+    return (int) $result['count'];
 }
 
 function getReason($reasonId)
 {
-	switch ($reasonId) {
-		case 0:
-			return 'Offensive Name';
-		case 1:
-			return 'Invalid Name Format';
-		case 2:
-			return 'Unsuitable Name';
-		case 3:
-			return 'Name Inciting Rule Violation';
-		case 4:
-			return 'Offensive Statement';
-		case 5:
-			return 'Spamming';
-		case 6:
-			return 'Illegal Advertising';
-		case 7:
-			return 'Off-Topic Public Statement';
-		case 8:
-			return 'Non-English Public Statement';
-		case 9:
-			return 'Inciting Rule Violation';
-		case 10:
-			return 'Bug Abuse';
-		case 11:
-			return 'Game Weakness Abuse';
-		case 12:
-			return 'Using Unofficial Software to Play';
-		case 13:
-			return 'Hacking';
-		case 14:
-			return 'Multi-Clienting';
-		case 15:
-			return 'Account Trading or Sharing';
-		case 16:
-			return 'Threatening Gamemaster';
-		case 17:
-			return 'Pretending to Have Influence on Rule Enforcement';
-		case 18:
-			return 'False Report to Gamemaster';
-		case 19:
-			return 'Destructive Behaviour';
-		case 20:
-			return 'Excessive Unjustified Player Killing';
-		case 21:
-			return 'Invalid Payment';
-		case 22:
-			return 'Spoiling Auction';
-		default:
-			break;
-	}
-	return 'Unknown Reason';
+    switch ($reasonId) {
+        case 0:
+            return 'Offensive Name';
+        case 1:
+            return 'Invalid Name Format';
+        case 2:
+            return 'Unsuitable Name';
+        case 3:
+            return 'Name Inciting Rule Violation';
+        case 4:
+            return 'Offensive Statement';
+        case 5:
+            return 'Spamming';
+        case 6:
+            return 'Illegal Advertising';
+        case 7:
+            return 'Off-Topic Public Statement';
+        case 8:
+            return 'Non-English Public Statement';
+        case 9:
+            return 'Inciting Rule Violation';
+        case 10:
+            return 'Bug Abuse';
+        case 11:
+            return 'Game Weakness Abuse';
+        case 12:
+            return 'Using Unofficial Software to Play';
+        case 13:
+            return 'Hacking';
+        case 14:
+            return 'Multi-Clienting';
+        case 15:
+            return 'Account Trading or Sharing';
+        case 16:
+            return 'Threatening Gamemaster';
+        case 17:
+            return 'Pretending to Have Influence on Rule Enforcement';
+        case 18:
+            return 'False Report to Gamemaster';
+        case 19:
+            return 'Destructive Behaviour';
+        case 20:
+            return 'Excessive Unjustified Player Killing';
+        case 21:
+            return 'Invalid Payment';
+        case 22:
+            return 'Spoiling Auction';
+        default:
+            break;
+    }
+    return 'Unknown Reason';
 }
 
 //################### DISPLAY FUNCTIONS #####################
 //return shorter text (news ticker)
 function short_text($text, $chars_limit)
 {
-	if (strlen($text) > $chars_limit) {
-		return substr($text, 0, strrpos(substr($text, 0, $chars_limit), ' ')) . '...';
-	} else {
-		return $text;
-	}
+    if (strlen($text) > $chars_limit) {
+        return substr($text, 0, strrpos(substr($text, 0, $chars_limit), ' ')) . '...';
+    } else {
+        return $text;
+    }
 }
 //return text to news msg
 function news_place()
 {
-	if ($GLOBALS['subtopic'] == 'latestnews') {
-		//add tickers to site - without it tickers will not be showed
-		//$news .= $GLOBALS['news_content'];
-		/*
+    if ($GLOBALS['subtopic'] == 'latestnews') {
+        //add tickers to site - without it tickers will not be showed
+        //$news .= $GLOBALS['news_content'];
+        /*
 //featured article
 $layout_name = $GLOBALS['layout_name'];
 $news .= ' <div id="featuredarticle" class="Box">
@@ -582,460 +582,460 @@ skad sie laduje mozesz zmienic linijke ponad komentarzem
 <div class="CornerWrapper-b"><div class="Corner-br" style="background-image:url('.$layout_name.'/images/content/corner-br.gif);"></div></div>
 </div>';
 */
-	}
-	return $news;
+    }
+    return $news;
 }
 //set monster of week
 function logo_monster()
 {
-	return str_replace(' ', '', trim(mb_strtolower($GLOBALS['layout_ini']['logo_monster'])));
+    return str_replace(' ', '', trim(mb_strtolower($GLOBALS['layout_ini']['logo_monster'])));
 }
 $statustimeout = 1;
 foreach (explode('*', str_replace(' ', '', $config['server']['statusTimeout'])) as $status_var) {
-	if ($status_var > 0) {
-		$statustimeout = $statustimeout * $status_var;
-	}
+    if ($status_var > 0) {
+        $statustimeout = $statustimeout * $status_var;
+    }
 }
 $statustimeout = $statustimeout / 1000;
 $config['status'] = @parse_ini_file('config/serverstatus');
 if (!is_array($config['status'])) {
-	$config['status'] = [
-		'serverStatus_lastCheck' => 0,
-		'serverStatus_checkInterval' => $statustimeout + 3,
-		'serverStatus_online' => 0,
-		'serverStatus_players' => 0,
-		'serverStatus_playersMax' => 0,
-		'serverStatus_uptime' => '0h 0m',
-		'serverStatus_monsters' => 0
-	];
+    $config['status'] = [
+        'serverStatus_lastCheck' => 0,
+        'serverStatus_checkInterval' => $statustimeout + 3,
+        'serverStatus_online' => 0,
+        'serverStatus_players' => 0,
+        'serverStatus_playersMax' => 0,
+        'serverStatus_uptime' => '0h 0m',
+        'serverStatus_monsters' => 0
+    ];
 }
 if (($config['status']['serverStatus_lastCheck'] ?? 0) + $statustimeout < time()) {
-	$config['status']['serverStatus_checkInterval'] = $statustimeout + 3;
-	$config['status']['serverStatus_lastCheck'] = time();
-	$info = chr(6) . chr(0) . chr(255) . chr(255) . 'info';
-	$status_host = !empty($config['site']['status_host']) ? $config['site']['status_host'] : $config['server']['ip'];
-	$sock = @fsockopen($status_host, $config['server']['statusPort'], $errno, $errstr, 1);
-	if ($sock) {
-		fwrite($sock, $info);
-		$data = '';
-		while (!feof($sock)) {
-			$data .= fgets($sock, 10000000);
-		}
-		fclose($sock);
-		preg_match('/players online="(\d+)" max="(\d+)"/', $data, $matches);
-		$config['status']['serverStatus_online'] = 1;
-		$config['status']['serverStatus_players'] = $matches[1];
-		$config['status']['serverStatus_playersMax'] = $matches[2];
-		preg_match('/uptime="(\d+)"/', $data, $matches);
-		$h = floor($matches[1] / 3600);
-		$m = floor(($matches[1] - $h * 3600) / 60);
-		$config['status']['serverStatus_uptime'] = $h . 'h ' . $m . 'm';
-		preg_match('/monsters total="(\d+)"/', $data, $matches);
-		$config['status']['serverStatus_monsters'] = $matches[1];
-	} else {
-		$config['status']['serverStatus_online'] = 0;
-		$config['status']['serverStatus_players'] = 0;
-		$config['status']['serverStatus_playersMax'] = 0;
-	}
-	$file = @fopen('config/serverstatus', 'w');
-	if ($file !== false) {
-		$file_data = '';
-		foreach ($config['status'] as $param => $data) {
-			$file_data .=
-				$param .
-				' = "' .
-				str_replace('"', '', $data) .
-				'"
+    $config['status']['serverStatus_checkInterval'] = $statustimeout + 3;
+    $config['status']['serverStatus_lastCheck'] = time();
+    $info = chr(6) . chr(0) . chr(255) . chr(255) . 'info';
+    $status_host = !empty($config['site']['status_host']) ? $config['site']['status_host'] : $config['server']['ip'];
+    $sock = @fsockopen($status_host, $config['server']['statusPort'], $errno, $errstr, 1);
+    if ($sock) {
+        fwrite($sock, $info);
+        $data = '';
+        while (!feof($sock)) {
+            $data .= fgets($sock, 10000000);
+        }
+        fclose($sock);
+        preg_match('/players online="(\d+)" max="(\d+)"/', $data, $matches);
+        $config['status']['serverStatus_online'] = 1;
+        $config['status']['serverStatus_players'] = $matches[1];
+        $config['status']['serverStatus_playersMax'] = $matches[2];
+        preg_match('/uptime="(\d+)"/', $data, $matches);
+        $h = floor($matches[1] / 3600);
+        $m = floor(($matches[1] - $h * 3600) / 60);
+        $config['status']['serverStatus_uptime'] = $h . 'h ' . $m . 'm';
+        preg_match('/monsters total="(\d+)"/', $data, $matches);
+        $config['status']['serverStatus_monsters'] = $matches[1];
+    } else {
+        $config['status']['serverStatus_online'] = 0;
+        $config['status']['serverStatus_players'] = 0;
+        $config['status']['serverStatus_playersMax'] = 0;
+    }
+    $file = @fopen('config/serverstatus', 'w');
+    if ($file !== false) {
+        $file_data = '';
+        foreach ($config['status'] as $param => $data) {
+            $file_data .=
+                $param .
+                ' = "' .
+                str_replace('"', '', $data) .
+                '"
 ';
-		}
-		fwrite($file, $file_data);
-		fclose($file);
-	}
+        }
+        fwrite($file, $file_data);
+        fclose($file);
+    }
 }
 
 //PAGE VIEWS COUNTER :)
 $views_counter = 'usercounter.dat';
 // checking if the file exists
 if (file_exists($views_counter)) {
-	$actie = @fopen($views_counter, 'r+');
-	if ($actie !== false) {
-		$page_views = fgets($actie, 9);
-		$page_views++;
-		rewind($actie);
-		fputs($actie, $page_views, 9);
-		fclose($actie);
-	} else {
-		$page_views = 0;
-	}
+    $actie = @fopen($views_counter, 'r+');
+    if ($actie !== false) {
+        $page_views = fgets($actie, 9);
+        $page_views++;
+        rewind($actie);
+        fputs($actie, $page_views, 9);
+        fclose($actie);
+    } else {
+        $page_views = 0;
+    }
 } else {
-	$actie = @fopen($views_counter, 'w');
-	$page_views = 1;
-	if ($actie !== false) {
-		fputs($actie, $page_views, 9);
-		fclose($actie);
-	}
+    $actie = @fopen($views_counter, 'w');
+    $page_views = 1;
+    if ($actie !== false) {
+        fputs($actie, $page_views, 9);
+        fclose($actie);
+    }
 }
 
 function makeOrder($arr, $order, $default)
 {
-	// Function by Colandus!
-	$type = 'asc';
-	if (isset($_GET['order'])) {
-		$v = explode('_', strrev($_GET['order']), 2);
-		if (count($v) == 2) {
-			if ($orderBy = $arr[strrev($v[1])]) {
-				$default = $orderBy;
-			}
-		}
-		$type = strrev($v[0]) == 'asc' ? 'desc' : 'asc';
-	}
+    // Function by Colandus!
+    $type = 'asc';
+    if (isset($_GET['order'])) {
+        $v = explode('_', strrev($_GET['order']), 2);
+        if (count($v) == 2) {
+            if ($orderBy = $arr[strrev($v[1])]) {
+                $default = $orderBy;
+            }
+        }
+        $type = strrev($v[0]) == 'asc' ? 'desc' : 'asc';
+    }
 
-	return 'ORDER BY ' . $default . ' ' . $type;
+    return 'ORDER BY ' . $default . ' ' . $type;
 }
 
 function getOrder($arr, $order, $field)
 {
-	// Function by Colandus!
-	$type = 'asc';
-	if ($orderBy = $arr[$field]) {
-		if (isset($_GET[$order])) {
-			$v = explode('_', strrev($_GET[$order]), 2);
-			if (strrev($v[1]) == $field) {
-				$type = strrev($v[0]) == 'asc' ? 'desc' : 'asc';
-			}
-		}
-	}
+    // Function by Colandus!
+    $type = 'asc';
+    if ($orderBy = $arr[$field]) {
+        if (isset($_GET[$order])) {
+            $v = explode('_', strrev($_GET[$order]), 2);
+            if (strrev($v[1]) == $field) {
+                $type = strrev($v[0]) == 'asc' ? 'desc' : 'asc';
+            }
+        }
+    }
 
-	return $field . '_' . $type;
+    return $field . '_' . $type;
 }
 
 // Parse smiley bbcode into HTML images
 function parsesmileys($message)
 {
-	foreach (
-		[
-			'/\:\)/si' => "<img src='images/smiley/smile.gif' title='Smile'>",
-			'/\;\)/si' => "<img src='images/smiley/wink.gif' title='Wink'>",
-			'/\:\(/si' => "<img src='images/smiley/sad.gif' title='Sad'>",
-			'/\:\|/si' => "<img src='images/smiley/frown.gif' title='Frown'>",
-			'/\:o/si' => "<img src='images/smiley/shock.gif' title='Shock'>",
-			'/\:p/si' => "<img src='images/smiley/pfft.gif' title='Pfft!'>",
-			'/b\)/si' => "<img src='images/smiley/cool.gif' title='Cool...'>",
-			'/\:d/si' => "<img src='images/smiley/grin.gif' title='Grin'>",
-			'/\:@/si' => "<img src='images/smiley/angry.gif' title='Angry'>",
-			'/\:rol:/si' => "<img title='Rolleyes...' src='images/smiley/roll.gif'>",
-			'/\:uhoh:/si' => "<img title='Uh-Oh!' src='images/smiley/uhoh.gif'>",
-			'/\:no:/si' => "<img title='Nope' src='images/smiley/no.gif'>",
-			'/\:shy:/si' => "<img title='Shy' src='images/smiley/shy.gif'>",
-			'/\:lol:/si' => "<img title='Laugh' src='images/smiley/laugh.gif'>",
-			'/\:rip:/si' => "<img title='Dead...' src='images/smiley/dead.gif'>",
-			'/\:yes:/si' => "<img title='Yeah' src='images/smiley/yes.gif'>",
-			'/\:mad:/si' => "<img title='Mad' src='images/smiley/mad.gif'>",
-			'/\:bigeek:/si' => "<img title='Big eek!' src='images/smiley/bigeek.gif'>",
-			'/\:bigrazz:/si' => "<img title='Big razz' src='images/smiley/bigrazz.gif'>",
-			'/\:smilewinkgrin:/si' => "<img title='Smile-Wink-Grin' src='images/smiley/smilewinkgrin.gif'>",
-			'/\:sourgrapes:/si' => "<img title='Sour Grapes' src='images/smiley/sourgrapes.gif'>",
-			'/\:confused:/si' => "<img title='Confused?' src='images/smiley/confused.gif'>",
-			'/\:upset:/si' => "<img title='Upset' src='images/smiley/upset.gif'>",
-			'/\:sleep:/si' => "<img title='Sleep' src='images/smiley/sleep.gif'>",
-			'/\:yupi:/si' => "<img title='Yupi!' src='images/smiley/jupi.gif'>"
-		]
-		as $key => $img
-	) {
-		$message = preg_replace($key, $img, $message);
-	}
+    foreach (
+        [
+            '/\:\)/si' => "<img src='images/smiley/smile.gif' title='Smile'>",
+            '/\;\)/si' => "<img src='images/smiley/wink.gif' title='Wink'>",
+            '/\:\(/si' => "<img src='images/smiley/sad.gif' title='Sad'>",
+            '/\:\|/si' => "<img src='images/smiley/frown.gif' title='Frown'>",
+            '/\:o/si' => "<img src='images/smiley/shock.gif' title='Shock'>",
+            '/\:p/si' => "<img src='images/smiley/pfft.gif' title='Pfft!'>",
+            '/b\)/si' => "<img src='images/smiley/cool.gif' title='Cool...'>",
+            '/\:d/si' => "<img src='images/smiley/grin.gif' title='Grin'>",
+            '/\:@/si' => "<img src='images/smiley/angry.gif' title='Angry'>",
+            '/\:rol:/si' => "<img title='Rolleyes...' src='images/smiley/roll.gif'>",
+            '/\:uhoh:/si' => "<img title='Uh-Oh!' src='images/smiley/uhoh.gif'>",
+            '/\:no:/si' => "<img title='Nope' src='images/smiley/no.gif'>",
+            '/\:shy:/si' => "<img title='Shy' src='images/smiley/shy.gif'>",
+            '/\:lol:/si' => "<img title='Laugh' src='images/smiley/laugh.gif'>",
+            '/\:rip:/si' => "<img title='Dead...' src='images/smiley/dead.gif'>",
+            '/\:yes:/si' => "<img title='Yeah' src='images/smiley/yes.gif'>",
+            '/\:mad:/si' => "<img title='Mad' src='images/smiley/mad.gif'>",
+            '/\:bigeek:/si' => "<img title='Big eek!' src='images/smiley/bigeek.gif'>",
+            '/\:bigrazz:/si' => "<img title='Big razz' src='images/smiley/bigrazz.gif'>",
+            '/\:smilewinkgrin:/si' => "<img title='Smile-Wink-Grin' src='images/smiley/smilewinkgrin.gif'>",
+            '/\:sourgrapes:/si' => "<img title='Sour Grapes' src='images/smiley/sourgrapes.gif'>",
+            '/\:confused:/si' => "<img title='Confused?' src='images/smiley/confused.gif'>",
+            '/\:upset:/si' => "<img title='Upset' src='images/smiley/upset.gif'>",
+            '/\:sleep:/si' => "<img title='Sleep' src='images/smiley/sleep.gif'>",
+            '/\:yupi:/si' => "<img title='Yupi!' src='images/smiley/jupi.gif'>"
+        ]
+        as $key => $img
+    ) {
+        $message = preg_replace($key, $img, $message);
+    }
 
-	return $message;
+    return $message;
 }
 
 // Parse bbcode into HTML code (URLs restricted to http/https)
 function parseubb($text)
 {
-	global $account_logged;
-	$text = preg_replace('#\[b\](.*?)\[/b\]#si', '<b>\1</b>', $text);
+    global $account_logged;
+    $text = preg_replace('#\[b\](.*?)\[/b\]#si', '<b>\1</b>', $text);
 
-	$text = preg_replace('#\[i\](.*?)\[/i\]#si', '<i>\1</i>', $text);
-	$text = preg_replace('#\[u\](.*?)\[/u\]#si', '<u>\1</u>', $text);
-	$text = preg_replace('#\[s\](.*?)\[/s\]#si', '<s>\1</s>', $text);
-	$text = preg_replace('#\[center\](.*?)\[/center\]#si', '<center>\1</center>', $text);
+    $text = preg_replace('#\[i\](.*?)\[/i\]#si', '<i>\1</i>', $text);
+    $text = preg_replace('#\[u\](.*?)\[/u\]#si', '<u>\1</u>', $text);
+    $text = preg_replace('#\[s\](.*?)\[/s\]#si', '<s>\1</s>', $text);
+    $text = preg_replace('#\[center\](.*?)\[/center\]#si', '<center>\1</center>', $text);
 
-	$linkify = function ($url, $label) {
-		$u = safe_http_url(str_replace('<br>', '', $url));
-		if ($u === '') {
-			return h($label);
-		}
-		return '<a href="' . h($u) . '" target="_blank" rel="noopener noreferrer">' . h(strip_tags($label)) . '</a>';
-	};
-	$text = preg_replace_callback(
-		'#\[url\](.*?)\[/url\]#si',
-		function ($m) use ($linkify) {
-			$raw = trim(str_replace('<br>', '', $m[1]));
-			$u = safe_http_url($raw);
-			if ($u === '' && $raw !== '' && !preg_match('#^[a-z][a-z0-9+.-]*:#i', $raw)) {
-				$u = safe_http_url('http://' . $raw);
-			}
-			return $u === '' ? h($raw) : $linkify($u, $raw);
-		},
-		$text
-	);
-	$text = preg_replace_callback(
-		'#\[url=(.*?)\](.*?)\[/url\]#si',
-		function ($m) use ($linkify) {
-			$raw = trim(str_replace('<br>', '', $m[1]));
-			$u = safe_http_url($raw);
-			if ($u === '' && $raw !== '' && !preg_match('#^[a-z][a-z0-9+.-]*:#i', $raw)) {
-				$u = safe_http_url('http://' . $raw);
-			}
-			return $u === '' ? h($m[2]) : $linkify($u, $m[2]);
-		},
-		$text
-	);
+    $linkify = function ($url, $label) {
+        $u = safe_http_url(str_replace('<br>', '', $url));
+        if ($u === '') {
+            return h($label);
+        }
+        return '<a href="' . h($u) . '" target="_blank" rel="noopener noreferrer">' . h(strip_tags($label)) . '</a>';
+    };
+    $text = preg_replace_callback(
+        '#\[url\](.*?)\[/url\]#si',
+        function ($m) use ($linkify) {
+            $raw = trim(str_replace('<br>', '', $m[1]));
+            $u = safe_http_url($raw);
+            if ($u === '' && $raw !== '' && !preg_match('#^[a-z][a-z0-9+.-]*:#i', $raw)) {
+                $u = safe_http_url('http://' . $raw);
+            }
+            return $u === '' ? h($raw) : $linkify($u, $raw);
+        },
+        $text
+    );
+    $text = preg_replace_callback(
+        '#\[url=(.*?)\](.*?)\[/url\]#si',
+        function ($m) use ($linkify) {
+            $raw = trim(str_replace('<br>', '', $m[1]));
+            $u = safe_http_url($raw);
+            if ($u === '' && $raw !== '' && !preg_match('#^[a-z][a-z0-9+.-]*:#i', $raw)) {
+                $u = safe_http_url('http://' . $raw);
+            }
+            return $u === '' ? h($m[2]) : $linkify($u, $m[2]);
+        },
+        $text
+    );
 
-	$text = preg_replace(
-		'#\[mail\]([\r\n]*)([^\s\'\";:\+]*?)([\r\n]*)\[/mail\]#si',
-		'<a href=\'mailto:\2\'>\2</a>',
-		$text
-	);
-	$text = preg_replace(
-		'#\[mail=([\r\n]*)([^\s\'\";:\+]*?)\](.*?)([\r\n]*)\[/mail\]#si',
-		'<a href=\'mailto:\2\'>\2</a>',
-		$text
-	);
+    $text = preg_replace(
+        '#\[mail\]([\r\n]*)([^\s\'\";:\+]*?)([\r\n]*)\[/mail\]#si',
+        '<a href=\'mailto:\2\'>\2</a>',
+        $text
+    );
+    $text = preg_replace(
+        '#\[mail=([\r\n]*)([^\s\'\";:\+]*?)\](.*?)([\r\n]*)\[/mail\]#si',
+        '<a href=\'mailto:\2\'>\2</a>',
+        $text
+    );
 
-	$text = preg_replace('#\[small\](.*?)\[/small\]#si', '<small>\1</small>', $text);
-	$text = preg_replace(
-		'#\[color=(black|blue|brown|cyan|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|violet|white|yellow)\](.*?)\[/color\]#si',
-		'<span style=\'color:\1\'>\2</span>',
-		$text
-	);
+    $text = preg_replace('#\[small\](.*?)\[/small\]#si', '<small>\1</small>', $text);
+    $text = preg_replace(
+        '#\[color=(black|blue|brown|cyan|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|violet|white|yellow)\](.*?)\[/color\]#si',
+        '<span style=\'color:\1\'>\2</span>',
+        $text
+    );
 
-	if ($account_logged) {
-		$text = preg_replace('#\[hide\](.*?)\[/hide\]#si', '\1', $text);
-	}
+    if ($account_logged) {
+        $text = preg_replace('#\[hide\](.*?)\[/hide\]#si', '\1', $text);
+    }
 
-	$text = preg_replace(
-		'#\[size=(8|10|12|14|16|18|20)\](.*?)\[/size\]#si',
-		'<span style=\'font-size: \1;\'>\2</span>',
-		$text
-	);
-	$text = preg_replace('#\[marquee\](.*?)\[/marquee\]#si', '<marquee>\1</marquee>', $text);
-	$text = preg_replace(
-		'#\[marquee=(left|down|up|right)\](.*?)\[/marquee\]#si',
-		'<marquee direction=\'\1\'>\2</marquee>',
-		$text
-	);
-	$text = preg_replace(
-		'#\[marquee=(left|down|up|right):(scroll|slide|alternate)\](.*?)\[/marquee\]#si',
-		'<marquee direction=\'\1\' behavior=\'\2\'>\3</marquee>',
-		$text
-	);
+    $text = preg_replace(
+        '#\[size=(8|10|12|14|16|18|20)\](.*?)\[/size\]#si',
+        '<span style=\'font-size: \1;\'>\2</span>',
+        $text
+    );
+    $text = preg_replace('#\[marquee\](.*?)\[/marquee\]#si', '<marquee>\1</marquee>', $text);
+    $text = preg_replace(
+        '#\[marquee=(left|down|up|right)\](.*?)\[/marquee\]#si',
+        '<marquee direction=\'\1\'>\2</marquee>',
+        $text
+    );
+    $text = preg_replace(
+        '#\[marquee=(left|down|up|right):(scroll|slide|alternate)\](.*?)\[/marquee\]#si',
+        '<marquee direction=\'\1\' behavior=\'\2\'>\3</marquee>',
+        $text
+    );
 
-	// Flash embeds removed (obsolete + XSS risk)
-	$text = preg_replace('#\[flash[^\]]*\].*?\[/flash\]#si', '', $text);
-	$text = preg_replace_callback(
-		'#\[img\](.*?)\[/img\]#si',
-		function ($m) {
-			$u = safe_http_url(trim(str_replace('<br>', '', $m[1])));
-			if ($u === '' || !preg_match('#\.(jpe?g|gif|png)(\?.*)?$#i', $u)) {
-				return '';
-			}
-			return '<img src="' . h($u) . '" style="border:0px" alt="">';
-		},
-		$text
-	);
+    // Flash embeds removed (obsolete + XSS risk)
+    $text = preg_replace('#\[flash[^\]]*\].*?\[/flash\]#si', '', $text);
+    $text = preg_replace_callback(
+        '#\[img\](.*?)\[/img\]#si',
+        function ($m) {
+            $u = safe_http_url(trim(str_replace('<br>', '', $m[1])));
+            if ($u === '' || !preg_match('#\.(jpe?g|gif|png)(\?.*)?$#i', $u)) {
+                return '';
+            }
+            return '<img src="' . h($u) . '" style="border:0px" alt="">';
+        },
+        $text
+    );
 
-	$qcount = substr_count($text, '[quote]');
-	for ($i = 0; $i < $qcount; $i++) {
-		$text = preg_replace('#\[quote\](.*?)\[/quote\]#si', '<div class=\'quote\'>\1</div>', $text);
-	}
+    $qcount = substr_count($text, '[quote]');
+    for ($i = 0; $i < $qcount; $i++) {
+        $text = preg_replace('#\[quote\](.*?)\[/quote\]#si', '<div class=\'quote\'>\1</div>', $text);
+    }
 
-	$ccount = substr_count($text, '[code]');
-	for ($i = 0; $i < $ccount; $i++) {
-		$text = preg_replace(
-			'#\[code\](.*?)\[/code\]#si',
-			'<div class=\'quote\' style=\'width:400px;white-space:nowrap;overflow:auto\'><code style=\'white-space:nowrap\'>\1<br><br><br></code></div>',
-			$text
-		);
-	}
+    $ccount = substr_count($text, '[code]');
+    for ($i = 0; $i < $ccount; $i++) {
+        $text = preg_replace(
+            '#\[code\](.*?)\[/code\]#si',
+            '<div class=\'quote\' style=\'width:400px;white-space:nowrap;overflow:auto\'><code style=\'white-space:nowrap\'>\1<br><br><br></code></div>',
+            $text
+        );
+    }
 
-	return descript($text, false);
+    return descript($text, false);
 }
 
 function descript($text, $striptags = true)
 {
-	// Convert problematic ascii characters to their true values
-	$search = [
-		'40',
-		'41',
-		'58',
-		'65',
-		'66',
-		'67',
-		'68',
-		'69',
-		'70',
-		'71',
-		'72',
-		'73',
-		'74',
-		'75',
-		'76',
-		'77',
-		'78',
-		'79',
-		'80',
-		'81',
-		'82',
-		'83',
-		'84',
-		'85',
-		'86',
-		'87',
-		'88',
-		'89',
-		'90',
-		'97',
-		'98',
-		'99',
-		'100',
-		'101',
-		'102',
-		'103',
-		'104',
-		'105',
-		'106',
-		'107',
-		'108',
-		'109',
-		'110',
-		'111',
-		'112',
-		'113',
-		'114',
-		'115',
-		'116',
-		'117',
-		'118',
-		'119',
-		'120',
-		'121',
-		'122'
-	];
-	$replace = [
-		'(',
-		')',
-		':',
-		'a',
-		'b',
-		'c',
-		'd',
-		'e',
-		'f',
-		'g',
-		'h',
-		'i',
-		'j',
-		'k',
-		'l',
-		'm',
-		'n',
-		'o',
-		'p',
-		'q',
-		'r',
-		's',
-		't',
-		'u',
-		'v',
-		'w',
-		'x',
-		'y',
-		'z',
-		'a',
-		'b',
-		'c',
-		'd',
-		'e',
-		'f',
-		'g',
-		'h',
-		'i',
-		'j',
-		'k',
-		'l',
-		'm',
-		'n',
-		'o',
-		'p',
-		'q',
-		'r',
-		's',
-		't',
-		'u',
-		'v',
-		'w',
-		'x',
-		'y',
-		'z'
-	];
+    // Convert problematic ascii characters to their true values
+    $search = [
+        '40',
+        '41',
+        '58',
+        '65',
+        '66',
+        '67',
+        '68',
+        '69',
+        '70',
+        '71',
+        '72',
+        '73',
+        '74',
+        '75',
+        '76',
+        '77',
+        '78',
+        '79',
+        '80',
+        '81',
+        '82',
+        '83',
+        '84',
+        '85',
+        '86',
+        '87',
+        '88',
+        '89',
+        '90',
+        '97',
+        '98',
+        '99',
+        '100',
+        '101',
+        '102',
+        '103',
+        '104',
+        '105',
+        '106',
+        '107',
+        '108',
+        '109',
+        '110',
+        '111',
+        '112',
+        '113',
+        '114',
+        '115',
+        '116',
+        '117',
+        '118',
+        '119',
+        '120',
+        '121',
+        '122'
+    ];
+    $replace = [
+        '(',
+        ')',
+        ':',
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+        'k',
+        'l',
+        'm',
+        'n',
+        'o',
+        'p',
+        'q',
+        'r',
+        's',
+        't',
+        'u',
+        'v',
+        'w',
+        'x',
+        'y',
+        'z',
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+        'k',
+        'l',
+        'm',
+        'n',
+        'o',
+        'p',
+        'q',
+        'r',
+        's',
+        't',
+        'u',
+        'v',
+        'w',
+        'x',
+        'y',
+        'z'
+    ];
 
-	$entities = count($search);
-	for ($i = 0; $i < $entities; $i++) {
-		$text = preg_replace('#(&\#)(0*' . $search[$i] . '+);*#si', $replace[$i], $text);
-	}
+    $entities = count($search);
+    for ($i = 0; $i < $entities; $i++) {
+        $text = preg_replace('#(&\#)(0*' . $search[$i] . '+);*#si', $replace[$i], $text);
+    }
 
-	// kill hexadecimal characters completely
-	$text = preg_replace('#(&\#x)([0-9A-F]+);*#si', '', $text);
-	// remove any attribute starting with "on" or xmlns
-	$text = preg_replace(
-		'#(<[^>]+[\\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onload|xmlns)[^>]*>#iU',
-		'>',
-		$text
-	);
-	// remove javascript: and vbscript: protocol
-	$text = preg_replace('#([a-z]*)=([\`\'\"]*)script:#iU', '$1=$2nojscript...', $text);
-	$text = preg_replace('#([a-z]*)=([\`\'\"]*)javascript:#iU', '$1=$2nojavascript...', $text);
-	$text = preg_replace('#([a-z]*)=([\'\"]*)vbscript:#iU', '$1=$2novbscript...', $text);
-	//<span style="width: expression(alert('Ping!'));"></span> (only affects ie...)
-	$text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU', "$1>", $text);
-	$text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU', "$1>", $text);
-	if (!$striptags) {
-		return $text;
-	}
+    // kill hexadecimal characters completely
+    $text = preg_replace('#(&\#x)([0-9A-F]+);*#si', '', $text);
+    // remove any attribute starting with "on" or xmlns
+    $text = preg_replace(
+        '#(<[^>]+[\\"\'\s])(onmouseover|onmousedown|onmouseup|onmouseout|onmousemove|onclick|ondblclick|onload|xmlns)[^>]*>#iU',
+        '>',
+        $text
+    );
+    // remove javascript: and vbscript: protocol
+    $text = preg_replace('#([a-z]*)=([\`\'\"]*)script:#iU', '$1=$2nojscript...', $text);
+    $text = preg_replace('#([a-z]*)=([\`\'\"]*)javascript:#iU', '$1=$2nojavascript...', $text);
+    $text = preg_replace('#([a-z]*)=([\'\"]*)vbscript:#iU', '$1=$2novbscript...', $text);
+    //<span style="width: expression(alert('Ping!'));"></span> (only affects ie...)
+    $text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU', "$1>", $text);
+    $text = preg_replace('#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU', "$1>", $text);
+    if (!$striptags) {
+        return $text;
+    }
 
-	do {
-		$tmp = $text;
-		$text = preg_replace(
-			'#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i',
-			'',
-			$text
-		);
-	} while ($tmp != $text);
-	return $text;
+    do {
+        $tmp = $text;
+        $text = preg_replace(
+            '#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i',
+            '',
+            $text
+        );
+    } while ($tmp != $text);
+    return $text;
 }
 
 function verifyimage($file)
 {
-	$txt = file_get_contents($file);
-	if (preg_match("#([a-z]*)=([\`\'\"]*)script:#iU", $txt)) {
-		return false;
-	}
-	if (preg_match("#([a-z]*)=([\`\'\"]*)javascript:#iU", $txt)) {
-		return false;
-	}
-	if (preg_match("#([a-z]*)=([\'\"]*)vbscript:#iU", $txt)) {
-		return false;
-	}
-	if (preg_match("#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU", $txt)) {
-		return false;
-	}
-	if (preg_match("#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU", $txt)) {
-		return false;
-	}
-	if (preg_match('#</*(applet|body|head|html|link|style|script|iframe|frame|frameset)[^>]*>#i', $txt)) {
-		return false;
-	}
-	return true;
+    $txt = file_get_contents($file);
+    if (preg_match("#([a-z]*)=([\`\'\"]*)script:#iU", $txt)) {
+        return false;
+    }
+    if (preg_match("#([a-z]*)=([\`\'\"]*)javascript:#iU", $txt)) {
+        return false;
+    }
+    if (preg_match("#([a-z]*)=([\'\"]*)vbscript:#iU", $txt)) {
+        return false;
+    }
+    if (preg_match("#(<[^>]+)style=([\`\'\"]*).*expression\([^>]*>#iU", $txt)) {
+        return false;
+    }
+    if (preg_match("#(<[^>]+)style=([\`\'\"]*).*behaviour\([^>]*>#iU", $txt)) {
+        return false;
+    }
+    if (preg_match('#</*(applet|body|head|html|link|style|script|iframe|frame|frameset)[^>]*>#i', $txt)) {
+        return false;
+    }
+    return true;
 }
 
 ?>

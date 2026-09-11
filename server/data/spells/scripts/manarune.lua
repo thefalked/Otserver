@@ -6,5 +6,5 @@ setCombatParam(combat, COMBAT_PARAM_AGGRESSIVE, 0)
 setCombatFormula(combat, COMBAT_FORMULA_LEVELMAGIC, 5, 4, 3, 2)
 
 function onCastSpell(cid, var)
-	return doCombat(cid, combat, var)
+    return doCombat(cid, combat, var)
 end
