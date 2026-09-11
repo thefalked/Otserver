@@ -1,6 +1,6 @@
 <npc name="The Oracle" floorchange="0" walkinterval="0">
-	<health now="150" max="150"/>
-	<look typeex="1448"/>
+	<health now="150" max="150" />
+	<look typeex="1448" />
 	<interaction range="3" idletime="30">
 		<interact keywords="hi" focus="1">
 			<!--These are the keywords will trigger this interaction-->
@@ -26,12 +26,12 @@
 		<interact keywords="yes" topic="1">
 			<!--Premium account, b1 is set in above-->
 			<response b1="1" text="IN WHICH TOWN DO YOU WANT TO LIVE: CARLIN, EDRON, THAIS, OR VENORE?">
-				<action name="topic" value="2"/>
+				<action name="topic" value="2" />
 			</response>
 
 			<!--Normal account-->
 			<response text="IN WHICH TOWN DO YOU WANT TO LIVE: CARLIN, THAIS, OR VENORE?">
-				<action name="topic" value="2"/>
+				<action name="topic" value="2" />
 			</response>
 		</interact>
 
@@ -74,7 +74,7 @@
 		<interact keywords="edron" topic="2">
 			<response text="YOU NEED A PREMIUM ACCOUNT IN ORDER TO GO THERE!">
 				<!--Set the topic back to 2, ie. choose a new town.-->
-				<action name="topic" value="2"/>
+				<action name="topic" value="2" />
 			</response>
 			<!--b1: premium account, see <interact keywords="hi" focus="1"> where _state.b1 is is set.-->
 			<response b1="1" text="IN EDRON! AND WHAT PROFESSION HAVE YOU CHOSEN: KNIGHT, PALADIN, SORCERER, OR DRUID?">
@@ -90,8 +90,8 @@
 
 		<!--If the player does not say any city, repeat our question-->
 		<interact keywords="|*|" topic="2">
-			<response b1="1" text="CARLIN, EDRON, THAIS, OR VENORE?"/>
-			<response text="CARLIN, EDRON, THAIS, OR VENORE?"/>
+			<response b1="1" text="CARLIN, EDRON, THAIS, OR VENORE?" />
+			<response text="CARLIN, EDRON, THAIS, OR VENORE?" />
 		</interact>
 
 		<interact keywords="sorcerer" topic="3">
@@ -144,7 +144,7 @@
 
 		<!--If the player does not say any profession, repeat our question-->
 		<interact keywords="|*|" topic="3">
-			<response text="KNIGHT, PALADIN, SORCERER, OR DRUID?"/>
+			<response text="KNIGHT, PALADIN, SORCERER, OR DRUID?" />
 		</interact>
 
 		<interact keywords="yes" topic="4">
@@ -177,24 +177,24 @@
 						end
 					]]>
 				</action>
-				<action name="idle" value="1"/>
+				<action name="idle" value="1" />
 			</response>
 		</interact>
 
 		<interact keywords="bye" focus="0">
 			<keywords>farewell</keywords>
-			<response text="Good bye. Recommend us, if you were satisfied with our service."/>
+			<response text="Good bye. Recommend us, if you were satisfied with our service." />
 		</interact>
 
 		<interact event="onBusy">
 			<response text="WAIT UNTIL IT IS YOUR TURN!">
-				<action name="addqueue" value="|PLAYER|"/>
+				<action name="addqueue" value="|PLAYER|" />
 			</response>
 		</interact>
 
 		<!--This event triggers if the player goes to far away from the npc/logout/idle timeout-->
 		<interact event="onPlayerLeave" focus="0">
-			<response text="COME BACK WHEN YOU ARE PREPARED TO FACE YOUR DESTINY!"/>
+			<response text="COME BACK WHEN YOU ARE PREPARED TO FACE YOUR DESTINY!" />
 		</interact>
 	</interaction>
 </npc>

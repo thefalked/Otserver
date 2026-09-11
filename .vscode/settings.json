@@ -1,0 +1,16 @@
+{
+  "[lua]": {
+    "editor.defaultFormatter": "JohnnyMorganz.stylua",
+    "editor.formatOnSave": true
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml",
+    "editor.formatOnSave": true
+  },
+  "files.associations": {
+    "*.lua.template": "lua"
+  },
+  "Lua.runtime.version": "Lua 5.1",
+  "Lua.diagnostics.disable": ["undefined-global", "lowercase-global"],
+  "xml.format.splitAttributes": false
+}

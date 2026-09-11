@@ -11,8 +11,8 @@ addDamageCondition(poison, 5, 6000, -3)
 addDamageCondition(poison, 10, 6000, -2)
 addDamageCondition(poison, 20, 6000, -1)
 
-local fluidType = {3, 4, 5, 7, 10, 11, 13, 15, 19}
-local fluidMessage = {"Aah...", "Urgh!", "Mmmh.", "Aaaah...", "Aaaah...", "Urgh!", "Urgh!", "Aah...", "Urgh!"}
+local fluidType = { 3, 4, 5, 7, 10, 11, 13, 15, 19 }
+local fluidMessage = { "Aah...", "Urgh!", "Mmmh.", "Aaaah...", "Aaaah...", "Urgh!", "Urgh!", "Aah...", "Urgh!" }
 function onUse(cid, item, fromPosition, itemEx, toPosition)
 	if itemEx.itemid == 1 then
 		if item.type == 0 then
@@ -42,15 +42,20 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
 			doChangeTypeItem(item.uid, 0)
 			doDecayItem(splash)
 		end
-	elseif (itemEx.itemid >= 490 and itemEx.itemid <= 493) or (itemEx.itemid >= 4608 and itemEx.itemid <= 4625) or (itemEx.itemid >= 618 and itemEx.itemid <= 629) or itemEx.itemid == 1771 then
+	elseif
+		(itemEx.itemid >= 490 and itemEx.itemid <= 493)
+		or (itemEx.itemid >= 4608 and itemEx.itemid <= 4625)
+		or (itemEx.itemid >= 618 and itemEx.itemid <= 629)
+		or itemEx.itemid == 1771
+	then
 		doChangeTypeItem(item.uid, 9)
 	elseif itemEx.itemid == 103 then
 		doChangeTypeItem(item.uid, 19)
 	elseif (itemEx.itemid >= 598 and itemEx.itemid < 712) or itemEx.itemid == 1509 then
 		doChangeTypeItem(item.uid, 26)
-	elseif (itemEx.itemid >= 351 and itemEx.itemid <= 355) then
+	elseif itemEx.itemid >= 351 and itemEx.itemid <= 355 then
 		doChangeTypeItem(item.uid, 19)
-	elseif (itemEx.itemid >= 602 and itemEx.itemid <= 605) then
+	elseif itemEx.itemid >= 602 and itemEx.itemid <= 605 then
 		doChangeTypeItem(item.uid, 28)
 	elseif itemEx.itemid == 1772 then
 		doChangeTypeItem(item.uid, 3)

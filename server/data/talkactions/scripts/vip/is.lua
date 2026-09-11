@@ -3,5 +3,5 @@ function onSay(cid, words, param, channel)
 		doPlayerSendCancel(cid, "You are a VIP player.")
 	else
 		doPlayerSendCancel(cid, "You are not a VIP player.")
-	end	
+	end
 end

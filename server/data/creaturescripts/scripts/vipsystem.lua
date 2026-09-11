@@ -10,7 +10,7 @@ quantity = math.floor((getPlayerStorageValue(cid,29000) - timenow)(360024))
 if quantity = 0 and viptime  0 then
 setPlayerStorageValue(cid,29000,0)
 doTeleportThing(cid,templepos)
--- setPlayerTown (estou sem minha listinha de functions para ver qual function que é para colocar townid), você pode colocar aqui se quiser
+-- setPlayerTown (estou sem minha listinha de functions para ver qual function que Ã© para colocar townid), vocÃª pode colocar aqui se quiser
 end
 return TRUE
 end

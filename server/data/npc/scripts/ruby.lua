@@ -10,9 +10,7 @@ function onCreatureSay(cid, type, msg)
 	--
 end
 
-function onThink()
-
-end
+function onThink() end
 
 function onSayCurse(cid, text)
 	selfSay("Take this!")

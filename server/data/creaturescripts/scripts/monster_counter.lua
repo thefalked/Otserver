@@ -16,15 +16,19 @@ local monsters = {
 }
 
 function onKill(cid, target)
-	if(isMonster(target) == TRUE) then
+	if isMonster(target) == TRUE then
 		local name = getCreatureName(target)
 		local monster = monsters[string.lower(name)]
-		if(monster) then
+		if monster then
 			local killedMonsters = getPlayerStorageValue(cid, monster)
-			if(killedMonsters == -1) then
+			if killedMonsters == -1 then
 				killedMonsters = 1
 			end
-			doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_ORANGE, "Você matou " .. killedMonsters .. " " .. name .. "'s.")
+			doPlayerSendTextMessage(
+				cid,
+				MESSAGE_STATUS_CONSOLE_ORANGE,
+				"VocÃª matou " .. killedMonsters .. " " .. name .. "'s."
+			)
 			setPlayerStorageValue(cid, monster, killedMonsters + 1)
 		end
 	end

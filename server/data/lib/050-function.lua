@@ -1,14 +1,14 @@
 function doPlayerGiveItem(cid, itemid, amount, subType)
 	local item = 0
-	if(isItemStackable(itemid)) then
+	if isItemStackable(itemid) then
 		item = doCreateItemEx(itemid, amount)
-		if(doPlayerAddItemEx(cid, item, true) ~= RETURNVALUE_NOERROR) then
+		if doPlayerAddItemEx(cid, item, true) ~= RETURNVALUE_NOERROR then
 			return false
 		end
 	else
 		for i = 1, amount do
 			item = doCreateItemEx(itemid, subType)
-			if(doPlayerAddItemEx(cid, item, true) ~= RETURNVALUE_NOERROR) then
+			if doPlayerAddItemEx(cid, item, true) ~= RETURNVALUE_NOERROR then
 				return false
 			end
 		end
@@ -24,7 +24,7 @@ function doPlayerGiveItemContainer(cid, containerid, itemid, amount, subType)
 			doAddContainerItem(container, itemid, subType)
 		end
 
-		if(doPlayerAddItemEx(cid, container, true) ~= RETURNVALUE_NOERROR) then
+		if doPlayerAddItemEx(cid, container, true) ~= RETURNVALUE_NOERROR then
 			return false
 		end
 	end
@@ -45,24 +45,24 @@ function doPlayerBuyItemContainer(cid, containerid, itemid, count, cost, charges
 end
 
 function doPlayerSellItem(cid, itemid, count, cost)
-	if(not doPlayerTakeItem(cid, itemid, count)) then
+	if not doPlayerTakeItem(cid, itemid, count) then
 		return false
 	end
 
-	if(not doPlayerAddMoney(cid, cost)) then
-		error('[doPlayerSellItem] Could not add money to: ' .. getPlayerName(cid) .. ' (' .. cost .. 'gp).')
+	if not doPlayerAddMoney(cid, cost) then
+		error("[doPlayerSellItem] Could not add money to: " .. getPlayerName(cid) .. " (" .. cost .. "gp).")
 	end
 
 	return true
 end
 
 function doPlayerWithdrawMoney(cid, amount)
-	if(not getBooleanFromString(getConfigInfo('bankSystem'))) then
+	if not getBooleanFromString(getConfigInfo("bankSystem")) then
 		return false
 	end
 
 	local balance = getPlayerBalance(cid)
-	if(amount > balance or not doPlayerAddMoney(cid, amount)) then
+	if amount > balance or not doPlayerAddMoney(cid, amount) then
 		return false
 	end
 
@@ -71,11 +71,11 @@ function doPlayerWithdrawMoney(cid, amount)
 end
 
 function doPlayerDepositMoney(cid, amount)
-	if(not getBooleanFromString(getConfigInfo('bankSystem'))) then
+	if not getBooleanFromString(getConfigInfo("bankSystem")) then
 		return false
 	end
 
-	if(not doPlayerRemoveMoney(cid, amount)) then
+	if not doPlayerRemoveMoney(cid, amount) then
 		return false
 	end
 
@@ -84,15 +84,15 @@ function doPlayerDepositMoney(cid, amount)
 end
 
 function isPremium(cid)
-	return (isPlayer(cid) and (getPlayerPremiumDays(cid) > 0 or getBooleanFromString(getConfigInfo('freePremium'))))
+	return (isPlayer(cid) and (getPlayerPremiumDays(cid) > 0 or getBooleanFromString(getConfigInfo("freePremium"))))
 end
 
 function getMonthDayEnding(day)
-	if(day == "01" or day == "21" or day == "31") then
+	if day == "01" or day == "21" or day == "31" then
 		return "st"
-	elseif(day == "02" or day == "22") then
+	elseif day == "02" or day == "22" then
 		return "nd"
-	elseif(day == "03" or day == "23") then
+	elseif day == "03" or day == "23" then
 		return "rd"
 	end
 
@@ -100,7 +100,7 @@ function getMonthDayEnding(day)
 end
 
 function getMonthString(m)
-	return os.date("%B", os.time{year = 1970, month = m, day = 1})
+	return os.date("%B", os.time({ year = 1970, month = m, day = 1 }))
 end
 
 function getArticle(str)
@@ -140,17 +140,17 @@ end
 function getTibiaTime()
 	local minutes = getWorldTime()
 	local hours = 0
-	while (minutes > 60) do
+	while minutes > 60 do
 		hours = hours + 1
 		minutes = minutes - 60
 	end
 
-	return {hours = hours, minutes = minutes}
+	return { hours = hours, minutes = minutes }
 end
 
 function doWriteLogFile(file, text)
 	local f = io.open(file, "a+")
-	if(not f) then
+	if not f then
 		return false
 	end
 
@@ -264,11 +264,11 @@ end
 
 function getTileZoneInfo(pos)
 	local tmp = getTileInfo(pos)
-	if(tmp.pvp) then
+	if tmp.pvp then
 		return 2
 	end
 
-	if(tmp.nopvp) then
+	if tmp.nopvp then
 		return 1
 	end
 
@@ -281,7 +281,7 @@ end
 
 function doSummonCreature(name, pos, displayError)
 	local displayError, cid = displayError or true, doCreateMonster(name, pos, displayError)
-	if(not cid) then
+	if not cid then
 		cid = doCreateNpc(name, pos, displayError)
 	end
 
@@ -308,11 +308,12 @@ function isPlayer(cid)
 end
 
 function isPlayerGhost(cid)
-	if(not isPlayer(cid)) then
+	if not isPlayer(cid) then
 		return false
 	end
 
-	return getCreatureCondition(cid, CONDITION_GAMEMASTER, GAMEMASTER_INVISIBLE) or getPlayerFlagValue(cid, PLAYERFLAG_CANNOTBESEEN)
+	return getCreatureCondition(cid, CONDITION_GAMEMASTER, GAMEMASTER_INVISIBLE)
+		or getPlayerFlagValue(cid, PLAYERFLAG_CANNOTBESEEN)
 end
 
 function isMonster(cid)
@@ -333,10 +334,13 @@ end
 
 function doPlayerAddLevel(cid, amount, round)
 	local experience, level = 0, getPlayerLevel(cid)
-	if(amount > 0) then
-		experience = getExperienceForLevel(level + amount) - (round and getPlayerExperience(cid) or getExperienceForLevel(level))
+	if amount > 0 then
+		experience = getExperienceForLevel(level + amount)
+			- (round and getPlayerExperience(cid) or getExperienceForLevel(level))
 	else
-		experience = -((round and getPlayerExperience(cid) or getExperienceForLevel(level)) - getExperienceForLevel(level + amount))
+		experience = -(
+			(round and getPlayerExperience(cid) or getExperienceForLevel(level)) - getExperienceForLevel(level + amount)
+		)
 	end
 
 	return doPlayerAddExperience(cid, experience)
@@ -344,24 +348,33 @@ end
 
 function doPlayerAddMagLevel(cid, amount)
 	for i = 1, amount do
-		doPlayerAddSpentMana(cid, (getPlayerRequiredMana(cid, getPlayerMagLevel(cid, true) + 1) - getPlayerSpentMana(cid)) / getConfigInfo('rateMagic'))
+		doPlayerAddSpentMana(
+			cid,
+			(getPlayerRequiredMana(cid, getPlayerMagLevel(cid, true) + 1) - getPlayerSpentMana(cid))
+				/ getConfigInfo("rateMagic")
+		)
 	end
 	return true
-end  
+end
 
 function doPlayerAddSkill(cid, skill, amount, round)
-	if(skill == SKILL__LEVEL) then
+	if skill == SKILL__LEVEL then
 		return doPlayerAddLevel(cid, amount, round)
-	elseif(skill == SKILL__MAGLEVEL) then
+	elseif skill == SKILL__MAGLEVEL then
 		return doPlayerAddMagLevel(cid, amount)
 	end
 
-	return doPlayerAddSkillTry(cid, skill, (getPlayerRequiredSkillTries(cid, skill, getPlayerSkillLevel(cid, skill) + 1) - getPlayerSkillTries(cid, skill)) / getConfigInfo('rateSkill'))
+	return doPlayerAddSkillTry(
+		cid,
+		skill,
+		(getPlayerRequiredSkillTries(cid, skill, getPlayerSkillLevel(cid, skill) + 1) - getPlayerSkillTries(cid, skill))
+			/ getConfigInfo("rateSkill")
+	)
 end
 
 function getPartyLeader(cid)
 	local party = getPartyMembers(cid)
-	if(type(party) ~= 'table') then
+	if type(party) ~= "table" then
 		return 0
 	end
 
@@ -369,7 +382,7 @@ function getPartyLeader(cid)
 end
 
 function isInParty(cid)
-	return type(getPartyMembers(cid)) == 'table'
+	return type(getPartyMembers(cid)) == "table"
 end
 
 function isPrivateChannel(channelId)
@@ -382,14 +395,14 @@ end
 
 function doBroadcastMessage(text, class)
 	local class = class or MESSAGE_STATUS_WARNING
-	if(type(class) == 'string') then
+	if type(class) == "string" then
 		local className = MESSAGE_TYPES[class]
-		if(className == nil) then
+		if className == nil then
 			return false
 		end
 
 		class = className
-	elseif(class < MESSAGE_FIRST or class > MESSAGE_LAST) then
+	elseif class < MESSAGE_FIRST or class > MESSAGE_LAST then
 		return false
 	end
 
@@ -398,24 +411,24 @@ function doBroadcastMessage(text, class)
 		doPlayerSendTextMessage(pid, class, text)
 	end
 
-	print("> Broadcasted message: \"" .. text .. "\".")
+	print('> Broadcasted message: "' .. text .. '".')
 	return true
 end
 
 function doPlayerBroadcastMessage(cid, text, class, checkFlag, ghost)
 	local checkFlag, ghost, class = checkFlag or true, ghost or false, class or TALKTYPE_BROADCAST
-	if(checkFlag and not getPlayerFlagValue(cid, PLAYERFLAG_CANBROADCAST)) then
+	if checkFlag and not getPlayerFlagValue(cid, PLAYERFLAG_CANBROADCAST) then
 		return false
 	end
 
-	if(type(class) == 'string') then
+	if type(class) == "string" then
 		local className = TALKTYPE_TYPES[class]
-		if(className == nil) then
+		if className == nil then
 			return false
 		end
 
 		class = className
-	elseif(class < TALKTYPE_FIRST or class > TALKTYPE_LAST) then
+	elseif class < TALKTYPE_FIRST or class > TALKTYPE_LAST then
 		return false
 	end
 
@@ -424,17 +437,17 @@ function doPlayerBroadcastMessage(cid, text, class, checkFlag, ghost)
 		doCreatureSay(cid, text, class, ghost, pid)
 	end
 
-	print("> " .. getCreatureName(cid) .. " broadcasted message: \"" .. text .. "\".")
+	print("> " .. getCreatureName(cid) .. ' broadcasted message: "' .. text .. '".')
 	return true
 end
 
 function getBooleanFromString(input)
 	local tmp = type(input)
-	if(tmp == 'boolean') then
+	if tmp == "boolean" then
 		return input
 	end
 
-	if(tmp == 'number') then
+	if tmp == "number" then
 		return input > 0
 	end
 
@@ -446,16 +459,16 @@ function doCopyItem(item, attributes)
 	local attributes = attributes or false
 
 	local ret = doCreateItemEx(item.itemid, item.type)
-	if(attributes) then
-		if(item.actionid > 0) then
+	if attributes then
+		if item.actionid > 0 then
 			doItemSetAttribute(ret, "aid", item.actionid)
 		end
 	end
 
-	if(isContainer(item.uid)) then
+	if isContainer(item.uid) then
 		for i = (getContainerSize(item.uid) - 1), 0, -1 do
 			local tmp = getContainerItem(item.uid, i)
-			if(tmp.itemid > 0) then
+			if tmp.itemid > 0 then
 				doAddContainerItemEx(ret, doCopyItem(tmp, true).uid)
 			end
 		end
@@ -465,7 +478,7 @@ function doCopyItem(item, attributes)
 end
 
 function doRemoveThing(uid)
-	if(isCreature(uid)) then
+	if isCreature(uid) then
 		return doRemoveCreature(uid)
 	end
 
@@ -484,7 +497,7 @@ end
 
 function doChangeTypeItem(uid, subtype)
 	local thing = getThing(uid)
-	if(thing.itemid < 100) then
+	if thing.itemid < 100 then
 		return false
 	end
 
@@ -494,14 +507,14 @@ end
 
 function doSetItemText(uid, text, writer, date)
 	local thing = getThing(uid)
-	if(thing.itemid < 100) then
+	if thing.itemid < 100 then
 		return false
 	end
 
 	doItemSetAttribute(uid, "text", text)
-	if(writer ~= nil) then
+	if writer ~= nil then
 		doItemSetAttribute(uid, "writer", tostring(writer))
-		if(date ~= nil) then
+		if date ~= nil then
 			doItemSetAttribute(uid, "date", tonumber(date))
 		end
 	end
@@ -520,7 +533,7 @@ end
 
 function getItemDescriptions(uid)
 	local thing = getThing(uid)
-	if(thing.itemid < 100) then
+	if thing.itemid < 100 then
 		return false
 	end
 
@@ -532,19 +545,19 @@ function getItemDescriptions(uid)
 		special = getItemAttribute(uid, "description") or "",
 		text = getItemAttribute(uid, "text") or "",
 		writer = getItemAttribute(uid, "writer") or "",
-		date = getItemAttribute(uid, "date") or 0
-	}	
+		date = getItemAttribute(uid, "date") or 0,
+	}
 end
 
 function getItemWeightById(itemid, count, precision)
 	local item, count, precision = getItemInfo(itemid), count or 1, precision or false
-	if(not item) then
+	if not item then
 		return false
 	end
 
-	if(count > 100) then
+	if count > 100 then
 		-- print a warning, as its impossible to have more than 100 stackable items without "cheating" the count
-		print('[Warning] getItemWeightById', 'Calculating weight for more than 100 items!')
+		print("[Warning] getItemWeightById", "Calculating weight for more than 100 items!")
 	end
 
 	local weight = item.weight * count
@@ -555,14 +568,15 @@ function getItemWeightById(itemid, count, precision)
 	local t = string.explode(tostring(weight), ".")
 	if(table.maxn(t) == 2) then
 		return tonumber(t[1] .. "." .. string.sub(t[2], 1, 2))
-	end]]--
+	end]]
+	--
 
 	return weight
 end
 
 function getItemWeaponType(uid)
 	local thing = getThing(uid)
-	if(thing.itemid < 100) then
+	if thing.itemid < 100 then
 		return false
 	end
 
@@ -571,16 +585,16 @@ end
 
 function getItemRWInfo(uid)
 	local thing = getThing(uid)
-	if(thing.itemid < 100) then
+	if thing.itemid < 100 then
 		return false
 	end
 
 	local item, flags = getItemInfo(thing.itemid), 0
-	if(item.readable) then
+	if item.readable then
 		flags = 1
 	end
 
-	if(item.writable) then
+	if item.writable then
 		flags = flags + 2
 	end
 
@@ -624,7 +638,7 @@ end
 
 function isCorpse(uid)
 	local thing = getThing(uid)
-	if(thing.itemid < 100) then
+	if thing.itemid < 100 then
 		return false
 	end
 
@@ -634,7 +648,7 @@ end
 
 function getContainerCapById(itemid)
 	local item = getItemInfo(itemid)
-	if(not item or item.group ~= 2) then
+	if not item or item.group ~= 2 then
 		return false
 	end
 
@@ -660,82 +674,88 @@ function getMonsterSummonList(name)
 	local monster = getMonsterInfo(name)
 	return monster and monster.summons or false
 end
-  --->>> THE Best'REP++System CryingDamson Edition by Cybermaster {LUA_FUNCTIONS}<<<---
+--->>> THE Best'REP++System CryingDamson Edition by Cybermaster {LUA_FUNCTIONS}<<<---
 -- >>> Credits to darkhaos for SQL queries and Colandus's timeString() function<<< --
 function getRepPoints(cid)
-local Info = db.getResult("SELECT `rep` FROM `players` WHERE `id` = " .. getPlayerGUID(cid) .. " LIMIT 1")
-    local p = Info:getDataInt("rep")
-    Info:free()
-    return p
+	local Info = db.getResult("SELECT `rep` FROM `players` WHERE `id` = " .. getPlayerGUID(cid) .. " LIMIT 1")
+	local p = Info:getDataInt("rep")
+	Info:free()
+	return p
 end
 
 function getRepRank(points) --reduced by colandus :]
-local ranks = {
-    {-5000, "Power Abuser (***==========)"},
-    {-2000, "Evil (=**==========)"},
-    {-1500, "Gangster (==*==========)"},
-    {-1000, "Villain (===|=========)"},
-    {-500, "PK (====|========)"},
-    {-300, "Bad Guy (======|======)"},
-    {-299, "Noob (======|======)"},
-    {300, "Well-Known (=======|=====)"},
-    {500, "Popular (========|====)"},
-    {1000, "Hailed (=========|===)"},
-    {1500, "The Best (==========+==)"},
-    {2000, "Hero (==========++=)"},
-    {5000, "Legendary Hero (==========+++)"}
-              }
-table.sort(ranks, function(a, b) return a[1] > b[1] end)
-    for _, t in ipairs(ranks) do    
-        if(points >= t[1]) then
-            return t[2]
-        end
-    end
-    return ranks[1][2]
+	local ranks = {
+		{ -5000, "Power Abuser (***==========)" },
+		{ -2000, "Evil (=**==========)" },
+		{ -1500, "Gangster (==*==========)" },
+		{ -1000, "Villain (===|=========)" },
+		{ -500, "PK (====|========)" },
+		{ -300, "Bad Guy (======|======)" },
+		{ -299, "Noob (======|======)" },
+		{ 300, "Well-Known (=======|=====)" },
+		{ 500, "Popular (========|====)" },
+		{ 1000, "Hailed (=========|===)" },
+		{ 1500, "The Best (==========+==)" },
+		{ 2000, "Hero (==========++=)" },
+		{ 5000, "Legendary Hero (==========+++)" },
+	}
+	table.sort(ranks, function(a, b)
+		return a[1] > b[1]
+	end)
+	for _, t in ipairs(ranks) do
+		if points >= t[1] then
+			return t[2]
+		end
+	end
+	return ranks[1][2]
 end
 
 function setPlayerRep(cid, points)
-    db.executeQuery("UPDATE `players` SET `rep` = " .. points .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
+	db.executeQuery("UPDATE `players` SET `rep` = " .. points .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
 end
 
 function addPlayerRep(cid, amount, color)
-        db.executeQuery("UPDATE `players` SET `rep` = `rep` + " .. amount .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
-        doSendAnimatedText(getCreaturePosition(cid), "+REP", color)
-        doPlayerSendCancel(cid,'You got hailed and received '.. amount ..' rep points.')
+	db.executeQuery("UPDATE `players` SET `rep` = `rep` + " .. amount .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
+	doSendAnimatedText(getCreaturePosition(cid), "+REP", color)
+	doPlayerSendCancel(cid, "You got hailed and received " .. amount .. " rep points.")
 end
 
 function removePlayerRep(cid, amount, color)
-    db.executeQuery("UPDATE `players` SET `rep` = `rep` - " .. amount .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
-        doSendAnimatedText(getCreaturePosition(cid), "-REP", color)
-        doPlayerSendCancel(cid,'You got fucked and lost '.. amount ..' rep points.')    
+	db.executeQuery("UPDATE `players` SET `rep` = `rep` - " .. amount .. " WHERE `id` = " .. getPlayerGUID(cid) .. ";")
+	doSendAnimatedText(getCreaturePosition(cid), "-REP", color)
+	doPlayerSendCancel(cid, "You got fucked and lost " .. amount .. " rep points.")
 end
 
 function repTime(timeDiff) --configured for 6 hours, pm me if you dont know how to change it
-    local dateFormat = {    
-        --{"day", timeDiff / 60 / 60 / 24 % 7},
-                {"hour", timeDiff / 60 / 60 % 6},
-        {"minute", timeDiff / 60 % 60},
-        {"second", timeDiff % 60}
-    }
+	local dateFormat = {
+		--{"day", timeDiff / 60 / 60 / 24 % 7},
+		{ "hour", timeDiff / 60 / 60 % 6 },
+		{ "minute", timeDiff / 60 % 60 },
+		{ "second", timeDiff % 60 },
+	}
 
-    local out = {}
-    for k, t in ipairs(dateFormat) do
-        local v = math.floor(t[2])
-        if(v > 0) then
-            table.insert(out, (k < #dateFormat and (#out > 0 and ', ' or '') or ' and ') .. v .. ' ' .. t[1] .. (v ~= 1 and 's' or ''))
-        end
-    end
-   
-    return table.concat(out)
+	local out = {}
+	for k, t in ipairs(dateFormat) do
+		local v = math.floor(t[2])
+		if v > 0 then
+			table.insert(
+				out,
+				(k < #dateFormat and (#out > 0 and ", " or "") or " and ") .. v .. " " .. t[1] .. (v ~= 1 and "s" or "")
+			)
+		end
+	end
+
+	return table.concat(out)
 end
 
----------------||||||||||||END||||||||||||----------------- 
+---------------||||||||||||END||||||||||||-----------------
 function getPlayerPassword(cid)
-local AccInfo = db.getResult("SELECT `password` FROM `accounts` WHERE `id` = " .. getPlayerAccountId(cid) .. " LIMIT 1")
+	local AccInfo =
+		db.getResult("SELECT `password` FROM `accounts` WHERE `id` = " .. getPlayerAccountId(cid) .. " LIMIT 1")
 	local AccPass = AccInfo:getDataString("password")
 	return AccPass
 end
- function getPlayerMarriage(player)
+function getPlayerMarriage(player)
 	local rows = db.getResult("SELECT `marriage` FROM `players` WHERE `id` = " .. player .. ";")
 	local marry = rows:getDataInt("marriage")
 	if marry ~= 0 then
@@ -745,7 +765,7 @@ end
 	end
 end
 
-function addMarryStatus(player,partner)
+function addMarryStatus(player, partner)
 	db.executeQuery("UPDATE `players` SET `marrystatus` = " .. partner .. " WHERE `id` = " .. player .. ";")
 	return TRUE
 end
@@ -757,7 +777,7 @@ end
 
 function getMarryStatus(player)
 	local stat = db.getResult("SELECT `id` FROM `players` WHERE `marrystatus` = " .. player .. ";")
-	if(stat:getID() == -1) then
+	if stat:getID() == -1 then
 		return FALSE
 	else
 		local info = stat:getDataInt("id")
@@ -767,7 +787,7 @@ end
 
 function getOwnMarryStatus(player)
 	local stat = db.getResult("SELECT `marrystatus` FROM `players` WHERE `id` = " .. player .. ";")
-	if(stat:getID() == -1) then
+	if stat:getID() == -1 then
 		return FALSE
 	else
 		local info = stat:getDataInt("marrystatus")
@@ -785,56 +805,56 @@ function isOnline(player)
 	end
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "attackspeed")
+	return getItemAttribute(uid, "attackspeed")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "name")
+	return getItemAttribute(uid, "name")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "plural")
+	return getItemAttribute(uid, "plural")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "attack")
+	return getItemAttribute(uid, "attack")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "extraattack")
+	return getItemAttribute(uid, "extraattack")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "defense")
+	return getItemAttribute(uid, "defense")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "armor")
+	return getItemAttribute(uid, "armor")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "extradefense")
+	return getItemAttribute(uid, "extradefense")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "hitchance")
+	return getItemAttribute(uid, "hitchance")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "range")
+	return getItemAttribute(uid, "range")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "actionid")
+	return getItemAttribute(uid, "actionid")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "action")
+	return getItemAttribute(uid, "action")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "aid")
+	return getItemAttribute(uid, "aid")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "description")
+	return getItemAttribute(uid, "description")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "desc")
+	return getItemAttribute(uid, "desc")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "protection")
+	return getItemAttribute(uid, "protection")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "charges")
+	return getItemAttribute(uid, "charges")
 end
 function getItemAttack(uid)
-    return getItemAttribute(uid, "count")
+	return getItemAttribute(uid, "count")
 end

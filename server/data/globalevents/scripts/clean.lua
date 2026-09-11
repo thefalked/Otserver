@@ -5,7 +5,7 @@ function executeClean()
 end
 
 function onThink(interval, lastExecution, thinkInterval)
-	doBroadcastMessage("Retirando Lixo Do Ot, Retire Seus Itens Do Ch„o")
+	doBroadcastMessage("Retirando Lixo Do Ot, Retire Seus Itens Do Ch√£o")
 	addEvent(executeClean, 50000)
 	return true
 end

@@ -15,15 +15,15 @@ setCombatCondition(xCombat, condition)
 
 function onUseWeapon(cid, var)
 	local ret = doCombat(cid, combat, var)
-	if(ret == false) then
+	if ret == false then
 		return false
 	end
 
 	local target = variantToNumber(var)
-	if(target ~= 0) then
+	if target ~= 0 then
 		-- chance to poison the enemy
 		local chance = math.random(0, 100)
-		if(chance > 90) then
+		if chance > 90 then
 			ret = doCombat(cid, xCombat, var)
 		end
 	end

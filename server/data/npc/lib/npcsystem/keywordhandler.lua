@@ -1,7 +1,7 @@
 -- Advanced NPC System (Created by Jiddo),
 -- Modified by Talaturen.
 
-if(KeywordHandler == nil) then
+if KeywordHandler == nil then
 	BEHAVIOR_SIMPLE = 1 -- Does not support nested keywords. If you choose this setting you must use a variable such as 'talkState' to keep track of how to handle keywords.
 	BEHAVIOR_NORMAL = 2 -- Default behvaior. If a sub-keyword is not found, then the root is searched, not the parent hierarchy,
 	BEHAVIOR_NORMAL_EXTENDED = 3 -- Same as BEHAVIOR_NORMAL but it also searches through the last node's parent.
@@ -20,7 +20,7 @@ if(KeywordHandler == nil) then
 		callback = nil,
 		parameters = nil,
 		children = nil,
-		parent = nil
+		parent = nil,
 	}
 
 	-- Created a new keywordnode with the given keywords, callback function and parameters and without any childNodes.
@@ -43,13 +43,13 @@ if(KeywordHandler == nil) then
 	-- Returns true if message contains all patterns/strings found in keywords.
 	function KeywordNode:checkMessage(message)
 		local ret = true
-		if(self.keywords.callback ~= nil) then
+		if self.keywords.callback ~= nil then
 			return self.keywords.callback(self.keywords, message)
 		end
-		for i,v in ipairs(self.keywords) do
-			if(type(v) == 'string') then
+		for i, v in ipairs(self.keywords) do
+			if type(v) == "string" then
 				local a, b = string.find(message, v)
-				if(a == nil or b == nil) then
+				if a == nil or b == nil then
 					ret = false
 					break
 				end
@@ -88,7 +88,7 @@ if(KeywordHandler == nil) then
 
 	KeywordHandler = {
 		root = nil,
-		lastNode = nil
+		lastNode = nil,
 	}
 
 	-- Creates a new keywordhandler with an empty rootnode.
@@ -109,49 +109,49 @@ if(KeywordHandler == nil) then
 	--	The behavior of this function depends much on the KEYWORD_BEHAVIOR.
 	function KeywordHandler:processMessage(cid, message)
 		local node = self:getLastNode()
-		if(node == nil) then
-			error('No root node found.')
+		if node == nil then
+			error("No root node found.")
 			return false
 		end
-		if(KEYWORD_BEHAVIOR == BEHAVIOR_SIMPLE) then
+		if KEYWORD_BEHAVIOR == BEHAVIOR_SIMPLE then
 			local ret = self:processNodeMessage(node, cid, message)
-			if(ret) then
+			if ret then
 				return true
 			end
-		elseif(KEYWORD_BEHAVIOR == BEHAVIOR_NORMAL or KEYWORD_BEHAVIOR == BEHAVIOR_NORMAL_EXTENDED) then
+		elseif KEYWORD_BEHAVIOR == BEHAVIOR_NORMAL or KEYWORD_BEHAVIOR == BEHAVIOR_NORMAL_EXTENDED then
 			local ret = self:processNodeMessage(node, cid, message)
-			if(ret) then
+			if ret then
 				return true
 			end
-			if(KEYWORD_BEHAVIOR == BEHAVIOR_NORMAL_EXTENDED and node:getParent()) then
+			if KEYWORD_BEHAVIOR == BEHAVIOR_NORMAL_EXTENDED and node:getParent() then
 				node = node:getParent() -- Search through the parent.
 				local ret = self:processNodeMessage(node, cid, message)
-				if(ret) then
+				if ret then
 					return true
 				end
 			end
-			if(node ~= self:getRoot()) then
+			if node ~= self:getRoot() then
 				node = self:getRoot() -- Search through the root.
 				local ret = self:processNodeMessage(node, cid, message)
-				if(ret) then
+				if ret then
 					return true
 				end
 			end
-		elseif(KEYWORD_BEHAVIOR == BEHAVIOR_COMPLEX) then
+		elseif KEYWORD_BEHAVIOR == BEHAVIOR_COMPLEX then
 			while true do
 				local ret = self:processNodeMessage(node, cid, message)
-				if(ret) then
+				if ret then
 					return true
 				end
 
-				if(node:getParent() ~= nil) then
+				if node:getParent() ~= nil then
 					node = node:getParent() -- Move one step upwards in the hierarchy.
 				else
 					break
 				end
 			end
 		else
-			error('Unknown keyword behavior.')
+			error("Unknown keyword behavior.")
 		end
 		return false
 	end
@@ -161,11 +161,11 @@ if(KeywordHandler == nil) then
 	function KeywordHandler:processNodeMessage(node, cid, message)
 		local messageLower = string.lower(message)
 		for i, childNode in pairs(node.children) do
-			if(childNode:checkMessage(messageLower)) then
+			if childNode:checkMessage(messageLower) then
 				local oldLast = self.lastNode
 				self.lastNode = childNode
 				childNode.parent = node -- Make sure node is the parent of childNode (as one node can be parent to several nodes).
-				if(childNode:processMessage(cid, message)) then
+				if childNode:processMessage(cid, message) then
 					return true
 				else
 					self.lastNode = oldLast
@@ -182,7 +182,7 @@ if(KeywordHandler == nil) then
 
 	-- Returns the last processed keywordnode or root if no last node is found.
 	function KeywordHandler:getLastNode()
-		if(KEYWORD_BEHAVIOR == BEHAVIOR_SIMPLE) then
+		if KEYWORD_BEHAVIOR == BEHAVIOR_SIMPLE then
 			return self:getRoot()
 		else
 			return self.lastNode or self:getRoot()
@@ -198,11 +198,11 @@ if(KeywordHandler == nil) then
 	--	This function MIGHT not work properly yet. Use at your own risk.
 	function KeywordHandler:moveUp(count)
 		local steps = count
-		if(steps == nil) then
+		if steps == nil then
 			steps = 1
 		end
-		for i = 1, steps,1 do
-			if(self.lastNode == nil) then
+		for i = 1, steps, 1 do
+			if self.lastNode == nil then
 				break
 			else
 				self.lastNode = self.lastNode:getParent() or self:getRoot()

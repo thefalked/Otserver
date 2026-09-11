@@ -2,7 +2,7 @@ function onLogin(cid)
 
 doPlayerPopupFYI(cid, "Seja bem vindo ao Alissow OTs!
  
-Utilize o canal help para maiores informações.
+Utilize o canal help para maiores informaÃ§Ãµes.
  
 Enjoy xD")
 return TRUE

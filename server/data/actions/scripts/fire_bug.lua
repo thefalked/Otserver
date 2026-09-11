@@ -1,17 +1,15 @@
-
 function onUse(cid, item, frompos, item2, topos)
-
-	if math.random(0,10) > 8 then
+	if math.random(0, 10) > 8 then
 		doPlayerAddHealth(cid, -5)
 		doSendMagicEffect(frompos, 4)
 		doRemoveItem(item.uid, 1)
 		return 1
 	end
-	
+
 	if item2.itemid == 5466 then
-		doTransformItem(item2.uid,5465)
+		doTransformItem(item2.uid, 5465)
 		doDecayItem(item2.uid)
-	else 
+	else
 		return 0
 	end
 

@@ -1,7 +1,7 @@
 local focuses = {}
 local function isFocused(cid)
 	for i, v in pairs(focuses) do
-		if(v == cid) then
+		if v == cid then
 			return true
 		end
 	end
@@ -9,13 +9,13 @@ local function isFocused(cid)
 end
 
 local function addFocus(cid)
-	if(not isFocused(cid)) then
+	if not isFocused(cid) then
 		table.insert(focuses, cid)
 	end
 end
 local function removeFocus(cid)
 	for i, v in pairs(focuses) do
-		if(v == cid) then
+		if v == cid then
 			table.remove(focuses, i)
 			break
 		end
@@ -23,7 +23,7 @@ local function removeFocus(cid)
 end
 local function lookAtFocus()
 	for i, v in pairs(focuses) do
-		if(isPlayer(v) == TRUE) then
+		if isPlayer(v) == TRUE then
 			doNpcSetCreatureFocus(v)
 			return
 		end
@@ -32,33 +32,38 @@ local function lookAtFocus()
 end
 
 local itemWindow = {
-	{id=2173, subType=0, buy=10000, sell=5000, name="Amulet of Loss"}
+	{ id = 2173, subType = 0, buy = 10000, sell = 5000, name = "Amulet of Loss" },
 }
 
 local items = {}
 for _, item in ipairs(itemWindow) do
-	items[item.id] = {buyPrice = item.buy, sellPrice = item.sell, subType = item.subType, realName = item.name}
+	items[item.id] = { buyPrice = item.buy, sellPrice = item.sell, subType = item.subType, realName = item.name }
 end
 
 local function getPlayerMoney(cid)
-	return ((getPlayerItemCount(cid, 2160) * 10000) +
-	(getPlayerItemCount(cid, 2152) * 100) +
-	getPlayerItemCount(cid, 2148))
+	return (
+		(getPlayerItemCount(cid, 2160) * 10000)
+		+ (getPlayerItemCount(cid, 2152) * 100)
+		+ getPlayerItemCount(cid, 2148)
+	)
 end
 
 local onBuy = function(cid, item, subType, amount, ignoreCap, inBackpacks)
-	if(items[item] == nil) then
+	if items[item] == nil then
 		selfSay("Ehm.. sorry... this shouldn't be there, I'm not selling it.", cid)
 		return
 	end
 
-	if(getPlayerMoney(cid) >= amount * items[item].buyPrice) then
+	if getPlayerMoney(cid) >= amount * items[item].buyPrice then
 		local itemz, i = doPlayerAddItem(cid, item, amount, subType, ignoreCap, inBackpacks)
-		if(i < amount) then
-			if(i == 0) then
+		if i < amount then
+			if i == 0 then
 				selfSay("Sorry, but you don't have space to take it.", cid)
 			else
-				selfSay("I've sold some for you, but it seems you can't carry more than this. I won't take more money than necessary.", cid)
+				selfSay(
+					"I've sold some for you, but it seems you can't carry more than this. I won't take more money than necessary.",
+					cid
+				)
 				doPlayerRemoveMoney(cid, i * items[item].buyPrice)
 			end
 		else
@@ -71,14 +76,14 @@ local onBuy = function(cid, item, subType, amount, ignoreCap, inBackpacks)
 end
 
 local onSell = function(cid, item, subType, amount, ignoreCap, inBackpacks)
-	if(items[item] == nil) then
+	if items[item] == nil then
 		selfSay("Ehm.. sorry... this shouldn't be there, I'm not buying it.", cid)
 	end
 
-	if(subType < 1) then
+	if subType < 1 then
 		subType = -1
 	end
-	if(doPlayerRemoveItem(cid, item, amount, subType) == TRUE) then
+	if doPlayerRemoveItem(cid, item, amount, subType) == TRUE then
 		doPlayerAddMoney(cid, items[item].sellPrice * amount)
 		selfSay("Here you are.", cid)
 	else
@@ -86,28 +91,27 @@ local onSell = function(cid, item, subType, amount, ignoreCap, inBackpacks)
 	end
 end
 
-function onCreatureAppear(cid)
-end
+function onCreatureAppear(cid) end
 
 function onCreatureDisappear(cid)
-	if(isFocused(cid)) then
+	if isFocused(cid) then
 		selfSay("Hmph!")
 		removeFocus(cid)
-		if(isPlayer(cid) == TRUE) then --Be sure he's online
+		if isPlayer(cid) == TRUE then --Be sure he's online
 			closeShopWindow(cid)
 		end
 	end
 end
 
 function onCreatureSay(cid, type, msg)
-	if((msg == "hi") and not (isFocused(cid))) then
-		selfSay("Welcome, ".. getCreatureName(cid) ..".", cid, TRUE)
+	if (msg == "hi") and not (isFocused(cid)) then
+		selfSay("Welcome, " .. getCreatureName(cid) .. ".", cid, TRUE)
 		selfSay("Do you want to see my {wares}?", cid)
 		addFocus(cid)
-	elseif((isFocused(cid)) and (msg == "wares" or msg == "trade")) then
+	elseif (isFocused(cid)) and (msg == "wares" or msg == "trade") then
 		selfSay("Pretty nice, right?", cid)
 		openShopWindow(cid, itemWindow, onBuy, onSell)
-	elseif((isFocused(cid)) and (msg == "bye" or msg == "goodbye" or msg == "cya")) then
+	elseif (isFocused(cid)) and (msg == "bye" or msg == "goodbye" or msg == "cya") then
 		selfSay("Goodbye!", cid, TRUE)
 		closeShopWindow(cid)
 		removeFocus(cid)
@@ -115,7 +119,7 @@ function onCreatureSay(cid, type, msg)
 end
 
 function onPlayerCloseChannel(cid)
-	if(isFocused(cid)) then
+	if isFocused(cid) then
 		selfSay("Hmph!")
 		closeShopWindow(cid)
 		removeFocus(cid)
@@ -128,11 +132,11 @@ end
 
 function onThink()
 	for i, focus in pairs(focuses) do
-		if(isCreature(focus) == FALSE) then
+		if isCreature(focus) == FALSE then
 			removeFocus(focus)
 		else
 			local distance = getDistanceTo(focus) or -1
-			if((distance > 4) or (distance == -1)) then
+			if (distance > 4) or (distance == -1) then
 				selfSay("Hmph!")
 				closeShopWindow(focus)
 				removeFocus(focus)

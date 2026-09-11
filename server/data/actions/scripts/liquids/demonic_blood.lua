@@ -1,4 +1,4 @@
-local POTIONS = {7588, 7589}
+local POTIONS = { 7588, 7589 }
 
 function onUse(cid, item, fromPosition, itemEx, toPosition)
 	doTransformItem(item.uid, POTIONS[math.random(1, table.maxn(POTIONS))])
