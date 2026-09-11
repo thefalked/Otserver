@@ -35,11 +35,11 @@ arena_monsters[42328] = "deathbringer"
 arena_monsters[42329] = "the obliverator"
 
 function getArenaMonsterIdByName(name)
-    name = string.lower(tostring(name))
-    for i = 42300, 42329 do
-        if tostring(arena_monsters[i]) == name then
-            return i
-        end
+  name = string.lower(tostring(name))
+  for i = 42300, 42329 do
+    if tostring(arena_monsters[i]) == name then
+      return i
     end
-    return 0
+  end
+  return 0
 end

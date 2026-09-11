@@ -1,11 +1,11 @@
 <?php $main_content .=
-    '<div style="text-align: center; font-weight: bold;"><h2>Top 10 guilds Em ' .
-    $config['server']['serverName'] .
-    '</h2></div> 
+  '<div style="text-align: center; font-weight: bold;"><h2>Top 10 guilds Em ' .
+  $config['server']['serverName'] .
+  '</h2></div> 
 <center><table border="0" cellspacing="1" cellpadding="4" width="80%"> 
     <tr bgcolor="' .
-    $config['site']['vdarkborder'] .
-    '"> 
+  $config['site']['vdarkborder'] .
+  '"> 
         <td width="10%"><b><font color=white><center>Posição</font></center></b></td> 
         <td width="20%"><b><font color=white><center>Logo</center></b></font></td> 
         <td width="30%"><b><font color=white><center>Nome da Guild</center></b></font></td> 
@@ -13,7 +13,7 @@
     </tr>';
 $i = 0;
 foreach (
-    $SQL->query('SELECT `g`.`id` AS `id`, `g`.`name` AS `name`, 
+  $SQL->query('SELECT `g`.`id` AS `id`, `g`.`name` AS `name`, 
     `g`.`logo_gfx_name` AS `logo`, COUNT(`g`.`name`) as `frags` 
     FROM `killers` k 
     LEFT JOIN `player_killers` pk ON `k`.`id` = `pk`.`kill_id` 
@@ -24,34 +24,34 @@ foreach (
     GROUP BY `name` 
     ORDER BY `frags` DESC, `name` ASC 
     LIMIT 0, 10;')
-    as $guild
+  as $guild
 ) {
-    $i++;
-    $main_content .=
-        '<tr bgcolor="' .
-        (is_int($i / 2) ? $config['site']['lightborder'] : $config['site']['darkborder']) .
-        '"> 
+  $i++;
+  $main_content .=
+    '<tr bgcolor="' .
+    (is_int($i / 2) ? $config['site']['lightborder'] : $config['site']['darkborder']) .
+    '"> 
         <td>             
             <center>' .
-        $i .
-        '</center> 
+    $i .
+    '</center> 
         </td> 
         <td>             
             <center><img src="guilds/' .
-        (!empty($guild['logo']) && file_exists('guilds/' . $guild['logo']) ? $guild['logo'] : 'default_logo.gif') .
-        '" width="64" height="64" border="0"/></center> 
+    (!empty($guild['logo']) && file_exists('guilds/' . $guild['logo']) ? $guild['logo'] : 'default_logo.gif') .
+    '" width="64" height="64" border="0"/></center> 
         </td> 
         <td> 
             <center><a href="?subtopic=guilds&action=show&guild=' .
-        $guild['id'] .
-        '">' .
-        $guild['name'] .
-        '</a></center> 
+    $guild['id'] .
+    '">' .
+    $guild['name'] .
+    '</a></center> 
         </td> 
         <td> 
             <center>' .
-        $guild['frags'] .
-        ' kills</center> 
+    $guild['frags'] .
+    ' kills</center> 
         </td> 
     </tr>';
 }

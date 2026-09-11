@@ -7,11 +7,11 @@ local area = createCombatArea(AREA_SQUARE1X1)
 setCombatArea(combat, area)
 
 function onGetFormulaValues(cid, level, skill, attack, factor)
-    local skillTotal, levelTotal = skill + attack * 3, level / 8
-    return -(skillTotal * 2.2 + levelTotal), -(skillTotal * 6 + levelTotal)
+  local skillTotal, levelTotal = skill + attack * 3, level / 8
+  return -(skillTotal * 2.2 + levelTotal), -(skillTotal * 6 + levelTotal)
 end
 
 setCombatCallback(combat, CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValues")
 function onCastSpell(cid, var)
-    return doCombat(cid, combat, var)
+  return doCombat(cid, combat, var)
 end

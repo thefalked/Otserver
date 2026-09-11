@@ -206,10 +206,10 @@
 <body onBeforeUnLoad="SaveMenu();" onUnload="SaveMenu();">
   <?php
   if (!isset($news_content)) {
-      $news_content = '';
+    $news_content = '';
   }
   if (!isset($main_content)) {
-      $main_content = '';
+    $main_content = '';
   }
   ?>
 
@@ -423,67 +423,67 @@
                 </a>
                 <?php
                 if ($config['site']['download_page'] == 1) {
-                    if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-                        echo "<a href='?subtopic=adminpanel'>
+                  if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
+                    echo "<a href='?subtopic=adminpanel'>
   <div id='submenu_adminpanel' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                            $layout_name .
-                            "/images/general/chain.gif);'></div>
+                      $layout_name .
+                      "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_adminpanel' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                            $layout_name .
-                            "/images/menu/icon-activesubmenu.gif);'></div>
+                      $layout_name .
+                      "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'><font color=\"red\">! Painel admin !</font></div>
     <div class='RightChain' style='background-image:url(" .
-                            $layout_name .
-                            "/images/general/chain.gif);'></div>
+                      $layout_name .
+                      "/images/general/chain.gif);'></div>
   </div>
 </a>";
-                    }
+                  }
                 }
                 if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-                    echo "<a href='?subtopic=scrollnews&action=edit_ticker'> 
+                  echo "<a href='?subtopic=scrollnews&action=edit_ticker'> 
   <div id='submenu_polls' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'> 
     <div class='LeftChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div> 
+                    $layout_name .
+                    "/images/general/chain.gif);'></div> 
     <div id='ActiveSubmenuItemIcon_polls' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/icon-activesubmenu.gif);'></div> 
+                    $layout_name .
+                    "/images/menu/icon-activesubmenu.gif);'></div> 
     <div class='RightChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div> 
+                    $layout_name .
+                    "/images/general/chain.gif);'></div> 
   </div> 
 </a>";
                 }
                 if ($group_id_of_acc_logged > 0) {
-                    echo "<a href='?subtopic=namelock'>
+                  echo "<a href='?subtopic=namelock'>
   <div id='submenu_namelock' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_namelock' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/icon-activesubmenu.gif);'></div>
+                    $layout_name .
+                    "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'><font color=\"red\">! Namelocks !</font></div>
     <div class='RightChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
   </div>
 </a>";
                 }
                 if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-                    echo "<a href='?subtopic=polls'>
+                  echo "<a href='?subtopic=polls'>
   <div id='submenu_polls' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_polls' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/icon-activesubmenu.gif);'></div>
+                    $layout_name .
+                    "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'><font color=\"red\">! Gerenciar enquetes !</font></div>
     <div class='RightChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
   </div>
 </a>";
                 }
@@ -645,31 +645,31 @@
             <?php echo "<div id='forum' class='menuitem'>
          <span onClick=\"MenuItemAction('forum')\">
 	 <div class='MenuButton' style='background-image:url(" .
-                $layout_name .
-                "/images/menu/button-background.gif);'>
+              $layout_name .
+              "/images/menu/button-background.gif);'>
 	     <div onMouseOver='MouseOverMenuItem(this);' onMouseOut='MouseOutMenuItem(this);'><div class='Button' style='background-image:url(" .
-                $layout_name .
-                "/images/menu/button-background-over.gif);'></div>
+              $layout_name .
+              "/images/menu/button-background-over.gif);'></div>
                <span id='forum_Lights' class='Lights'>
                 <div class='light_lu' style='background-image:url(" .
-                $layout_name .
-                "/images/menu/green-light.gif);'></div>
+              $layout_name .
+              "/images/menu/green-light.gif);'></div>
                 <div class='light_ld' style='background-image:url(" .
-                $layout_name .
-                "/images/menu/green-light.gif);'></div>
+              $layout_name .
+              "/images/menu/green-light.gif);'></div>
                 <div class='light_ru' style='background-image:url(" .
-                $layout_name .
-                "/images/menu/green-light.gif);'></div>
+              $layout_name .
+              "/images/menu/green-light.gif);'></div>
                </span>
                <div id='forum_Icon' class='Icon' style='background-image:url(" .
-                $layout_name .
-                "/images/menu/icon-forum.gif);'></div>
+              $layout_name .
+              "/images/menu/icon-forum.gif);'></div>
                <div id='forum_Label' class='Label' style='background-image:url(" .
-                $layout_name .
-                "/images/menu/label-forum.gif);'></div>
+              $layout_name .
+              "/images/menu/label-forum.gif);'></div>
                <div id='forum_Extend' class='Extend' style='background-image:url(" .
-                $layout_name .
-                "/images/general/plus.gif);'></div>
+              $layout_name .
+              "/images/general/plus.gif);'></div>
              </div>
            </div>
           </span>
@@ -677,15 +677,15 @@
           <a href='?subtopic=forum'>
            <div id='submenu_forum' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
              <div class='LeftChain' style='background-image:url(" .
-                $layout_name .
-                "/images/general/chain.gif);'></div>
+              $layout_name .
+              "/images/general/chain.gif);'></div>
              <div id='ActiveSubmenuItemIcon_forum' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                $layout_name .
-                "/images/menu/icon-activesubmenu.gif);'></div>
+              $layout_name .
+              "/images/menu/icon-activesubmenu.gif);'></div>
              <div class='SubmenuitemLabel'>Fórum</div>
              <div class='RightChain' style='background-image:url(" .
-                $layout_name .
-                "/images/general/chain.gif);'></div>
+              $layout_name .
+              "/images/general/chain.gif);'></div>
            </div>
           </a>
         </div>  
@@ -744,67 +744,67 @@
                 </a>
                 <?php
                 if ($config['site']['gallery_page'] == 1) {
-                    echo "<a href='?subtopic=gallery'>
+                  echo "<a href='?subtopic=gallery'>
   <div id='submenu_gallery' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_gallery' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/icon-activesubmenu.gif);'></div>
+                    $layout_name .
+                    "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'>Galeria</div>
     <div class='RightChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
   </div>
 </a>";
                 }
                 if ($config['site']['serverinfo_page'] == 1) {
-                    echo "<a href='?subtopic=serverinfo'>
+                  echo "<a href='?subtopic=serverinfo'>
   <div id='submenu_serverinfo' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_serverinfo' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/icon-activesubmenu.gif);'></div>
+                    $layout_name .
+                    "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'>Info do servidor</div>
     <div class='RightChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
   </div>
 </a>";
                 }
                 ?>
                 <?php if ($config['site']['shop_system'] == 0) {
-                    echo "<div id='shops' class='menuitem'>
+                  echo "<div id='shops' class='menuitem'>
 <span onClick=\"MenuItemAction('shops')\">
   <div class='MenuButton' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/button-background.gif);'>
+                    $layout_name .
+                    "/images/menu/button-background.gif);'>
     <div onMouseOver='MouseOverMenuItem(this);' onMouseOut='MouseOutMenuItem(this);'><div class='Button' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/button-background-over.gif);'></div>
+                    $layout_name .
+                    "/images/menu/button-background-over.gif);'></div>
       <span id='shops_Lights' class='Lights'>
         <div class='light_lu' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/green-light.gif);'></div>
+                    $layout_name .
+                    "/images/menu/green-light.gif);'></div>
         <div class='light_ld' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/green-light.gif);'></div>
+                    $layout_name .
+                    "/images/menu/green-light.gif);'></div>
         <div class='light_ru' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/green-light.gif);'></div>
+                    $layout_name .
+                    "/images/menu/green-light.gif);'></div>
       </span>
       <div id='shops_Icon' class='Icon' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/icon-shops.gif);'></div>
+                    $layout_name .
+                    "/images/menu/icon-shops.gif);'></div>
       <div id='shops_Label' class='Label' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/label-shops.gif);'></div>
+                    $layout_name .
+                    "/images/menu/label-shops.gif);'></div>
       <div id='shops_Extend' class='Extend' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/plus.gif);'></div>
+                    $layout_name .
+                    "/images/general/plus.gif);'></div>
     </div>
   </div>
 </span>
@@ -813,64 +813,64 @@
 <a href='?subtopic=donate'>
   <div id='submenu_donate' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_donate' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/icon-activesubmenu.gif);'></div>
+                    $layout_name .
+                    "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'><blink style=\"color: green;\">Doar</blink></div>
     <div class='RightChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
   </div>
 </a>
 <a href='?subtopic=shopsystem'>
   <div id='submenu_shopsystem' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_shopsystem' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                        $layout_name .
-                        "/images/menu/icon-activesubmenu.gif);'></div>
+                    $layout_name .
+                    "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'><div style=\"color: red;\">Loja</div></div>
     <div class='RightChain' style='background-image:url(" .
-                        $layout_name .
-                        "/images/general/chain.gif);'></div>
+                    $layout_name .
+                    "/images/general/chain.gif);'></div>
   </div>
 </a>";
-                    if ($logged) {
-                        echo "<a href='?subtopic=shopsystem&action=show_history'>
+                  if ($logged) {
+                    echo "<a href='?subtopic=shopsystem&action=show_history'>
   <div id='submenu_show_history' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                            $layout_name .
-                            "/images/general/chain.gif);'></div>
+                      $layout_name .
+                      "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_show_history' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                            $layout_name .
-                            "/images/menu/icon-activesubmenu.gif);'></div>
+                      $layout_name .
+                      "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'>Hist. de compras</div>
     <div class='RightChain' style='background-image:url(" .
-                            $layout_name .
-                            "/images/general/chain.gif);'></div>
+                      $layout_name .
+                      "/images/general/chain.gif);'></div>
   </div>
 </a>";
-                    }
-                    if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-                        echo "<a href='?subtopic=shopadmin'>
+                  }
+                  if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
+                    echo "<a href='?subtopic=shopadmin'>
   <div id='submenu_shopadmin' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
-                            $layout_name .
-                            "/images/general/chain.gif);'></div>
+                      $layout_name .
+                      "/images/general/chain.gif);'></div>
     <div id='ActiveSubmenuItemIcon_shopadmin' class='ActiveSubmenuItemIcon' style='background-image:url(" .
-                            $layout_name .
-                            "/images/menu/icon-activesubmenu.gif);'></div>
+                      $layout_name .
+                      "/images/menu/icon-activesubmenu.gif);'></div>
     <div class='SubmenuitemLabel'><font color=red>! Admin da loja !</font></div>
     <div class='RightChain' style='background-image:url(" .
-                            $layout_name .
-                            "/images/general/chain.gif);'></div>
+                      $layout_name .
+                      "/images/general/chain.gif);'></div>
   </div>
 </a>";
-                    }
-                    echo '</div>';
+                  }
+                  echo '</div>';
                 } ?>
               </div>
             </div>
@@ -938,18 +938,18 @@
             <img id="PedestalAndOnline" src="<?php echo $layout_name; ?>/images/header/pedestal-and-online.gif"
               alt="Monster Pedestal and Jogadores online Box" />
             <?php if (count($config['site']['worlds']) > 1) {
-                $whoisonlineworld = '?subtopic=whoisonline';
+              $whoisonlineworld = '?subtopic=whoisonline';
             } else {
-                $whoisonlineworld = '?subtopic=whoisonline&world=0';
+              $whoisonlineworld = '?subtopic=whoisonline&world=0';
             } ?>
             <div id="PlayersOnline" onClick="window.location='<?php echo $whoisonlineworld; ?>'">
 
               <?php
               $update_interval = 2;
               if ($config['status']['serverStatus_online'] == 1) {
-                  echo $config['status']['serverStatus_players'] . '<br />Jogadores online';
+                echo $config['status']['serverStatus_players'] . '<br />Jogadores online';
               } else {
-                  echo '<font color="red"><b>Servidor<br />Offline</b></font>';
+                echo '<font color="red"><b>Servidor<br />Offline</b></font>';
               }
               ?>
             </div>
@@ -972,14 +972,14 @@
                 style="background-image:url(<?php echo $layout_name; ?>/images/general/box-bottom.gif);"></div>
             </div>
             <?php if ($config['site']['screenoftheday'] == 1) {
-                echo '<div id="ScreenshotBox" class="Themebox" style="background-image:url(' .
-                    $layout_name .
-                    '/images/themeboxes/screenshot/screenshotbox.gif);">
+              echo '<div id="ScreenshotBox" class="Themebox" style="background-image:url(' .
+                $layout_name .
+                '/images/themeboxes/screenshot/screenshotbox.gif);">
       <a href="?subtopic=gallery" >
         <img id="ScreenshotContent" class="ThemeboxContent" src="images/screenshotoftheday.gif" alt="Screenshot of the Day" /></a>
     <div class="Bottom" style="background-image:url(' .
-                    $layout_name .
-                    '/images/general/box-bottom.gif);"></div>
+                $layout_name .
+                '/images/general/box-bottom.gif);"></div>
     </div>';
             } ?>
             <?php
@@ -988,45 +988,45 @@
             $polls = '';
             $p = null;
             foreach ($viewpoll as $row) {
-                $p = $row;
-                $polls .= '<center>' . $row['question'] . '</center>';
+              $p = $row;
+              $polls .= '<center>' . $row['question'] . '</center>';
             }
             if (!empty($p['id'])) {
-                echo '<div id="CurrentPollBox" class="Themebox" style="background-image:url(' .
-                    $layout_name .
-                    '/images/themeboxes/current-poll/currentpollbox.gif);">
+              echo '<div id="CurrentPollBox" class="Themebox" style="background-image:url(' .
+                $layout_name .
+                '/images/themeboxes/current-poll/currentpollbox.gif);">
       <div id="CurrentPollText">' .
-                    $polls .
-                    '</div>
+                $polls .
+                '</div>
       <a class="ThemeboxButton" href="?subtopic=polls&id= ' .
-                    $p['id'] .
-                    '" onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" style="background-image:url(' .
-                    $layout_name .
-                    '/images/buttons/sbutton.gif);"><div class="BigButtonOver" style="background-image:url(' .
-                    $layout_name .
-                    '/images/buttons/sbutton_over.gif);"></div>
+                $p['id'] .
+                '" onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" style="background-image:url(' .
+                $layout_name .
+                '/images/buttons/sbutton.gif);"><div class="BigButtonOver" style="background-image:url(' .
+                $layout_name .
+                '/images/buttons/sbutton_over.gif);"></div>
         <div class="ButtonText" style="background-image:url(' .
-                    $layout_name .
-                    '/images/buttons/_sbutton_votenow.gif);"></div>
+                $layout_name .
+                '/images/buttons/_sbutton_votenow.gif);"></div>
       </a>
     <div class="Bottom" style="background-image:url(' .
-                    $layout_name .
-                    '/images/general/box-bottom.gif);"></div>
+                $layout_name .
+                '/images/general/box-bottom.gif);"></div>
     </div>';
             }
             ?>
             <?php if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-                echo '<div id="CurrentPollBox" class="Themebox" style="background-image:url(' .
-                    $layout_name .
-                    '/images/themeboxes/admin/admin.gif);">
+              echo '<div id="CurrentPollBox" class="Themebox" style="background-image:url(' .
+                $layout_name .
+                '/images/themeboxes/admin/admin.gif);">
       <div id="CurrentPollText">
 	<b><a href="?subtopic=adminpanel"><b>Painel admin</b></a><b><br>
 	<b><a href="?subtopic=namelock"><b>Namelocks</b></a><b><br>
 	<b><a href="?subtopic=polls"><b>Gerenciar enquetes</b></a><b><br>
 	<b><a href="?subtopic=shopadmin"><b>Admin da loja</b></a><b></div>
     <div class="Bottom" style="background-image:url(' .
-                    $layout_name .
-                    '/images/general/box-bottom.gif);"></div>
+                $layout_name .
+                '/images/general/box-bottom.gif);"></div>
     </div>';
             } ?>
           </div>

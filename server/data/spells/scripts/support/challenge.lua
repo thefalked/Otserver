@@ -5,10 +5,10 @@ local area = createCombatArea(AREA_SQUARE1X1)
 setCombatArea(combat, area)
 
 function onTargetCreature(cid, target)
-    return doChallengeCreature(cid, target)
+  return doChallengeCreature(cid, target)
 end
 setCombatCallback(combat, CALLBACK_PARAM_TARGETCREATURE, "onTargetCreature")
 
 function onCastSpell(cid, var)
-    return doCombat(cid, combat, var)
+  return doCombat(cid, combat, var)
 end
