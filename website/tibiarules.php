@@ -1,8 +1,8 @@
 <?php if ($subtopic == 'tibiarules') {
-    $main_content .=
-        '<B>' .
-        h($config['server']['serverName'] ?? 'Server') .
-        ' Regras</B><BR><TEXTAREA ROWS="25" WRAP="physical" COLS="80" READONLY="true">';
+  $main_content .=
+    '<B>' .
+    h($config['server']['serverName'] ?? 'Server') .
+    ' Regras</B><BR><TEXTAREA ROWS="25" WRAP="physical" COLS="80" READONLY="true">';
 }
 $main_content .= '1. Nomes
 a) Nomes que contem linguagem insultuosa, racista, de direita extrema, sexista ou ofensivo.
@@ -29,6 +29,6 @@ A violacao das Regras de Tibia pode levar ao banimento temporario de personagens
 
 Estas regras podem ser alteradas a qualquer momento. Todas as mudancas serao anunciadas no site oficial.';
 if ($subtopic == 'tibiarules') {
-    $main_content .= '</TEXTAREA>';
+  $main_content .= '</TEXTAREA>';
 }
 ?>

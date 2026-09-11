@@ -9,12 +9,12 @@ local color7 = 144
 local color8 = 180
 local color9 = 210
 local function loop(valores)
-    doSendAnimatedText({ x = 159, y = 49, z = 7 }, "Tp's", color)
+  doSendAnimatedText({ x = 159, y = 49, z = 7 }, "Tp's", color)
 
-    addEvent(loop, velocidade, valore) -- Não remova isso
+  addEvent(loop, velocidade, valore) -- Não remova isso
 end
 
 function onUse(cid, item, frompos, item2, topos)
-    valore = { cid = cid, topos = topos }
-    addEvent(loop, velocidade, valore)
+  valore = { cid = cid, topos = topos }
+  addEvent(loop, velocidade, valore)
 end

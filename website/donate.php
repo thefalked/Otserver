@@ -1,14 +1,14 @@
 <?php if (
-    empty($config['pagseguro']['email']) ||
-    empty($config['pagseguro']['Token']) ||
-    empty($config['pagseguro']['enabled'])
+  empty($config['pagseguro']['email']) ||
+  empty($config['pagseguro']['Token']) ||
+  empty($config['pagseguro']['enabled'])
 ) {
-    $main_content .= '<b>Donations via PagSeguro are currently disabled.</b>';
-    return;
+  $main_content .= '<b>Donations via PagSeguro are currently disabled.</b>';
+  return;
 }
 if ($action == '') {
-    $main_content .=
-        '
+  $main_content .=
+    '
 <div id="ProgressBar">  <div id="Headline">Informações Iniciais</div>  <div id="MainContainer">	<div id="BackgroundContainer">  
 <img id="BackgroundContainerLeftEnd" src="/images/worldtrade/stonebar-left-end.gif">	  <div id="BackgroundContainerCenter">	  
 <div id="BackgroundContainerCenterImage" style="background-image: url(/images/worldtrade/stonebar-center.gif);"></div>	  </div>
@@ -72,13 +72,13 @@ if ($action == '') {
 		<div class="InnerTableContainer">	  
   <table style="width: 100%;"><tbody><tr><td>
 Informamos aos jogadores e colaboradores que o ' .
-        $config['server']['serverName'] .
-        ' não tem nenhum interesse financeiro. Toda a renda obtida é diretamente reaplicada para a manutenção do servidor - isto significa que ao fazer uma doação, você está garantindo a estabilidade e aumentando a qualidade do mesmo.</br></br>
+    $config['server']['serverName'] .
+    ' não tem nenhum interesse financeiro. Toda a renda obtida é diretamente reaplicada para a manutenção do servidor - isto significa que ao fazer uma doação, você está garantindo a estabilidade e aumentando a qualidade do mesmo.</br></br>
 Os pontos que são repassados aos jogadores que efetuam as doações não representam nada mais além de nossa gratificação, isto é, você não está comprando pontos e sim recebendo uma gratificação simbólica (em formas de pontos) que te beneficie dentro do jogo; você poderá usar os seus pontos da maneira que desejar.</br></br>
 O espírito deste sistema é simples: com o intuito de nos aproximarmos dos jogadores e fazer com que vocês se sintam em casa, entendemos a sua doação como uma via de mão dupla no quesito credibilidade. Ao acreditar que vale a pena investir na manutenção do servidor, nós investimos em vocês creditando-os com pontos, que como já dito anteriormente, podem ser utilizados da maneira que mais os couber.</br></br>
 Confira o <a href="?subtopic=shopsystem">' .
-        $config['server']['serverName'] .
-        ' Shop</a> e saiba como aproveitar os seus pontos da maneira mais proveitosa à sua situação.</br>
+    $config['server']['serverName'] .
+    ' Shop</a> e saiba como aproveitar os seus pontos da maneira mais proveitosa à sua situação.</br>
 <h3>Dúvidas Frequentes</h3>
 <b>Mas o que são Premium Points?</b>
 Premium Points faz parte do nosso sistema de doação, com eles você pode adquirir uma VIP ou algo mais que esteja disponível no Shopping Online.</br></br>
@@ -94,41 +94,40 @@ Premium Points faz parte do nosso sistema de doação, com eles você pode adqui
 
 ';
 } elseif ($action == 'rules') {
-    if (!$logged) {
-        $main_content .=
-            'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
-    } else {
-        $main_content .=
-            '<div id="ProgressBar">  <div id="Headline">Regras & Informações</div>  <div id="MainContainer">	<div id="BackgroundContainer">	  <img id="BackgroundContainerLeftEnd" src="layouts/tibiacom/images/vips/stonebar-left-end.gif">	  <div id="BackgroundContainerCenter">		<div id="BackgroundContainerCenterImage" style="background-image: url(layouts/tibiacom/images/content/stonebar-center.gif);"></div>	  </div>	  <img id="BackgroundContainerRightEnd" src="layouts/tibiacom/images/vips/stonebar-right-end.gif">	</div>	<img id="TubeLeftEnd" src="layouts/tibiacom/images/vips/progress-bar-tube-left-green.gif">	<img id="TubeRightEnd" src="layouts/tibiacom/images/vips/progress-bar-tube-right-blue.gif">	<div id="FirstStep" class="Steps">	  <div class="SingleStepContainer">		<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-0-green.gif">		<div class="StepText" style="font-weight: bold;">Regras da Doação</div>	  </div>	</div>	<div id="StepsContainer1">	  <div id="StepsContainer2">		<div class="Steps" style="width: 25%;">		  <div class="TubeContainer">			<img class="Tube" src="layouts/tibiacom/images/vips/progress-bar-tube-green-blue.gif">		  </div>		  <div class="SingleStepContainer">			<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-1-blue.gif">			<div class="StepText" style="font-weight: normal;">Metodo de Pagamento</div>		  </div>		</div>		<div class="Steps" style="width: 25%;">		  <div class="TubeContainer">			<img class="Tube" src="layouts/tibiacom/images/vips/progress-bar-tube-blue.gif">		  </div>		  <div class="SingleStepContainer">			<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-2-blue.gif">			<div class="StepText" style="font-weight: normal;">Informações do Pedido</div>		  </div>		</div>		<div class="Steps" style="width: 25%;">		  <div class="TubeContainer">			<img class="Tube" src="layouts/tibiacom/images/vips/progress-bar-tube-blue.gif">		  </div>		  <div class="SingleStepContainer">			<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-3-blue.gif">			<div class="StepText" style="font-weight: normal;">Confirmação</div>		  </div>		</div>		<div class="Steps" style="width: 25%;">		  <div class="TubeContainer">			<img class="Tube" src="layouts/tibiacom/images/vips/progress-bar-tube-blue.gif">		  </div>		  <div class="SingleStepContainer">			<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-4-blue.gif">			<div class="StepText" style="font-weight: normal;">Pedido Realizado</div>		  </div>		</div>	  </div>	</div>  </div></div><div class="TableContainer">  <div class="CaptionContainer">	  <div class="CaptionInnerContainer">		<span class="CaptionEdgeLeftTop" style="background-image: url(layouts/tibiacom/images/content/box-frame-edge.gif);"></span>		<span class="CaptionEdgeRightTop" style="background-image: url(layouts/tibiacom/images/content/box-frame-edge.gif);"></span>		<span class="CaptionBorderTop" style="background-image: url(layouts/tibiacom/images/content/table-headline-border.gif);"></span>		<span class="CaptionVerticalLeft" style="background-image: url(layouts/tibiacom/images/content/box-frame-vertical.gif);"></span>		<div class="Text">Leia as Regras das Doações</div>		<span class="CaptionVerticalRight" style="background-image: url(layouts/tibiacom/images/content/box-frame-vertical.gif);"></span>		<span class="CaptionBorderBottom" style="background-image: url(layouts/tibiacom/images/content/table-headline-border.gif);"></span>		<span class="CaptionEdgeLeftBottom" style="background-image: url(layouts/tibiacom/images/content/box-frame-edge.gif);"></span>		<span class="CaptionEdgeRightBottom" style="background-image: url(layouts/tibiacom/images/content/box-frame-edge.gif);"></span>	  </div>	</div>	<table class="Table1" cellpadding="0" cellspacing="0">	<tbody><tr>	  <td>		<div class="InnerTableContainer">		  <table style="width: 100%;"><tbody><tr><td valign="middle" width="25px;">
+  if (!$logged) {
+    $main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+  } else {
+    $main_content .=
+      '<div id="ProgressBar">  <div id="Headline">Regras & Informações</div>  <div id="MainContainer">	<div id="BackgroundContainer">	  <img id="BackgroundContainerLeftEnd" src="layouts/tibiacom/images/vips/stonebar-left-end.gif">	  <div id="BackgroundContainerCenter">		<div id="BackgroundContainerCenterImage" style="background-image: url(layouts/tibiacom/images/content/stonebar-center.gif);"></div>	  </div>	  <img id="BackgroundContainerRightEnd" src="layouts/tibiacom/images/vips/stonebar-right-end.gif">	</div>	<img id="TubeLeftEnd" src="layouts/tibiacom/images/vips/progress-bar-tube-left-green.gif">	<img id="TubeRightEnd" src="layouts/tibiacom/images/vips/progress-bar-tube-right-blue.gif">	<div id="FirstStep" class="Steps">	  <div class="SingleStepContainer">		<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-0-green.gif">		<div class="StepText" style="font-weight: bold;">Regras da Doação</div>	  </div>	</div>	<div id="StepsContainer1">	  <div id="StepsContainer2">		<div class="Steps" style="width: 25%;">		  <div class="TubeContainer">			<img class="Tube" src="layouts/tibiacom/images/vips/progress-bar-tube-green-blue.gif">		  </div>		  <div class="SingleStepContainer">			<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-1-blue.gif">			<div class="StepText" style="font-weight: normal;">Metodo de Pagamento</div>		  </div>		</div>		<div class="Steps" style="width: 25%;">		  <div class="TubeContainer">			<img class="Tube" src="layouts/tibiacom/images/vips/progress-bar-tube-blue.gif">		  </div>		  <div class="SingleStepContainer">			<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-2-blue.gif">			<div class="StepText" style="font-weight: normal;">Informações do Pedido</div>		  </div>		</div>		<div class="Steps" style="width: 25%;">		  <div class="TubeContainer">			<img class="Tube" src="layouts/tibiacom/images/vips/progress-bar-tube-blue.gif">		  </div>		  <div class="SingleStepContainer">			<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-3-blue.gif">			<div class="StepText" style="font-weight: normal;">Confirmação</div>		  </div>		</div>		<div class="Steps" style="width: 25%;">		  <div class="TubeContainer">			<img class="Tube" src="layouts/tibiacom/images/vips/progress-bar-tube-blue.gif">		  </div>		  <div class="SingleStepContainer">			<img class="StepIcon" src="layouts/tibiacom/images/vips/progress-bar-icon-4-blue.gif">			<div class="StepText" style="font-weight: normal;">Pedido Realizado</div>		  </div>		</div>	  </div>	</div>  </div></div><div class="TableContainer">  <div class="CaptionContainer">	  <div class="CaptionInnerContainer">		<span class="CaptionEdgeLeftTop" style="background-image: url(layouts/tibiacom/images/content/box-frame-edge.gif);"></span>		<span class="CaptionEdgeRightTop" style="background-image: url(layouts/tibiacom/images/content/box-frame-edge.gif);"></span>		<span class="CaptionBorderTop" style="background-image: url(layouts/tibiacom/images/content/table-headline-border.gif);"></span>		<span class="CaptionVerticalLeft" style="background-image: url(layouts/tibiacom/images/content/box-frame-vertical.gif);"></span>		<div class="Text">Leia as Regras das Doações</div>		<span class="CaptionVerticalRight" style="background-image: url(layouts/tibiacom/images/content/box-frame-vertical.gif);"></span>		<span class="CaptionBorderBottom" style="background-image: url(layouts/tibiacom/images/content/table-headline-border.gif);"></span>		<span class="CaptionEdgeLeftBottom" style="background-image: url(layouts/tibiacom/images/content/box-frame-edge.gif);"></span>		<span class="CaptionEdgeRightBottom" style="background-image: url(layouts/tibiacom/images/content/box-frame-edge.gif);"></span>	  </div>	</div>	<table class="Table1" cellpadding="0" cellspacing="0">	<tbody><tr>	  <td>		<div class="InnerTableContainer">		  <table style="width: 100%;"><tbody><tr><td valign="middle" width="25px;">
 <B>Antes de fazer uma doação, lembre-se de estar de acordo com as regras vigentes e ciente de todas as informações necessárias.</B><TEXTAREA ROWS="5" WRAP="physical" COLS="80" READONLY="true" style="float:right;">
 1. Gerais
 a) O ' .
-            $config['server']['serverName'] .
-            ' é um servidor alternativo de Tibia planejado, construído e executado dentro das regras vigentes que possibilitam o funcionamento do mesmo sem infringir nenhuma lei (seja ela nacional ou não).
+      $config['server']['serverName'] .
+      ' é um servidor alternativo de Tibia planejado, construído e executado dentro das regras vigentes que possibilitam o funcionamento do mesmo sem infringir nenhuma lei (seja ela nacional ou não).
 b) Todo o dinheiro depositado e creditado no servidor é diretamente aplicado em sua própria manutenção, isto é, todo o capital girado em torno do mesmo é diretamente canalizado para o rumo de sua autossuficiência.
 c) O ' .
-            $config['server']['serverName'] .
-            ' luta pela sua estabilidade, entretando, não podemos impedir que erros venham a acontecer.
+      $config['server']['serverName'] .
+      ' luta pela sua estabilidade, entretando, não podemos impedir que erros venham a acontecer.
 d) O histórico de doações está sendo salvado, ou seja, você nunca será esquecido.
 e) O nome designado à central de trocas de pontos - ' .
-            $config['server']['serverName'] .
-            'Shop - é fictício; o ' .
-            $config['server']['serverName'] .
-            ' não vende nenhum tipo de produto.
+      $config['server']['serverName'] .
+      'Shop - é fictício; o ' .
+      $config['server']['serverName'] .
+      ' não vende nenhum tipo de produto.
 e) O ' .
-            $config['server']['serverName'] .
-            ' é uma empresa sem fins lucrativos.
+      $config['server']['serverName'] .
+      ' é uma empresa sem fins lucrativos.
 2. Perdas & Danos
 a) Guarde o seu comprovante de doação. É o único documento que comprova a sua ajuda para a manutenção do servidor.
 b) Em caso de resets, todas as doações que foram realizadas no prazo de dois meses (contando a partir do dia do reset) serão recreditadas integralmente nas contas dos jogadores. Lembrem-se que o histórico de doações está sendo salvo, porém você também precisa comprovar a sua participação nas doações.
 c) Em caso de quedas e(ou) problemas que façam com que o ' .
-            $config['server']['serverName'] .
-            ' fique off-line, em modo de segurança ou de espera por três dias consecutivos ou mais, os jogadores que optaram por debitar seus pontos em tempo VIP serão recreditados, da mesma maneira, com os dias perdidos (contando a partir do terceiro dia).
+      $config['server']['serverName'] .
+      ' fique off-line, em modo de segurança ou de espera por três dias consecutivos ou mais, os jogadores que optaram por debitar seus pontos em tempo VIP serão recreditados, da mesma maneira, com os dias perdidos (contando a partir do terceiro dia).
 d) Em caso de paralização inesperada das atividades, não haverá reposição ou recreditação de capital investida no servidor, posto que toda doação é diretamente encaminhada à manutenção do mesmo. Neste caso, os jogadores serão comunicados pelos veículos de informação (site oficial ou fórum).
 e) Em caso de paralização pré-programada das atividades, os jogadores serão informados através de nossos veículos de informação e a partir da data referida o sistema de doações encontrar-se-á fora do ar.
 f) O ' .
-            $config['server']['serverName'] .
-            ' oferece e investe na segurança básica para o servidor, cabe a você mantê-lo seguro; ou seja, não nos responsabilizamos pelos seus pertencens, personagens e contas.
+      $config['server']['serverName'] .
+      ' oferece e investe na segurança básica para o servidor, cabe a você mantê-lo seguro; ou seja, não nos responsabilizamos pelos seus pertencens, personagens e contas.
 3. Denotação # Doação
 a) Ato ou efeito de doar.
 b) Aquilo que se doa.
@@ -150,38 +149,36 @@ Caso você não concorde com a contratação sobre a doação simples por favor 
 			  
 
 ';
-    }
+  }
 } elseif ($action == 'selectchar') {
-    if (!$logged) {
-        $main_content .=
-            'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
-    } else {
-        $main_content .= '
+  if (!$logged) {
+    $main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+  } else {
+    $main_content .= '
 <h1>Selecione o player</h1><BR>
    <form action="index.php?subtopic=donate&action=pag_form" method=POST>
    <table border="0" cellpadding="1" cellspacing="1" width="100%">
    <tr bgcolor="#505050"><td colspan="2"><font color="#FFFFFF"><b>Select the character you want receive the donate.</b></font></td></tr>
    <tr bgcolor="#D4C0A1"><td width="110"><b>Nome:</b></td><td width="550"><select name="buy_name">';
-        $players_from_logged_acc = $account_logged->getPlayersList();
-        if (count($players_from_logged_acc) > 0) {
-            $players_from_logged_acc->orderBy('name');
-            foreach ($players_from_logged_acc as $player) {
-                $main_content .= '<option>' . $player->getName() . '</option>';
-            }
-        } else {
-            $main_content .= 'Voce não tem nenhum char nessa account.';
-        }
-        $main_content .= '</table>
+    $players_from_logged_acc = $account_logged->getPlayersList();
+    if (count($players_from_logged_acc) > 0) {
+      $players_from_logged_acc->orderBy('name');
+      foreach ($players_from_logged_acc as $player) {
+        $main_content .= '<option>' . $player->getName() . '</option>';
+      }
+    } else {
+      $main_content .= 'Voce não tem nenhum char nessa account.';
+    }
+    $main_content .= '</table>
   <br><center><input type="image" value="submit" src="layouts/tibiacom/images/buttons/sbutton_submit.gif"/>
   </form>';
-    }
+  }
 } elseif ($action == 'pag_form') {
-    if (!$logged) {
-        $main_content .=
-            'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
-    } else {
-        $buy_name = stripslashes(urldecode($_POST['buy_name']));
-        $main_content .= '<div id="ProgressBar">  <div id="Headline">Método de Pagamento</div>  <div id="MainContainer">	<div id="BackgroundContainer">	
+  if (!$logged) {
+    $main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+  } else {
+    $buy_name = stripslashes(urldecode($_POST['buy_name']));
+    $main_content .= '<div id="ProgressBar">  <div id="Headline">Método de Pagamento</div>  <div id="MainContainer">	<div id="BackgroundContainer">	
 <img id="BackgroundContainerLeftEnd" src="layouts/tibiacom/images/vips/stonebar-left-end.gif">	  <div id="BackgroundContainerCenter">	  
 <div id="BackgroundContainerCenterImage" style="background-image: url(layouts/tibiacom/images/content/stonebar-center.gif);"></div>	
 </div>	  <img id="BackgroundContainerRightEnd" src="layouts/tibiacom/images/vips/stonebar-right-end.gif">	</div>  
@@ -222,33 +219,32 @@ Caso você não concorde com a contratação sobre a doação simples por favor 
 	<div onmouseover="MouseOverBigButton(this);" onmouseout="MouseOutBigButton(this);"><div class="BigButtonOver" style="background-image: url(layouts/tibiacom/images/buttons/sbutton_over.gif);"></div>
 	<input class="ButtonText" name="Continue" alt="Continue" src="layouts/tibiacom/images/vips/_sbutton_continue.gif" type="image">
 	</table></td></tr></tbody></table>';
-    }
-    $_SESSION['nome'] = stripslashes(urldecode($_POST['method']));
+  }
+  $_SESSION['nome'] = stripslashes(urldecode($_POST['method']));
 } elseif ($action == 'tipo') {
-    if (!$logged) {
-        $main_content .=
-            'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
-    } else {
-        $buy_tipo = stripslashes(urldecode($_POST['method']));
-        if ($buy_tipo == 1) {
-            $main_content .=
-                '
+  if (!$logged) {
+    $main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+  } else {
+    $buy_tipo = stripslashes(urldecode($_POST['method']));
+    if ($buy_tipo == 1) {
+      $main_content .=
+        '
 <form target="pagseguro" method="post" action="https://pagseguro.uol.com.br/checkout/checkout.jhtml">
 <input type="hidden" name="email_cobranca" value="' .
-                $config['pagseguro']['email'] .
-                '">
+        $config['pagseguro']['email'] .
+        '">
 <input type="hidden" name="tipo" value="CP">
 <input type="hidden" name="moeda" value="BRL">
 <input type="hidden" name="item_id_1" value="1">
 <input type="hidden" name="item_descr_1" value="' .
-                $config['pagseguro']['produtoNome'] .
-                '">
+        $config['pagseguro']['produtoNome'] .
+        '">
 <input type="hidden" name="item_frete_1" value="0">
 <input type="hidden" name="item_quant_1" value="1">
 <input type="hidden" name="item_peso_1" value="0">
 <input type="hidden" name="ref_transacao" value="' .
-                $account_logged->getCustomField('name') .
-                '-points">
+        $account_logged->getCustomField('name') .
+        '-points">
 <table border="0" cellpadding="4" cellspacing="1" width="100%" id="#estilo"><tbody>
 <div id="ProgressBar">  <div id="Headline">Informações do Pedido</div>  <div id="MainContainer">	<div id="BackgroundContainer">
 <img id="BackgroundContainerLeftEnd" src="layouts/tibiacom/images/vips/stonebar-left-end.gif">	  <div id="BackgroundContainerCenter">
@@ -275,8 +271,8 @@ Caso você não concorde com a contratação sobre a doação simples por favor 
 	<tr>
 		<td width="10%">Sua conta</td>
 		<td><strong>' .
-                $account_logged->getCustomField('name') .
-                '</strong></td>
+        $account_logged->getCustomField('name') .
+        '</strong></td>
 	</tr>
 	<tr>
 		<td width="10%">Pontos</td>
@@ -303,9 +299,9 @@ Caso você não concorde com a contratação sobre a doação simples por favor 
 		</td>
 		</tr>
 </tbody></table></form><p style="font-size: 18px">Ao doar pelo PagSeguro você não precisa confirmar seu pagamento, assim que PagSeguro aprovar o pagamento, os pontos serão adicionados automaticamente na sua conta.</p>';
-        }
-        if ($buy_tipo == 3) {
-            $main_content .= '
+    }
+    if ($buy_tipo == 3) {
+      $main_content .= '
 <table border="0" cellspacing="1" cellpadding="4" width="100%">
 		<tr bgcolor="#505050"><td colspan="1" class="white"><b>Banco do Brasil</b></tr></td>
 		<tr bgcolor="#D4C0A1"><td><img src="http://img526.imageshack.us/img526/2645/bancodobrasil2300x300.jpg"><br>
@@ -317,7 +313,7 @@ Agência: xxx-xxx<br>
 *O Pagamento pode ser feito através de Deposito ou Transferência Bancária (Não esqueça de confirmar a doação no link "Confirmar Doação").
 </td></tr>
 		</table><br/>';
-            $main_content .= '
+      $main_content .= '
 <table border="0" cellspacing="1" cellpadding="4" width="100%">
 		<tr bgcolor="#505050"><td colspan="1" class="white"><b>Informações sobre Valores</b></td></tr>
 		<tr bgcolor="#D4C0A1"><td>R$ 5,00: 5 Premium Points<br>
@@ -329,128 +325,128 @@ R$ 30,00: 35 Premium Points*<br>
 Exemplo: Na compra de R$ 50,00 em Premium Points, você leva 58 Premium Points ao invés de 50 Premium Points. (Bonus de +15% em cima do valor).<br>
 </td></tr>
 		</table><br/>';
-        }
-        if ($buy_tipo == 4) {
-            $main_content .= '
+    }
+    if ($buy_tipo == 4) {
+      $main_content .= '
 <center><h1>Onebip - Sistema de Pagamento pelo celuar via SMS</center></h1>
 ';
 
-            $main_content .=
-                '<center>
+      $main_content .=
+        '<center>
 <table border="0" cellspacing=1 cellpadding=4 width="80%">
 <tr bgcolor="' .
-                $config['site']['vdarkborder'] .
-                '">
+        $config['site']['vdarkborder'] .
+        '">
 <center><th width="100%"><font class=black><b>Planos disponíveis</b></font></th>
 </tr>
 </table>
 <table border="0" cellspacing=1 cellpadding=4 width="80%">
 <tr>
 <center><td bgcolor="' .
-                $config['site']['darkborder'] .
-                '" witdh="2%"><center><b>Doação - 5R$</center></b></td>
+        $config['site']['darkborder'] .
+        '" witdh="2%"><center><b>Doação - 5R$</center></b></td>
 <td bgcolor="' .
-                $config['site']['darkborder'] .
-                '" witdh="2%"><center><b>Doação - 10R$</center></b></td>
+        $config['site']['darkborder'] .
+        '" witdh="2%"><center><b>Doação - 10R$</center></b></td>
 <td bgcolor="' .
-                $config['site']['darkborder'] .
-                '" witdh="2%"><center><b>Doação - 20R$</center></b></td>
+        $config['site']['darkborder'] .
+        '" witdh="2%"><center><b>Doação - 20R$</center></b></td>
 <td bgcolor="' .
-                $config['site']['darkborder'] .
-                '" witdh="2%"><center><b>Doação - 30R$</center></b></td>
+        $config['site']['darkborder'] .
+        '" witdh="2%"><center><b>Doação - 30R$</center></b></td>
 <td bgcolor="' .
-                $config['site']['darkborder'] .
-                '" witdh="2%"><center><b>Doação - 50R$</center></b></td>
+        $config['site']['darkborder'] .
+        '" witdh="2%"><center><b>Doação - 50R$</center></b></td>
 </tr>
 <tr>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/a1197d7b3e9048f56a29f82569a5d7aa" title="Mobile payment: send and receive money with your mobile phone">
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/a1197d7b3e9048f56a29f82569a5d7aa" title="Mobile payment: send and receive money with your mobile phone">
 <img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
 </a></center></b></td>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/78232439f44d5cba6ff3a5873dd59472" title="Mobile payment: send and receive money with your mobile phone">
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/78232439f44d5cba6ff3a5873dd59472" title="Mobile payment: send and receive money with your mobile phone">
 <img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
 </a></center></b></td>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/a9f667a07c3e3719be57381b4910898e" title="Mobile payment: send and receive money with your mobile phone">
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/a9f667a07c3e3719be57381b4910898e" title="Mobile payment: send and receive money with your mobile phone">
 <img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
 </a></center></b></td>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/af26c76894856e21393b672ad4043076" title="Mobile payment: send and receive money with your mobile phone">
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/af26c76894856e21393b672ad4043076" title="Mobile payment: send and receive money with your mobile phone">
 <img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
 </a></center></b></td>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/81fe3a8e3d6148bd733134f55c615ed8" title="Mobile payment: send and receive money with your mobile phone">
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b><a href="https://www.onebip.com/tinyurl/81fe3a8e3d6148bd733134f55c615ed8" title="Mobile payment: send and receive money with your mobile phone">
 <img src="http://www.onebip.com/tools/bts/btn04.gif" alt="Transfer money with your mobile phone credit" border="0"/>
 </a></center></b></td>
 </tr>
 <tr>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b>Faça sua Doação</center></b></td>
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b>Faça sua Doação</center></b></td>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b>Faça sua Doação</center></b></td>
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b>Faça sua Doação</center></b></td>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b>Faça sua Doação</center></b></td>
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b>Faça sua Doação</center></b></td>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b>Faça sua Doação</center></b></td>
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b>Faça sua Doação</center></b></td>
 <td bgcolor="' .
-                $config['site']['lightborder'] .
-                '" witdh="2%"><center><b>Faça sua Doação</center></b></td></center>
+        $config['site']['lightborder'] .
+        '" witdh="2%"><center><b>Faça sua Doação</center></b></td></center>
 </tr>
 </table>
 <table border="0" cellspacing=1 cellpadding=4 width="80%">
 <tr bgcolor="' .
-                $config['site']['vdarkborder'] .
-                '">
+        $config['site']['vdarkborder'] .
+        '">
 <td width="100%"></td>
 </tr>
 </table>
 <br>
 ';
 
-            $main_content .=
-                '
+      $main_content .=
+        '
 <table border="0" cellspacing=1 cellpadding=4 width="100%">
 <tr bgcolor="' .
-                $config['site']['vdarkborder'] .
-                '">
+        $config['site']['vdarkborder'] .
+        '">
 <th width="100%"><font class=black>Observações</b></th>
 </tr>
 </table>
 <table border="0" cellspacing=1 cellpadding=4 width="100%">
 <tr bgcolor="' .
-                $config['site']['darkborder'] .
-                '">
+        $config['site']['darkborder'] .
+        '">
 <td width="100%"><ul><li>Para efetuar com sucesso sua doação utilizando o sistema <b>Onebip</b> é necessário de atenção: Ao enviar a mensagem você recebera os créditos em sua conta Onebip e depois transferir para a conta do servidor, caso não seja feito isso seus pontos não vão chegar.</li></ul></td>
 </tr>
 <tr bgcolor="' .
-                $config['site']['darkborder'] .
-                '">
+        $config['site']['darkborder'] .
+        '">
 <td width="100%"><ul><li>Todas as doações efetuadas no sistema <b>Onebip</b> precisam ser <a href="http://tibera-world.com/index.php?subtopic=confirmacao">Confirmadas</a> para serem creditas em sua account, caso contrário seus pontos não serão creditados</li></ul></td>
 </tr>
 </table>';
-        } elseif ($buy_tipo == 2) {
-            if (!$logged) {
-                $main_content .=
-                    'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
-            } else {
-                $main_content .=
-                    '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PayPal, onde você deverá preencher os dados e concluir a doação.</center>
+    } elseif ($buy_tipo == 2) {
+      if (!$logged) {
+        $main_content .=
+          'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+      } else {
+        $main_content .=
+          '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PayPal, onde você deverá preencher os dados e concluir a doação.</center>
    <br><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
    <tr bgcolor="#505050"><td colspan="3"><font color="white" size="4"><b>Pedido</b></font></td></tr>
    <tr bgcolor="#D4C0A1"><td width="100"><b>Método de pagamento:</b></td><td width="550" colspan="2">PayPal</TD></tr>
    <tr bgcolor="#D4C0A1"><td width="100"><b>Account:</b></td><td width="550" colspan="2">' .
-                    $account_logged->getName() .
-                    '</td></tr>
+          $account_logged->getName() .
+          '</td></tr>
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
    <tr bgcolor="#D4C0A1"><td width="100"><b>Pontos:</b></td><td width="550" colspan="2"><select name="amount">
   <option value="10.00">10 R$</option>
@@ -464,11 +460,11 @@ Exemplo: Na compra de R$ 50,00 em Premium Points, você leva 58 Premium Points a
 <input type="hidden" name="business" value="EMAILPAYPALAQUI">
 <input type="hidden" name="lc" value="BR">
 <input type="hidden" name="item_name" value="Pontos na account de nome: ' .
-                    $account_logged->getCustomField('name') .
-                    '">
+          $account_logged->getCustomField('name') .
+          '">
 <input type="hidden" name="custom" value="' .
-                    $account_logged->getCustomField('name') .
-                    '">
+          $account_logged->getCustomField('name') .
+          '">
 <input type="hidden" name="item_number" value="1">
 <input type="hidden" name="currency_code" value="BRL">
 <input type="hidden" name="no_note" value="0">
@@ -482,30 +478,29 @@ Exemplo: Na compra de R$ 50,00 em Premium Points, você leva 58 Premium Points a
    <a href="index.php?subtopic=donate"><img border="0" src="layouts/tibiacom/images/buttons/sbutton_back.gif"></a> </TD>
    <td><input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online."></TR>
    </TABLE></form>';
-            }
-        }
+      }
     }
+  }
 } elseif ($action == 'finalps') {
-    if (!$logged) {
-        $main_content .=
-            'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
-    } else {
-        $buy_quant = stripslashes(urldecode($_POST['quant']));
-        $main_content .=
-            '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PagSeguro, onde você deverá preencher os dados e concluir a doação.</center>
+  if (!$logged) {
+    $main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+  } else {
+    $buy_quant = stripslashes(urldecode($_POST['quant']));
+    $main_content .=
+      '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PagSeguro, onde você deverá preencher os dados e concluir a doação.</center>
    <br><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
    <form target="pagseguro" action="https://pagseguro.uol.com.br/security/webpagamentos/webpagto.aspx" method="post"><input type="hidden" name="char_name" value="">
    <tr bgcolor="#505050"><td colspan="3"><font color="white" size="4"><b>Confirme seus dados</b></font></td></tr>
    <tr bgcolor="#D4C0A1"><td width="100"><b>Método de pagamento:</b></td><td width="550" colspan="2">PagSeguro</TD></tr>
    <tr bgcolor="#D4C0A1"><td width="100"><b>Account:</b></td><td width="550" colspan="2">' .
-            $account_logged->getName() .
-            '</td></tr>
+      $account_logged->getName() .
+      '</td></tr>
    <tr bgcolor="#D4C0A1"><td width="100"><b>Pontos:</b></td><td width="550" colspan="2">' .
-            $buy_quant .
-            '</td></tr>
+      $buy_quant .
+      '</td></tr>
    <tr bgcolor="#D4C0A1"><td width="100"><b>Valor:</b></td><td width="550" colspan="2">' .
-            $buy_quant .
-            ',00</td></tr>
+      $buy_quant .
+      ',00</td></tr>
    </TABLE><BR>
 	<center>
 <!-- INICIO FORMULARIO BOTAO PAGSEGURO -->
@@ -514,37 +509,36 @@ Exemplo: Na compra de R$ 50,00 em Premium Points, você leva 58 Premium Points a
 <input type="hidden" name="tipo" value="CP" />
 <input type="hidden" name="moeda" value="BRL" />
 <input type="hidden" name="item_id_1" value="' .
-            $buy_quant .
-            '" />
+      $buy_quant .
+      '" />
 <input type="hidden" name="item_descr_1" value="Pontos" />
 <input type="hidden" name="item_quant_1" value="' .
-            $buy_quant .
-            '" />
+      $buy_quant .
+      '" />
 <input type="hidden" name="item_valor_1" value="100" />
 <input type="hidden" name="item_peso_1" value="0" />
 <input type="hidden" name="ref_transacao" value="' .
-            $account_logged->getName() .
-            '" />
+      $account_logged->getName() .
+      '" />
 <!-- FINAL FORMULARIO BOTAO PAGSEGURO -->
 <BR>
    <table style="width:100%;" ><tr align="center" ><td>
    <a href="index.php?subtopic=donate"><img border="0" src="layouts/tibiacom/images/buttons/sbutton_back.gif"></a> </TD>
    <td><input type="image" src="layouts/tibiacom/images/buttons/sbutton_submit.gif" name="submit" alt="Pague com PagSeguro - é rápido, grátis e seguro!" /></TR>
    </TABLE></form>';
-    }
+  }
 } elseif ($action == 'finalpp') {
-    if (!$logged) {
-        $main_content .=
-            'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
-    } else {
-        $main_content .=
-            '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PayPal, onde você deverá preencher os dados e concluir a doação.</center>
+  if (!$logged) {
+    $main_content .= 'You are not logged in. <a href="?subtopic=accountmanagement">Log in</a> first to make a donate..';
+  } else {
+    $main_content .=
+      '<center>Ao clicar no botão submit você será redirecionado para a página de doações do PayPal, onde você deverá preencher os dados e concluir a doação.</center>
    <br><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%>
    <tr bgcolor="#505050"><td colspan="3"><font color="white" size="4"><b>Pedido</b></font></td></tr>
    <tr bgcolor="#D4C0A1"><td width="100"><b>Método de pagamento:</b></td><td width="550" colspan="2">PayPal</TD></tr>
    <tr bgcolor="#D4C0A1"><td width="100"><b>Account:</b></td><td width="550" colspan="2">' .
-            $account_logged->getName() .
-            '</td></tr>
+      $account_logged->getName() .
+      '</td></tr>
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
    <tr bgcolor="#D4C0A1"><td width="100"><b>Pontos:</b></td><td width="550" colspan="2"><select name="amount">
   <option value="10.00">10 R$</option>
@@ -558,11 +552,11 @@ Exemplo: Na compra de R$ 50,00 em Premium Points, você leva 58 Premium Points a
 <input type="hidden" name="business" value="frizman@o2.pl">
 <input type="hidden" name="lc" value="BR">
 <input type="hidden" name="item_name" value="Pontos na account de nome: ' .
-            $account_logged->getCustomField('name') .
-            '">
+      $account_logged->getCustomField('name') .
+      '">
 <input type="hidden" name="custom" value="' .
-            $account_logged->getCustomField('name') .
-            '">
+      $account_logged->getCustomField('name') .
+      '">
 <input type="hidden" name="item_number" value="1">
 <input type="hidden" name="currency_code" value="BRL">
 <input type="hidden" name="no_note" value="0">
@@ -576,6 +570,6 @@ Exemplo: Na compra de R$ 50,00 em Premium Points, você leva 58 Premium Points a
    <a href="index.php?subtopic=donate"><img border="0" src="layouts/tibiacom/images/buttons/sbutton_back.gif"></a> </TD>
    <td><input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online."></TR>
    </TABLE></form>';
-    }
+  }
 }
 ?>

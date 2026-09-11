@@ -1,15 +1,15 @@
 function onUse(cid, item, frompos, item2, topos)
-    if item.uid == 9058 then
-        queststatus = getPlayerStorageValue(cid, 90064)
-        if queststatus == -1 then
-            doPlayerSendTextMessage(cid, 22, "Você Ganhou Uma Master Legs!.")
-            doPlayerAddItem(cid, 5918, 1)
-            setPlayerStorageValue(cid, 90064, 1)
-        else
-            doPlayerSendTextMessage(cid, 22, "Você ja fez essa quest!")
-        end
+  if item.uid == 9058 then
+    queststatus = getPlayerStorageValue(cid, 90064)
+    if queststatus == -1 then
+      doPlayerSendTextMessage(cid, 22, "Você Ganhou Uma Master Legs!.")
+      doPlayerAddItem(cid, 5918, 1)
+      setPlayerStorageValue(cid, 90064, 1)
     else
-        return 0
+      doPlayerSendTextMessage(cid, 22, "Você ja fez essa quest!")
     end
-    return 1
+  else
+    return 0
+  end
+  return 1
 end

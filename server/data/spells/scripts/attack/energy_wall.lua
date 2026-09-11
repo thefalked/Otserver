@@ -8,5 +8,5 @@ local area = createCombatArea(AREA_WALLFIELD, AREADIAGONAL_WALLFIELD)
 setCombatArea(combat, area)
 
 function onCastSpell(cid, var)
-    return doCombat(cid, combat, var)
+  return doCombat(cid, combat, var)
 end

@@ -6,5 +6,5 @@ setConditionParam(condition, CONDITION_PARAM_TICKS, 66000)
 setConditionFormula(condition, 1.7, -36, 1.7, -36)
 setCombatCondition(combat, condition)
 function onCastSpell(cid, var)
-    return doCombat(cid, combat, var)
+  return doCombat(cid, combat, var)
 end

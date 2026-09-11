@@ -5,10 +5,10 @@ setCombatArea(combat, area)
 local condition = createConditionObject(CONDITION_OUTFIT)
 setConditionParam(condition, CONDITION_PARAM_TICKS, 20000)
 for i = 230, 247 do
-    addOutfitCondition(condition, { lookTypeEx = i })
+  addOutfitCondition(condition, { lookTypeEx = i })
 end
 
 setCombatCondition(combat, condition)
 function onCastSpell(cid, var)
-    return doCombat(cid, combat, var)
+  return doCombat(cid, combat, var)
 end

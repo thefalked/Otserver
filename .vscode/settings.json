@@ -1,28 +1,28 @@
 {
-	"[lua]": {
-		"editor.defaultFormatter": "JohnnyMorganz.stylua",
-		"editor.formatOnSave": true,
-		"editor.insertSpaces": true,
-		"editor.tabSize": 4
-	},
-	"[xml]": {
-		"editor.defaultFormatter": "redhat.vscode-xml",
-		"editor.formatOnSave": true,
-		"editor.insertSpaces": true,
-		"editor.tabSize": 4
-	},
-	"[php]": {
-		"editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
-		"editor.formatOnSave": true,
-		"editor.insertSpaces": true,
-		"editor.tabSize": 4
-	},
-	"files.associations": {
-		"*.lua.template": "lua"
-	},
-	"Lua.runtime.version": "Lua 5.1",
-	"Lua.diagnostics.disable": ["undefined-global", "lowercase-global"],
-	"xml.format.splitAttributes": false,
-	"xml.format.tabSize": 4,
-	"editor.detectIndentation": false
+  "[lua]": {
+    "editor.defaultFormatter": "JohnnyMorganz.stylua",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  },
+  "files.associations": {
+    "*.lua.template": "lua"
+  },
+  "Lua.runtime.version": "Lua 5.1",
+  "Lua.diagnostics.disable": ["undefined-global", "lowercase-global"],
+  "xml.format.splitAttributes": false,
+  "xml.format.tabSize": 2,
+  "editor.detectIndentation": false
 }

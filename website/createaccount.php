@@ -1,6 +1,6 @@
 <?php //CREATE ACCOUNT FORM PAGE
 if ($action == '') {
-    $main_content .= '<script type="text/javascript">
+  $main_content .= '<script type="text/javascript">
 
 var accountHttp;
 
@@ -111,35 +111,35 @@ function EmailStateChanged()
 	}
 	}
 	</script>';
-    $main_content .=
-        'Para jogar em ' .
-        $config['server']['serverName'] .
-        ' você precisa de uma conta. 
+  $main_content .=
+    'Para jogar em ' .
+    $config['server']['serverName'] .
+    ' você precisa de uma conta. 
 						Tudo que você tem que fazer para criar sua nova conta é digitar o seu endereço de e-mail, senha para nova conta, código de verificação de imagem e concordar com os termos apresentados abaixo.
 						Se você tiver feito isso, o nome da conta, senha e endereço de e-mail serão mostrados na página seguinte e sua conta e sua senha serão enviadas para seu endereço
 						 de e-mail junto com instruções adicionais.<BR><BR>
 						<FORM ACTION="?subtopic=createaccount&action=saveaccount" onsubmit="return validate_form(this)" METHOD=post>' .
-        csrf_field() .
-        '
+    csrf_field() .
+    '
 						<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
 						<TR><TD BGCOLOR="' .
-        $config['site']['vdarkborder'] .
-        '" CLASS=white><B>Criar uma conta ' .
-        $config['server']['serverName'] .
-        '</B></TD></TR>
+    $config['site']['vdarkborder'] .
+    '" CLASS=white><B>Criar uma conta ' .
+    $config['server']['serverName'] .
+    '</B></TD></TR>
 						<TR><TD BGCOLOR="' .
-        $config['site']['darkborder'] .
-        '"><TABLE BORDER=0 CELLSPACING=8 CELLPADDING=0>
+    $config['site']['darkborder'] .
+    '"><TABLE BORDER=0 CELLSPACING=8 CELLPADDING=0>
 						  <TR><TD>
 						    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=0>';
-    $main_content .=
-        '<TR><TD width="150" valign="top"><B>Nome da conta: </B></TD><TD colspan="2"><INPUT id="account_name" NAME="reg_name" onkeyup="checkAccount();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Digite seu novo nome de conta)</font></TD></TR>
+  $main_content .=
+    '<TR><TD width="150" valign="top"><B>Nome da conta: </B></TD><TD colspan="2"><INPUT id="account_name" NAME="reg_name" onkeyup="checkAccount();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Digite seu novo nome de conta)</font></TD></TR>
 					  <TR><TD width="150"><b>Status do nome:</b></TD><TD colspan="2"><b><div id="acc_name_check">Por favor, insira o nome da conta.</div></b></TD></TR>
 					<TR><TD width="150" valign="top"><B>Endereço de e-mail: </B></TD><TD colspan="2"><INPUT id="email" NAME="reg_email" onkeyup="checkEmail();" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Seu e-mail é necessário para a recuperação de uma conta ' .
-        $config['server']['serverName'] .
-        ')</font></TD></TR>
+    $config['server']['serverName'] .
+    ')</font></TD></TR>
 					  <TR><TD width="150"><b>Status do e-mail:</b></TD><TD colspan="2"><b><div id="email_check">Digite seu e-mail.</div></b></TD></TR>';
-    $main_content .= '<TR><TD width="150"><b>Selecione o país:</b></TD><TD colspan="2"><b><select name="country">
+  $main_content .= '<TR><TD width="150"><b>Selecione o país:</b></TD><TD colspan="2"><b><select name="country">
                     <option value="">Por favor escolha</option><option value="af"> Afghanistan </option><option value="al"> Albania </option><option value="dz"> Algeria </option><option value="as"> American Samoa </option><option value="ad"> Andorra </option><option value="ao"> Angola </option><option value="ai"> Anguilla </option><option value="aq"> Antarctica </option><option value="ag"> Antigua and Barbuda </option><option value="ar"> Argentina </option>
 
                     <option value="am"> Armenia </option><option value="aw"> Aruba </option><option value="au"> Australia </option><option value="at"> Austria </option><option value="az"> Azerbaijan </option><option value="bs"> Bahamas </option><option value="bh"> Bahrain </option><option value="bd"> Bangladesh </option><option value="bb"> Barbados </option><option value="by"> Belarus </option><option value="be"> Belgium </option><option value="bz"> Belize </option><option value="bj"> Benin </option><option value="bm"> Bermuda </option><option value="bt"> Bhutan </option><option value="bo"> Bolivia </option><option value="ba"> Bosnia and Herzegowina </option><option value="bw"> Botswana </option><option value="bv"> Bouvet Island </option><option value="br"> Brasil </option><option value="io"> British Indian Ocean Territory </option><option value="bn"> Brunei Darussalam </option><option value="bg"> Bulgaria </option><option value="bf"> Burkina Faso </option><option value="bi"> Burundi </option>                                     <option value="kh"> Cambodia </option><option value="cm"> Cameroon </option><option value="ca"> Canada </option><option value="cv"> Cape Verde </option><option value="ky"> Cayman Islands </option><option value="cf"> Central African Republic </option><option value="td"> Chad </option><option value="cl"> Chile </option><option value="cn"> China </option><option value="cx"> Christmas Island </option><option value="cc"> Cocos Islands </option><option value="co"> Colombia </option><option value="km"> Comoros </option><option value="cd"> Congo </option><option value="cg"> Congo </option><option value="ck"> Cook Islands </option><option value="cr"> Costa Rica </option><option value="ci"> Cote DIvoire </option><option value="hr"> Croatia </option><option value="cu"> Cuba </option><option value="cy"> Cyprus </option><option value="cz"> Czech Republic </option><option value="dk"> Denmark </option><option value="dj"> Djibouti </option><option value="dm"> Dominica </option>
@@ -162,17 +162,17 @@ function EmailStateChanged()
                     <option value="wf"> Wallis and Futuna Islands </option><option value="eh"> Western Sahara </option><option value="ye"> Yemen </option><option value="yu"> Yugoslavia </option><option value="zm"> Zambia </option><option value="zw"> Zimbabwe </option>
                   </select>';
 
-    if (!$config['site']['create_account_verify_mail']) {
-        $main_content .=
-            '<script type="text/javascript">var verifpass=1;</script>
-						<TR><TD width="150" valign="top"><B>Senha: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Digite sua senha para a nova conta no ' .
-            $config['server']['serverName'] .
-            ')</font></TD></TR>
-					  <TR><TD width="150" valign="top"><B>Repita a senha: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Repita sua senha)</font></TD></TR>';
-    } else {
-    }
+  if (!$config['site']['create_account_verify_mail']) {
     $main_content .=
-        '</TABLE>
+      '<script type="text/javascript">var verifpass=1;</script>
+						<TR><TD width="150" valign="top"><B>Senha: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor" NAME="reg_password" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Digite sua senha para a nova conta no ' .
+      $config['server']['serverName'] .
+      ')</font></TD></TR>
+					  <TR><TD width="150" valign="top"><B>Repita a senha: </B></TD><TD colspan="2"><INPUT TYPE="password" id="passor2" NAME="reg_password2" VALUE="" SIZE=30 MAXLENGTH=50><BR><font size="1" face="verdana,arial,helvetica">(Repita sua senha)</font></TD></TR>';
+  } else {
+  }
+  $main_content .=
+    '</TABLE>
 
 					    </TD></TR></TABLE>
 					  </TD></TR>
@@ -180,16 +180,16 @@ function EmailStateChanged()
 					    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=0>
 					    <TR><TD>
 					      <INPUT TYPE="checkbox" NAME="rules" id="rules" value="true" /><label for="rules"><u> Eu concordo com o ' .
-        $config['server']['serverName'] .
-        ' Regras.</u></lable><BR>
+    $config['server']['serverName'] .
+    ' Regras.</u></lable><BR>
 					    </TD></TR>
 					    <TR><TD>
 					      Se você totalmente de acordo com estes termos, clique no botao "Concordo", a fim de criar uma conta ' .
-        $config['server']['serverName'] .
-        '.<BR>
+    $config['server']['serverName'] .
+    '.<BR>
 					      Se você nao concorda com esses termos, ou nao deseja criar uma conta ' .
-        $config['server']['serverName'] .
-        ' por favor clique no botao "Cancelar".
+    $config['server']['serverName'] .
+    ' por favor clique no botao "Cancelar".
 					    </TD></TR></TABLE>
 					  </TD></TR>
 					</TABLE></TD></TR>
@@ -198,18 +198,18 @@ function EmailStateChanged()
 					<TABLE BORDER=0 WIDTH=100%>
 					  <TR><TD ALIGN=center>
 					    <IMG SRC="' .
-        $layout_name .
-        '/images/general/blank.gif" WIDTH=120 HEIGHT=1 BORDER=0><BR>
+    $layout_name .
+    '/images/general/blank.gif" WIDTH=120 HEIGHT=1 BORDER=0><BR>
 					  </TD><TD ALIGN=center VALIGN=top>
 					    <INPUT TYPE=image NAME="I Agree" SRC="' .
-        $layout_name .
-        '/images/buttons/sbutton_iagree.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+    $layout_name .
+    '/images/buttons/sbutton_iagree.gif" BORDER=0 WIDTH=120 HEIGHT=18>
 					    </FORM>
 					  </TD><TD ALIGN=center>
 					    <FORM  ACTION="?subtopic=latestnews" METHOD=post>
 					    <INPUT TYPE=image NAME="Cancel" SRC="' .
-        $layout_name .
-        '/images/buttons/sbutton_cancel.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+    $layout_name .
+    '/images/buttons/sbutton_cancel.gif" BORDER=0 WIDTH=120 HEIGHT=18>
 					    </FORM>
 					  </TD><TD ALIGN=center>
 					    <IMG SRC="/images/general/blank.gif" WIDTH=120 HEIGHT=1 BORDER=0><BR>
@@ -217,107 +217,107 @@ function EmailStateChanged()
 					</TABLE>
 					</TD>
 					<TD><IMG SRC="' .
-        $layout_name .
-        '/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
+    $layout_name .
+    '/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD>
 					</TR>
 					</TABLE>';
 }
 //CREATE ACCOUNT PAGE (save account in database)
 if ($action == 'saveaccount') {
-    $reg_form_errors = [];
-    if (!csrf_ok()) {
-        $reg_form_errors[] = 'Token de segurança inválido. Tente novamente.';
-    } elseif (!rate_limit('create_account', 5, 300)) {
-        $reg_form_errors[] = 'Too many account creation attempts. Wait a few minutes.';
+  $reg_form_errors = [];
+  if (!csrf_ok()) {
+    $reg_form_errors[] = 'Token de segurança inválido. Tente novamente.';
+  } elseif (!rate_limit('create_account', 5, 300)) {
+    $reg_form_errors[] = 'Too many account creation attempts. Wait a few minutes.';
+  }
+  $reg_country = trim($_POST['country'] ?? '');
+  $reg_name = strtoupper(trim($_POST['reg_name'] ?? ''));
+  $reg_email = trim($_POST['reg_email'] ?? '');
+  $reg_password = trim($_POST['reg_password'] ?? '');
+  $reg_code = trim($_POST['reg_code'] ?? '');
+  //FIRST check
+  //check e-mail
+  if (empty($reg_form_errors)) {
+    if (empty($reg_name)) {
+      $reg_form_errors[] = 'Por favor, insira o nome da conta.';
+    } elseif (!check_account_name($reg_name)) {
+      $reg_form_errors[] = 'Formato do nome da conta invalido. Utilize apenas de A a Z e numeros de 0-9.';
     }
-    $reg_country = trim($_POST['country'] ?? '');
-    $reg_name = strtoupper(trim($_POST['reg_name'] ?? ''));
-    $reg_email = trim($_POST['reg_email'] ?? '');
-    $reg_password = trim($_POST['reg_password'] ?? '');
-    $reg_code = trim($_POST['reg_code'] ?? '');
-    //FIRST check
-    //check e-mail
-    if (empty($reg_form_errors)) {
-        if (empty($reg_name)) {
-            $reg_form_errors[] = 'Por favor, insira o nome da conta.';
-        } elseif (!check_account_name($reg_name)) {
-            $reg_form_errors[] = 'Formato do nome da conta invalido. Utilize apenas de A a Z e numeros de 0-9.';
-        }
-        if (empty($reg_email)) {
-            $reg_form_errors[] = 'Por favor, insira o seu endereco de email.';
-        } else {
-            if (!check_mail($reg_email)) {
-                $reg_form_errors[] = 'Endereço de e-mail nao esta correto.';
-            }
-        }
+    if (empty($reg_email)) {
+      $reg_form_errors[] = 'Por favor, insira o seu endereco de email.';
+    } else {
+      if (!check_mail($reg_email)) {
+        $reg_form_errors[] = 'Endereço de e-mail nao esta correto.';
+      }
     }
-    if ($config['site']['verify_code']) {
+  }
+  if ($config['site']['verify_code']) {
+  }
+  //check password
+  if (empty($reg_form_errors)) {
+    if (empty($reg_password) && !$config['site']['create_account_verify_mail']) {
+      $reg_form_errors[] = 'Por favor digite a senha para a nova conta.';
+    } elseif (!$config['site']['create_account_verify_mail']) {
+      if (!check_password($reg_password)) {
+        $reg_form_errors[] = 'A senha contem caracteres ilegais (az, AZ e 0-9 so!) Ou comprimento.';
+      }
     }
-    //check password
-    if (empty($reg_form_errors)) {
-        if (empty($reg_password) && !$config['site']['create_account_verify_mail']) {
-            $reg_form_errors[] = 'Por favor digite a senha para a nova conta.';
-        } elseif (!$config['site']['create_account_verify_mail']) {
-            if (!check_password($reg_password)) {
-                $reg_form_errors[] = 'A senha contem caracteres ilegais (az, AZ e 0-9 so!) Ou comprimento.';
-            }
-        }
+  }
+  //SECOND check
+  //check e-mail address in database
+  if (empty($reg_form_errors)) {
+    if ($config['site']['one_email']) {
+      $test_email_account = $ots->createObject('Account');
+      //load account with this e-mail
+      $test_email_account->findByEmail($reg_email);
+      if ($test_email_account->isLoaded()) {
+        $reg_form_errors[] = 'Conta com este endereço de e-mail já existe no banco de dados.';
+      }
     }
-    //SECOND check
-    //check e-mail address in database
-    if (empty($reg_form_errors)) {
-        if ($config['site']['one_email']) {
-            $test_email_account = $ots->createObject('Account');
-            //load account with this e-mail
-            $test_email_account->findByEmail($reg_email);
-            if ($test_email_account->isLoaded()) {
-                $reg_form_errors[] = 'Conta com este endereço de e-mail já existe no banco de dados.';
-            }
-        }
-        $account_db = new OTS_Account();
-        $account_db->find($reg_name);
-        if ($account_db->isLoaded()) {
-            $reg_form_errors[] = 'Conta com este nome já existe.';
-        }
+    $account_db = new OTS_Account();
+    $account_db->find($reg_name);
+    if ($account_db->isLoaded()) {
+      $reg_form_errors[] = 'Conta com este nome já existe.';
     }
-    // ----------creates account-------------(save in database)
-    if (empty($reg_form_errors)) {
-        //create object 'account' and generate new acc. number
-        if ($config['site']['create_account_verify_mail']) {
-            $reg_password = '';
-            for ($i = 1; $i <= 6; $i++) {
-                $reg_password .= mt_rand(0, 9);
-            }
-        }
-        $reg_account = $ots->createObject('Account');
-        $number = $reg_account->create(0, 9999999, $reg_name);
-        // saves account information in database
-        $reg_account->setPassword(password_ency($reg_password));
-        $reg_account->setEMail($reg_email);
-        $reg_account->setCustomField('flag', $reg_country);
-        $reg_account->unblock();
-        $reg_account->save();
-        if ($config['site']['newaccount_premdays']) {
-            $reg_account->setCustomField('premdays', $config['site']['newaccount_premdays']);
-            $reg_account->setCustomField('lastday', time());
-        }
-        //show information about registration
-        if ($config['site']['send_emails'] && $config['site']['create_account_verify_mail']) {
-            $mailBody =
-                '<html>
+  }
+  // ----------creates account-------------(save in database)
+  if (empty($reg_form_errors)) {
+    //create object 'account' and generate new acc. number
+    if ($config['site']['create_account_verify_mail']) {
+      $reg_password = '';
+      for ($i = 1; $i <= 6; $i++) {
+        $reg_password .= mt_rand(0, 9);
+      }
+    }
+    $reg_account = $ots->createObject('Account');
+    $number = $reg_account->create(0, 9999999, $reg_name);
+    // saves account information in database
+    $reg_account->setPassword(password_ency($reg_password));
+    $reg_account->setEMail($reg_email);
+    $reg_account->setCustomField('flag', $reg_country);
+    $reg_account->unblock();
+    $reg_account->save();
+    if ($config['site']['newaccount_premdays']) {
+      $reg_account->setCustomField('premdays', $config['site']['newaccount_premdays']);
+      $reg_account->setCustomField('lastday', time());
+    }
+    //show information about registration
+    if ($config['site']['send_emails'] && $config['site']['create_account_verify_mail']) {
+      $mailBody =
+        '<html>
 			<body>
 			<h3>O nome da conta e senha!</h3>
 			<p>Voce ou alguem registado no servidor <a href="' .
-                $config['server']['url'] .
-                '"><b>' .
-                $config['server']['serverName'] .
-                '</b></a> com este e-mail.</p>
+        $config['server']['url'] .
+        '"><b>' .
+        $config['server']['serverName'] .
+        '</b></a> com este e-mail.</p>
 			<p>Nome da conta: <b>' .
-                $reg_name .
-                '</b></p>
+        $reg_name .
+        '</b></p>
 			<p>senha: <b>' .
-                trim($reg_password) .
-                '</b></p>
+        trim($reg_password) .
+        '</b></p>
 			<br />
 			<p>Apos o login, você pode:</p>
 			<li>Criar novos personagens
@@ -325,90 +325,89 @@ if ($action == 'saveaccount') {
 			<li>Mude o seu atual e-mail
 			</body>
 			</html>';
-            require 'phpmailer/class.phpmailer.php';
-            $mail = new PHPMailer();
-            if ($config['site']['smtp_enabled'] == 'yes') {
-                $mail->IsSMTP();
-                $mail->Host = $config['site']['smtp_host'];
-                $mail->Port = (int) $config['site']['smtp_port'];
-                $mail->SMTPAuth = $config['site']['smtp_auth'] ? true : false;
-                $mail->Username = $config['site']['smtp_user'];
-                $mail->Password = $config['site']['smtp_pass'];
-            } else {
-                $mail->IsMail();
-            }
-            $mail->IsHTML(true);
-            $mail->From = $config['site']['mail_address'];
-            $mail->AddAddress($reg_email);
-            $mail->Subject = $config['server']['serverName'] . ' - Registration';
-            $mail->Body = $mailBody;
-            if ($mail->Send()) {
-                $main_content .= 'Sua conta foi criada. Verifique se o seu e-mail. Nos vemos no OT!<BR><BR>';
-                $main_content .=
-                    '<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
+      require 'phpmailer/class.phpmailer.php';
+      $mail = new PHPMailer();
+      if ($config['site']['smtp_enabled'] == 'yes') {
+        $mail->IsSMTP();
+        $mail->Host = $config['site']['smtp_host'];
+        $mail->Port = (int) $config['site']['smtp_port'];
+        $mail->SMTPAuth = $config['site']['smtp_auth'] ? true : false;
+        $mail->Username = $config['site']['smtp_user'];
+        $mail->Password = $config['site']['smtp_pass'];
+      } else {
+        $mail->IsMail();
+      }
+      $mail->IsHTML(true);
+      $mail->From = $config['site']['mail_address'];
+      $mail->AddAddress($reg_email);
+      $mail->Subject = $config['server']['serverName'] . ' - Registration';
+      $mail->Body = $mailBody;
+      if ($mail->Send()) {
+        $main_content .= 'Sua conta foi criada. Verifique se o seu e-mail. Nos vemos no OT!<BR><BR>';
+        $main_content .=
+          '<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
 				<TR><TD BGCOLOR="' .
-                    $config['site']['vdarkborder'] .
-                    '" CLASS=white><B>Conta criada</B></TD></TR>
+          $config['site']['vdarkborder'] .
+          '" CLASS=white><B>Conta criada</B></TD></TR>
 				<TR><TD BGCOLOR="' .
-                    $config['site']['darkborder'] .
-                    '">
+          $config['site']['darkborder'] .
+          '">
 				  <TABLE BORDER=0 CELLPADDING=1><TR><TD>
 				    <BR>Your account name is <b>' .
-                    $reg_name .
-                    '</b>.
+          $reg_name .
+          '</b>.
 					<BR><b><i>Voce recebera e-mail (<b>' .
-                    $reg_email .
-                    '</b>) com a sua senha.</b></i><br>';
-                $main_content .=
-                    'Você vai precisar do nome da conta e sua senha para jogar no ' .
-                    $config['server']['serverName'] .
-                    '.
+          $reg_email .
+          '</b>) com a sua senha.</b></i><br>';
+        $main_content .=
+          'Você vai precisar do nome da conta e sua senha para jogar no ' .
+          $config['server']['serverName'] .
+          '.
 				    Por favor, mantenha o seu nome de usuario e senha em um lugar seguro e
 				    nunca dê o nome da conta ou a senha para ninguém.<BR><BR>';
-                $main_content .=
-                    '<br /><small>Estas informacoes foram enviar em e-mail <b>' .
-                    $reg_email .
-                    '</b>. Por favor, verifique sua caixa de entrada / pasta de spam.';
-            } else {
-                $main_content .=
-                    '<br /><small>Um erro ocorrido ao enviar e-mail! Conta nao criada. Tente novamente.</small>';
-                $reg_account->delete();
-            }
-        } else {
-            $main_content .=
-                'Sua conta foi criada. Agora você pode acessar e criar seu primeiro personagem. Nos vemos no OT!<BR><BR>';
-            $main_content .=
-                '<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
+        $main_content .=
+          '<br /><small>Estas informacoes foram enviar em e-mail <b>' .
+          $reg_email .
+          '</b>. Por favor, verifique sua caixa de entrada / pasta de spam.';
+      } else {
+        $main_content .= '<br /><small>Um erro ocorrido ao enviar e-mail! Conta nao criada. Tente novamente.</small>';
+        $reg_account->delete();
+      }
+    } else {
+      $main_content .=
+        'Sua conta foi criada. Agora você pode acessar e criar seu primeiro personagem. Nos vemos no OT!<BR><BR>';
+      $main_content .=
+        '<TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4>
 			<TR><TD BGCOLOR="' .
-                $config['site']['vdarkborder'] .
-                '" CLASS=white><B>Conta criada</B></TD></TR>
+        $config['site']['vdarkborder'] .
+        '" CLASS=white><B>Conta criada</B></TD></TR>
 			<TR><TD BGCOLOR="' .
-                $config['site']['darkborder'] .
-                '">
+        $config['site']['darkborder'] .
+        '">
 			  <TABLE BORDER=0 CELLPADDING=1><TR><TD>
 			    <BR>O nome da conta e <b>' .
-                $reg_name .
-                '</b><br>Você vai precisar do nome da conta e sua senha para jogar no ' .
-                $config['server']['serverName'] .
-                '.
+        $reg_name .
+        '</b><br>Você vai precisar do nome da conta e sua senha para jogar no ' .
+        $config['server']['serverName'] .
+        '.
 			    Por favor, mantenha o seu nome de usuario e senha em um lugar seguro e
 			    nunca dê o nome da conta ou a senha para ninguém.<BR><BR>';
-            if ($config['site']['send_emails'] && $config['site']['send_register_email']) {
-                $mailBody =
-                    '<html>
+      if ($config['site']['send_emails'] && $config['site']['send_register_email']) {
+        $mailBody =
+          '<html>
 				<body>
 				<h3>O nome da conta e senha!</h3>
 				<p>Voce ou alguem registado no servidor <a href="' .
-                    $config['server']['url'] .
-                    '"><b>' .
-                    $config['server']['serverName'] .
-                    '</b></a> com este e-mail.</p>
+          $config['server']['url'] .
+          '"><b>' .
+          $config['server']['serverName'] .
+          '</b></a> com este e-mail.</p>
 				<p>Nome da conta: <b>' .
-                    $reg_name .
-                    '</b></p>
+          $reg_name .
+          '</b></p>
 				<p>Senha: <b>' .
-                    trim($reg_password) .
-                    '</b></p>
+          trim($reg_password) .
+          '</b></p>
 				<br />
 				<p>Apos o login, você pode:</p>
 				<li>Criar novos personagens
@@ -416,69 +415,68 @@ if ($action == 'saveaccount') {
 				<li>Mudar o seu atual e-mail
 				</body>
 				</html>';
-                require 'phpmailer/class.phpmailer.php';
-                $mail = new PHPMailer();
-                if ($config['site']['smtp_enabled'] == 'yes') {
-                    $mail->IsSMTP();
-                    $mail->Host = $config['site']['smtp_host'];
-                    $mail->Port = (int) $config['site']['smtp_port'];
-                    $mail->SMTPAuth = $config['site']['smtp_auth'] ? true : false;
-                    $mail->Username = $config['site']['smtp_user'];
-                    $mail->Password = $config['site']['smtp_pass'];
-                } else {
-                    $mail->IsMail();
-                }
-                $mail->IsHTML(true);
-                $mail->From = $config['site']['mail_address'];
-                $mail->AddAddress($reg_email);
-                $mail->Subject = $config['server']['serverName'] . ' - Registration';
-                $mail->Body = $mailBody;
-                if ($mail->Send()) {
-                    $main_content .= '<br /><small>Estas informacoes foram enviar em e-mail <b>' . $reg_email . '</b>.';
-                } else {
-                    $main_content .=
-                        '<br /><small>Um erro ocorrido ao enviar e-mail (<b>' . $reg_email . '</b>)!</small>';
-                }
-            }
+        require 'phpmailer/class.phpmailer.php';
+        $mail = new PHPMailer();
+        if ($config['site']['smtp_enabled'] == 'yes') {
+          $mail->IsSMTP();
+          $mail->Host = $config['site']['smtp_host'];
+          $mail->Port = (int) $config['site']['smtp_port'];
+          $mail->SMTPAuth = $config['site']['smtp_auth'] ? true : false;
+          $mail->Username = $config['site']['smtp_user'];
+          $mail->Password = $config['site']['smtp_pass'];
+        } else {
+          $mail->IsMail();
         }
-        $main_content .= '</TD></TR></TABLE></TD></TR></TABLE><BR><BR>';
-    } else {
-        //SHOW ERRORs if data from form is wrong
-        $main_content .=
-            '<div class="SmallBox" >  <div class="MessageContainer" >    <div class="BoxFrameHorizontal" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-horizontal.gif);" /></div>    <div class="BoxFrameEdgeLeftTop" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-edge.gif);" /></div>    <div class="BoxFrameEdgeRightTop" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-edge.gif);" /></div>    <div class="ErrorMessage" >      <div class="BoxFrameVerticalLeft" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-vertical.gif);" /></div>      <div class="BoxFrameVerticalRight" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-vertical.gif);" /></div>      <div class="AttentionSign" style="background-image:url(' .
-            $layout_name .
-            '/images/content/attentionsign.gif);" /></div><b>Os seguintes erros ocorreram:</b><br/>';
-        foreach ($reg_form_errors as $show_msg) {
-            $main_content .= '<li>' . $show_msg;
+        $mail->IsHTML(true);
+        $mail->From = $config['site']['mail_address'];
+        $mail->AddAddress($reg_email);
+        $mail->Subject = $config['server']['serverName'] . ' - Registration';
+        $mail->Body = $mailBody;
+        if ($mail->Send()) {
+          $main_content .= '<br /><small>Estas informacoes foram enviar em e-mail <b>' . $reg_email . '</b>.';
+        } else {
+          $main_content .= '<br /><small>Um erro ocorrido ao enviar e-mail (<b>' . $reg_email . '</b>)!</small>';
         }
-        $main_content .=
-            '</div>    <div class="BoxFrameHorizontal" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-horizontal.gif);" /></div>    <div class="BoxFrameEdgeRightBottom" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-edge.gif);" /></div>    <div class="BoxFrameEdgeLeftBottom" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-edge.gif);" /></div>  </div></div><br/>
+      }
+    }
+    $main_content .= '</TD></TR></TABLE></TD></TR></TABLE><BR><BR>';
+  } else {
+    //SHOW ERRORs if data from form is wrong
+    $main_content .=
+      '<div class="SmallBox" >  <div class="MessageContainer" >    <div class="BoxFrameHorizontal" style="background-image:url(' .
+      $layout_name .
+      '/images/content/box-frame-horizontal.gif);" /></div>    <div class="BoxFrameEdgeLeftTop" style="background-image:url(' .
+      $layout_name .
+      '/images/content/box-frame-edge.gif);" /></div>    <div class="BoxFrameEdgeRightTop" style="background-image:url(' .
+      $layout_name .
+      '/images/content/box-frame-edge.gif);" /></div>    <div class="ErrorMessage" >      <div class="BoxFrameVerticalLeft" style="background-image:url(' .
+      $layout_name .
+      '/images/content/box-frame-vertical.gif);" /></div>      <div class="BoxFrameVerticalRight" style="background-image:url(' .
+      $layout_name .
+      '/images/content/box-frame-vertical.gif);" /></div>      <div class="AttentionSign" style="background-image:url(' .
+      $layout_name .
+      '/images/content/attentionsign.gif);" /></div><b>Os seguintes erros ocorreram:</b><br/>';
+    foreach ($reg_form_errors as $show_msg) {
+      $main_content .= '<li>' . $show_msg;
+    }
+    $main_content .=
+      '</div>    <div class="BoxFrameHorizontal" style="background-image:url(' .
+      $layout_name .
+      '/images/content/box-frame-horizontal.gif);" /></div>    <div class="BoxFrameEdgeRightBottom" style="background-image:url(' .
+      $layout_name .
+      '/images/content/box-frame-edge.gif);" /></div>    <div class="BoxFrameEdgeLeftBottom" style="background-image:url(' .
+      $layout_name .
+      '/images/content/box-frame-edge.gif);" /></div>  </div></div><br/>
 		<BR>
 		<CENTER>
 		<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION=?subtopic=createaccount METHOD=post><TR><TD>
 		<INPUT TYPE=hidden NAME=email VALUE="">
 
 		<INPUT TYPE=image NAME="Back" ALT="Back" SRC="' .
-            $layout_name .
-            '/images/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+      $layout_name .
+      '/images/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18>
 		</TD></TR></FORM></TABLE>
 		</CENTER>';
-    }
+  }
 }
 ?>

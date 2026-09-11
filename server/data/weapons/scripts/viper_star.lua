@@ -14,18 +14,18 @@ addDamageCondition(condition, 6, 2000, -1)
 setCombatCondition(xCombat, condition)
 
 function onUseWeapon(cid, var)
-    local ret = doCombat(cid, combat, var)
-    if ret == false then
-        return false
-    end
+  local ret = doCombat(cid, combat, var)
+  if ret == false then
+    return false
+  end
 
-    local target = variantToNumber(var)
-    if target ~= 0 then
-        -- chance to poison the enemy
-        local chance = math.random(0, 100)
-        if chance > 90 then
-            ret = doCombat(cid, xCombat, var)
-        end
+  local target = variantToNumber(var)
+  if target ~= 0 then
+    -- chance to poison the enemy
+    local chance = math.random(0, 100)
+    if chance > 90 then
+      ret = doCombat(cid, xCombat, var)
     end
-    return ret
+  end
+  return ret
 end

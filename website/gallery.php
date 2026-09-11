@@ -1,7 +1,7 @@
 <?php $main_content .=
-    '<center><b><h2>' .
-    $config['server']['serverName'] .
-    ' Gallery</h2></b><br />
+  '<center><b><h2>' .
+  $config['server']['serverName'] .
+  ' Gallery</h2></b><br />
 <embed
 src="gallery/imagerotator.swf"
 width="640"

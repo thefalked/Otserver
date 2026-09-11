@@ -4,16 +4,16 @@ NpcSystem.parseParameters(npcHandler)
 
 -- OTServ event handling functions start
 function onCreatureAppear(cid)
-    npcHandler:onCreatureAppear(cid)
+  npcHandler:onCreatureAppear(cid)
 end
 function onCreatureDisappear(cid)
-    npcHandler:onCreatureDisappear(cid)
+  npcHandler:onCreatureDisappear(cid)
 end
 function onCreatureSay(cid, type, msg)
-    npcHandler:onCreatureSay(cid, type, msg)
+  npcHandler:onCreatureSay(cid, type, msg)
 end
 function onThink()
-    npcHandler:onThink()
+  npcHandler:onThink()
 end
 -- OTServ event handling functions end
 
