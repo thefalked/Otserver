@@ -1,5 +1,4 @@
-<?PHP
-$text = isset($_GET['text']) ? (string) $_GET['text'] : '';
+<?php $text = isset($_GET['text']) ? (string) $_GET['text'] : '';
 if (!mb_check_encoding($text, 'UTF-8')) {
 	$text = mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1');
 }
@@ -7,23 +6,23 @@ $text = trim($text);
 // Letters/digits/spaces — Unicode letters allowed (pt-BR accents)
 if ($text === '' || mb_strlen($text, 'UTF-8') > 80 || !preg_match('/^[\p{L}\p{N}][\p{L}\p{N} _\-?]{0,79}$/u', $text)) {
 	http_response_code(400);
-	exit;
+	exit();
 }
 $dir = realpath(__DIR__ . '/images/head');
 if ($dir === false || !is_dir($dir)) {
 	http_response_code(500);
-	exit;
+	exit();
 }
 // Hash cache name avoids broken filenames when filesystem/encoding mangles accents
 $cacheName = 'h_' . md5($text) . '.png';
 $path = $dir . DIRECTORY_SEPARATOR . $cacheName;
 $legacyPath = $dir . DIRECTORY_SEPARATOR . $text . '.png';
 
-$fontCandidates = array(
+$fontCandidates = [
 	$dir . '/DejaVuSerif-Bold.ttf',
 	$dir . '/martel.ttf',
-	'/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf',
-);
+	'/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf'
+];
 $font = null;
 foreach ($fontCandidates as $candidate) {
 	if (is_file($candidate)) {
@@ -34,7 +33,7 @@ foreach ($fontCandidates as $candidate) {
 $base = $dir . '/headline.png';
 if ($font === null || !is_file($base)) {
 	http_response_code(500);
-	exit;
+	exit();
 }
 
 header('Content-Type: image/png');
@@ -45,14 +44,14 @@ if (is_file($path)) {
 	if ($pic !== false) {
 		imagepng($pic);
 		imagedestroy($pic);
-		exit;
+		exit();
 	}
 }
 
 $image = imagecreatefrompng($base);
 if ($image === false) {
 	http_response_code(500);
-	exit;
+	exit();
 }
 imagealphablending($image, true);
 imagesavealpha($image, true);

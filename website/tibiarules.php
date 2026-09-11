@@ -1,6 +1,8 @@
-<?PHP
-if($subtopic == "tibiarules") {
-$main_content .= '<B>'.h($config['server']['serverName'] ?? 'Server').' Regras</B><BR><TEXTAREA ROWS="25" WRAP="physical" COLS="80" READONLY="true">';
+<?php if ($subtopic == 'tibiarules') {
+	$main_content .=
+		'<B>' .
+		h($config['server']['serverName'] ?? 'Server') .
+		' Regras</B><BR><TEXTAREA ROWS="25" WRAP="physical" COLS="80" READONLY="true">';
 }
 $main_content .= '1. Nomes
 a) Nomes que contem linguagem insultuosa, racista, de direita extrema, sexista ou ofensivo.
@@ -26,7 +28,7 @@ a) morte excessiva de personagens que nao sao marcados com uma "caveira" em mund
 A violacao das Regras de Tibia pode levar ao banimento temporario de personagens e contas. Em casos graves, a remocao ou modificacao de habilidades do personagem, atributos e pertences, bem como a remocao permanente das contas, sem qualquer compensacao pode ser considerada. A sansao e baseada na gravidade da violacao da regra e os registros anteriores do jogador. E determinada pelo gamemaster que aplicou o banimento.
 
 Estas regras podem ser alteradas a qualquer momento. Todas as mudancas serao anunciadas no site oficial.';
-if($subtopic == "tibiarules") {
-$main_content .= '</TEXTAREA>';
+if ($subtopic == 'tibiarules') {
+	$main_content .= '</TEXTAREA>';
 }
 ?>

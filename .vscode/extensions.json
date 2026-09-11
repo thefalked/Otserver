@@ -2,6 +2,7 @@
   "recommendations": [
     "JohnnyMorganz.stylua",
     "sumneko.lua",
-    "redhat.vscode-xml"
+    "redhat.vscode-xml",
+    "bmewburn.vscode-intelephense-client"
   ]
 }

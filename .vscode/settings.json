@@ -7,6 +7,10 @@
     "editor.defaultFormatter": "redhat.vscode-xml",
     "editor.formatOnSave": true
   },
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+    "editor.formatOnSave": true
+  },
   "files.associations": {
     "*.lua.template": "lua"
   },
