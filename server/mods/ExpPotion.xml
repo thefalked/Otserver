@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <mod name="AdvancedExpPotionSystem" enabled="yes" author="MatheusMkalo" forum="XTibia.com">
-	<!-- Configs and Functions -->
-	<config
-		name="PotionExpConfigs"
-	><![CDATA[
+    <!-- Configs and Functions -->
+    <config
+        name="PotionExpConfigs"
+    ><![CDATA[
 
 ------ CONFIGURE SEU SCRIPT ------ TRUE ou FALSE
 configs = {
@@ -36,11 +36,11 @@ return (getPlayerRates(cid)[8]-1)*100
 end
 ]]></config>
 
-	<!-- exppotion.lua -->
-	<action
-		itemid="9109"
-		event="script"
-	><![CDATA[
+    <!-- exppotion.lua -->
+    <action
+        itemid="9109"
+        event="script"
+    ><![CDATA[
 domodlib('PotionExpConfigs')
 if getPlayerStorageValue(cid, 62164) >= 1 then
 return doPlayerSendCancel(cid, "You are already taking effect from this item.")
@@ -85,11 +85,11 @@ creatureEvent(setPlayerStorageValue, configs.time *60*1000, cid, 62164, 0)
 return TRUE
 ]]></action>
 
-	<creaturescript
-		type="login"
-		name="ExpPotion"
-		event="script"
-	><![CDATA[
+    <creaturescript
+        type="login"
+        name="ExpPotion"
+        event="script"
+    ><![CDATA[
 domodlib('PotionExpConfigs')
 local time = configs.time
 if os.time()-getPlayerStorageValue(cid, 62164) < time *60 then

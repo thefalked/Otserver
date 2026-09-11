@@ -1,8 +1,8 @@
 <?php
 $skills = $SQL->query(
-	'SELECT * FROM players WHERE deleted = 0 AND group_id < ' .
-		$config['site']['players_group_id_block'] .
-		' AND account_id != 1 ORDER BY level DESC LIMIT 5'
+    'SELECT * FROM players WHERE deleted = 0 AND group_id < ' .
+        $config['site']['players_group_id_block'] .
+        ' AND account_id != 1 ORDER BY level DESC LIMIT 5'
 ); ?>
 <style type="text/css" media="all">
   .Toplevelbox {
@@ -52,22 +52,22 @@ $skills = $SQL->query(
     <?php
     $a = 1;
     foreach ($skills as $skill) {
-    	echo '<div align="left"><a href="?subtopic=characters&name=' .
-    		$skill['name'] .
-    		'" class="topfont">
+        echo '<div align="left"><a href="?subtopic=characters&name=' .
+            $skill['name'] .
+            '" class="topfont">
         <font color="#CCC">&nbsp;&nbsp;&nbsp;&nbsp;' .
-    		$a .
-    		' - </font>' .
-    		$skill['name'] .
-    		'
+            $a .
+            ' - </font>' .
+            $skill['name'] .
+            '
         <br>
         <small><font color="white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nível: (' .
-    		$skill['level'] .
-    		')</font></small>
+            $skill['level'] .
+            ')</font></small>
         <br>
       </a>
       </div>';
-    	$a++;
+        $a++;
     }
     ?>
     <div class="Bottom" style="background-image:url(http://tremera-global.com/templates/tibia/images/global/general/box-bottom.gif); left:-5px;">

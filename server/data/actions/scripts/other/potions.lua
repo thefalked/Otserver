@@ -23,88 +23,88 @@ local exhaust = createConditionObject(CONDITION_EXHAUST_HEAL)
 setConditionParam(exhaust, CONDITION_PARAM_TICKS, getConfigInfo("timeBetweenExActions"))
 
 function onUse(cid, item, fromPosition, itemEx, toPosition)
-	if itemEx.uid ~= cid or itemEx.itemid ~= 1 then
-		return TRUE
-	end
+    if itemEx.uid ~= cid or itemEx.itemid ~= 1 then
+        return TRUE
+    end
 
-	if getCreatureCondition(cid, CONDITION_EXHAUST_HEAL) == TRUE then
-		doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUAREEXHAUSTED)
-		return TRUE
-	end
+    if getCreatureCondition(cid, CONDITION_EXHAUST_HEAL) == TRUE then
+        doPlayerSendDefaultCancel(cid, RETURNVALUE_YOUAREEXHAUSTED)
+        return TRUE
+    end
 
-	if item.itemid == antidotePot then
-		if doCombat(cid, antidote, numberToVariant(cid)) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, emptyPot)
-	elseif item.itemid == smallHealthPot then
-		if doTargetCombatHealth(0, cid, COMBAT_HEALING, 50, 100, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, emptyPot)
-	elseif item.itemid == healthPot then
-		if doTargetCombatHealth(0, cid, COMBAT_HEALING, 100, 200, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, emptyPot)
-	elseif item.itemid == manaPot then
-		if doTargetCombatMana(0, cid, 70, 130, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, emptyPot)
-	elseif item.itemid == strongHealthPot then
-		if doTargetCombatHealth(0, cid, COMBAT_HEALING, 200, 400, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, strongEmptyPot)
-	elseif item.itemid == strongManaPot then
-		if doTargetCombatMana(0, cid, 110, 190, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, strongEmptyPot)
-	elseif item.itemid == greatSpiritPot then
-		if
-			doTargetCombatHealth(0, cid, COMBAT_HEALING, 200, 400, CONST_ME_MAGIC_BLUE) == LUA_ERROR
-			or doTargetCombatMana(0, cid, 110, 190, CONST_ME_MAGIC_BLUE) == LUA_ERROR
-		then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, greatEmptyPot)
-	elseif item.itemid == greatHealthPot then
-		if doTargetCombatHealth(0, cid, COMBAT_HEALING, 500, 700, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, greatEmptyPot)
-	elseif item.itemid == greatManaPot then
-		if doTargetCombatMana(0, cid, 1300, 1500, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, greatEmptyPot)
-	elseif item.itemid == ultimateHealthPot then
-		if doTargetCombatHealth(0, cid, COMBAT_HEALING, 2300, 2700, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
-			return FALSE
-		end
-		doAddCondition(cid, exhaust)
-		doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
-		doTransformItem(item.uid, greatEmptyPot)
-	end
-	return TRUE
+    if item.itemid == antidotePot then
+        if doCombat(cid, antidote, numberToVariant(cid)) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, emptyPot)
+    elseif item.itemid == smallHealthPot then
+        if doTargetCombatHealth(0, cid, COMBAT_HEALING, 50, 100, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, emptyPot)
+    elseif item.itemid == healthPot then
+        if doTargetCombatHealth(0, cid, COMBAT_HEALING, 100, 200, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, emptyPot)
+    elseif item.itemid == manaPot then
+        if doTargetCombatMana(0, cid, 70, 130, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, emptyPot)
+    elseif item.itemid == strongHealthPot then
+        if doTargetCombatHealth(0, cid, COMBAT_HEALING, 200, 400, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, strongEmptyPot)
+    elseif item.itemid == strongManaPot then
+        if doTargetCombatMana(0, cid, 110, 190, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, strongEmptyPot)
+    elseif item.itemid == greatSpiritPot then
+        if
+            doTargetCombatHealth(0, cid, COMBAT_HEALING, 200, 400, CONST_ME_MAGIC_BLUE) == LUA_ERROR
+            or doTargetCombatMana(0, cid, 110, 190, CONST_ME_MAGIC_BLUE) == LUA_ERROR
+        then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, greatEmptyPot)
+    elseif item.itemid == greatHealthPot then
+        if doTargetCombatHealth(0, cid, COMBAT_HEALING, 500, 700, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, greatEmptyPot)
+    elseif item.itemid == greatManaPot then
+        if doTargetCombatMana(0, cid, 1300, 1500, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, greatEmptyPot)
+    elseif item.itemid == ultimateHealthPot then
+        if doTargetCombatHealth(0, cid, COMBAT_HEALING, 2300, 2700, CONST_ME_MAGIC_BLUE) == LUA_ERROR then
+            return FALSE
+        end
+        doAddCondition(cid, exhaust)
+        doCreatureSay(cid, "Aaaah...", TALKTYPE_ORANGE_1)
+        doTransformItem(item.uid, greatEmptyPot)
+    end
+    return TRUE
 end

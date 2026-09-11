@@ -5,5 +5,5 @@ setCombatParam(combat, COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_ENERGYBALL)
 setCombatParam(combat, COMBAT_PARAM_CREATEITEM, 1495)
 
 function onCastSpell(cid, var)
-	return doCombat(cid, combat, var)
+    return doCombat(cid, combat, var)
 end
