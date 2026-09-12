@@ -1,14 +1,38 @@
 #!/usr/bin/env bash
-# Bootstrap a fresh Ubuntu/Debian VPS for this OTServer stack:
-#   apt update/upgrade, git + Docker, sudo user, SSH root lockout, UFW, nginx certs.
-# Run as root:  sudo bash scripts/setup-vps.sh
+# =============================================================================
+# OTServer VPS bootstrap
+#
+# What this is: one-shot hardening + tooling for a fresh Ubuntu/Debian VPS that
+# will run this repo's Docker stack (MySQL + game + Gesior website + nginx).
+#
+# Why it exists: a default cloud image usually allows root SSH, has no firewall,
+# and has no Docker. This script makes a sudo user, locks root out of SSH, opens
+# only the ports the stack needs, and prepares nginx's self-signed cert.
+#
+# Run as root, from this repo:
+#   sudo bash scripts/setup-vps.sh
+#
+# It will prompt for:
+#   1) sudo username
+#   2) that user's password (twice)
+#   3) website hostname used as the TLS certificate CN/SAN
+#
+# It does NOT start the game stack. After it finishes, edit .env and run
+# `docker compose up --build -d` as the new user.
+#
+# Keep the current SSH session open until you can log in as the new user.
+# Root SSH is turned off at the end of the SSH section.
+# =============================================================================
 set -euo pipefail
 
+# Must be root: we change sshd, UFW, apt, and /etc/sudoers.d.
 if [ "$(id -u)" -ne 0 ]; then
 	echo "Run this script as root (sudo bash scripts/setup-vps.sh)." >&2
 	exit 1
 fi
 
+# apt-get + ufw + get.docker.com are Debian/Ubuntu specific. Other distros
+# (RHEL, Alpine) use different package managers and sshd paths.
 . /etc/os-release
 case "${ID:-}" in
 	ubuntu|debian) ;;
@@ -18,12 +42,18 @@ case "${ID:-}" in
 		;;
 esac
 
+# Resolve repo root from this file's location so certs/.env work no matter
+# what the current working directory is.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
+# apt/dpkg otherwise pop interactive dialogs (tzdata, needrestart) and hang
+# an unattended VPS run. "a" = auto-restart services after upgrades.
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
+# Read from /dev/tty so prompts still work if the script is piped
+# (curl | bash) and stdin is not a terminal.
 prompt() {
 	local value=""
 	printf '%s' "$1" > /dev/tty
@@ -31,6 +61,8 @@ prompt() {
 	printf '%s' "${value}"
 }
 
+# Same as prompt(), but hides typing. Echo a newline afterwards because
+# read -s does not print one.
 prompt_secret() {
 	local value=""
 	printf '%s' "$1" > /dev/tty
@@ -42,6 +74,11 @@ prompt_secret() {
 echo "=== OTServer VPS setup ==="
 echo
 
+# -----------------------------------------------------------------------------
+# Prompts
+# Why validate the username: useradd/chpasswd/sudoers filenames break on
+# spaces or uppercase-only names; we only allow a typical Unix login.
+# -----------------------------------------------------------------------------
 USERNAME="$(prompt "New sudo username: ")"
 if ! printf '%s' "${USERNAME}" | grep -Eq '^[a-z_][a-z0-9_-]{0,31}$'; then
 	echo "Invalid username. Use lowercase letters, digits, underscore, or hyphen." >&2
@@ -63,6 +100,8 @@ if [ "${PASSWORD}" != "${PASSWORD_CONFIRM}" ]; then
 	exit 1
 fi
 
+# Used as the self-signed cert CN. Default to the machine's FQDN so a VPS
+# with a PTR/hostname gets something useful without extra typing.
 DEFAULT_DOMAIN="$(hostname -f 2>/dev/null || hostname || echo localhost)"
 SITE_DOMAIN_INPUT="$(prompt "Website hostname for the TLS certificate [${DEFAULT_DOMAIN}]: ")"
 SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_DOMAIN}}"
@@ -73,7 +112,13 @@ echo "TLS CN:      ${SITE_DOMAIN}"
 echo "Open ports:  22, 80, 443, 8080, 7171, 7172"
 echo
 
-# --- packages ----------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Packages
+# Why: a new image is often weeks behind on CVEs. git clones this repo;
+# curl/ca-certificates fetch Docker's installer over HTTPS; openssl makes the
+# site cert; sudo + ufw are not always installed on the slimmest images.
+# --force-confold keeps existing config files if a package upgrade asks.
+# -----------------------------------------------------------------------------
 echo "==> Updating and upgrading packages"
 apt-get update -y
 apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" upgrade
@@ -86,19 +131,30 @@ apt-get install -y --no-install-recommends \
 	sudo \
 	ufw
 
-# --- sudo user ---------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Sudo user  ("set up root for the new user")
+# Why: daily work should not be as root. We still give this account full sudo
+# so you can administer the box after PermitRootLogin is turned off.
+# Idempotent: if the login already exists (re-run), only password/groups update.
+# -----------------------------------------------------------------------------
 echo "==> Creating sudo user ${USERNAME}"
 if id -u "${USERNAME}" >/dev/null 2>&1; then
 	echo "User ${USERNAME} already exists; updating password and groups."
 else
+	# -m home dir, bash so the account is usable for SSH/compose.
 	useradd -m -s /bin/bash "${USERNAME}"
 fi
 echo "${USERNAME}:${PASSWORD}" | chpasswd
 usermod -aG sudo "${USERNAME}"
+# Drop-in sudoers file: full root via `sudo`. Requires their password (not
+# NOPASSWD) so a stolen session still needs the login secret to escalate.
 printf '%s ALL=(ALL:ALL) ALL\n' "${USERNAME}" > "/etc/sudoers.d/90-${USERNAME}"
 chmod 440 "/etc/sudoers.d/90-${USERNAME}"
+# visudo -c rejects a broken sudoers file before it can lock you out of sudo.
 visudo -cf "/etc/sudoers.d/90-${USERNAME}" >/dev/null
 
+# Cloud images often put your laptop key on root only. Copy it so the new
+# user can SSH with that same key after root login is disabled.
 if [ -f /root/.ssh/authorized_keys ]; then
 	install -d -m 700 -o "${USERNAME}" -g "${USERNAME}" "/home/${USERNAME}/.ssh"
 	install -m 600 -o "${USERNAME}" -g "${USERNAME}" \
@@ -106,7 +162,13 @@ if [ -f /root/.ssh/authorized_keys ]; then
 	echo "Copied root authorized_keys to ${USERNAME}."
 fi
 
-# --- Docker ------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# Docker
+# Why: the game, website, MySQL, and nginx all run via docker compose.
+# get.docker.com installs docker-ce + the Compose v2 plugin (`docker compose`).
+# docker group: this user can run compose without sudo. They must log out/in
+# (or ssh again) before the new group membership applies.
+# -----------------------------------------------------------------------------
 echo "==> Installing Docker"
 if command -v docker >/dev/null 2>&1; then
 	echo "Docker already installed: $(docker --version)"
@@ -115,15 +177,28 @@ else
 fi
 usermod -aG docker "${USERNAME}"
 
-# --- SSH: disable root login (after the sudo user exists) --------------------
+# -----------------------------------------------------------------------------
+# SSH: disable root login
+# Why: bots hammer password guesses on root@port 22. We only do this AFTER the
+# sudo user exists so this session is not the last way in.
+#
+# OpenSSH "first value wins". Drop-ins in sshd_config.d are included from the
+# top of sshd_config, so a file named 00-* is parsed before Ubuntu cloud-init's
+# 50-cloud-init.conf (which often sets PasswordAuthentication no).
+#
+# PasswordAuthentication is left ON on purpose: you just set a password and
+# may not have a key yet. Switch it to `no` once key login works (fail2ban
+# + keys are the follow-up hardening).
+# -----------------------------------------------------------------------------
 echo "==> Disabling SSH root login"
 install -d -m 755 /etc/ssh/sshd_config.d
-# OpenSSH uses first-value-wins; 00- beats cloud-init's 50-cloud-init.conf.
 cat > /etc/ssh/sshd_config.d/00-otserver-hardening.conf <<'EOF'
 PermitRootLogin no
 PasswordAuthentication yes
 PubkeyAuthentication yes
 EOF
+# Belt-and-suspenders: cloud-init's drop-in would otherwise win on some images
+# if Include order ever changes.
 if [ -f /etc/ssh/sshd_config.d/50-cloud-init.conf ]; then
 	sed -i 's/^[#[:space:]]*PasswordAuthentication.*/PasswordAuthentication yes/' \
 		/etc/ssh/sshd_config.d/50-cloud-init.conf
@@ -131,7 +206,10 @@ fi
 if [ -f /etc/ssh/sshd_config ]; then
 	sed -i 's/^[#[:space:]]*PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
 fi
+# Test config before reload: a typo here can drop SSH entirely.
 sshd -t
+# Ubuntu 24.04 unit is `ssh`; Debian/older often `sshd`. Reload, don't restart,
+# so the current root session stays up.
 if systemctl list-unit-files --type=service 2>/dev/null | grep -q '^ssh.service'; then
 	systemctl reload ssh
 elif systemctl list-unit-files --type=service 2>/dev/null | grep -q '^sshd.service'; then
@@ -140,7 +218,25 @@ else
 	service ssh reload 2>/dev/null || service sshd reload
 fi
 
-# --- UFW ---------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# UFW firewall
+# Why: default-deny incoming so random services are not reachable. Then allow
+# only what this stack uses:
+#   22    SSH
+#   80    HTTP (nginx redirects to HTTPS on the VPS overlay)
+#   443   HTTPS Gesior site
+#   8080  HTTP Gesior (legacy / until you drop it)
+#   7171  OT login protocol (raw TCP, not HTTP)
+#   7172  OT game protocol
+# MySQL 3306 is NOT opened — it stays on the Docker network only.
+#
+# --force enable skips the "did you allow SSH?" yes/no prompt so we cannot
+# hang, and 22 is already allowed above so we should not lock ourselves out.
+#
+# Caveat: Docker publishes ports via its own iptables rules and can bypass
+# UFW for those published ports. Safety here is also "do not publish extra
+# compose ports" (no 3306, no Docker API).
+# -----------------------------------------------------------------------------
 echo "==> Configuring UFW (deny incoming, allow SSH + site + game)"
 ufw default deny incoming
 ufw default allow outgoing
@@ -153,12 +249,24 @@ ufw allow 7172/tcp comment 'OT game'
 ufw --force enable
 ufw status verbose
 
-# --- TLS material for docker nginx ------------------------------------------
+# -----------------------------------------------------------------------------
+# Self-signed TLS for docker nginx
+# Why: browsers/clients talking to Gesior on 443 need a cert. Let's Encrypt
+# needs a public domain + inbound 80; a brand-new VPS often has neither yet.
+# Self-signed gets HTTPS working immediately. Browsers will warn until you
+# replace docker/nginx/certs/*.pem with a real cert.
+#
+# Skip generation if files already exist so a re-run does not rotate the cert
+# (which would surprise anyone who already accepted it).
+# The nginx container also generates a cert on first start if these are empty.
+# -----------------------------------------------------------------------------
 CERT_DIR="${REPO_ROOT}/docker/nginx/certs"
 if [ -d "${REPO_ROOT}/docker/nginx" ]; then
 	echo "==> Writing self-signed certificate for nginx"
 	mkdir -p "${CERT_DIR}"
 	if [ ! -f "${CERT_DIR}/fullchain.pem" ] || [ ! -f "${CERT_DIR}/privkey.pem" ]; then
+		# SAN must list every name/IP you will type in the browser, or the
+		# cert warning is worse (name mismatch on top of "untrusted CA").
 		SAN="DNS:localhost,IP:127.0.0.1"
 		if printf '%s' "${SITE_DOMAIN}" | grep -Eq '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
 			SAN="${SAN},IP:${SITE_DOMAIN}"
@@ -178,6 +286,14 @@ if [ -d "${REPO_ROOT}/docker/nginx" ]; then
 	chown -R "${USERNAME}:${USERNAME}" "${CERT_DIR}" || true
 fi
 
+# -----------------------------------------------------------------------------
+# .env for docker compose
+# Why: compose requires .env (see docker-compose.yml env_file). Copying the
+# example avoids a first-up failure. SITE_DOMAIN feeds the nginx cert SAN.
+# COMPOSE_FILE adds docker-compose.vps.yml so host 80/443 are published
+# (local compose leaves those off so a busy laptop port 80 does not break up).
+# MYSQL_* are left empty on purpose — you must set them before `compose up`.
+# -----------------------------------------------------------------------------
 upsert_env() {
 	local file="$1" key="$2" value="$3"
 	if [ ! -f "${file}" ]; then
@@ -200,6 +316,7 @@ if [ -f "${REPO_ROOT}/.env.example" ]; then
 	chown "${USERNAME}:${USERNAME}" "${REPO_ROOT}/.env" || true
 fi
 
+# Do not leave the plaintext password in this process environment.
 unset PASSWORD PASSWORD_CONFIRM
 
 echo

@@ -1,4 +1,8 @@
 #!/bin/sh
+# First-start helper for the nginx container.
+# If certs are missing (no setup-vps.sh run, empty volume), mint a self-signed
+# one from SITE_DOMAIN / OT_IP so HTTPS on :443 can bind. Existing files are
+# left alone so a container recreate does not rotate the cert.
 set -eu
 
 CERT_DIR=/etc/nginx/certs
