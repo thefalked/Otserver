@@ -18,12 +18,16 @@ sudo bash scripts/setup-vps.sh
 The script prompts for a sudo username/password (and a hostname for the TLS cert), then:
 
 - `apt update` / `upgrade`
-- installs **git** and **Docker**
+- installs **git**, **Docker**, **fail2ban**, **unattended-upgrades**, and **certbot**
 - creates the sudo user and copies `/root/.ssh/authorized_keys` if present
-- disables SSH **root** login
+- disables SSH **root** login (password SSH stays on until you switch to keys)
 - enables **UFW** (deny incoming; allow 22, 80, 443, 8080, 7171, 7172)
+- applies apt updates daily **without rebooting**; docker/ssh are not auto-restarted
+- installs a daily **MySQL hot dump** timer (`backups/mysql/`)
 
-The script also points Compose at `docker-compose.vps.yml` so **80** (redirect to HTTPS) and **443** (self-signed) are published. `nginx` reverse-proxies the Gesior site and TCP-streams login/game **7171** / **7172** to `otserver`. Browsers will warn on the self-signed cert until you replace it (e.g. Let’s Encrypt). Keep the root session open until you can `ssh` in as the new user.
+The script also points Compose at `docker-compose.vps.yml` so **80** (ACME + redirect to HTTPS) and **443** are published. After DNS points at the VPS, `sudo bash scripts/setup-letsencrypt.sh` replaces the self-signed cert. Keep the root session open until you can `ssh` in as the new user.
+
+Keys-only SSH, Let's Encrypt, and backups: **[docs/vps.md](docs/vps.md)**.
 
 ## Home-server (optional)
 
@@ -85,7 +89,8 @@ Copy `.env.example` → `.env`. Compose and the containers read these values:
 | `MYSQL_HOST` / `MYSQL_PORT` | `mysql` / `3306` | Host inside Docker network |
 | `OT_IP` | `127.0.0.1` | IP advertised to game clients |
 | `WEBSITE_PORT` | `8080` | Host HTTP port for the website (standalone nginx) |
-| `SITE_DOMAIN` | `localhost` | CN/SAN for the nginx self-signed certificate |
+| `SITE_DOMAIN` | `localhost` | Hostname for nginx / Let's Encrypt |
+| `LETSENCRYPT_EMAIL` | *(empty)* | Account email for `scripts/setup-letsencrypt.sh` |
 
 Login/game are fixed at host **7171** / **7172** (same as home-server). Compose requires a `.env` file (`cp .env.example .env`).
 
@@ -131,12 +136,15 @@ docker compose up --build -d otserver
 
 ```
 .env.example          env template (copy to .env)
-docker-compose.yml    MySQL + game + website
-docker/               entrypoints, config render, MySQL init SQL
+docker-compose.yml    MySQL + game + website + nginx
+docker/               entrypoints, config render, MySQL init SQL, nginx
+scripts/              VPS bootstrap, Let's Encrypt, MySQL dump
+docs/vps.md           SSH keys, updates, certs, backups
 server/               binary, config template, data/, mods/
 src/                  TFS 0.4 sources (compile only)
 website/              Gesior AAC (PHP)
 backup/               reference Baiakzik pack + optional SQL dumps (not used at runtime)
+backups/              runtime MySQL dumps from scripts/backup-mysql.sh (gitignored)
 ```
 
 ## Connecting a client

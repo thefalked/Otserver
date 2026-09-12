@@ -9,6 +9,10 @@
 # and has no Docker. This script makes a sudo user, locks root out of SSH, opens
 # only the ports the stack needs, and prepares nginx's self-signed cert.
 #
+# Also installs (no extra downtime by default):
+#   fail2ban, unattended-upgrades (no auto-reboot), certbot, daily MySQL dump timer
+# Follow-up: docs/vps.md (SSH keys, Let's Encrypt, backups).
+#
 # Run as root, from this repo:
 #   sudo bash scripts/setup-vps.sh
 #
@@ -16,12 +20,14 @@
 #   1) sudo username
 #   2) that user's password (twice)
 #   3) website hostname used as the TLS certificate CN/SAN
+#   4) email for Let's Encrypt (optional now; required when you issue the cert)
 #
 # It does NOT start the game stack. After it finishes, edit .env and run
 # `docker compose up --build -d` as the new user.
 #
 # Keep the current SSH session open until you can log in as the new user.
-# Root SSH is turned off at the end of the SSH section.
+# Root SSH is turned off at the end of the SSH section. Password SSH stays on
+# until you run scripts/disable-ssh-passwords.sh (see docs/vps.md).
 # =============================================================================
 set -euo pipefail
 
@@ -106,9 +112,13 @@ DEFAULT_DOMAIN="$(hostname -f 2>/dev/null || hostname || echo localhost)"
 SITE_DOMAIN_INPUT="$(prompt "Website hostname for the TLS certificate [${DEFAULT_DOMAIN}]: ")"
 SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_DOMAIN}}"
 
+# Stored in .env for scripts/setup-letsencrypt.sh. Empty is fine until DNS exists.
+LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (optional now, Enter to skip): ")"
+
 echo
 echo "User:        ${USERNAME}"
 echo "TLS CN:      ${SITE_DOMAIN}"
+echo "LE email:    ${LETSENCRYPT_EMAIL:-"(set later)"}"
 echo "Open ports:  22, 80, 443, 8080, 7171, 7172"
 echo
 
@@ -129,7 +139,11 @@ apt-get install -y --no-install-recommends \
 	gnupg \
 	openssl \
 	sudo \
-	ufw
+	ufw \
+	fail2ban \
+	unattended-upgrades \
+	needrestart \
+	certbot
 
 # -----------------------------------------------------------------------------
 # Sudo user  ("set up root for the new user")
@@ -219,6 +233,73 @@ else
 fi
 
 # -----------------------------------------------------------------------------
+# fail2ban
+# Why: password SSH is still on until you switch to keys. Bots will hit port
+# 22; fail2ban bans the IP after a few failures so they do not get unlimited
+# guesses. systemd backend reads the journal (Ubuntu/Debian default for sshd).
+# Game ports are raw TCP and are not covered by this jail.
+# -----------------------------------------------------------------------------
+echo "==> Enabling fail2ban (sshd)"
+install -d -m 755 /etc/fail2ban/jail.d
+cat > /etc/fail2ban/jail.d/otserver.local <<'EOF'
+[DEFAULT]
+bantime  = 1h
+findtime = 10m
+maxretry = 5
+backend  = systemd
+ignoreip = 127.0.0.1/8 ::1
+
+[sshd]
+enabled = true
+port    = ssh
+filter  = sshd
+backend = systemd
+EOF
+if systemctl list-unit-files --type=service 2>/dev/null | grep -q '^fail2ban.service'; then
+	systemctl enable --now fail2ban || echo "warning: fail2ban did not start"
+	systemctl reload fail2ban 2>/dev/null || true
+fi
+
+# -----------------------------------------------------------------------------
+# Unattended upgrades (apply patches, do not reboot)
+# Why: you asked for updates with as little downtime as possible. Security and
+# -updates install daily. Automatic-Reboot stays false so a kernel package
+# never bounces the VPS on its own. needrestart is told not to restart docker,
+# containerd, or ssh — those would drop the game or this admin session.
+# You still reboot later when you choose, if a kernel update is waiting.
+# -----------------------------------------------------------------------------
+echo "==> Enabling unattended-upgrades (no automatic reboot)"
+cat > /etc/apt/apt.conf.d/20auto-upgrades <<'EOF'
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::AutocleanInterval "7";
+EOF
+cat > /etc/apt/apt.conf.d/51otserver-unattended <<'EOF'
+Unattended-Upgrade::Automatic-Reboot "false";
+Unattended-Upgrade::Automatic-Reboot-WithUsers "false";
+Unattended-Upgrade::MinimalSteps "true";
+Unattended-Upgrade::SyslogEnable "true";
+EOF
+if [ -f /etc/apt/apt.conf.d/50unattended-upgrades ]; then
+	# Enable the regular -updates pocket (security is already on by default).
+	sed -i '/codename}-updates"/s|^//[[:space:]]*||' /etc/apt/apt.conf.d/50unattended-upgrades
+	sed -i 's#^//\s*Unattended-Upgrade::Automatic-Reboot "false"#Unattended-Upgrade::Automatic-Reboot "false"#' \
+		/etc/apt/apt.conf.d/50unattended-upgrades || true
+fi
+install -d -m 755 /etc/needrestart/conf.d
+cat > /etc/needrestart/conf.d/otserver.conf <<'EOF'
+# 0 = do not restart this unit when libraries it uses were upgraded.
+$nrconf{override_rc}->{qr(^docker)} = 0;
+$nrconf{override_rc}->{qr(^containerd)} = 0;
+$nrconf{override_rc}->{qr(^ssh$)} = 0;
+$nrconf{override_rc}->{qr(^sshd$)} = 0;
+EOF
+if systemctl list-unit-files --type=service 2>/dev/null | grep -q '^unattended-upgrades.service'; then
+	systemctl enable --now unattended-upgrades
+fi
+
+# -----------------------------------------------------------------------------
 # UFW firewall
 # Why: default-deny incoming so random services are not reachable. Then allow
 # only what this stack uses:
@@ -286,6 +367,61 @@ if [ -d "${REPO_ROOT}/docker/nginx" ]; then
 	chown -R "${USERNAME}:${USERNAME}" "${CERT_DIR}" || true
 fi
 
+# ACME webroot for HTTP-01. nginx.conf serves this on :80; certbot writes here.
+# :ro in compose is fine — certbot runs on the host, not in the container.
+install -d -m 755 -o "${USERNAME}" -g "${USERNAME}" "${REPO_ROOT}/docker/nginx/acme"
+
+# -----------------------------------------------------------------------------
+# Let's Encrypt machinery (issue later — DNS + nginx :80 must exist first)
+# Why not issue now: this script runs before compose is up. HTTP-01 would fail.
+# certbot.timer renews twice daily; the deploy hook copies pems and reloads
+# nginx (no container restart, game stays up).
+# -----------------------------------------------------------------------------
+echo "==> Installing Let's Encrypt renew hook"
+install -d -m 755 /etc/letsencrypt/renewal-hooks/deploy
+cat > /etc/letsencrypt/renewal-hooks/deploy/otserver-nginx.sh <<EOF
+#!/bin/sh
+exec "${REPO_ROOT}/scripts/install-letsencrypt-certs.sh"
+EOF
+chmod 755 /etc/letsencrypt/renewal-hooks/deploy/otserver-nginx.sh
+if systemctl list-unit-files --type=timer 2>/dev/null | grep -q '^certbot.timer'; then
+	systemctl enable --now certbot.timer
+fi
+
+# -----------------------------------------------------------------------------
+# Daily MySQL hot dump
+# Why a timer: mysqldump --single-transaction does not stop MySQL. 04:15 UTC
+# is an off-peak default. Files go to backups/mysql/; copy them off-box.
+# -----------------------------------------------------------------------------
+echo "==> Installing daily MySQL backup timer"
+cat > /etc/systemd/system/otserver-mysql-backup.service <<EOF
+[Unit]
+Description=OTServer MySQL hot dump (no downtime)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=${REPO_ROOT}
+ExecStart=${REPO_ROOT}/scripts/backup-mysql.sh
+EOF
+cat > /etc/systemd/system/otserver-mysql-backup.timer <<'EOF'
+[Unit]
+Description=Daily OTServer MySQL hot dump
+
+[Timer]
+OnCalendar=*-*-* 04:15:00
+Persistent=true
+RandomizedDelaySec=10m
+
+[Install]
+WantedBy=timers.target
+EOF
+if command -v systemctl >/dev/null 2>&1; then
+	systemctl daemon-reload
+	systemctl enable --now otserver-mysql-backup.timer
+fi
+
 # -----------------------------------------------------------------------------
 # .env for docker compose
 # Why: compose requires .env (see docker-compose.yml env_file). Copying the
@@ -312,6 +448,7 @@ if [ -f "${REPO_ROOT}/.env.example" ]; then
 		echo "Created ${REPO_ROOT}/.env — set MYSQL_* and OT_IP before starting compose."
 	fi
 	upsert_env "${REPO_ROOT}/.env" SITE_DOMAIN "${SITE_DOMAIN}"
+	upsert_env "${REPO_ROOT}/.env" LETSENCRYPT_EMAIL "${LETSENCRYPT_EMAIL}"
 	upsert_env "${REPO_ROOT}/.env" COMPOSE_FILE "docker-compose.yml:docker-compose.vps.yml"
 	chown "${USERNAME}:${USERNAME}" "${REPO_ROOT}/.env" || true
 fi
@@ -327,11 +464,18 @@ echo "Next (as ${USERNAME}):"
 echo "  cd ${REPO_ROOT}"
 echo "  nano .env          # MYSQL_ROOT_PASSWORD, MYSQL_PASSWORD, OT_IP=${SITE_DOMAIN}"
 echo "  docker compose up --build -d"
+echo "  sudo bash scripts/setup-letsencrypt.sh   # after DNS points here"
+echo
+echo "SSH keys (do this soon):  docs/vps.md"
+echo "  ssh-copy-id -i ~/.ssh/id_ed25519.pub ${USERNAME}@<this-host>"
+echo "  sudo bash scripts/disable-ssh-passwords.sh   # only after a key login works"
 echo
 echo "Open:"
-echo "  https://${SITE_DOMAIN}/     (self-signed — browser warning is expected)"
+echo "  https://${SITE_DOMAIN}/     (self-signed until Let's Encrypt)"
 echo "  http://${SITE_DOMAIN}:8080/ (HTTP reverse proxy)"
 echo "  TCP ${SITE_DOMAIN}:7171 / 7172 (game, via nginx stream)"
+echo
+echo "MySQL dumps: ./scripts/backup-mysql.sh  (daily timer at 04:15 UTC, backups/mysql/)"
 echo
 echo "Log in from another terminal before closing this one:"
 echo "  ssh ${USERNAME}@<this-host>"

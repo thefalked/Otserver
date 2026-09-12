@@ -3,6 +3,9 @@
 docker/nginx/certs/*.pem
 docker/nginx/certs/*.key
 docker/nginx/certs/*.crt
+docker/nginx/acme/*
+!docker/nginx/acme/.gitkeep
+backups/
 website/config/config.local.php
 website/config/serverstatus
 website/cache/*.tmp

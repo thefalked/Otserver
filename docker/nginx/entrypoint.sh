@@ -2,7 +2,8 @@
 # First-start helper for the nginx container.
 # If certs are missing (no setup-vps.sh run, empty volume), mint a self-signed
 # one from SITE_DOMAIN / OT_IP so HTTPS on :443 can bind. Existing files are
-# left alone so a container recreate does not rotate the cert.
+# left alone so a container recreate does not rotate the cert — that includes
+# Let's Encrypt pems installed by scripts/setup-letsencrypt.sh.
 set -eu
 
 CERT_DIR=/etc/nginx/certs
