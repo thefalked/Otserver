@@ -1,5 +1,8 @@
 # Runtime / local
 .env
+docker/nginx/certs/*.pem
+docker/nginx/certs/*.key
+docker/nginx/certs/*.crt
 website/config/config.local.php
 website/config/serverstatus
 website/cache/*.tmp

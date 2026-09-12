@@ -1,0 +1,7 @@
+# Overlay used by scripts/setup-vps.sh (COMPOSE_FILE=docker-compose.yml:docker-compose.vps.yml).
+# Publishes HTTP/HTTPS on the host. nginx.conf already listens on 80/443 inside the container.
+services:
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"

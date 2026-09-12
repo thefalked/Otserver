@@ -7,6 +7,24 @@ Dockerized **The Forgotten Server 0.4** (Baiakzik Vip9 / 8.60) with MySQL and a 
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2
 - A Tibia **8.60** client pointed at your host IP (ports **7171** / **7172**)
 
+## VPS bootstrap
+
+On a fresh Ubuntu/Debian VPS, as **root**:
+
+```bash
+sudo bash scripts/setup-vps.sh
+```
+
+The script prompts for a sudo username/password (and a hostname for the TLS cert), then:
+
+- `apt update` / `upgrade`
+- installs **git** and **Docker**
+- creates the sudo user and copies `/root/.ssh/authorized_keys` if present
+- disables SSH **root** login
+- enables **UFW** (deny incoming; allow 22, 80, 443, 8080, 7171, 7172)
+
+The script also points Compose at `docker-compose.vps.yml` so **80** (redirect to HTTPS) and **443** (self-signed) are published. `nginx` reverse-proxies the Gesior site and TCP-streams login/game **7171** / **7172** to `otserver`. Browsers will warn on the self-signed cert until you replace it (e.g. Let’s Encrypt). Keep the root session open until you can `ssh` in as the new user.
+
 ## Home-server (optional)
 
 When this repo sits next to [home-server](https://github.com/thefalked/home-server) (`tests/Otserver` beside `tests/home-server`), you can run the stack from home-server’s thin wrapper:
@@ -38,8 +56,8 @@ Then open the site and connect the client:
 | Service | URL / port |
 | --------- | ------------ |
 | Website (Gesior) | <http://localhost:8080> |
-| Login | TCP **7171** |
-| Game | TCP **7172** |
+| Login | TCP **7171** (via nginx stream) |
+| Game | TCP **7172** (via nginx stream) |
 
 Default admin accounts from the imported DB:
 
@@ -66,7 +84,8 @@ Copy `.env.example` → `.env`. Compose and the containers read these values:
 | `MYSQL_USER` / `MYSQL_PASSWORD` | `ot` / *(required)* | App DB user |
 | `MYSQL_HOST` / `MYSQL_PORT` | `mysql` / `3306` | Host inside Docker network |
 | `OT_IP` | `127.0.0.1` | IP advertised to game clients |
-| `WEBSITE_PORT` | `8080` | Host port for the website (standalone only) |
+| `WEBSITE_PORT` | `8080` | Host HTTP port for the website (standalone nginx) |
+| `SITE_DOMAIN` | `localhost` | CN/SAN for the nginx self-signed certificate |
 
 Login/game are fixed at host **7171** / **7172** (same as home-server). Compose requires a `.env` file (`cp .env.example .env`).
 
@@ -84,7 +103,8 @@ Game settings live in `server/config.lua.template` (tracked, no secrets). At con
 | ----------------- | -------------- |
 | `mysql` | MySQL 8.4; schema + Gesior SQL on first init |
 | `otserver` | Ubuntu 26.04 runtime; prebuilt `server/theforgottenserver` |
-| `website` | PHP 8.5 Apache + Gesior AAC |
+| `website` | PHP 8.5 Apache + Gesior AAC (internal port 80) |
+| `nginx` | Reverse proxy: HTTPS site + TCP stream for 7171/7172 |
 
 `otserver` is **runtime-only** — it does not compile C++ on `docker compose up`. The Linux binary must already exist at `server/theforgottenserver` (included when present in the repo).
 
