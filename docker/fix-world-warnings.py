@@ -300,9 +300,31 @@ def fix_spawns() -> tuple[int, int]:
     return n_time, n_name + n_rename + removed
 
 
+def fix_otbm_sidecar_names() -> int:
+    """Point OTBM EXT_SPAWN/HOUSE attrs at snake_case sidecar XML filenames."""
+    data = bytearray(OTBM.read_bytes())
+    replacements = [
+        (b"Baiak Yurots-spawn.xml", b"baiak_yurots-spawn.xml"),
+        (b"Baiak Yurots-house.xml", b"baiak_yurots-house.xml"),
+    ]
+    changed = 0
+    for old, new in replacements:
+        if len(old) != len(new):
+            raise SystemExit(f"OTBM rename length mismatch: {old!r} -> {new!r}")
+        n = data.count(old)
+        if n:
+            data = data.replace(old, new)
+            changed += n
+    if changed:
+        OTBM.write_bytes(data)
+    return changed
+
+
 def main():
+    o = fix_otbm_sidecar_names()
     h = fix_houses()
     t, n = fix_spawns()
+    print(f"otbm sidecar renames: {o}")
     print(f"houses entry fixed: {h}")
     print(f"spawntime 0->60: {t}")
     print(f"spawn name fixes/removals: {n}")
