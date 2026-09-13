@@ -787,7 +787,7 @@ if ($_REQUEST['page'] == 'step') {
       $check_voc_0 = $SQL->query('SELECT * FROM players WHERE name = "Rook Sample" LIMIT 1 OFFSET 0')->fetch();
       if (!isset($check_voc_0['name'])) {
         $SQL->query('INSERT INTO `players` (`id`, `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`, `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `town_id`, `posx`, `posy`, `posz`, `conditions`, `cap`, `sex`, `lastlogin`, `lastip`, `save`, `skull`, `skulltime`, `rank_id`, `guildnick`, `lastlogout`, `blessings`, `balance`, `stamina`, `direction`, `loss_experience`, `loss_mana`, `loss_skills`, `loss_containers`, `loss_items`, `premend`, `online`, `marriage`, `promotion`, `deleted`, `description`, `created`, `nick_verify`, `old_name`, `hide_char`, `comment`) VALUES
-			(NULL, "Rook Sample", 0, 1, 1, 1, 0, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, "", 0, 0, "", 0, "")');
+			(NULL, "Rook Sample", 0, 1, 1, 1, 0, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 1, "", 0, 0, "", 0, "")');
         echo "Added 'Rook Sample' character.<br/>";
       } else {
         echo "Character 'Rook Sample' already in database.<br/>";
@@ -795,7 +795,7 @@ if ($_REQUEST['page'] == 'step') {
       $check_voc_1 = $SQL->query('SELECT * FROM players WHERE name = "Sorcerer Sample" LIMIT 1 OFFSET 0')->fetch();
       if (!isset($check_voc_1['name'])) {
         $SQL->query('INSERT INTO `players` (`id`, `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`, `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `town_id`, `posx`, `posy`, `posz`, `conditions`, `cap`, `sex`, `lastlogin`, `lastip`, `save`, `skull`, `skulltime`, `rank_id`, `guildnick`, `lastlogout`, `blessings`, `balance`, `stamina`, `direction`, `loss_experience`, `loss_mana`, `loss_skills`, `loss_containers`, `loss_items`, `premend`, `online`, `marriage`, `promotion`, `deleted`, `description`, `created`, `nick_verify`, `old_name`, `hide_char`, `comment`) VALUES
-			(NULL, "Sorcerer Sample", 0, 1, 1, 1, 1, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, "", 0, 0, "", 0, "")');
+			(NULL, "Sorcerer Sample", 0, 1, 1, 1, 1, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 1, "", 0, 0, "", 0, "")');
         echo "Added 'Sorcerer Sample' character.<br/>";
       } else {
         echo "Character 'Sorcerer Sample' already in database.<br/>";
@@ -803,7 +803,7 @@ if ($_REQUEST['page'] == 'step') {
       $check_voc_2 = $SQL->query('SELECT * FROM players WHERE name = "Druid Sample" LIMIT 1 OFFSET 0')->fetch();
       if (!isset($check_voc_2['name'])) {
         $SQL->query('INSERT INTO `players` (`id`, `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`, `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `town_id`, `posx`, `posy`, `posz`, `conditions`, `cap`, `sex`, `lastlogin`, `lastip`, `save`, `skull`, `skulltime`, `rank_id`, `guildnick`, `lastlogout`, `blessings`, `balance`, `stamina`, `direction`, `loss_experience`, `loss_mana`, `loss_skills`, `loss_containers`, `loss_items`, `premend`, `online`, `marriage`, `promotion`, `deleted`, `description`, `created`, `nick_verify`, `old_name`, `hide_char`, `comment`) VALUES
-			(NULL, "Druid Sample", 0, 1, 1, 1, 2, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, "", 0, 0, "", 0, "")');
+			(NULL, "Druid Sample", 0, 1, 1, 1, 2, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 1, "", 0, 0, "", 0, "")');
         echo "Added 'Druid Sample' character.<br/>";
       } else {
         echo "Character 'Druid Sample' already in database.<br/>";
@@ -811,7 +811,7 @@ if ($_REQUEST['page'] == 'step') {
       $check_voc_3 = $SQL->query('SELECT * FROM players WHERE name = "Paladin Sample" LIMIT 1 OFFSET 0')->fetch();
       if (!isset($check_voc_3['name'])) {
         $SQL->query('INSERT INTO `players` (`id`, `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`, `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `town_id`, `posx`, `posy`, `posz`, `conditions`, `cap`, `sex`, `lastlogin`, `lastip`, `save`, `skull`, `skulltime`, `rank_id`, `guildnick`, `lastlogout`, `blessings`, `balance`, `stamina`, `direction`, `loss_experience`, `loss_mana`, `loss_skills`, `loss_containers`, `loss_items`, `premend`, `online`, `marriage`, `promotion`, `deleted`, `description`, `created`, `nick_verify`, `old_name`, `hide_char`, `comment`) VALUES
-			(NULL, "Paladin Sample", 0, 1, 1, 1, 3, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, "", 0, 0, "", 0, "")');
+			(NULL, "Paladin Sample", 0, 1, 1, 1, 3, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 1, "", 0, 0, "", 0, "")');
         echo "Added 'Paladin Sample' character.<br/>";
       } else {
         echo "Character 'Paladin Sample' already in database.<br/>";
@@ -819,7 +819,7 @@ if ($_REQUEST['page'] == 'step') {
       $check_voc_4 = $SQL->query('SELECT * FROM players WHERE name = "Knight Sample" LIMIT 1 OFFSET 0')->fetch();
       if (!isset($check_voc_4['name'])) {
         $SQL->query('INSERT INTO `players` (`id`, `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`, `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`, `maglevel`, `mana`, `manamax`, `manaspent`, `soul`, `town_id`, `posx`, `posy`, `posz`, `conditions`, `cap`, `sex`, `lastlogin`, `lastip`, `save`, `skull`, `skulltime`, `rank_id`, `guildnick`, `lastlogout`, `blessings`, `balance`, `stamina`, `direction`, `loss_experience`, `loss_mana`, `loss_skills`, `loss_containers`, `loss_items`, `premend`, `online`, `marriage`, `promotion`, `deleted`, `description`, `created`, `nick_verify`, `old_name`, `hide_char`, `comment`) VALUES
-			(NULL, "Knight Sample", 0, 1, 1, 1, 4, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, "", 0, 0, "", 0, "")');
+			(NULL, "Knight Sample", 0, 1, 1, 1, 4, 150, 150, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0, 50, 50, 7, "", 400, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 201660000, 0, 100, 100, 100, 100, 100, 0, 0, 0, 0, 1, "", 0, 0, "", 0, "")');
         echo "Added 'Knight Sample' character.<br/>";
         echo 'All samples added to database. Now you can go to <a href="install.php?page=step&step=5&server_conf=yes">STEP 5 - Set Admin Account</a>';
       } else {
@@ -871,4 +871,3 @@ if ($_REQUEST['page'] == 'step') {
     echo "Account maker is already installed! To reinstall open file 'config.ini' in directory 'config' and change:<br/><b>install = \"no\"</b><br/>to:</br><b>install = \"start\"</b><br/>and enter this site again.";
   }
 }
-?>

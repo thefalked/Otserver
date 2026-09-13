@@ -1,4 +1,6 @@
-accountManager = "yes"
+-- Disabled: Gesior website creates/manages characters. Leaving this on injects a
+-- virtual "Account Manager" into every non-1/1 login charlist (including god).
+accountManager = "no"
 namelockManager = "yes"
 newPlayerChooseVoc = "yes"
 newPlayerSpawnPosX = 155

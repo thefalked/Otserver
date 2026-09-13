@@ -1,7 +1,7 @@
 -- The Forgotten Server Config
 
-	-- Account manager
-	accountManager = true
+	-- Account manager (off when using Gesior website for char creation)
+	accountManager = false
 	namelockManager = true
 	newPlayerChooseVoc = false
 	newPlayerSpawnPosX = 95

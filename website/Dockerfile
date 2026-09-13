@@ -32,6 +32,7 @@ RUN mkdir -p /usr/local/share/otserver \
  && chmod +x /usr/local/bin/render-config.sh /usr/local/bin/website-entrypoint.sh
 COPY docker/mysql/07-lottery.sql /usr/local/share/otserver/07-lottery.sql
 COPY docker/mysql/08-god-energy.sql /usr/local/share/otserver/08-god-energy.sql
+COPY docker/mysql/09-hide-sample-chars.sql /usr/local/share/otserver/09-hide-sample-chars.sql
 
 WORKDIR /var/www/html
 ENTRYPOINT ["website-entrypoint.sh"]

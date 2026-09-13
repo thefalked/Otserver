@@ -231,7 +231,8 @@ UPDATE `players` SET `posx` = 32360, `posy` = 31782, `posz` = 7, `town_id` = 1 W
 -- Admin panel access for account 1
 UPDATE `accounts` SET `page_access` = 3, `flag` = 'unknown' WHERE `name` = '1';
 
--- Sample vocation templates for character creation (cloned from Account Manager)
+-- Sample vocation templates for website character creation (cloned by Gesior).
+-- deleted=1 keeps them off the account 1/1 login charlist; OTS_Player::find still loads them.
 INSERT INTO `players` (
   `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`,
   `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`,
@@ -242,7 +243,7 @@ SELECT
   v.name, 0, 1, 1, 1, v.voc,
   150, 150, 0, 0, 0, 0, 0, 128, 0,
   0, 0, 0, 0, 0, 1, 32360, 31782, 7, '',
-  400, 0, 1, 201660000, 100, 100, 100, 100, 100, 0, ''
+  400, 0, 1, 201660000, 100, 100, 100, 100, 100, 1, ''
 FROM (
   SELECT 'Rook Sample' AS name, 0 AS voc
   UNION ALL SELECT 'Sorcerer Sample', 1
@@ -251,6 +252,11 @@ FROM (
   UNION ALL SELECT 'Knight Sample', 4
 ) AS v
 WHERE NOT EXISTS (SELECT 1 FROM `players` p WHERE p.name = v.name);
+
+UPDATE `players`
+SET `deleted` = 1
+WHERE `name` IN ('Rook Sample', 'Sorcerer Sample', 'Druid Sample', 'Paladin Sample', 'Knight Sample')
+  AND `deleted` = 0;
 
 CREATE TABLE IF NOT EXISTS `z_featured_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

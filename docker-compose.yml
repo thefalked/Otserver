@@ -35,6 +35,7 @@ services:
       - ./docker/mysql/06-gesior-player-cols.sql:/docker-entrypoint-initdb.d/06-gesior-player-cols.sql:ro
       - ./docker/mysql/07-lottery.sql:/docker-entrypoint-initdb.d/07-lottery.sql:ro
       - ./docker/mysql/08-god-energy.sql:/docker-entrypoint-initdb.d/08-god-energy.sql:ro
+      - ./docker/mysql/09-hide-sample-chars.sql:/docker-entrypoint-initdb.d/09-hide-sample-chars.sql:ro
     mem_limit: 4g
     memswap_limit: 4g
     healthcheck:
