@@ -13,25 +13,22 @@
 #   fail2ban, unattended-upgrades (no auto-reboot), certbot, daily MySQL dump timer
 # Follow-up: docs/vps.md (SSH keys, Let's Encrypt, backups).
 #
-# Run as root, from this repo:
-#   sudo bash scripts/setup-vps.sh
+# Run from your PC (this repo, Git Bash / macOS / Linux / WSL):
+#   ./scripts/setup-from-pc.sh
+# That SSHs into the VPS, clones with your GitHub token, and runs this file.
+# All prompts (users, passwords, token, hostname) happen in that session.
 #
-# On a VPS that does not have this project yet: this repo is private, so do
-# not anonymous-clone. From your laptop (recommended):
-#   rsync -az --exclude '.git' ./ root@VPS:/opt/otserver/
-#   ssh -t root@VPS bash /opt/otserver/scripts/setup-vps.sh
-# Or a PAT — see docs/vps.md (bootstrap-vps.sh).
+# Already on the VPS as root, with the repo and GITHUB_TOKEN set:
+#   sudo bash scripts/setup-vps.sh
 #
 # It will prompt for:
 #   1) sudo username
 #   2) that user's password (twice)
 #   3) website hostname (default baiakvip9.thefalked.dev — Enter to keep it)
-#   4) email for Let's Encrypt (optional now; required when you issue the cert)
+#   4) Let's Encrypt email
+#   5) MySQL root and app passwords
 #
 # Change the hostname later without re-running this: scripts/set-domain.sh
-#
-# It does NOT start the game stack. After it finishes, edit .env and run
-# `docker compose up --build -d` as the new user.
 #
 # Keep the current SSH session open until you can log in as the new user.
 # Root SSH is turned off at the end of the SSH section. Password SSH stays on
@@ -123,7 +120,21 @@ SITE_DOMAIN_INPUT="$(prompt "Website hostname [${DEFAULT_SITE_DOMAIN}]: ")"
 SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_SITE_DOMAIN}}"
 
 # Stored in .env for scripts/setup-letsencrypt.sh. Empty is fine until DNS exists.
-LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (optional now, Enter to skip): ")"
+LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (Enter to skip HTTPS cert for now): ")"
+
+MYSQL_ROOT_PASSWORD="$(prompt_secret "MySQL root password: ")"
+MYSQL_ROOT_PASSWORD_CONFIRM="$(prompt_secret "Confirm MySQL root password: ")"
+if [ -z "${MYSQL_ROOT_PASSWORD}" ] || [ "${MYSQL_ROOT_PASSWORD}" != "${MYSQL_ROOT_PASSWORD_CONFIRM}" ]; then
+	echo "MySQL root password empty or did not match." >&2
+	exit 1
+fi
+MYSQL_PASSWORD="$(prompt_secret "MySQL app (ot) password: ")"
+MYSQL_PASSWORD_CONFIRM="$(prompt_secret "Confirm MySQL app password: ")"
+if [ -z "${MYSQL_PASSWORD}" ] || [ "${MYSQL_PASSWORD}" != "${MYSQL_PASSWORD_CONFIRM}" ]; then
+	echo "MySQL app password empty or did not match." >&2
+	exit 1
+fi
+unset MYSQL_ROOT_PASSWORD_CONFIRM MYSQL_PASSWORD_CONFIRM
 
 echo
 echo "User:        ${USERNAME}"
@@ -442,47 +453,101 @@ fi
 # -----------------------------------------------------------------------------
 upsert_env() {
 	local file="$1" key="$2" value="$3"
-	if [ ! -f "${file}" ]; then
-		return 0
-	fi
-	if grep -q "^${key}=" "${file}"; then
-		sed -i "s|^${key}=.*|${key}=${value}|" "${file}"
+	local tmp
+	tmp="$(mktemp)"
+	if [ -f "${file}" ]; then
+		grep -v "^${key}=" "${file}" > "${tmp}" || true
 	else
-		printf '\n%s=%s\n' "${key}" "${value}" >> "${file}"
+		: > "${tmp}"
 	fi
+	printf '%s=%s\n' "${key}" "${value}" >> "${tmp}"
+	mv "${tmp}" "${file}"
 }
 
 if [ -f "${REPO_ROOT}/.env.example" ]; then
 	if [ ! -f "${REPO_ROOT}/.env" ]; then
 		cp "${REPO_ROOT}/.env.example" "${REPO_ROOT}/.env"
-		echo "Created ${REPO_ROOT}/.env — set MYSQL_ROOT_PASSWORD and MYSQL_PASSWORD before starting compose."
 	fi
 	upsert_env "${REPO_ROOT}/.env" SITE_DOMAIN "${SITE_DOMAIN}"
 	upsert_env "${REPO_ROOT}/.env" OT_IP "${SITE_DOMAIN}"
 	upsert_env "${REPO_ROOT}/.env" LETSENCRYPT_EMAIL "${LETSENCRYPT_EMAIL}"
+	upsert_env "${REPO_ROOT}/.env" MYSQL_ROOT_PASSWORD "${MYSQL_ROOT_PASSWORD}"
+	upsert_env "${REPO_ROOT}/.env" MYSQL_PASSWORD "${MYSQL_PASSWORD}"
 	upsert_env "${REPO_ROOT}/.env" COMPOSE_FILE "docker-compose.yml:docker-compose.vps.yml"
 	chown "${USERNAME}:${USERNAME}" "${REPO_ROOT}/.env" || true
+	chmod 600 "${REPO_ROOT}/.env" || true
 fi
 
-# Fresh clone via bootstrap-vps.sh is root-owned. Hand the tree to the sudo
-# user so they can edit .env and run docker compose without extra root.
+# Fresh clone is root-owned. Hand the tree to the sudo user so they can
+# git pull and docker compose without extra root.
 if [ "$(stat -c %u "${REPO_ROOT}" 2>/dev/null || echo 0)" = "0" ]; then
 	echo "==> Giving ${USERNAME} ownership of ${REPO_ROOT}"
 	chown -R "${USERNAME}:${USERNAME}" "${REPO_ROOT}"
 fi
 
-# Do not leave the plaintext password in this process environment.
-unset PASSWORD PASSWORD_CONFIRM
+# Persist GitHub HTTPS auth for the sudo user (remote URL stays token-free).
+# They can later: cd /opt/otserver && git pull
+if [ -n "${GITHUB_TOKEN:-}" ]; then
+	echo "==> Saving git credentials for ${USERNAME} (git pull on this private repo)"
+	USER_HOME="$(getent passwd "${USERNAME}" | cut -d: -f6)"
+	USER_HOME="${USER_HOME:-/home/${USERNAME}}"
+	install -d -m 700 -o "${USERNAME}" -g "${USERNAME}" "${USER_HOME}"
+	printf 'https://x-access-token:%s@github.com\n' "${GITHUB_TOKEN}" > "${USER_HOME}/.git-credentials"
+	chown "${USERNAME}:${USERNAME}" "${USER_HOME}/.git-credentials"
+	chmod 600 "${USER_HOME}/.git-credentials"
+	if [ ! -f "${USER_HOME}/.gitconfig" ]; then
+		install -m 600 -o "${USERNAME}" -g "${USERNAME}" /dev/null "${USER_HOME}/.gitconfig"
+	fi
+	sudo -u "${USERNAME}" git config --global credential.helper store
+	sudo -u "${USERNAME}" git config --global --add safe.directory "${REPO_ROOT}" || true
+fi
+
+# -----------------------------------------------------------------------------
+# Start the stack and (optional) Let's Encrypt
+# Why here: you asked for the script to finish setup, not leave compose/certs
+# as a manual step. First image build can take several minutes.
+# docker compose as root: the new user is in group docker but this session
+# would not see that group until they log in again.
+# -----------------------------------------------------------------------------
+echo "==> Starting Docker and the compose stack (first build can take a while)"
+if command -v systemctl >/dev/null 2>&1; then
+	systemctl enable --now docker 2>/dev/null || true
+fi
+# Wait until the daemon answers (get.docker.com has just installed it).
+for _i in 1 2 3 4 5 6 7 8 9 10; do
+	docker info >/dev/null 2>&1 && break
+	sleep 2
+done
+(
+	cd "${REPO_ROOT}"
+	docker compose up --build -d
+)
+
+if [ -n "${LETSENCRYPT_EMAIL}" ]; then
+	echo "==> Waiting for nginx, then requesting a Let's Encrypt cert for ${SITE_DOMAIN}"
+	for _i in $(seq 1 36); do
+		if docker ps -q -f 'name=^otserver-nginx$' | grep -q .; then
+			break
+		fi
+		sleep 5
+	done
+	if bash "${REPO_ROOT}/scripts/setup-letsencrypt.sh"; then
+		echo "Let's Encrypt installed."
+	else
+		echo "Let's Encrypt failed (DNS/port 80?). Re-run later: sudo bash ${REPO_ROOT}/scripts/setup-letsencrypt.sh" >&2
+	fi
+fi
+
+unset PASSWORD PASSWORD_CONFIRM MYSQL_ROOT_PASSWORD MYSQL_PASSWORD GITHUB_TOKEN
 
 echo
 echo "=== Done ==="
 echo "Root SSH login is disabled. Keep this session open until you can log in as ${USERNAME}."
 echo
-echo "Next (as ${USERNAME}):"
+echo "On the VPS as ${USERNAME}:"
 echo "  cd ${REPO_ROOT}"
-echo "  nano .env          # MYSQL_ROOT_PASSWORD, MYSQL_PASSWORD"
-echo "  docker compose up --build -d"
-echo "  sudo bash scripts/setup-letsencrypt.sh   # DNS already on ${SITE_DOMAIN}"
+echo "  git pull                  # token is in ~${USERNAME}/.git-credentials (mode 600)"
+echo "  docker compose ps"
 echo
 echo "Change hostname later:  sudo bash scripts/set-domain.sh new.example.com"
 echo
@@ -491,11 +556,9 @@ echo "  ssh-copy-id -i ~/.ssh/id_ed25519.pub ${USERNAME}@<this-host>"
 echo "  sudo bash scripts/disable-ssh-passwords.sh   # only after a key login works"
 echo
 echo "Open:"
-echo "  https://${SITE_DOMAIN}/     (self-signed until Let's Encrypt)"
-echo "  http://${SITE_DOMAIN}:8080/ (HTTP reverse proxy)"
-echo "  TCP ${SITE_DOMAIN}:7171 / 7172 (game, via nginx stream)"
-echo
-echo "MySQL dumps: ./scripts/backup-mysql.sh  (daily timer at 04:15 UTC, backups/mysql/)"
+echo "  https://${SITE_DOMAIN}/"
+echo "  http://${SITE_DOMAIN}:8080/"
+echo "  TCP ${SITE_DOMAIN}:7171 / 7172"
 echo
 echo "Log in from another terminal before closing this one:"
 echo "  ssh ${USERNAME}@<this-host>"

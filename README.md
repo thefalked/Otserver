@@ -9,19 +9,17 @@ Dockerized **The Forgotten Server 0.4** (Baiakzik Vip9 / 8.60) with MySQL and a 
 
 ## VPS bootstrap
 
-This GitHub repo is **private**. A new VPS cannot `git clone` or `curl` GitHub without auth.
-
-**Easiest:** copy the project from your laptop (where you already have it), then run setup on the VPS:
+This GitHub repo is **private**. From **this PC** (Git Bash, macOS, Linux, or WSL), in the repo:
 
 ```bash
-# laptop, from the repo root
-rsync -az --exclude '.git' ./ root@VPS_IP:/opt/otserver/
-ssh -t root@VPS_IP bash /opt/otserver/scripts/setup-vps.sh
+./scripts/setup-from-pc.sh
 ```
 
-**Or** a GitHub PAT (Contents: Read-only on this repo) — see [docs/vps.md](docs/vps.md). Hostname default is **baiakvip9.thefalked.dev**. Change later with `sudo bash scripts/set-domain.sh new.example.com`.
+It asks for the VPS address and a GitHub token, SSHs in, `git clone`s into `/opt/otserver`, then runs the rest of setup on the server (sudo user, passwords, hostname, MySQL, firewall, Docker, Let’s Encrypt). Afterward, on the VPS: `cd /opt/otserver && git pull`.
 
-If the repo is already on disk:
+Hostname default is **baiakvip9.thefalked.dev**. Change later with `sudo bash scripts/set-domain.sh new.example.com`.
+
+If you are already root on the VPS with the repo checked out:
 
 ```bash
 sudo bash scripts/setup-vps.sh

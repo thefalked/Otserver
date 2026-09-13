@@ -1,32 +1,13 @@
 #!/usr/bin/env bash
 # =============================================================================
-# Empty-VPS entrypoint — this GitHub repo is PRIVATE, so a bare `git clone`
-# and a bare curl of this file both fail without auth.
+# Clone the private repo on the VPS, then run setup-vps.sh.
 #
-# Recommended (no GitHub token on the VPS): copy the tree from your laptop,
-# then run setup-vps.sh. You already have the repo there.
+# Called by scripts/setup-from-pc.sh (from your laptop). You can also run this
+# on the VPS as root if GITHUB_TOKEN is already set.
 #
-#   # laptop, from the repo root
-#   rsync -az --exclude '.git' ./ root@VPS_IP:/opt/otserver/
-#   ssh -t root@VPS_IP bash /opt/otserver/scripts/setup-vps.sh
-#
-# Alternative: GitHub PAT (Contents: Read-only on this repo). The token is
-# used once to clone, then stripped from `git remote` so it is not saved.
-#
-#   # laptop: create the PAT, then on the VPS as root:
-#   read -s GITHUB_TOKEN; echo
-#   curl -fsSL \
-#     -H "Authorization: Bearer ${GITHUB_TOKEN}" \
-#     -H "Accept: application/vnd.github.raw" \
-#     "https://api.github.com/repos/thefalked/Otserver/contents/scripts/bootstrap-vps.sh?ref=master" \
-#     | sudo env GITHUB_TOKEN="${GITHUB_TOKEN}" bash
-#
-# Env (optional):
-#   GITHUB_TOKEN     PAT or fine-grained token (prompted if clone is needed)
-#   OTSERVER_REPO    HTTPS git URL (default https://github.com/thefalked/Otserver.git)
-#   OTSERVER_REF     branch/tag (default master)
-#   OTSERVER_DIR     clone/copy path (default /opt/otserver)
-#   SITE_DOMAIN      hostname prompt default (baiakvip9.thefalked.dev)
+# The token is kept long enough for setup-vps.sh to install a git credential
+# helper for the new sudo user so they can `git pull` later. It is not stored
+# in `git remote`.
 # =============================================================================
 set -euo pipefail
 
@@ -75,7 +56,7 @@ echo "Repo:    ${OTSERVER_REPO}"
 echo "Ref:     ${OTSERVER_REF}"
 echo "Dir:     ${OTSERVER_DIR}"
 echo "Domain:  ${SITE_DOMAIN}  (Enter at the hostname prompt to keep this)"
-echo "This repository is private: clone needs a token, or copy the tree with rsync first."
+echo "This repository is private: a GitHub token is required to clone."
 echo
 
 echo "==> Installing git and curl"
@@ -94,7 +75,7 @@ else
 		GITHUB_TOKEN="$(prompt_token)"
 	fi
 	if [ -z "${GITHUB_TOKEN}" ]; then
-		echo "No GITHUB_TOKEN. Either pass one, or rsync the repo from your laptop to ${OTSERVER_DIR}." >&2
+		echo "No GITHUB_TOKEN. Re-run from your PC: ./scripts/setup-from-pc.sh" >&2
 		exit 1
 	fi
 
@@ -108,14 +89,13 @@ case "$1" in
 	*) printf '%s\n' "${GITHUB_TOKEN}" ;;
 esac
 EOF
-	echo "==> Cloning ${OTSERVER_REF} into ${OTSERVER_DIR} (private HTTPS)"
+	echo "==> Cloning ${OTSERVER_REF} into ${OTSERVER_DIR} (private HTTPS, full history)"
 	export GITHUB_TOKEN
 	GIT_ASKPASS="${ASKPASS}" GIT_TERMINAL_PROMPT=0 \
-		git clone --branch "${OTSERVER_REF}" --depth 1 "${OTSERVER_REPO}" "${OTSERVER_DIR}"
+		git clone --branch "${OTSERVER_REF}" "${OTSERVER_REPO}" "${OTSERVER_DIR}"
 	rm -f "${ASKPASS}"
-	unset GITHUB_TOKEN
 	git -C "${OTSERVER_DIR}" remote set-url origin "$(origin_public)"
-	echo "Clone done. git remote has no token. Later pulls need a deploy key or a new token."
+	echo "Clone done. Token stays in env only so setup-vps.sh can enable git pull for the sudo user."
 fi
 
 if [ ! -f "${OTSERVER_DIR}/scripts/setup-vps.sh" ]; then
