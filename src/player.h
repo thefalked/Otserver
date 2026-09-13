@@ -131,8 +131,8 @@ typedef std::list<Party*> PartyList;
 typedef std::map<uint32_t, War_t> WarMap;
 #endif
 
-#define SPEED_MAX 1500
-#define SPEED_MIN 10
+#define PLAYER_SPEED_MAX 1500
+#define PLAYER_SPEED_MIN 10
 #define STAMINA_MAX (42 * 60 * 60 * 1000)
 #define STAMINA_MULTIPLIER (60 * 1000)
 
@@ -749,7 +749,7 @@ class Player : public Creature, public Cylinder
 			if(!hasFlag(PlayerFlag_SetMaxSpeed))
 				baseSpeed = vocation->getBaseSpeed() + (2 * (level - 1));
 			else
-				baseSpeed = SPEED_MAX;
+				baseSpeed = PLAYER_SPEED_MAX;
 		}
 
 		void updateInventoryWeight();
@@ -797,11 +797,11 @@ class Player : public Creature, public Cylinder
 		uint32_t getVocAttackSpeed() const {return vocation->getAttackSpeed();}
 		virtual int32_t getStepSpeed() const
 		{
-			if(getSpeed() > SPEED_MAX)
-				return SPEED_MAX;
+			if(getSpeed() > PLAYER_SPEED_MAX)
+				return PLAYER_SPEED_MAX;
 
-			if(getSpeed() < SPEED_MIN)
-				return SPEED_MIN;
+			if(getSpeed() < PLAYER_SPEED_MIN)
+				return PLAYER_SPEED_MIN;
 
 			return getSpeed();
 		}
