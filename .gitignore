@@ -25,5 +25,8 @@ src/config.log
 src/libtool
 src/stamp-h1
 
+# Host copy from ./server/compile.sh — image builds its own binary in Docker
+server/theforgottenserver
+
 # Generated headline caches
 website/images/head/h_*.png

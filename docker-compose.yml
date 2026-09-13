@@ -50,8 +50,7 @@ services:
     networks:
       - otnet
 
-  # Prebuilt server/theforgottenserver (no compile on up).
-  # Rebuild binary only when sources change: ./server/compile.sh
+  # Compiles TFS inside the image for the host arch (see server/Dockerfile).
   otserver:
     build:
       context: .

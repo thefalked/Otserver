@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Compile TFS 0.4 once and save the Linux binary next to data/mods (replaces Baiak-Map.exe).
+# Optional: compile TFS 0.4 and copy the binary to server/theforgottenserver.
+# docker compose build otserver compiles inside the image for the target arch;
+# you do not need this file on the VPS.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

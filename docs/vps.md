@@ -18,7 +18,14 @@ That script asks you for **everything on your laptop** (no remote prompts):
 
 It then SSHs in (host key / VPS root password if the provider did not inject your laptop key), installs git, clones into `/opt/otserver` (full history), and runs `setup-vps.sh` with those values. It also starts Docker Compose and tries Let’s Encrypt if you gave an email.
 
-The token is stored only as `~sudo-user/.git-credentials` (mode 600), not in `git remote`. Anyone who can read that file can `git pull` this private repo — treat it like a secret. Later:
+The token is stored only as `~sudo-user/.git-credentials` (mode 600), not in `git remote`. Anyone who can read that file can `git pull` this private repo — treat it like a secret. If that file is missing:
+
+```bash
+# as the sudo user, from /opt/otserver — or:
+sudo bash scripts/set-git-credentials.sh --user YOUR_SUDO_USER
+```
+
+Later:
 
 ```bash
 ssh USER@VPS

@@ -118,11 +118,11 @@ Game settings live in `server/config.lua.template` (tracked, no secrets). At con
 | Compose service | Image / role |
 | ----------------- | -------------- |
 | `mysql` | MySQL 8.4; schema + Gesior SQL on first init |
-| `otserver` | Ubuntu 26.04 runtime; prebuilt `server/theforgottenserver` |
+| `otserver` | Ubuntu 26.04; compiles `theforgottenserver` from `src/` in the image |
 | `website` | PHP 8.5 Apache + Gesior AAC (internal port 80) |
 | `nginx` | Reverse proxy: HTTPS site + TCP stream for 7171/7172 |
 
-`otserver` is **runtime-only** — it does not compile C++ on `docker compose up`. The Linux binary must already exist at `server/theforgottenserver` (included when present in the repo).
+`otserver` builds the game binary **inside Docker** for the machine’s architecture. Do not rely on a checked-in `server/theforgottenserver` (an Apple Silicon build will fail on an amd64 VPS with `Exec format error`).
 
 Useful commands:
 
@@ -134,14 +134,15 @@ docker compose up --build -d website
 
 ## Rebuild the game binary
 
-Only needed when you change C++ under `src/`:
+`docker compose up --build -d otserver` recompiles when `src/` or `server/Dockerfile` change.
+
+Optional: write a host copy next to `data/` (same builder image):
 
 ```bash
 ./server/compile.sh
-docker compose up --build -d otserver
 ```
 
-`compile.sh` builds in a Docker builder image and writes `server/theforgottenserver` (replaces the old Windows `Baiak-Map.exe`).
+`compile.sh` is optional for local tooling; the compose image does not use that file.
 
 ## Project layout
 
