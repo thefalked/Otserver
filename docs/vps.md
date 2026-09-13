@@ -1,7 +1,50 @@
-# VPS ops: updates, SSH keys, Let's Encrypt, MySQL backups
+# VPS ops: first boot, domain, updates, SSH keys, Let's Encrypt, MySQL backups
 
-This is the follow-up to `sudo bash scripts/setup-vps.sh`. The bootstrap script
-installs the tools below; this page is how you use them without extra downtime.
+## Empty VPS (no git, no project)
+
+Cloud images do not include this repo. SSH in as **root** and run:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/thefalked/Otserver/master/scripts/bootstrap-vps.sh | sudo bash
+```
+
+That script only: installs `git`, clones into `/opt/otserver`, then runs `scripts/setup-vps.sh`. You will be asked for a sudo username, password, hostname, and optional Let's Encrypt email.
+
+Hostname default is **baiakvip9.thefalked.dev**. Press Enter to keep it, or type another name.
+
+Optional overrides (must be passed into the piped shell):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/thefalked/Otserver/master/scripts/bootstrap-vps.sh \
+  | sudo env SITE_DOMAIN=play.example.com OTSERVER_REF=master bash
+```
+
+| Variable | Default | Meaning |
+|----------|---------|---------|
+| `SITE_DOMAIN` | `baiakvip9.thefalked.dev` | Hostname prompt default (also written to `.env` as `OT_IP`) |
+| `OTSERVER_DIR` | `/opt/otserver` | Clone path |
+| `OTSERVER_REF` | `master` | Git branch or tag |
+| `OTSERVER_REPO` | `https://github.com/thefalked/Otserver.git` | Git remote |
+
+If you already have a checkout: `sudo bash scripts/setup-vps.sh`.
+
+## Change the hostname later
+
+DNS and the `.env` values are not frozen. After bootstrap:
+
+```bash
+sudo bash scripts/set-domain.sh                      # prompt
+sudo bash scripts/set-domain.sh play.example.com     # set SITE_DOMAIN + OT_IP
+sudo bash scripts/set-domain.sh play.example.com --keep-ot-ip
+```
+
+`set-domain.sh` restarts `otserver` so game clients get the new `OT_IP`. Then point DNS at the VPS and issue a cert for the new name:
+
+```bash
+sudo bash scripts/setup-letsencrypt.sh
+```
+
+You can also edit `SITE_DOMAIN` / `OT_IP` in `.env` by hand; `set-domain.sh` is the same thing plus the otserver restart.
 
 The game (7171/7172) and MySQL stay up across cert renewals, package installs,
 and database dumps. A **reboot is never automatic**. You still need one later
@@ -132,15 +175,15 @@ Browsers will warn until you issue a public cert.
 
 Requirements:
 
-- `SITE_DOMAIN` in `.env` is a real hostname (not an IP, not `localhost`)
+- `SITE_DOMAIN` in `.env` is a public hostname (default on VPS: `baiakvip9.thefalked.dev`)
 - DNS **A** (and **AAAA** if you have IPv6) for that name points at the VPS
 - compose is up with the VPS overlay (host port **80** published)
 - `LETSENCRYPT_EMAIL` in `.env` (or the script will ask)
 
 ```bash
-# .env
-SITE_DOMAIN=play.example.com
-OT_IP=play.example.com
+# .env (setup-vps.sh already sets these to the hostname you confirmed)
+SITE_DOMAIN=baiakvip9.thefalked.dev
+OT_IP=baiakvip9.thefalked.dev
 LETSENCRYPT_EMAIL=you@example.com
 
 docker compose up --build -d

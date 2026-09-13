@@ -16,11 +16,17 @@
 # Run as root, from this repo:
 #   sudo bash scripts/setup-vps.sh
 #
+# On a VPS that does not have git or this project yet, start with:
+#   curl -fsSL https://raw.githubusercontent.com/thefalked/Otserver/master/scripts/bootstrap-vps.sh | sudo bash
+# That clone lands in /opt/otserver and then runs this file.
+#
 # It will prompt for:
 #   1) sudo username
 #   2) that user's password (twice)
-#   3) website hostname used as the TLS certificate CN/SAN
+#   3) website hostname (default baiakvip9.thefalked.dev — Enter to keep it)
 #   4) email for Let's Encrypt (optional now; required when you issue the cert)
+#
+# Change the hostname later without re-running this: scripts/set-domain.sh
 #
 # It does NOT start the game stack. After it finishes, edit .env and run
 # `docker compose up --build -d` as the new user.
@@ -106,11 +112,13 @@ if [ "${PASSWORD}" != "${PASSWORD_CONFIRM}" ]; then
 	exit 1
 fi
 
-# Used as the self-signed cert CN. Default to the machine's FQDN so a VPS
-# with a PTR/hostname gets something useful without extra typing.
-DEFAULT_DOMAIN="$(hostname -f 2>/dev/null || hostname || echo localhost)"
-SITE_DOMAIN_INPUT="$(prompt "Website hostname for the TLS certificate [${DEFAULT_DOMAIN}]: ")"
-SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_DOMAIN}}"
+# Public DNS name for nginx / Let's Encrypt / game OT_IP.
+# Default is the current production host; override by typing another name, or
+# export SITE_DOMAIN before running (bootstrap-vps.sh does that).
+# Change later with: sudo bash scripts/set-domain.sh new.example.com
+DEFAULT_SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.thefalked.dev}"
+SITE_DOMAIN_INPUT="$(prompt "Website hostname [${DEFAULT_SITE_DOMAIN}]: ")"
+SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_SITE_DOMAIN}}"
 
 # Stored in .env for scripts/setup-letsencrypt.sh. Empty is fine until DNS exists.
 LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (optional now, Enter to skip): ")"
@@ -445,12 +453,20 @@ upsert_env() {
 if [ -f "${REPO_ROOT}/.env.example" ]; then
 	if [ ! -f "${REPO_ROOT}/.env" ]; then
 		cp "${REPO_ROOT}/.env.example" "${REPO_ROOT}/.env"
-		echo "Created ${REPO_ROOT}/.env — set MYSQL_* and OT_IP before starting compose."
+		echo "Created ${REPO_ROOT}/.env — set MYSQL_ROOT_PASSWORD and MYSQL_PASSWORD before starting compose."
 	fi
 	upsert_env "${REPO_ROOT}/.env" SITE_DOMAIN "${SITE_DOMAIN}"
+	upsert_env "${REPO_ROOT}/.env" OT_IP "${SITE_DOMAIN}"
 	upsert_env "${REPO_ROOT}/.env" LETSENCRYPT_EMAIL "${LETSENCRYPT_EMAIL}"
 	upsert_env "${REPO_ROOT}/.env" COMPOSE_FILE "docker-compose.yml:docker-compose.vps.yml"
 	chown "${USERNAME}:${USERNAME}" "${REPO_ROOT}/.env" || true
+fi
+
+# Fresh clone via bootstrap-vps.sh is root-owned. Hand the tree to the sudo
+# user so they can edit .env and run docker compose without extra root.
+if [ "$(stat -c %u "${REPO_ROOT}" 2>/dev/null || echo 0)" = "0" ]; then
+	echo "==> Giving ${USERNAME} ownership of ${REPO_ROOT}"
+	chown -R "${USERNAME}:${USERNAME}" "${REPO_ROOT}"
 fi
 
 # Do not leave the plaintext password in this process environment.
@@ -462,9 +478,11 @@ echo "Root SSH login is disabled. Keep this session open until you can log in as
 echo
 echo "Next (as ${USERNAME}):"
 echo "  cd ${REPO_ROOT}"
-echo "  nano .env          # MYSQL_ROOT_PASSWORD, MYSQL_PASSWORD, OT_IP=${SITE_DOMAIN}"
+echo "  nano .env          # MYSQL_ROOT_PASSWORD, MYSQL_PASSWORD"
 echo "  docker compose up --build -d"
-echo "  sudo bash scripts/setup-letsencrypt.sh   # after DNS points here"
+echo "  sudo bash scripts/setup-letsencrypt.sh   # DNS already on ${SITE_DOMAIN}"
+echo
+echo "Change hostname later:  sudo bash scripts/set-domain.sh new.example.com"
 echo
 echo "SSH keys (do this soon):  docs/vps.md"
 echo "  ssh-copy-id -i ~/.ssh/id_ed25519.pub ${USERNAME}@<this-host>"

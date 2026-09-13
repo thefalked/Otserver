@@ -9,13 +9,21 @@ Dockerized **The Forgotten Server 0.4** (Baiakzik Vip9 / 8.60) with MySQL and a 
 
 ## VPS bootstrap
 
-On a fresh Ubuntu/Debian VPS, as **root**:
+A new cloud image has no git and no copy of this project. As **root**, download the tiny bootstrap script and let it clone into `/opt/otserver`, then run the rest of the setup:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/thefalked/Otserver/master/scripts/bootstrap-vps.sh | sudo bash
+```
+
+That prompts for a sudo user, password, hostname (default **baiakvip9.thefalked.dev** — press Enter to keep it), and optional Let's Encrypt email. Change the hostname later with `sudo bash scripts/set-domain.sh new.example.com`.
+
+If the repo is already on disk:
 
 ```bash
 sudo bash scripts/setup-vps.sh
 ```
 
-The script prompts for a sudo username/password (and a hostname for the TLS cert), then:
+The setup then:
 
 - `apt update` / `upgrade`
 - installs **git**, **Docker**, **fail2ban**, **unattended-upgrades**, and **certbot**
@@ -24,10 +32,11 @@ The script prompts for a sudo username/password (and a hostname for the TLS cert
 - enables **UFW** (deny incoming; allow 22, 80, 443, 8080, 7171, 7172)
 - applies apt updates daily **without rebooting**; docker/ssh are not auto-restarted
 - installs a daily **MySQL hot dump** timer (`backups/mysql/`)
+- sets `SITE_DOMAIN` and `OT_IP` to the hostname you confirmed
 
-The script also points Compose at `docker-compose.vps.yml` so **80** (ACME + redirect to HTTPS) and **443** are published. After DNS points at the VPS, `sudo bash scripts/setup-letsencrypt.sh` replaces the self-signed cert. Keep the root session open until you can `ssh` in as the new user.
+Compose uses `docker-compose.vps.yml` so **80** (ACME + redirect to HTTPS) and **443** are published. After the stack is up: `sudo bash scripts/setup-letsencrypt.sh`. Keep the root session open until you can `ssh` in as the new user.
 
-Keys-only SSH, Let's Encrypt, and backups: **[docs/vps.md](docs/vps.md)**.
+Keys-only SSH, Let's Encrypt, domain changes, and backups: **[docs/vps.md](docs/vps.md)**.
 
 ## Home-server (optional)
 
@@ -87,9 +96,9 @@ Copy `.env.example` → `.env`. Compose and the containers read these values:
 | `MYSQL_DATABASE` | `ot` | Database name |
 | `MYSQL_USER` / `MYSQL_PASSWORD` | `ot` / *(required)* | App DB user |
 | `MYSQL_HOST` / `MYSQL_PORT` | `mysql` / `3306` | Host inside Docker network |
-| `OT_IP` | `127.0.0.1` | IP advertised to game clients |
+| `OT_IP` | `127.0.0.1` | IP/hostname advertised to game clients (VPS: set to `SITE_DOMAIN`) |
 | `WEBSITE_PORT` | `8080` | Host HTTP port for the website (standalone nginx) |
-| `SITE_DOMAIN` | `localhost` | Hostname for nginx / Let's Encrypt |
+| `SITE_DOMAIN` | `localhost` | Nginx / Let's Encrypt hostname (VPS default `baiakvip9.thefalked.dev`) |
 | `LETSENCRYPT_EMAIL` | *(empty)* | Account email for `scripts/setup-letsencrypt.sh` |
 
 Login/game are fixed at host **7171** / **7172** (same as home-server). Compose requires a `.env` file (`cp .env.example .env`).
