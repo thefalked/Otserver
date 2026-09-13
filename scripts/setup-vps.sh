@@ -16,9 +16,11 @@
 # Run as root, from this repo:
 #   sudo bash scripts/setup-vps.sh
 #
-# On a VPS that does not have git or this project yet, start with:
-#   curl -fsSL https://raw.githubusercontent.com/thefalked/Otserver/master/scripts/bootstrap-vps.sh | sudo bash
-# That clone lands in /opt/otserver and then runs this file.
+# On a VPS that does not have this project yet: this repo is private, so do
+# not anonymous-clone. From your laptop (recommended):
+#   rsync -az --exclude '.git' ./ root@VPS:/opt/otserver/
+#   ssh -t root@VPS bash /opt/otserver/scripts/setup-vps.sh
+# Or a PAT — see docs/vps.md (bootstrap-vps.sh).
 #
 # It will prompt for:
 #   1) sudo username

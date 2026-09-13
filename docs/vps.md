@@ -1,32 +1,42 @@
 # VPS ops: first boot, domain, updates, SSH keys, Let's Encrypt, MySQL backups
 
-## Empty VPS (no git, no project)
+## Empty VPS (private repo — no git, no project)
 
-Cloud images do not include this repo. SSH in as **root** and run:
+GitHub will reject an anonymous `git clone` and an anonymous curl of these scripts.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/thefalked/Otserver/master/scripts/bootstrap-vps.sh | sudo bash
-```
+### Option A — copy from your laptop (no token on the VPS)
 
-That script only: installs `git`, clones into `/opt/otserver`, then runs `scripts/setup-vps.sh`. You will be asked for a sudo username, password, hostname, and optional Let's Encrypt email.
-
-Hostname default is **baiakvip9.thefalked.dev**. Press Enter to keep it, or type another name.
-
-Optional overrides (must be passed into the piped shell):
+You already have the repo locally. From the **repo root on your laptop**:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/thefalked/Otserver/master/scripts/bootstrap-vps.sh \
-  | sudo env SITE_DOMAIN=play.example.com OTSERVER_REF=master bash
+rsync -az --exclude '.git' ./ root@VPS_IP:/opt/otserver/
+ssh -t root@VPS_IP bash /opt/otserver/scripts/setup-vps.sh
 ```
 
-| Variable | Default | Meaning |
-|----------|---------|---------|
-| `SITE_DOMAIN` | `baiakvip9.thefalked.dev` | Hostname prompt default (also written to `.env` as `OT_IP`) |
-| `OTSERVER_DIR` | `/opt/otserver` | Clone path |
-| `OTSERVER_REF` | `master` | Git branch or tag |
-| `OTSERVER_REPO` | `https://github.com/thefalked/Otserver.git` | Git remote |
+`setup-vps.sh` then asks for a sudo user, password, hostname (default **baiakvip9.thefalked.dev**), and optional Let's Encrypt email.
 
-If you already have a checkout: `sudo bash scripts/setup-vps.sh`.
+### Option B — GitHub personal access token
+
+On GitHub: **Settings → Developer settings → Personal access tokens**. Fine-grained token on **this repo only**, permission **Contents: Read-only**. Classic token needs the `repo` scope.
+
+On the VPS as root (token is prompted, or pass `GITHUB_TOKEN`):
+
+```bash
+read -s GITHUB_TOKEN; echo
+curl -fsSL \
+  -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+  -H "Accept: application/vnd.github.raw" \
+  "https://api.github.com/repos/thefalked/Otserver/contents/scripts/bootstrap-vps.sh?ref=master" \
+  | sudo env GITHUB_TOKEN="${GITHUB_TOKEN}" bash
+```
+
+Until this is merged, use `ref=cursor/vps-setup-script-b06f` and `OTSERVER_REF=cursor/vps-setup-script-b06f` in that URL / env.
+
+The bootstrap script clones into `/opt/otserver` using the token, then **removes the token from `git remote`**. Later `git pull` needs a new token or a read-only [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys).
+
+Optional env: `SITE_DOMAIN`, `OTSERVER_DIR` (`/opt/otserver`), `OTSERVER_REF` (`master`), `OTSERVER_REPO`.
+
+If you already have a checkout on the VPS: `sudo bash scripts/setup-vps.sh`.
 
 ## Change the hostname later
 
