@@ -10,7 +10,9 @@
 #
 # Reload (not restart) so existing HTTP/HTTPS connections drain; game TCP
 # streams through nginx are only dropped if that worker is recycled, which
-# is still far cheaper than bouncing the OT process.
+# is still far cheaper than bouncing the OT process. If reload fails (e.g.
+# old nginx.conf that required otserver DNS at load time), fall back to a
+# container restart so the new pems are still picked up.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -52,9 +54,31 @@ if [ -d "${CERT_DIR}" ]; then
 		|| chown "$(stat -c '%u:%g' "${CERT_DIR}")" "${CERT_DIR}/fullchain.pem" "${CERT_DIR}/privkey.pem" || true
 fi
 
-if docker ps -q -f "name=^${CONTAINER}$" | grep -q .; then
-	docker exec "${CONTAINER}" nginx -s reload
-	echo "Installed cert from ${LIVE} and reloaded ${CONTAINER}"
-else
+if ! docker ps -q -f "name=^${CONTAINER}$" | grep -q .; then
 	echo "Installed cert from ${LIVE} (${CONTAINER} not running; it will pick this up on start)"
+	exit 0
 fi
+
+reload_nginx() {
+	docker exec "${CONTAINER}" nginx -t >/dev/null 2>&1 \
+		&& docker exec "${CONTAINER}" nginx -s reload
+}
+
+if reload_nginx; then
+	echo "Installed cert from ${LIVE} and reloaded ${CONTAINER}"
+	exit 0
+fi
+
+echo "nginx reload failed (often: upstream not in Docker DNS yet). Restarting ${CONTAINER}..." >&2
+docker restart "${CONTAINER}" >/dev/null
+# Brief wait so compose health / listeners come back.
+for _i in 1 2 3 4 5 6 7 8 9 10; do
+	if docker ps -q -f "name=^${CONTAINER}$" | grep -q .; then
+		echo "Installed cert from ${LIVE} and restarted ${CONTAINER}"
+		exit 0
+	fi
+	sleep 1
+done
+
+echo "Cert files are in ${CERT_DIR}, but ${CONTAINER} did not come back. Check: docker compose ps" >&2
+exit 1

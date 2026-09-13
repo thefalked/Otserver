@@ -15,18 +15,21 @@
 #
 # Run from your PC (this repo, Git Bash / macOS / Linux / WSL):
 #   ./scripts/setup-from-pc.sh
-# That SSHs into the VPS, clones with your GitHub token, and runs this file.
-# All prompts (users, passwords, token, hostname) happen in that session.
+# That collects every prompt on your laptop, SSHs into the VPS, clones with
+# your GitHub token, and runs this file non-interactively.
 #
-# Already on the VPS as root, with the repo and GITHUB_TOKEN set:
+# Already on the VPS as root, with the repo (and optionally GITHUB_TOKEN) set:
 #   sudo bash scripts/setup-vps.sh
-#
-# It will prompt for:
+# Without OTSERVER_* / MYSQL_* env vars it will prompt on /dev/tty for:
 #   1) sudo username
 #   2) that user's password (twice)
 #   3) website hostname (default baiakvip9.thefalked.dev — Enter to keep it)
 #   4) Let's Encrypt email
 #   5) MySQL root and app passwords
+#
+# Prefill without prompts (what setup-from-pc.sh exports):
+#   OTSERVER_USERNAME OTSERVER_PASSWORD SITE_DOMAIN LETSENCRYPT_EMAIL
+#   MYSQL_ROOT_PASSWORD MYSQL_PASSWORD  (and GITHUB_TOKEN for git credentials)
 #
 # Change the hostname later without re-running this: scripts/set-domain.sh
 #
@@ -67,6 +70,10 @@ export NEEDRESTART_MODE=a
 # (curl | bash) and stdin is not a terminal.
 prompt() {
 	local value=""
+	if ! { : > /dev/tty; } 2>/dev/null; then
+		echo "Need /dev/tty for prompts, or set OTSERVER_USERNAME / OTSERVER_PASSWORD / MYSQL_* (see ./scripts/setup-from-pc.sh)." >&2
+		exit 1
+	fi
 	printf '%s' "$1" > /dev/tty
 	IFS= read -r value < /dev/tty
 	printf '%s' "${value}"
@@ -76,6 +83,10 @@ prompt() {
 # read -s does not print one.
 prompt_secret() {
 	local value=""
+	if ! { : > /dev/tty; } 2>/dev/null; then
+		echo "Need /dev/tty for prompts, or set OTSERVER_USERNAME / OTSERVER_PASSWORD / MYSQL_* (see ./scripts/setup-from-pc.sh)." >&2
+		exit 1
+	fi
 	printf '%s' "$1" > /dev/tty
 	IFS= read -rs value < /dev/tty
 	printf '\n' > /dev/tty
@@ -86,11 +97,49 @@ echo "=== OTServer VPS setup ==="
 echo
 
 # -----------------------------------------------------------------------------
-# Prompts
+# Prompts (or env from setup-from-pc.sh)
 # Why validate the username: useradd/chpasswd/sudoers filenames break on
 # spaces or uppercase-only names; we only allow a typical Unix login.
 # -----------------------------------------------------------------------------
-USERNAME="$(prompt "New sudo username: ")"
+if [ -n "${OTSERVER_USERNAME:-}" ]; then
+	USERNAME="${OTSERVER_USERNAME}"
+	PASSWORD="${OTSERVER_PASSWORD:-}"
+	SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.thefalked.dev}"
+	LETSENCRYPT_EMAIL="${LETSENCRYPT_EMAIL:-}"
+	MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
+	MYSQL_PASSWORD="${MYSQL_PASSWORD:-}"
+	echo "Using setup values from environment (non-interactive)."
+else
+	USERNAME="$(prompt "New sudo username: ")"
+	PASSWORD="$(prompt_secret "Password for ${USERNAME}: ")"
+	PASSWORD_CONFIRM="$(prompt_secret "Confirm password: ")"
+	if [ "${PASSWORD}" != "${PASSWORD_CONFIRM}" ]; then
+		echo "Passwords do not match." >&2
+		exit 1
+	fi
+	unset PASSWORD_CONFIRM
+
+	DEFAULT_SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.thefalked.dev}"
+	SITE_DOMAIN_INPUT="$(prompt "Website hostname [${DEFAULT_SITE_DOMAIN}]: ")"
+	SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_SITE_DOMAIN}}"
+
+	LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (Enter to skip HTTPS cert for now): ")"
+
+	MYSQL_ROOT_PASSWORD="$(prompt_secret "MySQL root password: ")"
+	MYSQL_ROOT_PASSWORD_CONFIRM="$(prompt_secret "Confirm MySQL root password: ")"
+	if [ -z "${MYSQL_ROOT_PASSWORD}" ] || [ "${MYSQL_ROOT_PASSWORD}" != "${MYSQL_ROOT_PASSWORD_CONFIRM}" ]; then
+		echo "MySQL root password empty or did not match." >&2
+		exit 1
+	fi
+	MYSQL_PASSWORD="$(prompt_secret "MySQL app (ot) password: ")"
+	MYSQL_PASSWORD_CONFIRM="$(prompt_secret "Confirm MySQL app password: ")"
+	if [ -z "${MYSQL_PASSWORD}" ] || [ "${MYSQL_PASSWORD}" != "${MYSQL_PASSWORD_CONFIRM}" ]; then
+		echo "MySQL app password empty or did not match." >&2
+		exit 1
+	fi
+	unset MYSQL_ROOT_PASSWORD_CONFIRM MYSQL_PASSWORD_CONFIRM
+fi
+
 if ! printf '%s' "${USERNAME}" | grep -Eq '^[a-z_][a-z0-9_-]{0,31}$'; then
 	echo "Invalid username. Use lowercase letters, digits, underscore, or hyphen." >&2
 	exit 1
@@ -99,42 +148,14 @@ if [ "${USERNAME}" = "root" ]; then
 	echo "Pick a non-root username." >&2
 	exit 1
 fi
-
-PASSWORD="$(prompt_secret "Password for ${USERNAME}: ")"
-PASSWORD_CONFIRM="$(prompt_secret "Confirm password: ")"
 if [ -z "${PASSWORD}" ]; then
 	echo "Password cannot be empty." >&2
 	exit 1
 fi
-if [ "${PASSWORD}" != "${PASSWORD_CONFIRM}" ]; then
-	echo "Passwords do not match." >&2
+if [ -z "${MYSQL_ROOT_PASSWORD}" ] || [ -z "${MYSQL_PASSWORD}" ]; then
+	echo "MYSQL_ROOT_PASSWORD and MYSQL_PASSWORD are required." >&2
 	exit 1
 fi
-
-# Public DNS name for nginx / Let's Encrypt / game OT_IP.
-# Default is the current production host; override by typing another name, or
-# export SITE_DOMAIN before running (bootstrap-vps.sh does that).
-# Change later with: sudo bash scripts/set-domain.sh new.example.com
-DEFAULT_SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.thefalked.dev}"
-SITE_DOMAIN_INPUT="$(prompt "Website hostname [${DEFAULT_SITE_DOMAIN}]: ")"
-SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_SITE_DOMAIN}}"
-
-# Stored in .env for scripts/setup-letsencrypt.sh. Empty is fine until DNS exists.
-LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (Enter to skip HTTPS cert for now): ")"
-
-MYSQL_ROOT_PASSWORD="$(prompt_secret "MySQL root password: ")"
-MYSQL_ROOT_PASSWORD_CONFIRM="$(prompt_secret "Confirm MySQL root password: ")"
-if [ -z "${MYSQL_ROOT_PASSWORD}" ] || [ "${MYSQL_ROOT_PASSWORD}" != "${MYSQL_ROOT_PASSWORD_CONFIRM}" ]; then
-	echo "MySQL root password empty or did not match." >&2
-	exit 1
-fi
-MYSQL_PASSWORD="$(prompt_secret "MySQL app (ot) password: ")"
-MYSQL_PASSWORD_CONFIRM="$(prompt_secret "Confirm MySQL app password: ")"
-if [ -z "${MYSQL_PASSWORD}" ] || [ "${MYSQL_PASSWORD}" != "${MYSQL_PASSWORD_CONFIRM}" ]; then
-	echo "MySQL app password empty or did not match." >&2
-	exit 1
-fi
-unset MYSQL_ROOT_PASSWORD_CONFIRM MYSQL_PASSWORD_CONFIRM
 
 echo
 echo "User:        ${USERNAME}"
@@ -542,11 +563,13 @@ if [ -n "${LETSENCRYPT_EMAIL}" ]; then
 	if bash "${REPO_ROOT}/scripts/setup-letsencrypt.sh"; then
 		echo "Let's Encrypt installed."
 	else
-		echo "Let's Encrypt failed (DNS/port 80?). Re-run later: sudo bash ${REPO_ROOT}/scripts/setup-letsencrypt.sh" >&2
+		echo "Let's Encrypt step failed. Cert may already be issued under /etc/letsencrypt/live/${SITE_DOMAIN}/." >&2
+		echo "Check DNS/port 80, then: sudo bash ${REPO_ROOT}/scripts/setup-letsencrypt.sh" >&2
+		echo "Or only install existing certs: sudo bash ${REPO_ROOT}/scripts/install-letsencrypt-certs.sh" >&2
 	fi
 fi
 
-unset PASSWORD PASSWORD_CONFIRM MYSQL_ROOT_PASSWORD MYSQL_PASSWORD GITHUB_TOKEN
+unset PASSWORD PASSWORD_CONFIRM OTSERVER_PASSWORD MYSQL_ROOT_PASSWORD MYSQL_PASSWORD GITHUB_TOKEN
 
 echo
 echo "=== Done ==="

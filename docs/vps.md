@@ -8,12 +8,15 @@ The repo is private. Do **not** anonymous-clone on the VPS. From this repo on yo
 ./scripts/setup-from-pc.sh
 ```
 
-That script asks you for:
+That script asks you for **everything on your laptop** (no remote prompts):
 
 1. VPS IP/hostname, SSH user (`root` on a new machine), SSH port
 2. GitHub token (hidden) — fine-grained **Contents: Read-only** on this repo, or classic `repo`
+3. New sudo username + password
+4. Website hostname (default **baiakvip9.thefalked.dev**), Let’s Encrypt email
+5. MySQL root and app passwords
 
-It then SSHs in (host key / VPS root password if the provider did not inject your laptop key). On the server it installs git, clones into `/opt/otserver` (full history), and runs `setup-vps.sh`, which asks for the sudo user, passwords, hostname (default **baiakvip9.thefalked.dev**), Let’s Encrypt email, and MySQL passwords. It also starts Docker Compose and tries Let’s Encrypt if you gave an email.
+It then SSHs in (host key / VPS root password if the provider did not inject your laptop key), installs git, clones into `/opt/otserver` (full history), and runs `setup-vps.sh` with those values. It also starts Docker Compose and tries Let’s Encrypt if you gave an email.
 
 The token is stored only as `~sudo-user/.git-credentials` (mode 600), not in `git remote`. Anyone who can read that file can `git pull` this private repo — treat it like a secret. Later:
 
