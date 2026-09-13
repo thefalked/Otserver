@@ -235,8 +235,8 @@ teleportAllSummons = false
 teleportPlayerSummons = false
 
 ownerName = "[ADM] Energy"
-ownerEmail = "(BREVE)"
-url = "baiakzikvip924h.servegame.com"
+ownerEmail = "baiakvip9@thefalked.dev"
+url = "baiakvip9.thefalked.dev"
 location = "Brasil"
 displayGamemastersWithOnlineCommand = false
 
@@ -244,6 +244,6 @@ adminLogsEnabled = false
 displayPlayersLogging = true
 prefixChannelLogs = ""
 runFile = ""
-outLogName = "server/out.log"
-errorLogName = "server/error.log"
+outLogName = ""
+errorLogName = ""
 truncateLogsOnStartup = false

@@ -482,7 +482,9 @@ void otserv(StringVec, ServiceManager* services)
 	}
 
 	std::clog << ">> Checking software version...";
-	if(xmlDocPtr doc = xmlParseFile(VERSION_CHECK))
+	if(VERSION_CHECK[0] == '\0')
+		std::clog << " skipped (disabled)." << std::endl;
+	else if(xmlDocPtr doc = xmlParseFile(VERSION_CHECK))
 	{
 		xmlNodePtr p, root = xmlDocGetRootElement(doc);
 		if(!xmlStrcmp(root->name, (const xmlChar*)"versions"))

@@ -45,6 +45,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	ca-certificates \
+	coreutils \
 	gettext-base \
 	libboost-thread1.90.0 \
 	libboost-regex1.90.0 \

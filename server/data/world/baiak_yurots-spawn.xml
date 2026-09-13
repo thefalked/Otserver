@@ -10,7 +10,7 @@
     <monster name="Hydra" x="2" y="2" z="2" spawntime="60" />
   </spawn>
   <spawn centerx="302" centery="92" centerz="3" radius="2">
-    <npc name="Varkhal" x="1" y="0" z="3" spawntime="60" />
+    <npc name="varkhal" x="1" y="0" z="3" spawntime="60" />
   </spawn>
   <spawn centerx="153" centery="244" centerz="3" radius="5">
     <monster name="Hydra" x="1" y="-2" z="3" spawntime="60" />
@@ -21,7 +21,7 @@
     <monster name="Demon" x="3" y="-3" z="4" spawntime="60" />
   </spawn>
   <spawn centerx="310" centery="80" centerz="4" radius="1">
-    <npc name="Lector" x="-1" y="0" z="4" spawntime="60" />
+    <npc name="lector" x="-1" y="0" z="4" spawntime="60" />
   </spawn>
   <spawn centerx="127" centery="101" centerz="4" radius="7">
     <monster name="Serpent Spawn" x="-1" y="-2" z="4" spawntime="60" />
@@ -84,15 +84,15 @@
   </spawn>
   <spawn centerx="1506" centery="2025" centerz="4" radius="5" />
   <spawn centerx="120" centery="48" centerz="5" radius="1">
-    <npc name="Perac" x="0" y="0" z="5" spawntime="60" />
+    <npc name="perac" x="0" y="0" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="128" centery="48" centerz="5" radius="5">
-    <npc name="Especialista of Sotf" x="-1" y="0" z="5" spawntime="60" />
-    <npc name="Johnny" x="2" y="0" z="5" spawntime="60" />
-    <npc name="Rashid" x="4" y="0" z="5" spawntime="60" />
+    <npc name="especialista_of_sotf" x="-1" y="0" z="5" spawntime="60" />
+    <npc name="johnny" x="2" y="0" z="5" spawntime="60" />
+    <npc name="rashid" x="4" y="0" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="121" centery="57" centerz="5" radius="5">
-    <npc name="Mad" x="1" y="0" z="5" spawntime="60" />
+    <npc name="mad" x="1" y="0" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="61" centery="59" centerz="5" radius="5">
     <monster name="Warlock" x="-3" y="4" z="5" spawntime="60" />
@@ -107,7 +107,7 @@
     <monster name="Stone Golem" x="3" y="4" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="305" centery="80" centerz="5" radius="1">
-    <npc name="Dark Rodo" x="1" y="0" z="5" spawntime="60" />
+    <npc name="dark_rodo" x="1" y="0" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="165" centery="85" centerz="5" radius="5">
     <monster name="Valkyrie" x="1" y="-1" z="5" spawntime="60" />
@@ -137,14 +137,14 @@
     <monster name="Giant Spider" x="0" y="-1" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="314" centery="107" centerz="5" radius="1">
-    <npc name="Seller" x="-1" y="0" z="5" spawntime="60" />
+    <npc name="seller" x="-1" y="0" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="169" centery="118" centerz="5" radius="7">
     <monster name="Goblin" x="-4" y="-7" z="5" spawntime="60" />
     <monster name="Goblin" x="-6" y="-4" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="256" centery="122" centerz="5" radius="1">
-    <npc name="Athan" x="0" y="1" z="5" spawntime="60" />
+    <npc name="athan" x="0" y="1" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="146" centery="137" centerz="5" radius="15">
     <monster name="Orc Warrior" x="2" y="3" z="5" spawntime="60" />
@@ -223,7 +223,7 @@
     <monster name="Demon Vip" x="-1" y="2" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="220" centery="513" centerz="5" radius="5">
-    <npc name="Updade Seller" x="2" y="1" z="5" spawntime="60" />
+    <npc name="updade_seller" x="2" y="1" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="98" centery="523" centerz="5" radius="5">
     <monster name="Event Zombie" x="-3" y="-3" z="5" spawntime="60" />
@@ -251,10 +251,10 @@
     <monster name="Shadow Warrior" x="2" y="3" z="5" spawntime="512" />
   </spawn>
   <spawn centerx="990" centery="972" centerz="5" radius="1">
-    <npc name="Blesser Man" x="0" y="-1" z="5" spawntime="60" />
+    <npc name="blesser_man" x="0" y="-1" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="1031" centery="1002" centerz="5" radius="1">
-    <npc name="Perac" x="0" y="1" z="5" spawntime="60" />
+    <npc name="perac" x="0" y="1" z="5" spawntime="60" />
   </spawn>
   <spawn centerx="1133" centery="1080" centerz="5" radius="1">
     <monster name="Dragon Lord" x="0" y="0" z="5" spawntime="60" />
@@ -431,7 +431,7 @@
     <monster name="Bazir" x="4" y="3" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="128" centery="48" centerz="6" radius="5">
-    <npc name="Dark Rodo" x="0" y="0" z="6" spawntime="60" />
+    <npc name="dark_rodo" x="0" y="0" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="146" centery="48" centerz="6" radius="5">
     <monster name="Treiner" x="2" y="-3" z="6" spawntime="5" />
@@ -560,14 +560,14 @@
     <monster name="Bandit" x="-2" y="4" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="314" centery="107" centerz="6" radius="1">
-    <npc name="Mad" x="-1" y="0" z="6" spawntime="60" />
+    <npc name="mad" x="-1" y="0" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="104" centery="108" centerz="6" radius="10">
     <monster name="Cyclops" x="-2" y="2" z="6" spawntime="60" />
     <monster name="Cyclops" x="-2" y="5" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="223" centery="109" centerz="6" radius="1">
-    <npc name="Perac" x="1" y="0" z="6" spawntime="60" />
+    <npc name="perac" x="1" y="0" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="168" centery="117" centerz="6" radius="7">
     <monster name="Dworc Venomsniper" x="1" y="-2" z="6" spawntime="60" />
@@ -587,7 +587,7 @@
     <monster name="Goblin" x="-7" y="7" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="253" centery="122" centerz="6" radius="1">
-    <npc name="Obi" x="0" y="1" z="6" spawntime="60" />
+    <npc name="obi" x="0" y="1" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="160" centery="123" centerz="6" radius="7">
     <monster name="Goblin" x="-1" y="-2" z="6" spawntime="60" />
@@ -1119,7 +1119,7 @@
     <monster name="Master Vip Frost Dragon" x="4" y="-1" z="6" spawntime="256" />
   </spawn>
   <spawn centerx="170" centery="507" centerz="6" radius="5">
-    <npc name="Updade Seller" x="-1" y="4" z="6" spawntime="20" />
+    <npc name="updade_seller" x="-1" y="4" z="6" spawntime="20" />
   </spawn>
   <spawn centerx="170" centery="508" centerz="6" radius="6" />
   <spawn centerx="1413" centery="512" centerz="6" radius="5">
@@ -1128,8 +1128,8 @@
     <monster name="Master Vip Frost Dragon" x="1" y="2" z="6" spawntime="512" />
   </spawn>
   <spawn centerx="220" centery="513" centerz="6" radius="5">
-    <npc name="Warmaster Addon 1" x="3" y="-2" z="6" spawntime="60" />
-    <npc name="Warmaster Addon 2" x="3" y="4" z="6" spawntime="60" />
+    <npc name="warmaster_addon_1" x="3" y="-2" z="6" spawntime="60" />
+    <npc name="warmaster_addon_2" x="3" y="4" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="232" centery="530" centerz="6" radius="6">
     <monster name="Vip Trainer" x="-3" y="-5" z="6" spawntime="50" />
@@ -1193,13 +1193,13 @@
     <monster name="King of Baiak" x="1" y="0" z="6" spawntime="180" />
   </spawn>
   <spawn centerx="989" centery="992" centerz="6" radius="1">
-    <npc name="Especialista of Sotf" x="0" y="1" z="6" spawntime="60" />
+    <npc name="especialista_of_sotf" x="0" y="1" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="997" centery="992" centerz="6" radius="1">
-    <npc name="Eremo" x="0" y="1" z="6" spawntime="60" />
+    <npc name="eremo" x="0" y="1" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="1019" centery="992" centerz="6" radius="1">
-    <npc name="Johnny" x="0" y="0" z="6" spawntime="60" />
+    <npc name="johnny" x="0" y="0" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="1123" centery="997" centerz="6" radius="5">
     <monster name="Wyrm" x="-1" y="0" z="6" spawntime="60" />
@@ -1209,10 +1209,10 @@
     <monster name="Wyrm" x="0" y="-2" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="1032" centery="1002" centerz="6" radius="1">
-    <npc name="Dark Rodo" x="0" y="0" z="6" spawntime="60" />
+    <npc name="dark_rodo" x="0" y="0" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="988" centery="1005" centerz="6" radius="1">
-    <npc name="Raphael" x="1" y="1" z="6" spawntime="60" />
+    <npc name="raphael" x="1" y="1" z="6" spawntime="60" />
   </spawn>
   <spawn centerx="1123" centery="1008" centerz="6" radius="5">
     <monster name="Wyrm" x="-2" y="-1" z="6" spawntime="60" />
@@ -1428,7 +1428,7 @@
     <monster name="Dragao De Gelo" x="0" y="-4" z="7" spawntime="5" />
     <monster name="Capeta" x="2" y="-4" z="7" spawntime="5" />
     <monster name="Capeta" x="4" y="-4" z="7" spawntime="5" />
-    <npc name="Baiak-Zik" x="-2" y="2" z="7" spawntime="5" />
+    <npc name="baiak-zik" x="-2" y="2" z="7" spawntime="5" />
   </spawn>
   <spawn centerx="484" centery="11" centerz="7" radius="5">
     <monster name="Morte" x="4" y="-4" z="7" spawntime="5" />
@@ -1566,7 +1566,7 @@
   <spawn centerx="643" centery="23" centerz="7" radius="5" />
   <spawn centerx="641" centery="26" centerz="7" radius="30" />
   <spawn centerx="132" centery="27" centerz="7" radius="1">
-    <npc name="Especialista of Sotf" x="0" y="1" z="7" spawntime="60" />
+    <npc name="especialista_of_sotf" x="0" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="423" centery="28" centerz="7" radius="30">
     <monster name="Demon Vip" x="16" y="-2" z="7" spawntime="60" />
@@ -1706,7 +1706,7 @@
     <monster name="Medusa Vip" x="6" y="22" z="7" spawntime="5" />
   </spawn>
   <spawn centerx="133" centery="33" centerz="7" radius="1">
-    <npc name="Eremo" x="-1" y="0" z="7" spawntime="60" />
+    <npc name="eremo" x="-1" y="0" z="7" spawntime="60" />
     <monster name="Wolf" x="0" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="505" centery="33" centerz="7" radius="5" />
@@ -2025,7 +2025,7 @@
   <spawn centerx="569" centery="41" centerz="7" radius="30" />
   <spawn centerx="504" centery="42" centerz="7" radius="1" />
   <spawn centerx="155" centery="43" centerz="7" radius="1">
-    <npc name="New Runes" x="0" y="1" z="7" spawntime="5" />
+    <npc name="new_runes" x="0" y="1" z="7" spawntime="5" />
   </spawn>
   <spawn centerx="280" centery="43" centerz="7" radius="6" />
   <spawn centerx="312" centery="43" centerz="7" radius="30" />
@@ -2102,7 +2102,7 @@
     <monster name="Frost Dragon Vip" x="-16" y="19" z="7" spawntime="5" />
   </spawn>
   <spawn centerx="176" centery="46" centerz="7" radius="1">
-    <npc name="Baiakzik Seller" x="-1" y="1" z="7" spawntime="5" />
+    <npc name="baiakzik_seller" x="-1" y="1" z="7" spawntime="5" />
   </spawn>
   <spawn centerx="414" centery="47" centerz="7" radius="1" />
   <spawn centerx="426" centery="47" centerz="7" radius="30" />
@@ -2112,7 +2112,7 @@
   <spawn centerx="367" centery="48" centerz="7" radius="30" />
   <spawn centerx="483" centery="48" centerz="7" radius="30" />
   <spawn centerx="127" centery="49" centerz="7" radius="5">
-    <npc name="Lector" x="0" y="-1" z="7" spawntime="60" />
+    <npc name="lector" x="0" y="-1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="410" centery="49" centerz="7" radius="1" />
   <spawn centerx="500" centery="50" centerz="7" radius="30" />
@@ -2122,10 +2122,10 @@
   <spawn centerx="479" centery="54" centerz="7" radius="5" />
   <spawn centerx="504" centery="54" centerz="7" radius="1" />
   <spawn centerx="128" centery="55" centerz="7" radius="5">
-    <npc name="Dufi" x="0" y="0" z="7" spawntime="60" />
+    <npc name="dufi" x="0" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="163" centery="55" centerz="7" radius="1">
-    <npc name="New master" x="0" y="0" z="7" spawntime="60" />
+    <npc name="new_master" x="0" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="489" centery="55" centerz="7" radius="5" />
   <spawn centerx="481" centery="56" centerz="7" radius="30" />
@@ -4488,10 +4488,10 @@
     <monster name="Nightmare" x="4" y="3" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="161" centery="507" centerz="7" radius="5">
-    <npc name="Dark Rodo" x="-4" y="-1" z="7" spawntime="60" />
+    <npc name="dark_rodo" x="-4" y="-1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="149" centery="509" centerz="7" radius="5">
-    <npc name="Especialista of Sotf" x="-2" y="-1" z="7" spawntime="60" />
+    <npc name="especialista_of_sotf" x="-2" y="-1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1010" centery="509" centerz="7" radius="5">
     <monster name="Ferumbras" x="3" y="-5" z="7" spawntime="60" />
@@ -4505,7 +4505,7 @@
     <monster name="Morgaroth" x="1" y="3" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="220" centery="513" centerz="7" radius="5">
-    <npc name="Lector" x="3" y="-1" z="7" spawntime="60" />
+    <npc name="lector" x="3" y="-1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="856" centery="513" centerz="7" radius="5">
     <monster name="Grim Reaper Vip" x="0" y="-3" z="7" spawntime="60" />
@@ -4534,7 +4534,7 @@
     <monster name="Plaguesmith" x="1" y="2" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="154" centery="516" centerz="7" radius="5">
-    <npc name="Mad" x="2" y="1" z="7" spawntime="60" />
+    <npc name="mad" x="2" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="889" centery="517" centerz="7" radius="5">
     <monster name="Grim Reaper Vip" x="3" y="-1" z="7" spawntime="60" />
@@ -4595,7 +4595,7 @@
     <monster name="Demon" x="-2" y="3" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="232" centery="529" centerz="7" radius="5">
-    <npc name="Dufi" x="4" y="1" z="7" spawntime="60" />
+    <npc name="dufi" x="4" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="265" centery="529" centerz="7" radius="7">
     <monster name="hydra vip" x="-7" y="-3" z="7" spawntime="60" />
@@ -7183,7 +7183,7 @@
     <monster name="Master Vip Hydra" x="30" y="29" z="7" spawntime="768" />
   </spawn>
   <spawn centerx="999" centery="991" centerz="7" radius="1">
-    <npc name="Athan" x="-1" y="1" z="7" spawntime="60" />
+    <npc name="athan" x="-1" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1905" centery="993" centerz="7" radius="30">
     <monster name="Master Vip Hydra" x="-14" y="-22" z="7" spawntime="768" />
@@ -7205,13 +7205,13 @@
     <monster name="Master Vip Hydra" x="-3" y="19" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1014" centery="1001" centerz="7" radius="1">
-    <npc name="Varkhal" x="0" y="0" z="7" spawntime="60" />
+    <npc name="varkhal" x="0" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1030" centery="1001" centerz="7" radius="1">
-    <npc name="Lector" x="0" y="0" z="7" spawntime="60" />
+    <npc name="lector" x="0" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1010" centery="1002" centerz="7" radius="1">
-    <npc name="Riona" x="0" y="0" z="7" spawntime="60" />
+    <npc name="riona" x="0" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1118" centery="1013" centerz="7" radius="5">
     <monster name="Wisp" x="2" y="0" z="7" spawntime="60" />
@@ -7356,7 +7356,7 @@
     <monster name="Master Vip Hydra" x="16" y="24" z="7" spawntime="1024" />
   </spawn>
   <spawn centerx="1018" centery="1037" centerz="7" radius="1">
-    <npc name="Updade Seller" x="0" y="0" z="7" spawntime="60" />
+    <npc name="updade_seller" x="0" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="423" centery="1038" centerz="7" radius="30">
     <monster name="The Fire Elemental" x="-10" y="-11" z="7" spawntime="50" />
@@ -7945,7 +7945,7 @@
     <monster name="Master Vip" x="1" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1259" centery="1231" centerz="7" radius="1">
-    <npc name="Lector" x="-1" y="0" z="7" spawntime="60" />
+    <npc name="lector" x="-1" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1629" centery="1231" centerz="7" radius="1">
     <monster name="Ghazbaran" x="-1" y="0" z="7" spawntime="60" />
@@ -8039,14 +8039,14 @@
     <monster name="Dont Lure" x="0" y="3" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1157" centery="1267" centerz="7" radius="1">
-    <npc name="Master Vip Seller" x="1" y="1" z="7" spawntime="60" />
+    <npc name="master_vip_seller" x="1" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1817" centery="1267" centerz="7" radius="3">
     <monster name="Infernatil" x="0" y="1" z="7" spawntime="60" />
     <monster name="Dont Lure" x="-2" y="2" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1146" centery="1268" centerz="7" radius="1">
-    <npc name="Dark Rodo" x="-1" y="0" z="7" spawntime="60" />
+    <npc name="dark_rodo" x="-1" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1796" centery="1269" centerz="7" radius="3">
     <monster name="Morgaroth" x="-2" y="1" z="7" spawntime="60" />
@@ -8090,17 +8090,17 @@
     <monster name="warlock vip" x="3" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1159" centery="1279" centerz="7" radius="1">
-    <npc name="super dufi" x="-1" y="1" z="7" spawntime="60" />
+    <npc name="super_dufi" x="-1" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1167" centery="1279" centerz="7" radius="1">
-    <npc name="Especialista of Sotf" x="1" y="1" z="7" spawntime="60" />
+    <npc name="especialista_of_sotf" x="1" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="999" centery="1280" centerz="7" radius="4">
     <monster name="Ghazbaran" x="4" y="-2" z="7" spawntime="60" />
     <monster name="Ghazbaran" x="-3" y="1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1091" centery="1280" centerz="7" radius="1">
-    <npc name="Priest" x="-1" y="0" z="7" spawntime="60" />
+    <npc name="priest" x="-1" y="0" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1025" centery="1283" centerz="7" radius="4">
     <monster name="Ferumbras" x="2" y="-1" z="7" spawntime="60" />
@@ -8220,8 +8220,8 @@
     <monster name="warlock vip" x="4" y="4" z="7" spawntime="1280" />
   </spawn>
   <spawn centerx="825" centery="1328" centerz="7" radius="5">
-    <npc name="Dufi" x="2" y="-3" z="7" spawntime="50" />
-    <npc name="Especialista of Sotf" x="2" y="4" z="7" spawntime="50" />
+    <npc name="dufi" x="2" y="-3" z="7" spawntime="50" />
+    <npc name="especialista_of_sotf" x="2" y="4" z="7" spawntime="50" />
   </spawn>
   <spawn centerx="1482" centery="1332" centerz="7" radius="30">
     <monster name="Master Vip Medusa" x="-10" y="-13" z="7" spawntime="1280" />
@@ -8450,8 +8450,8 @@
     <monster name="Master Vip Grim Reaper" x="3" y="-5" z="7" spawntime="60" />
     <monster name="Master Vip Grim Reaper" x="4" y="-5" z="7" spawntime="60" />
     <monster name="Master Vip Grim Reaper" x="5" y="-5" z="7" spawntime="60" />
-    <npc name="Riona" x="2" y="-3" z="7" spawntime="60" />
-    <npc name="Especialista of Sotf" x="-2" y="3" z="7" spawntime="60" />
+    <npc name="riona" x="2" y="-3" z="7" spawntime="60" />
+    <npc name="especialista_of_sotf" x="-2" y="3" z="7" spawntime="60" />
     <monster name="Master Vip Demon" x="-5" y="5" z="7" spawntime="60" />
     <monster name="Master Boss" x="-4" y="5" z="7" spawntime="60" />
     <monster name="Master Vip Demon" x="-3" y="5" z="7" spawntime="60" />
@@ -8875,7 +8875,7 @@
     <monster name="Swamp Troll" x="4" y="20" z="7" spawntime="1792" />
   </spawn>
   <spawn centerx="1564" centery="1897" centerz="7" radius="1">
-    <npc name="Baiak VIP9" x="0" y="-1" z="7" spawntime="60" />
+    <npc name="baiak_vip9" x="0" y="-1" z="7" spawntime="60" />
   </spawn>
   <spawn centerx="1664" centery="1958" centerz="7" radius="2">
     <monster name="Magicthrower" x="-1" y="-2" z="7" spawntime="10" />
@@ -9542,7 +9542,7 @@
     <monster name="Treiner" x="5" y="4" z="8" spawntime="40" />
     <monster name="Treiner" x="7" y="4" z="8" spawntime="40" />
     <monster name="Treiner" x="9" y="4" z="8" spawntime="40" />
-    <npc name="Obi" x="3" y="10" z="8" spawntime="60" />
+    <npc name="obi" x="3" y="10" z="8" spawntime="60" />
   </spawn>
   <spawn centerx="118" centery="41" centerz="8" radius="4">
     <monster name="Bug" x="0" y="0" z="8" spawntime="10" />
@@ -10165,7 +10165,7 @@
     <monster name="Grim Reaper Vip" x="8" y="12" z="8" spawntime="60" />
     <monster name="Grim Reaper Vip" x="9" y="12" z="8" spawntime="60" />
     <monster name="Grim Reaper Vip" x="10" y="12" z="8" spawntime="5" />
-    <npc name="Baiakzik" x="-29" y="25" z="8" spawntime="5" />
+    <npc name="baiakzik" x="-29" y="25" z="8" spawntime="5" />
     <monster name="Hellhound" x="22" y="30" z="8" spawntime="60" />
   </spawn>
   <spawn centerx="485" centery="46" centerz="8" radius="30">
@@ -11811,7 +11811,7 @@
     <monster name="Rotworm" x="6" y="14" z="8" spawntime="5" />
     <monster name="Rotworm" x="9" y="14" z="8" spawntime="5" />
     <monster name="Rotworm Queen" x="-6" y="15" z="8" spawntime="5" />
-    <npc name="Lector" x="-20" y="22" z="8" spawntime="5" />
+    <npc name="lector" x="-20" y="22" z="8" spawntime="5" />
     <monster name="Treiner" x="-18" y="22" z="8" spawntime="5" />
     <monster name="Treiner" x="-16" y="22" z="8" spawntime="5" />
     <monster name="Treiner" x="-14" y="22" z="8" spawntime="5" />
@@ -11824,7 +11824,7 @@
     <monster name="Treiner" x="18" y="22" z="8" spawntime="5" />
     <monster name="Treiner" x="20" y="22" z="8" spawntime="5" />
     <monster name="Treiner" x="22" y="22" z="8" spawntime="5" />
-    <npc name="Lector" x="24" y="22" z="8" spawntime="5" />
+    <npc name="lector" x="24" y="22" z="8" spawntime="5" />
     <monster name="Treiner" x="-20" y="30" z="8" spawntime="5" />
     <monster name="Treiner" x="24" y="30" z="8" spawntime="5" />
   </spawn>
@@ -14349,7 +14349,7 @@
     <monster name="Frost Dragon" x="2" y="-7" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="11" y="-7" z="8" spawntime="60" />
     <monster name="Frost Dragon" x="19" y="-7" z="8" spawntime="512" />
-    <npc name="Dark Rodo" x="-25" y="-6" z="8" spawntime="60" />
+    <npc name="dark_rodo" x="-25" y="-6" z="8" spawntime="60" />
     <monster name="Frost Dragon" x="7" y="-6" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="13" y="-5" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-28" y="-4" z="8" spawntime="512" />
@@ -14378,13 +14378,13 @@
     <monster name="Frost Dragon" x="-18" y="5" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-25" y="6" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="17" y="6" z="8" spawntime="512" />
-    <npc name="Mad" x="23" y="6" z="8" spawntime="60" />
+    <npc name="mad" x="23" y="6" z="8" spawntime="60" />
     <monster name="Frost Dragon" x="-10" y="7" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-18" y="8" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-13" y="8" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-6" y="8" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-30" y="9" z="8" spawntime="512" />
-    <npc name="Lector" x="-26" y="9" z="8" spawntime="60" />
+    <npc name="lector" x="-26" y="9" z="8" spawntime="60" />
     <monster name="Frost Dragon" x="2" y="9" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="15" y="9" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="22" y="10" z="8" spawntime="512" />
@@ -14416,7 +14416,7 @@
     <monster name="Frost Dragon" x="-16" y="26" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="30" y="26" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-29" y="27" z="8" spawntime="512" />
-    <npc name="Riona" x="-26" y="30" z="8" spawntime="60" />
+    <npc name="riona" x="-26" y="30" z="8" spawntime="60" />
     <monster name="Frost Dragon" x="-20" y="30" z="8" spawntime="512" />
   </spawn>
   <spawn centerx="294" centery="532" centerz="8" radius="30">
@@ -14486,7 +14486,7 @@
     <monster name="Frost Dragon" x="-10" y="-18" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-4" y="-18" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="9" y="-17" z="8" spawntime="512" />
-    <npc name="Dufi" x="20" y="-17" z="8" spawntime="60" />
+    <npc name="dufi" x="20" y="-17" z="8" spawntime="60" />
     <monster name="Frost Dragon" x="-3" y="-16" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="7" y="-16" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="9" y="-16" z="8" spawntime="512" />
@@ -14529,7 +14529,7 @@
     <monster name="Frost Dragon" x="26" y="-4" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-28" y="-3" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-18" y="-3" z="8" spawntime="60" />
-    <npc name="Blesser Man" x="-11" y="-3" z="8" spawntime="60" />
+    <npc name="blesser_man" x="-11" y="-3" z="8" spawntime="60" />
     <monster name="Frost Dragon" x="6" y="-2" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-28" y="-1" z="8" spawntime="512" />
     <monster name="Frost Dragon" x="-23" y="-1" z="8" spawntime="512" />
@@ -20720,10 +20720,10 @@
     <monster name="Fury" x="-10" y="11" z="12" spawntime="60" />
   </spawn>
   <spawn centerx="659" centery="574" centerz="12" radius="6">
-    <npc name="Updade Seller" x="-5" y="-4" z="12" spawntime="15" />
-    <npc name="Dark Rodo" x="5" y="-3" z="12" spawntime="15" />
-    <npc name="Johnny" x="-1" y="0" z="12" spawntime="15" />
-    <npc name="Mad" x="-6" y="4" z="12" spawntime="15" />
+    <npc name="updade_seller" x="-5" y="-4" z="12" spawntime="15" />
+    <npc name="dark_rodo" x="5" y="-3" z="12" spawntime="15" />
+    <npc name="johnny" x="-1" y="0" z="12" spawntime="15" />
+    <npc name="mad" x="-6" y="4" z="12" spawntime="15" />
   </spawn>
   <spawn centerx="1156" centery="1022" centerz="12" radius="20">
     <monster name="warlock vip" x="-12" y="-12" z="12" spawntime="60" />
@@ -21433,8 +21433,8 @@
     <monster name="Medusa Vip" x="-1" y="-1" z="13" spawntime="20" />
     <monster name="warlock vip" x="1" y="-1" z="13" spawntime="20" />
     <monster name="Grim Reaper Vip" x="3" y="-1" z="13" spawntime="20" />
-    <npc name="Warmaster Addon 1" x="-5" y="3" z="13" spawntime="15" />
-    <npc name="Warmaster Addon 2" x="1" y="3" z="13" spawntime="15" />
+    <npc name="warmaster_addon_1" x="-5" y="3" z="13" spawntime="15" />
+    <npc name="warmaster_addon_2" x="1" y="3" z="13" spawntime="15" />
   </spawn>
   <spawn centerx="651" centery="661" centerz="13" radius="5" />
   <spawn centerx="654" centery="661" centerz="13" radius="5" />

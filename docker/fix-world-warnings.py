@@ -268,9 +268,10 @@ def fix_spawns() -> tuple[int, int]:
         "Exp Bug": "Bugzin",
         "Arkhothep": "Ashmunrah",
     }
-    monsters_xml = (ROOT / "data" / "monster" / "monsters.xml").read_text(
-        encoding="latin-1", errors="replace"
-    )
+    monsters_xml_path = ROOT / "server" / "data" / "monster" / "monsters.xml"
+    if not monsters_xml_path.is_file():
+        monsters_xml_path = ROOT / "data" / "monster" / "monsters.xml"
+    monsters_xml = monsters_xml_path.read_text(encoding="latin-1", errors="replace")
     registered = set(
         re.findall(r'<monster\s+name="([^"]+)"', monsters_xml, flags=re.I)
     )
@@ -320,11 +321,63 @@ def fix_otbm_sidecar_names() -> int:
     return changed
 
 
+def fix_spawn_npc_filenames() -> int:
+    """Rewrite <npc name> in spawn XML to match snake_case npc/*.xml stems.
+
+    TFS loads NPCs as data/npc/<spawn name>.xml; display name stays inside the XML.
+    """
+    npc_files = {p.stem: p for p in (ROOT / "server" / "data" / "npc").glob("*.xml")}
+    npc_lower = {k.lower(): k for k in npc_files}
+
+    def resolve(name: str) -> str:
+        if name in npc_files:
+            return name
+        low = name.lower()
+        if low in npc_lower:
+            return npc_lower[low]
+        snake = name.strip().lower().replace(" ", "_")
+        for c in (snake, snake.replace("-", "_")):
+            if c in npc_files:
+                return c
+            if c in npc_lower:
+                return npc_lower[c]
+        raise KeyError(f"no npc file for spawn name {name!r}")
+
+    text = SPAWN_XML.read_text(encoding="utf-8")
+    names = set(re.findall(r'<npc\s+[^>]*\bname="([^"]+)"', text))
+    mapping = {}
+    for n in names:
+        r = resolve(n)
+        if r != n:
+            mapping[n] = r
+    if not mapping:
+        return 0
+
+    def repl_npc(m):
+        tag = m.group(0)
+
+        def repl_name(nm):
+            old = nm.group(1)
+            return f'name="{mapping.get(old, old)}"'
+
+        return re.sub(r'\bname="([^"]+)"', repl_name, tag, count=1)
+
+    new_text, _ = re.subn(r"<npc\b[^>]*>", repl_npc, text)
+    left = set(re.findall(r'<npc\s+[^>]*\bname="([^"]+)"', new_text))
+    bad = sorted(n for n in left if n not in npc_files)
+    if bad:
+        raise SystemExit(f"spawn npc names still missing files: {bad}")
+    SPAWN_XML.write_text(new_text, encoding="utf-8")
+    return len(mapping)
+
+
 def main():
     o = fix_otbm_sidecar_names()
+    npc = fix_spawn_npc_filenames()
     h = fix_houses()
     t, n = fix_spawns()
     print(f"otbm sidecar renames: {o}")
+    print(f"spawn npc filename renames: {npc}")
     print(f"houses entry fixed: {h}")
     print(f"spawntime 0->60: {t}")
     print(f"spawn name fixes/removals: {n}")
