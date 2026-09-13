@@ -26,9 +26,21 @@ if [ ! -f "${ENV_FILE}" ]; then
 	exit 1
 fi
 
+if ! printf '%s' "${KEEP_DAYS}" | grep -Eq '^[0-9]+$'; then
+	echo "BACKUP_KEEP_DAYS must be a non-negative integer (got: ${KEEP_DAYS})." >&2
+	exit 1
+fi
+
 # Pull only the keys we need so a weird .env line cannot rewrite PATH.
+# Strips one matching layer of single or double quotes around the value.
 env_val() {
-	grep -E "^${1}=" "${ENV_FILE}" | tail -n1 | cut -d= -f2-
+	local raw
+	raw="$(grep -E "^${1}=" "${ENV_FILE}" | tail -n1 | cut -d= -f2-)"
+	case "${raw}" in
+		\"*\") raw="${raw#\"}"; raw="${raw%\"}" ;;
+		\'*\') raw="${raw#\'}"; raw="${raw%\'}" ;;
+	esac
+	printf '%s' "${raw}"
 }
 
 MYSQL_ROOT_PASSWORD="$(env_val MYSQL_ROOT_PASSWORD)"

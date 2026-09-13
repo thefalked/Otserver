@@ -14,8 +14,10 @@ if [ "$(id -u)" -ne 0 ]; then
 	exit 1
 fi
 
+# Only count keys for non-root users. Root SSH is disabled by setup-vps.sh
+# (PermitRootLogin no); keys under /root/.ssh cannot save you after that.
 key_count=0
-for keys in /root/.ssh/authorized_keys /home/*/.ssh/authorized_keys; do
+for keys in /home/*/.ssh/authorized_keys; do
 	[ -f "${keys}" ] || continue
 	# Count real key lines (ssh-ed25519 / ssh-rsa / ecdsa / sk-).
 	c="$(grep -cE '^(ssh-(ed25519|rsa)|ecdsa-sha2-|sk-ssh-)' "${keys}" || true)"
@@ -23,12 +25,15 @@ for keys in /root/.ssh/authorized_keys /home/*/.ssh/authorized_keys; do
 done
 
 if [ "${key_count}" -lt 1 ]; then
-	echo "No SSH public keys found in authorized_keys." >&2
-	echo "Add a key first (docs/vps.md). Aborting so you are not locked out." >&2
+	echo "No SSH public keys found in /home/*/.ssh/authorized_keys." >&2
+	echo "Add a key for your sudo user first (docs/vps.md). Aborting so you are not locked out." >&2
+	if [ -f /root/.ssh/authorized_keys ]; then
+		echo "(Root has authorized_keys, but PermitRootLogin is off — those keys do not count.)" >&2
+	fi
 	exit 1
 fi
 
-echo "Found ${key_count} authorized SSH key(s). Disabling password authentication."
+echo "Found ${key_count} authorized SSH key(s) under /home. Disabling password authentication."
 echo "Keep this SSH session open. Test a NEW login with a key before you disconnect."
 
 install -d -m 755 /etc/ssh/sshd_config.d

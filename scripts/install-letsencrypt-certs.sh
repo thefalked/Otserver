@@ -25,6 +25,10 @@ else
 	SITE_DOMAIN=""
 	if [ -f "${ENV_FILE}" ]; then
 		SITE_DOMAIN="$(grep -E '^SITE_DOMAIN=' "${ENV_FILE}" | tail -n1 | cut -d= -f2-)"
+		case "${SITE_DOMAIN}" in
+			\"*\") SITE_DOMAIN="${SITE_DOMAIN#\"}"; SITE_DOMAIN="${SITE_DOMAIN%\"}" ;;
+			\'*\') SITE_DOMAIN="${SITE_DOMAIN#\'}"; SITE_DOMAIN="${SITE_DOMAIN%\'}" ;;
+		esac
 	fi
 	if [ -z "${SITE_DOMAIN}" ]; then
 		echo "SITE_DOMAIN is not set and RENEWED_LINEAGE is empty." >&2
@@ -42,6 +46,11 @@ mkdir -p "${CERT_DIR}"
 # install(1) does an atomic replace so nginx never reads a half-written pem.
 install -m 644 "${LIVE}/fullchain.pem" "${CERT_DIR}/fullchain.pem"
 install -m 600 "${LIVE}/privkey.pem" "${CERT_DIR}/privkey.pem"
+# Renew as root can leave root-owned pems; keep the certs dir owner (sudo user).
+if [ -d "${CERT_DIR}" ]; then
+	chown --reference="${CERT_DIR}" "${CERT_DIR}/fullchain.pem" "${CERT_DIR}/privkey.pem" 2>/dev/null \
+		|| chown "$(stat -c '%u:%g' "${CERT_DIR}")" "${CERT_DIR}/fullchain.pem" "${CERT_DIR}/privkey.pem" || true
+fi
 
 if docker ps -q -f "name=^${CONTAINER}$" | grep -q .; then
 	docker exec "${CONTAINER}" nginx -s reload

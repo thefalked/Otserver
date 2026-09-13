@@ -208,7 +208,14 @@ echo "==> Installing Docker"
 if command -v docker >/dev/null 2>&1; then
 	echo "Docker already installed: $(docker --version)"
 else
-	curl -fsSL https://get.docker.com | sh
+	# Download then run (not curl|sh) so a failed fetch cannot pipe partial script.
+	# Still trusts get.docker.com — pin/mirror yourself if you need stronger supply-chain controls.
+	_docker_install="$(mktemp)"
+	trap 'rm -f "${_docker_install}"' EXIT
+	curl -fsSL https://get.docker.com -o "${_docker_install}"
+	sh "${_docker_install}"
+	rm -f "${_docker_install}"
+	trap - EXIT
 fi
 usermod -aG docker "${USERNAME}"
 
@@ -492,6 +499,7 @@ if [ -n "${GITHUB_TOKEN:-}" ]; then
 	USER_HOME="$(getent passwd "${USERNAME}" | cut -d: -f6)"
 	USER_HOME="${USER_HOME:-/home/${USERNAME}}"
 	install -d -m 700 -o "${USERNAME}" -g "${USERNAME}" "${USER_HOME}"
+	# Plaintext token in this file (mode 600). Anyone who can read it can clone/pull.
 	printf 'https://x-access-token:%s@github.com\n' "${GITHUB_TOKEN}" > "${USER_HOME}/.git-credentials"
 	chown "${USERNAME}:${USERNAME}" "${USER_HOME}/.git-credentials"
 	chmod 600 "${USER_HOME}/.git-credentials"
@@ -546,7 +554,7 @@ echo "Root SSH login is disabled. Keep this session open until you can log in as
 echo
 echo "On the VPS as ${USERNAME}:"
 echo "  cd ${REPO_ROOT}"
-echo "  git pull                  # token is in ~${USERNAME}/.git-credentials (mode 600)"
+echo "  git pull                  # token in ~${USERNAME}/.git-credentials (mode 600; treat like a secret)"
 echo "  docker compose ps"
 echo
 echo "Change hostname later:  sudo bash scripts/set-domain.sh new.example.com"

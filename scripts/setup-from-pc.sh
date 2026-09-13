@@ -15,6 +15,9 @@
 #
 # GitHub token: Settings → Developer settings → Personal access tokens,
 # this repo, Contents: Read-only (classic: `repo` scope).
+#
+# Host keys: StrictHostKeyChecking=accept-new trusts the first key OpenSSH
+# sees (TOFU). On an untrusted network, verify the provider fingerprint first.
 # =============================================================================
 set -euo pipefail
 
@@ -67,7 +70,16 @@ SSH_USER="${SSH_USER:-root}"
 SSH_PORT="$(prompt "SSH port [22]: ")"
 SSH_PORT="${SSH_PORT:-22}"
 
-if [ -z "${GITHUB_TOKEN:-}" ]; then
+# Always prompt. An exported GITHUB_TOKEN (shell profile, CI, Cursor) used to
+# skip this and look like the script "never asked". Enter keeps the existing value.
+if [ -n "${GITHUB_TOKEN:-}" ]; then
+	echo "GITHUB_TOKEN is set in this environment (will reuse if you press Enter)." > /dev/tty
+	_entered="$(prompt_secret "GitHub token (Enter to reuse, input hidden): ")"
+	if [ -n "${_entered}" ]; then
+		GITHUB_TOKEN="${_entered}"
+	fi
+	unset _entered
+else
 	GITHUB_TOKEN="$(prompt_secret "GitHub token (input hidden): ")"
 fi
 if [ -z "${GITHUB_TOKEN}" ]; then
@@ -84,15 +96,18 @@ echo "Target:  ${SSH_USER}@${VPS_HOST}:${SSH_PORT}"
 echo "Clone:   ${OTSERVER_REF} → ${OTSERVER_DIR}"
 echo
 
-ssh -p "${SSH_PORT}" -t \
+# Env exports go on remote stdin (with the bootstrap script), not in ssh argv,
+# so the token does not show up in `ps` on the VPS.
+{
+	printf 'export GITHUB_TOKEN=%q\n' "${GITHUB_TOKEN}"
+	printf 'export SITE_DOMAIN=%q\n' "${SITE_DOMAIN}"
+	printf 'export OTSERVER_REF=%q\n' "${OTSERVER_REF}"
+	printf 'export OTSERVER_DIR=%q\n' "${OTSERVER_DIR}"
+	cat "${BOOTSTRAP}"
+} | ssh -p "${SSH_PORT}" -t \
 	-o StrictHostKeyChecking=accept-new \
 	"${SSH_USER}@${VPS_HOST}" \
-	"export GITHUB_TOKEN=$(printf '%q' "${GITHUB_TOKEN}")
-	 export SITE_DOMAIN=$(printf '%q' "${SITE_DOMAIN}")
-	 export OTSERVER_REF=$(printf '%q' "${OTSERVER_REF}")
-	 export OTSERVER_DIR=$(printf '%q' "${OTSERVER_DIR}")
-	 exec bash -s" \
-	< "${BOOTSTRAP}"
+	"exec bash -s"
 
 unset GITHUB_TOKEN
 echo

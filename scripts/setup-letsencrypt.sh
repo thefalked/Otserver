@@ -30,7 +30,13 @@ if [ ! -f "${ENV_FILE}" ]; then
 fi
 
 env_val() {
-	grep -E "^${1}=" "${ENV_FILE}" | tail -n1 | cut -d= -f2-
+	local raw
+	raw="$(grep -E "^${1}=" "${ENV_FILE}" | tail -n1 | cut -d= -f2-)"
+	case "${raw}" in
+		\"*\") raw="${raw#\"}"; raw="${raw%\"}" ;;
+		\'*\') raw="${raw#\'}"; raw="${raw%\'}" ;;
+	esac
+	printf '%s' "${raw}"
 }
 
 SITE_DOMAIN="$(env_val SITE_DOMAIN)"
@@ -46,6 +52,10 @@ if echo "${SITE_DOMAIN}" | grep -Eq '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
 fi
 
 if [ -z "${LETSENCRYPT_EMAIL}" ]; then
+	if [ ! -e /dev/tty ]; then
+		echo "LETSENCRYPT_EMAIL is empty in .env and there is no TTY to prompt." >&2
+		exit 1
+	fi
 	printf 'Let'\''s Encrypt account email: ' > /dev/tty
 	IFS= read -r LETSENCRYPT_EMAIL < /dev/tty
 fi
@@ -62,6 +72,12 @@ fi
 if [ -z "$(docker ps -q -f "name=^${CONTAINER}$")" ]; then
 	echo "${CONTAINER} is not running. Start the stack (port 80 must be published) first." >&2
 	exit 1
+fi
+
+if command -v getent >/dev/null 2>&1; then
+	if ! getent ahosts "${SITE_DOMAIN}" >/dev/null 2>&1; then
+		echo "Warning: ${SITE_DOMAIN} does not resolve yet. Certbot will likely fail until DNS points here." >&2
+	fi
 fi
 
 mkdir -p "${ACME_ROOT}"

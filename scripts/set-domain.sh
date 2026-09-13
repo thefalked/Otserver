@@ -45,7 +45,15 @@ if [ ! -f "${ENV_FILE}" ]; then
 fi
 
 if [ -z "${NEW_DOMAIN}" ]; then
+	if [ ! -e /dev/tty ]; then
+		echo "Need /dev/tty to prompt, or pass the hostname as an argument." >&2
+		exit 1
+	fi
 	CURRENT="$(grep -E '^SITE_DOMAIN=' "${ENV_FILE}" | tail -n1 | cut -d= -f2-)"
+	case "${CURRENT}" in
+		\"*\") CURRENT="${CURRENT#\"}"; CURRENT="${CURRENT%\"}" ;;
+		\'*\') CURRENT="${CURRENT#\'}"; CURRENT="${CURRENT%\'}" ;;
+	esac
 	CURRENT="${CURRENT:-baiakvip9.thefalked.dev}"
 	printf 'New hostname [%s]: ' "${CURRENT}" > /dev/tty
 	IFS= read -r NEW_DOMAIN < /dev/tty
@@ -66,13 +74,18 @@ if printf '%s' "${NEW_DOMAIN}" | grep -Eq '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
 	exit 1
 fi
 
+# Same approach as setup-vps.sh: rewrite via temp file so values with |/& are safe.
 upsert_env() {
 	local file="$1" key="$2" value="$3"
-	if grep -q "^${key}=" "${file}"; then
-		sed -i "s|^${key}=.*|${key}=${value}|" "${file}"
+	local tmp
+	tmp="$(mktemp)"
+	if [ -f "${file}" ]; then
+		grep -v "^${key}=" "${file}" > "${tmp}" || true
 	else
-		printf '\n%s=%s\n' "${key}" "${value}" >> "${file}"
+		: > "${tmp}"
 	fi
+	printf '%s=%s\n' "${key}" "${value}" >> "${tmp}"
+	mv "${tmp}" "${file}"
 }
 
 upsert_env "${ENV_FILE}" SITE_DOMAIN "${NEW_DOMAIN}"

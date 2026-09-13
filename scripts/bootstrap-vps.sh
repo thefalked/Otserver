@@ -73,6 +73,8 @@ else
 
 	if [ -z "${GITHUB_TOKEN:-}" ]; then
 		GITHUB_TOKEN="$(prompt_token)"
+	else
+		echo "Using GITHUB_TOKEN from environment."
 	fi
 	if [ -z "${GITHUB_TOKEN}" ]; then
 		echo "No GITHUB_TOKEN. Re-run from your PC: ./scripts/setup-from-pc.sh" >&2
@@ -82,6 +84,7 @@ else
 	# Askpass so the token is not stored in the remote URL or in `ps` argv.
 	ASKPASS="$(mktemp)"
 	chmod 700 "${ASKPASS}"
+	trap 'rm -f "${ASKPASS}"' EXIT
 	cat > "${ASKPASS}" <<'EOF'
 #!/bin/sh
 case "$1" in
@@ -94,6 +97,7 @@ EOF
 	GIT_ASKPASS="${ASKPASS}" GIT_TERMINAL_PROMPT=0 \
 		git clone --branch "${OTSERVER_REF}" "${OTSERVER_REPO}" "${OTSERVER_DIR}"
 	rm -f "${ASKPASS}"
+	trap - EXIT
 	git -C "${OTSERVER_DIR}" remote set-url origin "$(origin_public)"
 	echo "Clone done. Token stays in env only so setup-vps.sh can enable git pull for the sudo user."
 fi
