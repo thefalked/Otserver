@@ -3,8 +3,10 @@
 # Keep service definitions, SQL mounts, and ports in sync with that file.
 # Do not run this stack and the home-server wrapper at the same time.
 #
-# Website: host port WEBSITE_PORT (default 8080).
-# Game: host TCP 7171/7172 on otserver (raw OT protocol).
+# Public ports are on nginx (HTTP + TCP stream). Website and otserver
+# stay on the internal network only.
+#   8080 HTTP site | 7171/7172 game
+# VPS overlay (docker-compose.vps.yml) also publishes 80 → HTTPS and 443.
 # Clients: set OT_IP in .env to the hostname/IP clients should use after login.
 
 services:
@@ -75,9 +77,9 @@ services:
       - ./server/data:/ot/data
       - ./server/mods:/ot/mods
       - ot_logs:/ot/logs
-    ports:
-      - "7171:7171" # login — host publish (OTClient / raw TCP)
-      - "7172:7172" # game
+    expose:
+      - "7171"
+      - "7172"
     mem_limit: 6g
     memswap_limit: 6g
     networks:
@@ -107,13 +109,39 @@ services:
       - ./website:/var/www/html
       - ./server/config.lua.template:/ot/config.lua.template:ro
       - ./server/data:/ot/data:ro
-    ports:
-      - "${WEBSITE_PORT:-8080}:80"
+    expose:
+      - "80"
     mem_limit: 2g
     memswap_limit: 2g
     networks:
       - otnet
     # No in-container HTTP probe: php:apache image has no curl/wget.
+
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    container_name: otserver-nginx
+    restart: unless-stopped
+    depends_on:
+      - website
+      - otserver
+    env_file: .env
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
+      OT_IP: ${OT_IP}
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/certs:/etc/nginx/certs
+      - ./docker/nginx/acme:/var/www/certbot:ro
+    ports:
+      - "${WEBSITE_PORT:-8080}:8080"
+      - "7171:7171" # login — nginx TCP stream → otserver
+      - "7172:7172" # game
+    mem_limit: 256m
+    memswap_limit: 256m
+    networks:
+      - otnet
 
 networks:
   otnet:

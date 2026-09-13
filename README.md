@@ -7,6 +7,39 @@ Dockerized **The Forgotten Server 0.4** (Baiakzik Vip9 / 8.60) with MySQL and a 
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2
 - A Tibia **8.60** client pointed at your host IP (ports **7171** / **7172**)
 
+## VPS bootstrap
+
+This GitHub repo is **private**. From **this PC** (Git Bash, macOS, Linux, or WSL), in the repo:
+
+```bash
+./scripts/setup-from-pc.sh
+```
+
+It asks for the VPS address and a GitHub token, SSHs in, `git clone`s into `/opt/otserver`, then runs the rest of setup on the server (sudo user, passwords, hostname, MySQL, firewall, Docker, Let’s Encrypt). Afterward, on the VPS: `cd /opt/otserver && git pull`.
+
+Hostname default is **baiakvip9.thefalked.dev**. Change later with `sudo bash scripts/set-domain.sh new.example.com`.
+
+If you are already root on the VPS with the repo checked out:
+
+```bash
+sudo bash scripts/setup-vps.sh
+```
+
+The setup then:
+
+- `apt update` / `upgrade`
+- installs **git**, **Docker**, **fail2ban**, **unattended-upgrades**, and **certbot**
+- creates the sudo user and copies `/root/.ssh/authorized_keys` if present
+- disables SSH **root** login (password SSH stays on until you switch to keys)
+- enables **UFW** (deny incoming; allow 22, 80, 443, 8080, 7171, 7172)
+- applies apt updates daily **without rebooting**; docker/ssh are not auto-restarted
+- installs a daily **MySQL hot dump** timer (`backups/mysql/`)
+- sets `SITE_DOMAIN` and `OT_IP` to the hostname you confirmed
+
+Compose uses `docker-compose.vps.yml` so **80** (ACME + redirect to HTTPS) and **443** are published. After the stack is up: `sudo bash scripts/setup-letsencrypt.sh`. Keep the root session open until you can `ssh` in as the new user.
+
+Keys-only SSH, Let's Encrypt, domain changes, and backups: **[docs/vps.md](docs/vps.md)**.
+
 ## Home-server (optional)
 
 When this repo sits next to [home-server](https://github.com/thefalked/home-server) (`tests/Otserver` beside `tests/home-server`), you can run the stack from home-server’s thin wrapper:
@@ -38,8 +71,8 @@ Then open the site and connect the client:
 | Service | URL / port |
 | --------- | ------------ |
 | Website (Gesior) | <http://localhost:8080> |
-| Login | TCP **7171** |
-| Game | TCP **7172** |
+| Login | TCP **7171** (via nginx stream) |
+| Game | TCP **7172** (via nginx stream) |
 
 Default admin accounts from the imported DB:
 
@@ -65,8 +98,10 @@ Copy `.env.example` → `.env`. Compose and the containers read these values:
 | `MYSQL_DATABASE` | `ot` | Database name |
 | `MYSQL_USER` / `MYSQL_PASSWORD` | `ot` / *(required)* | App DB user |
 | `MYSQL_HOST` / `MYSQL_PORT` | `mysql` / `3306` | Host inside Docker network |
-| `OT_IP` | `127.0.0.1` | IP advertised to game clients |
-| `WEBSITE_PORT` | `8080` | Host port for the website (standalone only) |
+| `OT_IP` | `127.0.0.1` | IP/hostname advertised to game clients (VPS: set to `SITE_DOMAIN`) |
+| `WEBSITE_PORT` | `8080` | Host HTTP port for the website (standalone nginx) |
+| `SITE_DOMAIN` | `localhost` | Nginx / Let's Encrypt hostname (VPS default `baiakvip9.thefalked.dev`) |
+| `LETSENCRYPT_EMAIL` | *(empty)* | Account email for `scripts/setup-letsencrypt.sh` |
 
 Login/game are fixed at host **7171** / **7172** (same as home-server). Compose requires a `.env` file (`cp .env.example .env`).
 
@@ -84,7 +119,8 @@ Game settings live in `server/config.lua.template` (tracked, no secrets). At con
 | ----------------- | -------------- |
 | `mysql` | MySQL 8.4; schema + Gesior SQL on first init |
 | `otserver` | Ubuntu 26.04 runtime; prebuilt `server/theforgottenserver` |
-| `website` | PHP 8.5 Apache + Gesior AAC |
+| `website` | PHP 8.5 Apache + Gesior AAC (internal port 80) |
+| `nginx` | Reverse proxy: HTTPS site + TCP stream for 7171/7172 |
 
 `otserver` is **runtime-only** — it does not compile C++ on `docker compose up`. The Linux binary must already exist at `server/theforgottenserver` (included when present in the repo).
 
@@ -111,12 +147,15 @@ docker compose up --build -d otserver
 
 ```
 .env.example          env template (copy to .env)
-docker-compose.yml    MySQL + game + website
-docker/               entrypoints, config render, MySQL init SQL
+docker-compose.yml    MySQL + game + website + nginx
+docker/               entrypoints, config render, MySQL init SQL, nginx
+scripts/              VPS bootstrap, Let's Encrypt, MySQL dump
+docs/vps.md           SSH keys, updates, certs, backups
 server/               binary, config template, data/, mods/
 src/                  TFS 0.4 sources (compile only)
 website/              Gesior AAC (PHP)
 backup/               reference Baiakzik pack + optional SQL dumps (not used at runtime)
+backups/              runtime MySQL dumps from scripts/backup-mysql.sh (gitignored)
 ```
 
 ## Connecting a client
