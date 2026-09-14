@@ -1,6 +1,6 @@
--- Disabled: Gesior website creates/manages characters. Leaving this on injects a
--- virtual "Account Manager" into every non-1/1 login charlist (including god).
-accountManager = "no"
+-- Account Manager on 1/1 (in-game account creation). Note: with stock TFS this
+-- also adds a virtual "Account Manager" entry on other accounts (e.g. god).
+accountManager = "yes"
 namelockManager = "yes"
 newPlayerChooseVoc = "yes"
 newPlayerSpawnPosX = 155
