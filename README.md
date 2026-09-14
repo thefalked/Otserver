@@ -17,8 +17,8 @@ This GitHub repo is **private**. From **this PC** (Git Bash, macOS, Linux, or WS
 
 It asks for the VPS address and a GitHub token, SSHs in, `git clone`s into `/opt/otserver`, then runs the rest of setup on the server (sudo user, passwords, hostname, MySQL, firewall, Docker, Let’s Encrypt). Afterward, on the VPS: `cd /opt/otserver && git pull`.
 
-Hostname default is **baiakvip9.servegame.com** (maintenance alias
-**baiakvip9.thefalked.dev**). Change later with
+Hostname default is **baiakvip9.servegame.com** (maintenance / Dockhand
+**baiakvip9.thefalked.dev** on a **separate** TLS cert). Change later with
 `sudo bash scripts/set-domain.sh new.example.com`.
 
 If you are already root on the VPS with the repo checked out:
@@ -103,7 +103,7 @@ Copy `.env.example` → `.env`. Compose and the containers read these values:
 | `OT_IP` | `127.0.0.1` | IP/hostname advertised to game clients (VPS: set to `SITE_DOMAIN`) |
 | `WEBSITE_PORT` | `8080` | Host HTTP port for the website (standalone nginx) |
 | `SITE_DOMAIN` | `localhost` | Nginx / Let's Encrypt primary hostname (VPS default `baiakvip9.servegame.com`) |
-| `SITE_DOMAIN_ALIASES` | *(empty)* | Extra SANs on the same LE cert (VPS default `baiakvip9.thefalked.dev`) |
+| `SITE_MAINTENANCE_DOMAIN` | *(empty)* | Separate LE cert for Dockhand / ops (VPS default `baiakvip9.thefalked.dev`) |
 | `LETSENCRYPT_EMAIL` | *(empty)* | Account email for `scripts/setup-letsencrypt.sh` |
 
 Login/game are fixed at host **7171** / **7172** (same as home-server). Compose requires a `.env` file (`cp .env.example .env`).

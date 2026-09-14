@@ -140,26 +140,33 @@ else
 fi
 
 _site=""
-_alias=""
+_maint=""
 if [ -f "${ENV_FILE}" ]; then
 	_site="$(grep -E '^SITE_DOMAIN=' "${ENV_FILE}" | tail -n1 | cut -d= -f2- || true)"
 	case "${_site}" in
 		\"*\") _site="${_site#\"}"; _site="${_site%\"}" ;;
 		\'*\') _site="${_site#\'}"; _site="${_site%\'}" ;;
 	esac
-	_alias="$(grep -E '^SITE_DOMAIN_ALIASES=' "${ENV_FILE}" | tail -n1 | cut -d= -f2- || true)"
-	case "${_alias}" in
-		\"*\") _alias="${_alias#\"}"; _alias="${_alias%\"}" ;;
-		\'*\') _alias="${_alias#\'}"; _alias="${_alias%\'}" ;;
+	_maint="$(grep -E '^SITE_MAINTENANCE_DOMAIN=' "${ENV_FILE}" | tail -n1 | cut -d= -f2- || true)"
+	case "${_maint}" in
+		\"*\") _maint="${_maint#\"}"; _maint="${_maint%\"}" ;;
+		\'*\') _maint="${_maint#\'}"; _maint="${_maint%\'}" ;;
 	esac
+	if [ -z "${_maint}" ]; then
+		_alias="$(grep -E '^SITE_DOMAIN_ALIASES=' "${ENV_FILE}" | tail -n1 | cut -d= -f2- || true)"
+		case "${_alias}" in
+			\"*\") _alias="${_alias#\"}"; _alias="${_alias%\"}" ;;
+			\'*\') _alias="${_alias#\'}"; _alias="${_alias%\'}" ;;
+		esac
+		_maint="${_alias%%[, ]*}"
+	fi
 fi
-# Dockhand uses the maintenance alias when set; public site stays on SITE_DOMAIN.
-_dockhand="${_alias%%[, ]*}"
-_dockhand="${_dockhand:-${_site:-SITE_DOMAIN}}"
+_dockhand="${_maint:-${_site:-SITE_DOMAIN}}"
 
 echo
 echo "Hawser is up. Dockhand (maintenance): https://${_dockhand}:2376"
 echo "  TOKEN from /etc/hawser/config"
+echo "  TLS: maintenance-fullchain.pem (separate from public SITE_DOMAIN cert)"
 echo "  Public site: https://${_site:-SITE_DOMAIN}/"
 echo "  docker compose ps hawser"
 echo "  docker compose logs -f hawser"

@@ -180,76 +180,71 @@ the last key you still use.
 Bootstrap writes a **self-signed** cert so nginx can bind 443 immediately.
 Browsers will warn until you issue a public cert.
 
+**Two separate certificates** (not one cert with both names as SANs): Certificate
+Transparency would otherwise publish both hostnames on the same cert and link
+your public site to the maintenance / Dockhand name.
+
 Requirements:
 
-- `SITE_DOMAIN` in `.env` is a public hostname (default on VPS: `baiakvip9.servegame.com`)
-- DNS **A** (and **AAAA** if you have IPv6) for that name points at the VPS
-- compose is up with the VPS overlay (host port **80** published)
-- `LETSENCRYPT_EMAIL` in `.env` (or the script will ask)
+- `SITE_DOMAIN` = public game/site hostname (default: `baiakvip9.servegame.com`)
+- `SITE_MAINTENANCE_DOMAIN` = Dockhand / ops hostname (default: `baiakvip9.thefalked.dev`)
+- DNS **A**/**AAAA** for **each** name points at the VPS
+- compose up with VPS overlay (port **80** published)
+- `LETSENCRYPT_EMAIL` in `.env`
 
 ```bash
-# .env (setup-vps.sh already sets these)
 SITE_DOMAIN=baiakvip9.servegame.com
 OT_IP=baiakvip9.servegame.com
-SITE_DOMAIN_ALIASES=baiakvip9.thefalked.dev
+SITE_MAINTENANCE_DOMAIN=baiakvip9.thefalked.dev
 LETSENCRYPT_EMAIL=you@example.com
 
 docker compose up --build -d
 sudo bash scripts/setup-letsencrypt.sh
 ```
 
-That uses HTTP-01 via `/.well-known/acme-challenge/` on port 80 (nginx does
-**not** stop). The cert is copied into `docker/nginx/certs/` and nginx is
-**reloaded**. If Hawser is running, it is **restarted** so it picks up the new
-pems. Renewals: `certbot.timer` (twice daily) + the same deploy hook.
+Files:
 
-### Switch primary to servegame (keep thefalked for maintenance)
+| Role | Files under `docker/nginx/certs/` |
+| ---- | --------------------------------- |
+| Public | `fullchain.pem` / `privkey.pem` |
+| Maintenance + Hawser | `maintenance-fullchain.pem` / `maintenance-privkey.pem` |
 
-On an existing VPS that still uses `baiakvip9.thefalked.dev` as primary:
+### Switch primary to servegame (existing VPS)
 
 ```bash
-# sets SITE_DOMAIN + OT_IP, moves thefalked into SITE_DOMAIN_ALIASES, restarts otserver
 sudo bash scripts/set-domain.sh baiakvip9.servegame.com
+# → SITE_DOMAIN=servegame, SITE_MAINTENANCE_DOMAIN=thefalked, restarts otserver
 
-# both names must resolve here; expands/issues one cert with both SANs
 sudo bash scripts/setup-letsencrypt.sh
+# → two separate certbot lineages, nginx SNI, Hawser on maintenance pems
+
+# recreate nginx so the new nginx.conf + entrypoint are live
+docker compose up -d --build nginx hawser
 ```
 
-Game clients and the public site use **servegame.com**. HTTPS on
-**thefalked.dev** stays valid for **maintenance** (including Dockhand /
-Hawser at `https://baiakvip9.thefalked.dev:2376` — same cert).
+If you previously issued **one** cert listing both names, after the new pair
+works you can remove the old dual-SAN lineage:
+`sudo certbot delete --cert-name OLD_NAME`.
 
-If issuance fails, check DNS, that 80 is reachable from the internet, and
-`docker compose logs nginx`.
+If issuance fails, check DNS, port 80, and `docker compose logs nginx`.
 
 ## Hawser (Dockhand agent)
 
-The VPS overlay (`docker-compose.vps.yml`) runs Hawser in **Standard** mode on
-port **2376**, reusing the same Let's Encrypt files as nginx
-(`docker/nginx/certs/fullchain.pem` + `privkey.pem`).
+Hawser listens on **2376** with the **maintenance** cert only
+(`maintenance-fullchain.pem`), so Dockhand stays on
+`https://baiakvip9.thefalked.dev:2376` without sharing a CT-visible SAN with
+the public domain.
 
-`TOKEN` lives in **`/etc/hawser/config`**. Compose does **not** load that file
-as `env_file` (root mode `600` → permission denied for your user). Instead
-`setup-hawser.sh` mirrors the token to **`/etc/hawser/token`**, which the
-container mounts as `TOKEN_FILE`. TLS still uses the LE pems.
+`TOKEN` lives in **`/etc/hawser/config`**; `setup-hawser.sh` mirrors it to
+`/etc/hawser/token` for compose `TOKEN_FILE`.
 
 **Already have a VPS** (do not re-run `setup-vps.sh`):
 
 ```bash
-# after git pull of this repo on the VPS
 sudo bash scripts/setup-hawser.sh
 ```
 
-That keeps your existing `/etc/hawser/config`, opens UFW 2376, disables systemd
-`hawser` if it was installed, and runs `docker compose up -d hawser`.
-
-**Fresh install:** `setup-vps.sh` calls the same script (`--host-only`), then
-`docker compose up` starts the container with the rest of the stack.
-
-Dockhand (maintenance): `https://baiakvip9.thefalked.dev:2376` (or whatever is
-in `SITE_DOMAIN_ALIASES`) + the `TOKEN` from `/etc/hawser/config`. Public game
-site stays on `SITE_DOMAIN` (servegame).
-Public LE certs need no extra CA import.
+Dockhand: `https://baiakvip9.thefalked.dev:2376` + token from `/etc/hawser/config`.
 
 Prefer locking UFW to your home IP later:
 `ufw delete allow 2376/tcp` then

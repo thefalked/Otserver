@@ -105,8 +105,8 @@ if [ -n "${OTSERVER_USERNAME:-}" ]; then
 	USERNAME="${OTSERVER_USERNAME}"
 	PASSWORD="${OTSERVER_PASSWORD:-}"
 	SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.servegame.com}"
-	# Maintenance / alternate HTTPS name (SAN on the same LE cert).
-	SITE_DOMAIN_ALIASES="${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
+	# Separate LE cert for Dockhand / ops (not a SAN on the public cert).
+	SITE_MAINTENANCE_DOMAIN="${SITE_MAINTENANCE_DOMAIN:-baiakvip9.thefalked.dev}"
 	LETSENCRYPT_EMAIL="${LETSENCRYPT_EMAIL:-}"
 	MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
 	MYSQL_PASSWORD="${MYSQL_PASSWORD:-}"
@@ -124,7 +124,7 @@ else
 	DEFAULT_SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.servegame.com}"
 	SITE_DOMAIN_INPUT="$(prompt "Website hostname [${DEFAULT_SITE_DOMAIN}]: ")"
 	SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_SITE_DOMAIN}}"
-	SITE_DOMAIN_ALIASES="${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
+	SITE_MAINTENANCE_DOMAIN="${SITE_MAINTENANCE_DOMAIN:-baiakvip9.thefalked.dev}"
 
 	LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (Enter to skip HTTPS cert for now): ")"
 
@@ -163,7 +163,7 @@ fi
 echo
 echo "User:        ${USERNAME}"
 echo "TLS CN:      ${SITE_DOMAIN}"
-echo "TLS aliases: ${SITE_DOMAIN_ALIASES:-"(none)"}"
+echo "TLS maint:   ${SITE_MAINTENANCE_DOMAIN:-"(none)"}"
 echo "LE email:    ${LETSENCRYPT_EMAIL:-"(set later)"}"
 echo "Open ports:  22, 80, 443, 8080, 2376, 7171, 7172"
 echo
@@ -504,7 +504,7 @@ if [ -f "${REPO_ROOT}/.env.example" ]; then
 	fi
 	upsert_env "${REPO_ROOT}/.env" SITE_DOMAIN "${SITE_DOMAIN}"
 	upsert_env "${REPO_ROOT}/.env" OT_IP "${SITE_DOMAIN}"
-	upsert_env "${REPO_ROOT}/.env" SITE_DOMAIN_ALIASES "${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
+	upsert_env "${REPO_ROOT}/.env" SITE_MAINTENANCE_DOMAIN "${SITE_MAINTENANCE_DOMAIN:-baiakvip9.thefalked.dev}"
 	upsert_env "${REPO_ROOT}/.env" LETSENCRYPT_EMAIL "${LETSENCRYPT_EMAIL}"
 	upsert_env "${REPO_ROOT}/.env" MYSQL_ROOT_PASSWORD "${MYSQL_ROOT_PASSWORD}"
 	upsert_env "${REPO_ROOT}/.env" MYSQL_PASSWORD "${MYSQL_PASSWORD}"

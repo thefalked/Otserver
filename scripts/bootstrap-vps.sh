@@ -32,7 +32,7 @@ OTSERVER_REPO="${OTSERVER_REPO:-https://github.com/thefalked/Otserver.git}"
 OTSERVER_REF="${OTSERVER_REF:-master}"
 OTSERVER_DIR="${OTSERVER_DIR:-/opt/otserver}"
 export SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.servegame.com}"
-export SITE_DOMAIN_ALIASES="${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
+export SITE_MAINTENANCE_DOMAIN="${SITE_MAINTENANCE_DOMAIN:-baiakvip9.thefalked.dev}"
 
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a

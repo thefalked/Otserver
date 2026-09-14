@@ -1,21 +1,16 @@
 #!/usr/bin/env bash
-# Issue (or renew) a Let's Encrypt certificate for SITE_DOMAIN (+ optional aliases).
+# Issue (or renew) Let's Encrypt certificates for SITE_DOMAIN and optional
+# SITE_MAINTENANCE_DOMAIN as **separate** lineages (no shared SANs).
 #
-# Why a separate script: HTTP-01 needs nginx already publishing port 80 with
-# the ACME location, and DNS must already point at this VPS. setup-vps.sh
-# usually runs before either is true, so it only installs certbot + the hook.
+# Why separate: Certificate Transparency publishes every name on a cert.
+# Putting public + maintenance on one cert links them for anyone looking.
 #
 # Run as root, after `docker compose up -d` and after each domain's A/AAAA
-# record points here:
+# points here:
 #   sudo bash scripts/setup-letsencrypt.sh
-#   sudo bash scripts/setup-letsencrypt.sh baiakvip9.thefalked.dev   # extra -d
 #
-# Domains: SITE_DOMAIN, plus SITE_DOMAIN_ALIASES in .env (space/comma-separated),
-# plus any hostnames passed as arguments. One cert, many SANs — nginx/Hawser
-# still use docker/nginx/certs/fullchain.pem.
-#
-# Uses webroot (no nginx stop). A self-signed cert is replaced in
-# docker/nginx/certs; nginx is reloaded, not restarted.
+# Uses webroot (no nginx stop). Pems land in docker/nginx/certs/; nginx is
+# reloaded. Hawser uses the maintenance pair only.
 set -euo pipefail
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -44,7 +39,6 @@ env_val() {
 	printf '%s' "${raw}"
 }
 
-# Valid public DNS label (not localhost, not raw IPv4).
 is_public_hostname() {
 	local h="$1"
 	[ -n "${h}" ] || return 1
@@ -55,14 +49,31 @@ is_public_hostname() {
 
 SITE_DOMAIN="$(env_val SITE_DOMAIN)"
 LETSENCRYPT_EMAIL="$(env_val LETSENCRYPT_EMAIL)"
-SITE_DOMAIN_ALIASES="$(env_val SITE_DOMAIN_ALIASES)"
+SITE_MAINTENANCE_DOMAIN="$(env_val SITE_MAINTENANCE_DOMAIN)"
+if [ -z "${SITE_MAINTENANCE_DOMAIN}" ]; then
+	_aliases="$(env_val SITE_DOMAIN_ALIASES)"
+	SITE_MAINTENANCE_DOMAIN="${_aliases%%[, ]*}"
+fi
+
+for arg in "$@"; do
+	case "${arg}" in
+		-h|--help)
+			sed -n '2,16p' "$0" | sed 's/^# \?//'
+			exit 0
+			;;
+		*)
+			echo "Unexpected argument: ${arg} (domains come from .env)" >&2
+			exit 1
+			;;
+	esac
+done
 
 if [ -z "${SITE_DOMAIN}" ] || [ "${SITE_DOMAIN}" = "localhost" ]; then
 	echo "Set SITE_DOMAIN in .env to a public hostname (not localhost)." >&2
 	exit 1
 fi
-if echo "${SITE_DOMAIN}" | grep -Eq '^[0-9]{1,3}(\.[0-9]{1,3}){3}$'; then
-	echo "Let's Encrypt does not issue certificates for raw IP addresses. Use a DNS name." >&2
+if ! is_public_hostname "${SITE_DOMAIN}"; then
+	echo "SITE_DOMAIN is not a valid public hostname: ${SITE_DOMAIN}" >&2
 	exit 1
 fi
 
@@ -89,81 +100,47 @@ if [ -z "$(docker ps -q -f "name=^${CONTAINER}$")" ]; then
 	exit 1
 fi
 
-# Build unique domain list: primary, aliases from .env, then CLI extras.
-DOMAINS=()
-add_domain() {
-	local d="$1" x
-	[ -n "${d}" ] || return 0
-	for x in "${DOMAINS[@]+"${DOMAINS[@]}"}"; do
-		[ "${x}" = "${d}" ] && return 0
-	done
-	if ! is_public_hostname "${d}"; then
-		echo "Skipping invalid hostname: ${d}" >&2
-		return 0
-	fi
-	DOMAINS+=("${d}")
-}
-
-add_domain "${SITE_DOMAIN}"
-# shellcheck disable=SC2086
-for _alias in ${SITE_DOMAIN_ALIASES//,/ }; do
-	add_domain "${_alias}"
-done
-for _extra in "$@"; do
-	case "${_extra}" in
-		-h|--help)
-			sed -n '2,18p' "$0" | sed 's/^# \?//'
-			exit 0
-			;;
-		*) add_domain "${_extra}" ;;
-	esac
-done
-
-if [ "${#DOMAINS[@]}" -eq 0 ]; then
-	echo "No domains to request." >&2
-	exit 1
-fi
-
-if command -v getent >/dev/null 2>&1; then
-	for _d in "${DOMAINS[@]}"; do
-		if ! getent ahosts "${_d}" >/dev/null 2>&1; then
-			echo "Warning: ${_d} does not resolve yet. Certbot will likely fail until DNS points here." >&2
+issue_one() {
+	local name="$1"
+	if command -v getent >/dev/null 2>&1; then
+		if ! getent ahosts "${name}" >/dev/null 2>&1; then
+			echo "Warning: ${name} does not resolve yet. Certbot will likely fail until DNS points here." >&2
 		fi
-	done
-fi
+	fi
+	echo "Requesting certificate for ${name} (separate lineage, webroot ${ACME_ROOT})"
+	certbot certonly \
+		--webroot \
+		--webroot-path "${ACME_ROOT}" \
+		--cert-name "${name}" \
+		-d "${name}" \
+		--email "${LETSENCRYPT_EMAIL}" \
+		--agree-tos \
+		--non-interactive \
+		--deploy-hook "${REPO_ROOT}/scripts/install-letsencrypt-certs.sh"
+}
 
 mkdir -p "${ACME_ROOT}"
 
-CERTBOT_D_ARGS=()
-for _d in "${DOMAINS[@]}"; do
-	CERTBOT_D_ARGS+=(-d "${_d}")
-done
+issue_one "${SITE_DOMAIN}"
 
-echo "Requesting a certificate for: ${DOMAINS[*]}"
-echo "  webroot ${ACME_ROOT}  cert-name ${SITE_DOMAIN}"
-echo "If this fails: DNS A/AAAA for every name must point at this VPS, and port 80 must be reachable."
+if [ -n "${SITE_MAINTENANCE_DOMAIN}" ] && [ "${SITE_MAINTENANCE_DOMAIN}" != "${SITE_DOMAIN}" ]; then
+	if ! is_public_hostname "${SITE_MAINTENANCE_DOMAIN}"; then
+		echo "SITE_MAINTENANCE_DOMAIN is invalid: ${SITE_MAINTENANCE_DOMAIN}" >&2
+		exit 1
+	fi
+	issue_one "${SITE_MAINTENANCE_DOMAIN}"
+fi
 
-# --expand: add SANs to an existing lineage (needed when aliases are new).
-# Do not use --keep-until-expiring here — that skips reissue when not near
-# expiry and would block adding a new domain to the cert.
-certbot certonly \
-	--webroot \
-	--webroot-path "${ACME_ROOT}" \
-	--cert-name "${SITE_DOMAIN}" \
-	"${CERTBOT_D_ARGS[@]}" \
-	--email "${LETSENCRYPT_EMAIL}" \
-	--agree-tos \
-	--non-interactive \
-	--expand \
-	--deploy-hook "${REPO_ROOT}/scripts/install-letsencrypt-certs.sh"
-
-# certonly --deploy-hook runs on success; call again in case the hook path
-# was missing on an older install.
 "${REPO_ROOT}/scripts/install-letsencrypt-certs.sh"
 
 echo
-echo "HTTPS should now serve a public certificate for:"
-for _d in "${DOMAINS[@]}"; do
-	echo "  https://${_d}/"
-done
-echo "Renewal: certbot.timer (twice daily). The deploy hook reloads nginx."
+echo "Separate certificates installed:"
+echo "  public:      https://${SITE_DOMAIN}/"
+if [ -n "${SITE_MAINTENANCE_DOMAIN}" ] && [ "${SITE_MAINTENANCE_DOMAIN}" != "${SITE_DOMAIN}" ]; then
+	echo "  maintenance: https://${SITE_MAINTENANCE_DOMAIN}/  (Dockhand :2376)"
+fi
+echo "Renewal: certbot.timer (twice daily). Deploy hook reloads nginx."
+echo
+echo "If you previously had one cert with both names as SANs, delete the old"
+echo "lineage after confirming the new ones work, e.g.:"
+echo "  sudo certbot delete --cert-name OLD_DUAL_NAME"

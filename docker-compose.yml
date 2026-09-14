@@ -130,6 +130,7 @@ services:
     env_file: .env
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
+      SITE_MAINTENANCE_DOMAIN: ${SITE_MAINTENANCE_DOMAIN:-}
       OT_IP: ${OT_IP}
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
