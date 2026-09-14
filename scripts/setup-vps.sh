@@ -23,7 +23,7 @@
 # Without OTSERVER_* / MYSQL_* env vars it will prompt on /dev/tty for:
 #   1) sudo username
 #   2) that user's password (twice)
-#   3) website hostname (default baiakvip9.thefalked.dev — Enter to keep it)
+#   3) website hostname (default baiakvip9.servegame.com — Enter to keep it)
 #   4) Let's Encrypt email
 #   5) MySQL root and app passwords
 #
@@ -104,7 +104,9 @@ echo
 if [ -n "${OTSERVER_USERNAME:-}" ]; then
 	USERNAME="${OTSERVER_USERNAME}"
 	PASSWORD="${OTSERVER_PASSWORD:-}"
-	SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.thefalked.dev}"
+	SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.servegame.com}"
+	# Maintenance / alternate HTTPS name (SAN on the same LE cert).
+	SITE_DOMAIN_ALIASES="${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
 	LETSENCRYPT_EMAIL="${LETSENCRYPT_EMAIL:-}"
 	MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
 	MYSQL_PASSWORD="${MYSQL_PASSWORD:-}"
@@ -119,9 +121,10 @@ else
 	fi
 	unset PASSWORD_CONFIRM
 
-	DEFAULT_SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.thefalked.dev}"
+	DEFAULT_SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.servegame.com}"
 	SITE_DOMAIN_INPUT="$(prompt "Website hostname [${DEFAULT_SITE_DOMAIN}]: ")"
 	SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_SITE_DOMAIN}}"
+	SITE_DOMAIN_ALIASES="${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
 
 	LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (Enter to skip HTTPS cert for now): ")"
 
@@ -160,8 +163,9 @@ fi
 echo
 echo "User:        ${USERNAME}"
 echo "TLS CN:      ${SITE_DOMAIN}"
+echo "TLS aliases: ${SITE_DOMAIN_ALIASES:-"(none)"}"
 echo "LE email:    ${LETSENCRYPT_EMAIL:-"(set later)"}"
-echo "Open ports:  22, 80, 443, 8080, 7171, 7172"
+echo "Open ports:  22, 80, 443, 8080, 2376, 7171, 7172"
 echo
 
 # -----------------------------------------------------------------------------
@@ -500,6 +504,7 @@ if [ -f "${REPO_ROOT}/.env.example" ]; then
 	fi
 	upsert_env "${REPO_ROOT}/.env" SITE_DOMAIN "${SITE_DOMAIN}"
 	upsert_env "${REPO_ROOT}/.env" OT_IP "${SITE_DOMAIN}"
+	upsert_env "${REPO_ROOT}/.env" SITE_DOMAIN_ALIASES "${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
 	upsert_env "${REPO_ROOT}/.env" LETSENCRYPT_EMAIL "${LETSENCRYPT_EMAIL}"
 	upsert_env "${REPO_ROOT}/.env" MYSQL_ROOT_PASSWORD "${MYSQL_ROOT_PASSWORD}"
 	upsert_env "${REPO_ROOT}/.env" MYSQL_PASSWORD "${MYSQL_PASSWORD}"

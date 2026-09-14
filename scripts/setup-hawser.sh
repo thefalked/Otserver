@@ -140,16 +140,26 @@ else
 fi
 
 _site=""
+_alias=""
 if [ -f "${ENV_FILE}" ]; then
 	_site="$(grep -E '^SITE_DOMAIN=' "${ENV_FILE}" | tail -n1 | cut -d= -f2- || true)"
 	case "${_site}" in
 		\"*\") _site="${_site#\"}"; _site="${_site%\"}" ;;
 		\'*\') _site="${_site#\'}"; _site="${_site%\'}" ;;
 	esac
+	_alias="$(grep -E '^SITE_DOMAIN_ALIASES=' "${ENV_FILE}" | tail -n1 | cut -d= -f2- || true)"
+	case "${_alias}" in
+		\"*\") _alias="${_alias#\"}"; _alias="${_alias%\"}" ;;
+		\'*\') _alias="${_alias#\'}"; _alias="${_alias%\'}" ;;
+	esac
 fi
-_site="${_site:-SITE_DOMAIN}"
+# Dockhand uses the maintenance alias when set; public site stays on SITE_DOMAIN.
+_dockhand="${_alias%%[, ]*}"
+_dockhand="${_dockhand:-${_site:-SITE_DOMAIN}}"
 
 echo
-echo "Hawser is up. Dockhand: https://${_site}:2376 with TOKEN from /etc/hawser/config"
+echo "Hawser is up. Dockhand (maintenance): https://${_dockhand}:2376"
+echo "  TOKEN from /etc/hawser/config"
+echo "  Public site: https://${_site:-SITE_DOMAIN}/"
 echo "  docker compose ps hawser"
 echo "  docker compose logs -f hawser"

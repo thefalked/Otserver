@@ -13,7 +13,7 @@ That script asks you for **everything on your laptop** (no remote prompts):
 1. VPS IP/hostname, SSH user (`root` on a new machine), SSH port
 2. GitHub token (hidden) — fine-grained **Contents: Read-only** on this repo, or classic `repo`
 3. New sudo username + password
-4. Website hostname (default **baiakvip9.thefalked.dev**), Let’s Encrypt email
+4. Website hostname (default **baiakvip9.servegame.com**), Let’s Encrypt email
 5. MySQL root and app passwords
 
 It then SSHs in (host key / VPS root password if the provider did not inject your laptop key), installs git, clones into `/opt/otserver` (full history), and runs `setup-vps.sh` with those values. It also starts Docker Compose and tries Let’s Encrypt if you gave an email.
@@ -182,15 +182,16 @@ Browsers will warn until you issue a public cert.
 
 Requirements:
 
-- `SITE_DOMAIN` in `.env` is a public hostname (default on VPS: `baiakvip9.thefalked.dev`)
+- `SITE_DOMAIN` in `.env` is a public hostname (default on VPS: `baiakvip9.servegame.com`)
 - DNS **A** (and **AAAA** if you have IPv6) for that name points at the VPS
 - compose is up with the VPS overlay (host port **80** published)
 - `LETSENCRYPT_EMAIL` in `.env` (or the script will ask)
 
 ```bash
-# .env (setup-vps.sh already sets these to the hostname you confirmed)
-SITE_DOMAIN=baiakvip9.thefalked.dev
-OT_IP=baiakvip9.thefalked.dev
+# .env (setup-vps.sh already sets these)
+SITE_DOMAIN=baiakvip9.servegame.com
+OT_IP=baiakvip9.servegame.com
+SITE_DOMAIN_ALIASES=baiakvip9.thefalked.dev
 LETSENCRYPT_EMAIL=you@example.com
 
 docker compose up --build -d
@@ -201,6 +202,22 @@ That uses HTTP-01 via `/.well-known/acme-challenge/` on port 80 (nginx does
 **not** stop). The cert is copied into `docker/nginx/certs/` and nginx is
 **reloaded**. If Hawser is running, it is **restarted** so it picks up the new
 pems. Renewals: `certbot.timer` (twice daily) + the same deploy hook.
+
+### Switch primary to servegame (keep thefalked for maintenance)
+
+On an existing VPS that still uses `baiakvip9.thefalked.dev` as primary:
+
+```bash
+# sets SITE_DOMAIN + OT_IP, moves thefalked into SITE_DOMAIN_ALIASES, restarts otserver
+sudo bash scripts/set-domain.sh baiakvip9.servegame.com
+
+# both names must resolve here; expands/issues one cert with both SANs
+sudo bash scripts/setup-letsencrypt.sh
+```
+
+Game clients and the public site use **servegame.com**. HTTPS on
+**thefalked.dev** stays valid for **maintenance** (including Dockhand /
+Hawser at `https://baiakvip9.thefalked.dev:2376` — same cert).
 
 If issuance fails, check DNS, that 80 is reachable from the internet, and
 `docker compose logs nginx`.
@@ -229,7 +246,9 @@ That keeps your existing `/etc/hawser/config`, opens UFW 2376, disables systemd
 **Fresh install:** `setup-vps.sh` calls the same script (`--host-only`), then
 `docker compose up` starts the container with the rest of the stack.
 
-Dockhand: `https://SITE_DOMAIN:2376` + the `TOKEN` from `/etc/hawser/config`.
+Dockhand (maintenance): `https://baiakvip9.thefalked.dev:2376` (or whatever is
+in `SITE_DOMAIN_ALIASES`) + the `TOKEN` from `/etc/hawser/config`. Public game
+site stays on `SITE_DOMAIN` (servegame).
 Public LE certs need no extra CA import.
 
 Prefer locking UFW to your home IP later:

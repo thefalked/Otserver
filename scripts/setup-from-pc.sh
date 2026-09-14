@@ -107,9 +107,10 @@ if [ "${OTSERVER_PASSWORD}" != "${_confirm}" ]; then
 fi
 unset _confirm
 
-DEFAULT_SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.thefalked.dev}"
+DEFAULT_SITE_DOMAIN="${SITE_DOMAIN:-baiakvip9.servegame.com}"
 SITE_DOMAIN_INPUT="$(prompt "Website hostname [${DEFAULT_SITE_DOMAIN}]: ")"
 SITE_DOMAIN="${SITE_DOMAIN_INPUT:-${DEFAULT_SITE_DOMAIN}}"
+SITE_DOMAIN_ALIASES="${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
 
 LETSENCRYPT_EMAIL="$(prompt "Let's Encrypt email (Enter to skip HTTPS cert for now): ")"
 
@@ -160,6 +161,7 @@ chmod 700 "${LOCAL_BUNDLE}/bootstrap-vps.sh" "${LOCAL_BUNDLE}/setup-vps.sh"
 	printf '%s\n' 'set -euo pipefail'
 	printf 'export GITHUB_TOKEN=%q\n' "${GITHUB_TOKEN}"
 	printf 'export SITE_DOMAIN=%q\n' "${SITE_DOMAIN}"
+	printf 'export SITE_DOMAIN_ALIASES=%q\n' "${SITE_DOMAIN_ALIASES:-baiakvip9.thefalked.dev}"
 	printf 'export OTSERVER_REF=%q\n' "${OTSERVER_REF}"
 	printf 'export OTSERVER_DIR=%q\n' "${OTSERVER_DIR}"
 	printf 'export OTSERVER_USERNAME=%q\n' "${OTSERVER_USERNAME}"
