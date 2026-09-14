@@ -487,15 +487,22 @@ fi
 # -----------------------------------------------------------------------------
 upsert_env() {
 	local file="$1" key="$2" value="$3"
-	local tmp
+	local tmp owner group mode
 	tmp="$(mktemp)"
 	if [ -f "${file}" ]; then
+		owner="$(stat -c '%u' "${file}")"
+		group="$(stat -c '%g' "${file}")"
+		mode="$(stat -c '%a' "${file}")"
 		grep -v "^${key}=" "${file}" > "${tmp}" || true
 	else
+		owner="$(stat -c '%u' "$(dirname "${file}")" 2>/dev/null || echo 0)"
+		group="$(stat -c '%g' "$(dirname "${file}")" 2>/dev/null || echo 0)"
+		mode=600
 		: > "${tmp}"
 	fi
 	printf '%s=%s\n' "${key}" "${value}" >> "${tmp}"
-	mv "${tmp}" "${file}"
+	install -m "${mode}" -o "${owner}" -g "${group}" "${tmp}" "${file}"
+	rm -f "${tmp}"
 }
 
 if [ -f "${REPO_ROOT}/.env.example" ]; then

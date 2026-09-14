@@ -86,15 +86,24 @@ fi
 
 upsert_env() {
 	local file="$1" key="$2" value="$3"
-	local tmp
+	local tmp owner group mode
 	tmp="$(mktemp)"
 	if [ -f "${file}" ]; then
+		owner="$(stat -c '%u' "${file}")"
+		group="$(stat -c '%g' "${file}")"
+		mode="$(stat -c '%a' "${file}")"
 		grep -v "^${key}=" "${file}" > "${tmp}" || true
 	else
+		owner="$(stat -c '%u' "$(dirname "${file}")")"
+		group="$(stat -c '%g' "$(dirname "${file}")")"
+		mode=600
 		: > "${tmp}"
 	fi
 	printf '%s=%s\n' "${key}" "${value}" >> "${tmp}"
-	mv "${tmp}" "${file}"
+	# install(1) preserves intended owner — plain mv as root leaves root:600
+	# and breaks unprivileged `docker compose` (.env unreadable).
+	install -m "${mode}" -o "${owner}" -g "${group}" "${tmp}" "${file}"
+	rm -f "${tmp}"
 }
 
 # Keep prior public name as maintenance (Dockhand), unless it equals the new primary.
@@ -112,8 +121,12 @@ upsert_env "${ENV_FILE}" SITE_MAINTENANCE_DOMAIN "${NEW_MAINT}"
 # Drop legacy key so we do not keep dual-SAN behaviour by accident.
 if grep -qE '^SITE_DOMAIN_ALIASES=' "${ENV_FILE}" 2>/dev/null; then
 	tmp="$(mktemp)"
+	owner="$(stat -c '%u' "${ENV_FILE}")"
+	group="$(stat -c '%g' "${ENV_FILE}")"
+	mode="$(stat -c '%a' "${ENV_FILE}")"
 	grep -vE '^SITE_DOMAIN_ALIASES=' "${ENV_FILE}" > "${tmp}" || true
-	mv "${tmp}" "${ENV_FILE}"
+	install -m "${mode}" -o "${owner}" -g "${group}" "${tmp}" "${ENV_FILE}"
+	rm -f "${tmp}"
 fi
 
 if [ "${KEEP_OT_IP}" -eq 0 ]; then
