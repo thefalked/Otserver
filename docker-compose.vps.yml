@@ -8,23 +8,24 @@ services:
       - "443:443"
 
   # Remote Docker agent for Dockhand (local-only Dockhand connects here).
-  # TOKEN (and optional AGENT_*) come from the host systemd-style config.
-  # TLS_* below override any cert paths in that file so we reuse nginx LE pems.
+  # TOKEN via TOKEN_FILE bind-mount (not compose env_file): /etc/hawser/config is
+  # root:600, so unprivileged `docker compose` cannot open it as env_file.
+  # TLS_* use nginx LE pems (same SITE_DOMAIN).
   hawser:
     image: ghcr.io/finsys/hawser:latest
     container_name: otserver-hawser
     restart: unless-stopped
-    env_file:
-      - /etc/hawser/config
     environment:
       STACKS_DIR: /opt/hawser-stacks
       TLS_CERT: /certs/fullchain.pem
       TLS_KEY: /certs/privkey.pem
+      TOKEN_FILE: /run/secrets/hawser_token
       AGENT_NAME: ${HAWSER_AGENT_NAME:-otserver-vps}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       # Host path must match STACKS_DIR so relative bind mounts in stacks resolve.
       - /opt/hawser-stacks:/opt/hawser-stacks
       - ./docker/nginx/certs:/certs:ro
+      - /etc/hawser/token:/run/secrets/hawser_token:ro
     ports:
       - "2376:2376"

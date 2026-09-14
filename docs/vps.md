@@ -211,9 +211,10 @@ The VPS overlay (`docker-compose.vps.yml`) runs Hawser in **Standard** mode on
 port **2376**, reusing the same Let's Encrypt files as nginx
 (`docker/nginx/certs/fullchain.pem` + `privkey.pem`).
 
-`TOKEN` comes from **`/etc/hawser/config`** (same file as the upstream
-bash/systemd install). Compose overrides `TLS_CERT` / `TLS_KEY` to the LE
-pems, so any old self-signed paths in that file are ignored.
+`TOKEN` lives in **`/etc/hawser/config`**. Compose does **not** load that file
+as `env_file` (root mode `600` → permission denied for your user). Instead
+`setup-hawser.sh` mirrors the token to **`/etc/hawser/token`**, which the
+container mounts as `TOKEN_FILE`. TLS still uses the LE pems.
 
 **Already have a VPS** (do not re-run `setup-vps.sh`):
 

@@ -3,11 +3,12 @@
 #
 # Idempotent: safe on first bootstrap (called from setup-vps.sh) and on a live box.
 #   sudo bash scripts/setup-hawser.sh              # host prep + compose up hawser
-#   sudo bash scripts/setup-hawser.sh --host-only  # stacks, config, UFW, stop systemd
+#   sudo bash scripts/setup-hawser.sh --host-only  # stacks, config, token, UFW, stop systemd
 #
 # What it does:
 #   - /opt/hawser-stacks bind-mount dir
 #   - /etc/hawser/config with TOKEN (keeps an existing file)
+#   - /etc/hawser/token (raw token for compose TOKEN_FILE mount; root:600)
 #   - UFW allow 2376/tcp
 #   - disable systemd `hawser` if present (avoids fighting compose for the port)
 #   - docker compose up -d hawser (unless --host-only)
@@ -23,7 +24,7 @@ for arg in "$@"; do
 	case "${arg}" in
 		--host-only) HOST_ONLY=1 ;;
 		-h|--help)
-			sed -n '2,12p' "$0" | sed 's/^# \?//'
+			sed -n '2,14p' "$0" | sed 's/^# \?//'
 			exit 0
 			;;
 		*)
@@ -49,13 +50,14 @@ if id "${OWNER}" >/dev/null 2>&1 && [ "${OWNER}" != "root" ]; then
 	chown "${OWNER}:${OWNER}" /opt/hawser-stacks || true
 fi
 
+install -d -m 755 /etc/hawser
+
 if [ ! -f /etc/hawser/config ]; then
 	echo "==> Creating /etc/hawser/config (TOKEN for Dockhand)"
-	install -d -m 755 /etc/hawser
 	_hawser_tok="$(openssl rand -base64 32)"
 	umask 077
 	cat > /etc/hawser/config <<EOF
-# Hawser — used by otserver-hawser (docker-compose.vps.yml)
+# Hawser — TOKEN mirrored to /etc/hawser/token for otserver-hawser (compose)
 PORT=2376
 TOKEN=${_hawser_tok}
 DOCKER_SOCKET=/var/run/docker.sock
@@ -65,6 +67,27 @@ EOF
 else
 	echo "==> Keeping existing /etc/hawser/config"
 fi
+
+# Compose mounts this as TOKEN_FILE (container reads it as root). Avoids
+# env_file:/etc/hawser/config which fails for non-root `docker compose`.
+sync_hawser_token_file() {
+	local raw=""
+	raw="$(grep -E '^TOKEN=' /etc/hawser/config | tail -n1 | cut -d= -f2- || true)"
+	case "${raw}" in
+		\"*\") raw="${raw#\"}"; raw="${raw%\"}" ;;
+		\'*\') raw="${raw#\'}"; raw="${raw%\'}" ;;
+	esac
+	if [ -z "${raw}" ]; then
+		echo "No TOKEN= in /etc/hawser/config" >&2
+		exit 1
+	fi
+	umask 077
+	printf '%s\n' "${raw}" > /etc/hawser/token
+	chmod 600 /etc/hawser/token
+	chown root:root /etc/hawser/token
+	echo "==> Synced /etc/hawser/token from config (for compose TOKEN_FILE)"
+}
+sync_hawser_token_file
 
 if command -v ufw >/dev/null 2>&1; then
 	ufw allow 2376/tcp comment 'Hawser Dockhand' || true
