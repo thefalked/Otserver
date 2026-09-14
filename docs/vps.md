@@ -199,10 +199,41 @@ sudo bash scripts/setup-letsencrypt.sh
 
 That uses HTTP-01 via `/.well-known/acme-challenge/` on port 80 (nginx does
 **not** stop). The cert is copied into `docker/nginx/certs/` and nginx is
-**reloaded**. Renewals: `certbot.timer` (twice daily) + the same deploy hook.
+**reloaded**. If Hawser is running, it is **restarted** so it picks up the new
+pems. Renewals: `certbot.timer` (twice daily) + the same deploy hook.
 
 If issuance fails, check DNS, that 80 is reachable from the internet, and
 `docker compose logs nginx`.
+
+## Hawser (Dockhand agent)
+
+The VPS overlay (`docker-compose.vps.yml`) runs Hawser in **Standard** mode on
+port **2376**, reusing the same Let's Encrypt files as nginx
+(`docker/nginx/certs/fullchain.pem` + `privkey.pem`).
+
+`TOKEN` comes from **`/etc/hawser/config`** (same file as the upstream
+bash/systemd install). Compose overrides `TLS_CERT` / `TLS_KEY` to the LE
+pems, so any old self-signed paths in that file are ignored.
+
+**Already have a VPS** (do not re-run `setup-vps.sh`):
+
+```bash
+# after git pull of this repo on the VPS
+sudo bash scripts/setup-hawser.sh
+```
+
+That keeps your existing `/etc/hawser/config`, opens UFW 2376, disables systemd
+`hawser` if it was installed, and runs `docker compose up -d hawser`.
+
+**Fresh install:** `setup-vps.sh` calls the same script (`--host-only`), then
+`docker compose up` starts the container with the rest of the stack.
+
+Dockhand: `https://SITE_DOMAIN:2376` + the `TOKEN` from `/etc/hawser/config`.
+Public LE certs need no extra CA import.
+
+Prefer locking UFW to your home IP later:
+`ufw delete allow 2376/tcp` then
+`ufw allow from YOUR_IP to any port 2376 proto tcp`.
 
 ## MySQL backups (no stop)
 

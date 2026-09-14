@@ -3,7 +3,7 @@
 #
 # Why copy instead of mounting /etc/letsencrypt: the container only sees
 # docker/nginx/certs. Host symlinks into /etc/letsencrypt would be dangling
-# inside the container.
+# inside the container. Hawser (VPS overlay) mounts the same dir for TLS.
 #
 # Certbot calls this as a deploy hook with RENEWED_LINEAGE set. You can also
 # run it by hand after `certbot certonly`.
@@ -13,12 +13,14 @@
 # is still far cheaper than bouncing the OT process. If reload fails (e.g.
 # old nginx.conf that required otserver DNS at load time), fall back to a
 # container restart so the new pems are still picked up.
+# Hawser does not hot-reload certs — restart it when present so renewals apply.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 CERT_DIR="${REPO_ROOT}/docker/nginx/certs"
 CONTAINER="${NGINX_CONTAINER:-otserver-nginx}"
+HAWSER_CONTAINER="${HAWSER_CONTAINER:-otserver-hawser}"
 
 if [ -n "${RENEWED_LINEAGE:-}" ]; then
 	LIVE="${RENEWED_LINEAGE}"
@@ -64,8 +66,16 @@ reload_nginx() {
 		&& docker exec "${CONTAINER}" nginx -s reload
 }
 
+restart_hawser_if_running() {
+	if docker ps -q -f "name=^${HAWSER_CONTAINER}$" | grep -q .; then
+		docker restart "${HAWSER_CONTAINER}" >/dev/null
+		echo "Restarted ${HAWSER_CONTAINER} to pick up new certs"
+	fi
+}
+
 if reload_nginx; then
 	echo "Installed cert from ${LIVE} and reloaded ${CONTAINER}"
+	restart_hawser_if_running
 	exit 0
 fi
 
@@ -75,6 +85,7 @@ docker restart "${CONTAINER}" >/dev/null
 for _i in 1 2 3 4 5 6 7 8 9 10; do
 	if docker ps -q -f "name=^${CONTAINER}$" | grep -q .; then
 		echo "Installed cert from ${LIVE} and restarted ${CONTAINER}"
+		restart_hawser_if_running
 		exit 0
 	fi
 	sleep 1

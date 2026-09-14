@@ -1,7 +1,30 @@
 # Overlay used by scripts/setup-vps.sh (COMPOSE_FILE=docker-compose.yml:docker-compose.vps.yml).
 # Publishes HTTP/HTTPS on the host. nginx.conf already listens on 80/443 inside the container.
+# Also runs Hawser (Dockhand agent) in Standard mode with the same Let's Encrypt certs as nginx.
 services:
   nginx:
     ports:
       - "80:80"
       - "443:443"
+
+  # Remote Docker agent for Dockhand (local-only Dockhand connects here).
+  # TOKEN (and optional AGENT_*) come from the host systemd-style config.
+  # TLS_* below override any cert paths in that file so we reuse nginx LE pems.
+  hawser:
+    image: ghcr.io/finsys/hawser:latest
+    container_name: otserver-hawser
+    restart: unless-stopped
+    env_file:
+      - /etc/hawser/config
+    environment:
+      STACKS_DIR: /opt/hawser-stacks
+      TLS_CERT: /certs/fullchain.pem
+      TLS_KEY: /certs/privkey.pem
+      AGENT_NAME: ${HAWSER_AGENT_NAME:-otserver-vps}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Host path must match STACKS_DIR so relative bind mounts in stacks resolve.
+      - /opt/hawser-stacks:/opt/hawser-stacks
+      - ./docker/nginx/certs:/certs:ro
+    ports:
+      - "2376:2376"

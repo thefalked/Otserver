@@ -356,6 +356,7 @@ fi
 #   80    HTTP (nginx redirects to HTTPS on the VPS overlay)
 #   443   HTTPS Gesior site
 #   8080  HTTP Gesior (legacy / until you drop it)
+#   2376  Hawser / Dockhand agent (TLS + TOKEN; prefer restrict to your IP later)
 #   7171  OT login protocol (raw TCP, not HTTP)
 #   7172  OT game protocol
 # MySQL 3306 is NOT opened — it stays on the Docker network only.
@@ -374,6 +375,7 @@ ufw allow 22/tcp comment 'SSH'
 ufw allow 80/tcp comment 'HTTP'
 ufw allow 443/tcp comment 'HTTPS'
 ufw allow 8080/tcp comment 'Website HTTP'
+ufw allow 2376/tcp comment 'Hawser Dockhand'
 ufw allow 7171/tcp comment 'OT login'
 ufw allow 7172/tcp comment 'OT game'
 ufw --force enable
@@ -505,6 +507,10 @@ if [ -f "${REPO_ROOT}/.env.example" ]; then
 	chown "${USERNAME}:${USERNAME}" "${REPO_ROOT}/.env" || true
 	chmod 600 "${REPO_ROOT}/.env" || true
 fi
+
+# Hawser host bits (config, stacks dir, UFW, stop systemd). Compose starts the
+# container in the "up --build" step below. Existing VPSes: scripts/setup-hawser.sh
+SUDO_USER="${USERNAME}" bash "${REPO_ROOT}/scripts/setup-hawser.sh" --host-only
 
 # Fresh clone is root-owned. Hand the tree to the sudo user so they can
 # git pull and docker compose without extra root.
