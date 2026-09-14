@@ -72,6 +72,9 @@ worldId = 0
 -- advertise to clients (from .env OT_IP)
 ip = "${OT_IP}"
 bindOnlyConfiguredIpAddress = false
+# TFS 0.4 reads bindOnlyGlobalAddress (not the name above). Keep false in Docker
+# so the daemon still binds container IPs; charlist IP comes from `ip` / OT_IP.
+bindOnlyGlobalAddress = false
 loginPort = 7171
 gamePort = 7172
 adminPort = 0

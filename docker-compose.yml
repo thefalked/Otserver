@@ -3,9 +3,8 @@
 # Keep service definitions, SQL mounts, and ports in sync with that file.
 # Do not run this stack and the home-server wrapper at the same time.
 #
-# Public ports are on nginx (HTTP + TCP stream). Website and otserver
-# stay on the internal network only.
-#   8080 HTTP site | 7171/7172 game
+# Public ports are on nginx (HTTP) and otserver (OT TCP).
+#   8080 HTTP site | 7171/7172 game (direct to otserver — see service ports)
 # VPS overlay (docker-compose.vps.yml) also publishes 80 → HTTPS and 443.
 # Clients: set OT_IP in .env to the hostname/IP clients should use after login.
 
@@ -77,9 +76,11 @@ services:
       - ./server/data:/ot/data
       - ./server/mods:/ot/mods
       - ot_logs:/ot/logs
-    expose:
-      - "7171"
-      - "7172"
+    # Publish login/game on the host directly. If nginx streams these, TFS sees
+    # the proxy's Docker IP and the charlist advertises 172.x (client times out).
+    ports:
+      - "7171:7171"
+      - "7172:7172"
     mem_limit: 6g
     memswap_limit: 6g
     networks:
@@ -136,8 +137,7 @@ services:
       - ./docker/nginx/acme:/var/www/certbot:ro
     ports:
       - "${WEBSITE_PORT:-8080}:8080"
-      - "7171:7171" # login — nginx TCP stream → otserver
-      - "7172:7172" # game
+      # 7171/7172 are on otserver (not nginx) so charlist gets the real client IP
     mem_limit: 256m
     memswap_limit: 256m
     networks:
