@@ -508,7 +508,7 @@ $config['site']['show_vip_storage'] = 0; // the storage of vip
 $config['site']['show_outfit'] = 0; // show outfit, 1 = yes, 0 = no
 $config['site']['show_signature'] = 0; // show signature, 1 = yes, 0 = no
 $config['site']['screenoftheday'] = 0; // show screenshot of the day
-$config['site']['worldtransfer'] = 1; //1-Enable/0-Disable Character World Transfer
+$config['site']['worldtransfer'] = 0; //1-Enable/0-Disable Character World Transfer (single world)
 $config['site']['worldtransferprice'] = 10; //Price for Character World Transfer
 $config['site']['transfermonths'] = 6; //Months for which you cannot make World Transfer with a character
 $config['site']['show_health_information'] = 1; //Show health bar
@@ -529,4 +529,3 @@ $config['pagseguro']['produtoNome'] = 'Pontos Premium';
 $config['pagseguro']['Token'] = '';
 $config['pagseguro']['produtoValor'] = '100';
 $config['pagseguro']['enabled'] = 0;
-?>

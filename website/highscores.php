@@ -94,23 +94,27 @@ $main_content .=
   ' no ' .
   $world_name .
   '</H2></CENTER><BR>';
-$main_content .=
-  '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD></TD><TD>
+if (count($config['site']['worlds']) > 1) {
+  $main_content .=
+    '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD></TD><TD>
 <FORM ACTION="?subtopic=highscores" METHOD=get><INPUT TYPE=hidden NAME=subtopic VALUE=highscores><INPUT TYPE=hidden NAME=list VALUE=experience>
 <TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="' .
-  $config['site']['vdarkborder'] .
-  '" CLASS=white><B>Selecione o Mundo</B></TD></TR><TR><TD BGCOLOR="' .
-  $config['site']['lightborder'] .
-  '">
+    $config['site']['vdarkborder'] .
+    '" CLASS=white><B>Selecione o Mundo</B></TD></TR><TR><TD BGCOLOR="' .
+    $config['site']['lightborder'] .
+    '">
     <TABLE BORDER=0 CELLPADDING=1><TR><TD>Mundo: </TD><TD><SELECT SIZE="1" NAME="world"><OPTION VALUE="" SELECTED>(Selecione o Mundo)</OPTION>';
-foreach ($config['site']['worlds'] as $id => $world_n) {
-  $main_content .= '<OPTION VALUE="' . $id . '">' . $world_n . '</OPTION>';
+  foreach ($config['site']['worlds'] as $id => $world_n) {
+    $main_content .= '<OPTION VALUE="' . $id . '">' . $world_n . '</OPTION>';
+  }
+  $main_content .=
+    '</SELECT> </TD><TD><INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="' .
+    $layout_name .
+    '/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18>
+        </TD></TR></TABLE></TABLE></FORM></TABLE><br><br>';
 }
 $main_content .=
-  '</SELECT> </TD><TD><INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="' .
-  $layout_name .
-  '/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18>
-        </TD></TR></TABLE></TABLE></FORM></TABLE><br><br><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%></TABLE><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%><TR BGCOLOR="' .
+  '<TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%></TABLE><TABLE BORDER=0 CELLPADDING=4 CELLSPACING=1 WIDTH=100%><TR BGCOLOR="' .
   $config['site']['vdarkborder'] .
   '"><TD WIDTH=10% CLASS=whites><B>Pais</B></TD><TD WIDTH=10% CLASS=whites><B>Rank</B></TD><TD WIDTH=75% CLASS=whites><B>Nome</B></TD><TD WIDTH=15% CLASS=whites><b><center>Level</center></B></TD>';
 if ($list == 'experience') {
@@ -209,5 +213,3 @@ $main_content .=
   '" CLASS="size_xs">Fishing</A><BR></TABLE></TD><TD><IMG SRC="' .
   $layout_name .
   '/images/general/blank.gif" WIDTH=10 HEIGHT=1 BORDER=0></TD></TR></TABLE>';
-
-?>

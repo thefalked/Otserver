@@ -42,6 +42,10 @@ SET @exist := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEM
 SET @sqlstmt := IF(@exist = 0, 'ALTER TABLE `accounts` ADD `create_date` INT NOT NULL DEFAULT 0', 'SELECT 1');
 PREPARE stmt FROM @sqlstmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
+SET @exist := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'accounts' AND COLUMN_NAME = 'created');
+SET @sqlstmt := IF(@exist = 0, 'ALTER TABLE `accounts` ADD `created` INT NOT NULL DEFAULT 0', 'SELECT 1');
+PREPARE stmt FROM @sqlstmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
 SET @exist := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'accounts' AND COLUMN_NAME = 'create_ip');
 SET @sqlstmt := IF(@exist = 0, 'ALTER TABLE `accounts` ADD `create_ip` INT NOT NULL DEFAULT 0', 'SELECT 1');
 PREPARE stmt FROM @sqlstmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
@@ -77,6 +81,10 @@ PREPARE stmt FROM @sqlstmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 SET @exist := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'players' AND COLUMN_NAME = 'create_date');
 SET @sqlstmt := IF(@exist = 0, 'ALTER TABLE `players` ADD `create_date` INT NOT NULL DEFAULT 0', 'SELECT 1');
+PREPARE stmt FROM @sqlstmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+SET @exist := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'players' AND COLUMN_NAME = 'created');
+SET @sqlstmt := IF(@exist = 0, 'ALTER TABLE `players` ADD `created` INT NOT NULL DEFAULT 0', 'SELECT 1');
 PREPARE stmt FROM @sqlstmt; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 SET @exist := (SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'players' AND COLUMN_NAME = 'hide_char');

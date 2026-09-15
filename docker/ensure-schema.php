@@ -19,10 +19,12 @@ if ($db === '' || $user === '') {
 }
 
 $files = [
+  '/usr/local/share/otserver/06-gesior-player-cols.sql',
   '/usr/local/share/otserver/07-lottery.sql',
   '/usr/local/share/otserver/08-god-energy.sql',
   '/usr/local/share/otserver/09-hide-sample-chars.sql',
   '/usr/local/share/otserver/10-a2-account-manager.sql',
+  '/usr/local/share/otserver/11-gesior-created.sql',
 ];
 
 $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
@@ -35,25 +37,33 @@ for ($i = 1; $i <= $attempts; $i++) {
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
       PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
     ]);
-    foreach ($files as $path) {
-      if (!is_readable($path)) {
-        fwrite(STDERR, "ensure-schema: missing {$path}, skipping file\n");
-        continue;
-      }
-      $sql = file_get_contents($path);
-      if ($sql === false || trim($sql) === '') {
-        continue;
-      }
-      $pdo->exec($sql);
-      fwrite(STDOUT, 'ensure-schema: applied ' . basename($path) . "\n");
-    }
-    exit(0);
+    break;
   } catch (Throwable $e) {
     $last = $e;
-    fwrite(STDERR, "ensure-schema: attempt {$i}/{$attempts}: " . $e->getMessage() . "\n");
+    fwrite(STDERR, "ensure-schema: connect attempt {$i}/{$attempts}: " . $e->getMessage() . "\n");
+    if ($i === $attempts) {
+      fwrite(STDERR, "ensure-schema: gave up connecting: " . $e->getMessage() . "\n");
+      exit(0);
+    }
     sleep(2);
   }
 }
 
-fwrite(STDERR, "ensure-schema: gave up: " . ($last ? $last->getMessage() : 'unknown') . "\n");
+foreach ($files as $path) {
+  if (!is_readable($path)) {
+    fwrite(STDERR, "ensure-schema: missing {$path}, skipping file\n");
+    continue;
+  }
+  $sql = file_get_contents($path);
+  if ($sql === false || trim($sql) === '') {
+    continue;
+  }
+  try {
+    $pdo->exec($sql);
+    fwrite(STDOUT, 'ensure-schema: applied ' . basename($path) . "\n");
+  } catch (Throwable $e) {
+    fwrite(STDERR, 'ensure-schema: ' . basename($path) . ': ' . $e->getMessage() . "\n");
+  }
+}
+
 exit(0);

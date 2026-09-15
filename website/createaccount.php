@@ -295,6 +295,7 @@ if ($action == 'saveaccount') {
     $reg_account->setPassword(password_ency($reg_password));
     $reg_account->setEMail($reg_email);
     $reg_account->setCustomField('flag', $reg_country);
+    $reg_account->setCustomField('created', time());
     $reg_account->unblock();
     $reg_account->save();
     if ($config['site']['newaccount_premdays']) {
@@ -479,4 +480,3 @@ if ($action == 'saveaccount') {
 		</CENTER>';
   }
 }
-?>

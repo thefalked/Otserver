@@ -67,22 +67,24 @@ if ($action == 'login') {
 //-----------------------------------------------------------------------------//-----------------------------------------------------------------------------
 //show list of guilds
 if ($action == '') {
-  $main_content .=
-    '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD></TD><TD>
+  if (count($config['site']['worlds']) > 1) {
+    $main_content .=
+      '<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%><TR><TD></TD><TD>
 <FORM ACTION="" METHOD=get><INPUT TYPE=hidden NAME=subtopic VALUE=guilds><TABLE WIDTH=100% BORDER=0 CELLSPACING=1 CELLPADDING=4><TR><TD BGCOLOR="' .
-    $config['site']['vdarkborder'] .
-    '" CLASS=white><B>Selecione o Mundo</B></TD></TR><TR><TD BGCOLOR="' .
-    $config['site']['darkborder'] .
-    '">
+      $config['site']['vdarkborder'] .
+      '" CLASS=white><B>Selecione o Mundo</B></TD></TR><TR><TD BGCOLOR="' .
+      $config['site']['darkborder'] .
+      '">
     <TABLE BORDER=0 CELLPADDING=1><TR><TD>Mundo: </TD><TD><INPUT TYPE=hidden NAME=subtopic VALUE=guilds><SELECT SIZE="1" NAME="world"><OPTION VALUE="" SELECTED>(Selecione o Mundo)</OPTION>';
-  foreach ($config['site']['worlds'] as $id => $world_n) {
-    $main_content .= '<OPTION VALUE="' . $id . '">' . $world_n . '</OPTION>';
-  }
-  $main_content .=
-    '</SELECT> </TD><TD><INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="' .
-    $layout_name .
-    '/images/buttons/sbutton_submit.gif">
+    foreach ($config['site']['worlds'] as $id => $world_n) {
+      $main_content .= '<OPTION VALUE="' . $id . '">' . $world_n . '</OPTION>';
+    }
+    $main_content .=
+      '</SELECT> </TD><TD><INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="' .
+      $layout_name .
+      '/images/buttons/sbutton_submit.gif">
         </TD></TR></TABLE></TABLE></FORM></TABLE>';
+  }
   foreach ($config['site']['worlds'] as $idd => $world_n) {
     if ($idd == (int) ($_REQUEST['world'] ?? -1)) {
       $world_id = $idd;
