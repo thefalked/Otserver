@@ -8,7 +8,7 @@ local config = {
   timeToStartEvent = 2, -- Minutes, after these minutes the teleport will be removed and the event will be declared started
   timeBetweenSpawns = 20, -- Seconds between each spawn of zombie
   zombieName = "event zombie", -- Name of the zombie that should be summoned
-  playersNeededToStartEvent = 1, -- Players needed before the zombies can spawn.
+  playersNeededToStartEvent = 4, -- O13: was 1 (solo farm)
 
   -- Should be the same as in the creaturescript!
   -- The zombies will spawn randomly inside this area

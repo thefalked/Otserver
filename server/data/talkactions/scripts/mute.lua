@@ -6,19 +6,28 @@ end
 function onSay(cid, words, param)
   if words == "/mute" then
     local t = string.explode(param, ",")
-    if param == "" then
+    if param == "" or not t[1] then
       doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Invalid param specified.")
       return true
     end
-    local player, time, pid = getPlayerByName(t[1]), t[2], getPlayerByNameWildcard(t[1])
-    if not pid or (isPlayerGhost(pid) and getPlayerGhostAccess(pid) > getPlayerGhostAccess(cid)) then
+    local minutes = math.floor(tonumber(t[2]) or 0)
+    if minutes < 1 or minutes > 100 then
+      doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Mute minutes must be 1-100.")
+      return true
+    end
+    local player = getPlayerByNameWildcard(t[1])
+    if not player or (isPlayerGhost(player) and getPlayerGhostAccess(player) > getPlayerGhostAccess(cid)) then
       doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Player with this name doesn't exist or is offline.")
       return TRUE
     end
-    doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você mutou o jogador " .. t[1] .. " por " .. time .. " minutos.")
-    doAddCondition(player, v[tonumber(time)])
-    setPlayerStorageValue(player, 90000, os.time() + time * 60)
-    doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Você foi mutado por " .. time .. " minutos.")
+    doPlayerSendTextMessage(
+    cid,
+      MESSAGE_INFO_DESCR,
+      "Você mutou o jogador " .. t[1] .. " por " .. minutes .. " minutos."
+    )
+    doAddCondition(player, v[minutes])
+    setPlayerStorageValue(player, 90000, os.time() + minutes * 60)
+    doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Você foi mutado por " .. minutes .. " minutos.")
   elseif words == "/desmute" then
     if param == "" then
       doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Invalid param specified.")

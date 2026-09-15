@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <talkactions>
   <!-- ADM -->
 
@@ -79,7 +79,8 @@
   <talkaction words="/commands" event="script" value="commands.lua" />
   <talkaction words="!addon" event="script" value="addondoll.lua" />
   <talkaction words="!reparar;/reparar" script="repair.lua" />
-  <talkaction words="!vipdays;!buyvip;/checkvip;/;/delvip" script="systemvip.lua" />
+  <talkaction words="!vipdays;!buyvip" script="systemvip.lua" />
+  <talkaction log="yes" words="/checkvip;/delvip" access="5" script="systemvip.lua" />
   <talkaction words="!party" event="script" value="party.lua" />
   <talkaction words="!changeoutfit" script="guild.lua" />
   <talkaction words="!glist" script="guildlist.lua" />
@@ -102,8 +103,10 @@
   <talkaction words="!joinguild" event="function" value="guildJoin" />
 
   <!-- Guild War System -->
-  <talkaction words="/war" channel="0" event="script" value="war.lua" desc="(Guild channel command) War management." />
-  <talkaction words="/balance" channel="0" event="script" value="balance.lua" desc="(Guild channel command) Balance management." />
+  <talkaction words="/war" channel="0" event="script" value="war.lua"
+    desc="(Guild channel command) War management." />
+  <talkaction words="/balance" channel="0" event="script" value="balance.lua"
+    desc="(Guild channel command) Balance management." />
 
   <!-- (Deprecated) Redirect old '/' to '!' -->
   <talkaction words="/online" hide="yes" event="script" value="online.lua" />
@@ -114,10 +117,8 @@
 
   <!-- Custom systems -->
   <talkaction words="!notice" event="script" value="notice.lua" />
-  <talkaction words="!jail" script="cadeia.lua" />
-  <talkaction words="!unjail" script="cadeia.lua" />
-  <talkaction words="/jail" script="cadeia.lua" />
-  <talkaction words="/unjail" script="cadeia.lua" />
+  <talkaction words="!jail;/jail" access="4" script="cadeia.lua" />
+  <talkaction words="!unjail;/unjail" script="cadeia.lua" />
   <talkaction words="!necromancer" script="demonic.lua" />
   <talkaction words="!nightmare" script="love.lua" />
   <talkaction filter="word" words="/guild" script="guildcast.lua" />
@@ -135,7 +136,7 @@
   <talkaction words="!votepoll" event="script" value="poll_system.lua" />
   <talkaction words="love" script="love.lua" />
   <talkaction words="!attackguild" event="script" value="attackguild.lua" />
-  <talkaction words="/addvip" script="addvip2.lua" />
+  <talkaction log="yes" words="/addvip" access="5" script="addvip2.lua" />
   <talkaction log="yes" words="/vip" access="5" event="script" value="vip/addvipp.lua" />
   <talkaction words="!save" event="script" value="save1.lua" />
 </talkactions>

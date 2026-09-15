@@ -88,12 +88,13 @@ end
 
 function PollSystem:addVote(cid, id, vote, optmax)
   local Query = db.getResult("SELECT * FROM `poll_votes` WHERE `poll_id` = " .. id)
-  local PLAYER_GUID = getPlayerGUID(cid)
+  -- O11: one vote per account (was storing player GUID in account_id column)
+  local PLAYER_ACC = tostring(getPlayerAccountId(cid))
   if Query:getID() ~= -1 then
     local Query = db.getResult("SELECT `account_id` FROM `poll_votes` WHERE `poll_id` = " .. id)
-    local PLAYER_GUID_TABLE = string.explode(Query:getDataString("account_id"), ",")
+    local PLAYER_ACC_TABLE = string.explode(Query:getDataString("account_id"), ",")
     Query:free()
-    if isInArray(PLAYER_GUID_TABLE, PLAYER_GUID) then
+    if isInArray(PLAYER_ACC_TABLE, PLAYER_ACC) then
       return 1
     else
       local _tr = self:getVotes(id)
@@ -103,7 +104,7 @@ function PollSystem:addVote(cid, id, vote, optmax)
         "UPDATE `poll_votes` SET `votes` = '"
           .. votes
           .. "', `account_id` = CONCAT(`account_id`,'"
-          .. PLAYER_GUID
+          .. PLAYER_ACC
           .. ",') WHERE `poll_id` = "
           .. id
       ) or false
@@ -125,7 +126,7 @@ function PollSystem:addVote(cid, id, vote, optmax)
         .. ", '"
         .. votes
         .. "', '"
-        .. PLAYER_GUID
+        .. PLAYER_ACC
         .. ",')"
     ) or false
   end

@@ -34,8 +34,9 @@ function onSay(cid, words, param, channel)
       query = "`guild_id` = " .. guild .. " AND `enemy_id` = " .. enemy
     end
 
-    tmp =
-      db.getResult("SELECT `id`, `begin`, `end`, `payment` FROM `guild_wars` WHERE " .. query .. " AND `status` = 0")
+    tmp = db.getResult(
+      "SELECT `id`, `guild_id`, `begin`, `end`, `payment` FROM `guild_wars` WHERE " .. query .. " AND `status` = 0"
+    )
     if tmp:getID() == -1 then
       doPlayerSendChannelMessage(
         cid,
@@ -64,6 +65,15 @@ function onSay(cid, words, param, channel)
       end
 
       db.query("UPDATE `guilds` SET `balance` = `balance` - " .. tmp:getDataInt("payment") .. " WHERE `id` = " .. guild)
+    end
+
+    -- O10: refund inviter payment on reject/cancel
+    if t[1] == "reject" or t[1] == "cancel" then
+      local payment = tmp:getDataInt("payment")
+      local payer = tmp:getDataInt("guild_id")
+      if payment > 0 and payer > 0 then
+        db.query("UPDATE `guilds` SET `balance` = `balance` + " .. payment .. " WHERE `id` = " .. payer)
+      end
     end
 
     query = "UPDATE `guild_wars` SET "

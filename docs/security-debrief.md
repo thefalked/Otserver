@@ -3,7 +3,7 @@
 **Host:** <https://baiakvip9.servegame.com/>  
 **Mode:** fixes in progress (batch: host)  
 **Date:** 2026-09-14  
-**Fixed in repo (pending deploy):** F1, F2, W1, W2, W5 (partial: namelock + forum remove → POST), W6, W7, W8, W9, W10, H2, H3, H4, H5, H6, H8, H9, H11  
+**Fixed in repo (pending deploy):** F1, F2, W1, W2, W5 (partial: namelock + forum remove → POST), W6, W7, W8, W9, W10, H2, H3, H4, H5, H6, H8, H9, H11, O1–O8, O10, O11, O13–O15, A1  
 **Deferred:** **H7** non-root containers — quick `-u 1000` test segfaulted; needs dedicated USER + data ownership  
 **Accepted / kept as-is:** F3 (status protocol still reports SOFTWARE_NAME / SOFTWARE_VERSION)  
 
@@ -140,4 +140,4 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 - **Fingerprint batch:** F1, F2 fixed; **F3 accepted**.
 - **Web batch:** W1, W2, W5 (namelock + forum remove), W6–W10 fixed + committed.
 - **Host batch:** H2–H6, H8, H9, H11 committed; live VPS: `sudo bash scripts/apply-host-hardening.sh` then optional `disable-ssh-passwords.sh`. **H7 deferred**.
-- Next batch: **OT** (O1–O8, O10, O11, O13–O15) + **A1**.
+- **OT batch:** O1–O8, O10, O11, O13–O15 + **A1** committed — reload talkactions / restart otserver to apply.

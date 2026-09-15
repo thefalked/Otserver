@@ -19,7 +19,7 @@ function onSay(cid, words, param, channel)
 
   local amount = 100
   if t[2] then
-    amount = t[2]
+    amount = math.min(100, math.max(1, tonumber(t[2]) or 1))
   end
 
   local item = doCreateItemEx(id, amount)

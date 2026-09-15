@@ -10,13 +10,20 @@ function onSay(cid, words, param, channel)
     return true
   end
 
+  local rangeX = math.min(20, math.max(0, tonumber(t[1]) or 0))
+  local rangeY = math.min(20, math.max(0, tonumber(t[2]) or 0))
+  if rangeX == 0 and rangeY == 0 then
+    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Range must be at least 1 (max 20).")
+    return true
+  end
+
   local multifloor = false
   if t[3] then
     multifloor = getBooleanFromString(t[3])
   end
 
   local tmp = 0
-  for i, tid in ipairs(getSpectators(getCreaturePosition(cid), t[1], t[2], multifloor)) do
+  for i, tid in ipairs(getSpectators(getCreaturePosition(cid), rangeX, rangeY, multifloor)) do
     if isPlayer(tid) and tid ~= cid and getPlayerAccess(tid) < getPlayerAccess(cid) then
       doRemoveCreature(tid)
       tmp = tmp + 1

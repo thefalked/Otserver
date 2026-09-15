@@ -15,7 +15,6 @@ jail_list = {}
 jail_list_work = 0
 
 function checkJailList(param)
-  addEvent(checkJailList, 1000, {})
   for targetID, player in ipairs(jail_list) do
     if isPlayer(player) == TRUE then
       if getPlayerStorageValue(player, jailedstoragevalue_time) < os.time() then
@@ -28,6 +27,12 @@ function checkJailList(param)
     else
       table.remove(jail_list, targetID)
     end
+  end
+  -- O8: only reschedule while someone is jailed
+  if #jail_list > 0 then
+    addEvent(checkJailList, 1000, {})
+  else
+    jail_list_work = 0
   end
 end
 

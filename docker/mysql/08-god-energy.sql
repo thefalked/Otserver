@@ -10,11 +10,11 @@ WHERE NOT EXISTS (SELECT 1 FROM `accounts` WHERE `name` = 'god');
 
 UPDATE `accounts`
 SET
-  `password` = 'f71b7292f983a6d019178863b061e95e7e757aa8',
   `premdays` = 65535,
   `page_access` = 3,
   `flag` = 'unknown'
 WHERE `name` = 'god';
+-- A1: password only set on INSERT above — never reset on ensure-schema re-run.
 
 -- [ADM] Energy — from backup [ADM] Socks on account god
 INSERT INTO `players` (

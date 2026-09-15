@@ -32,7 +32,7 @@ function onSay(cid, words, param)
       "Você tem " .. (quantity < 0 and 0 or quantity) .. " dias de VIP no seu character."
     )
   elseif words == "/checkvip" then
-    if getPlayerAccess(cid) == 5 then
+    if getPlayerAccess(cid) >= 5 then
       if not param then
         doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Invalid param specified.")
       end
@@ -51,7 +51,7 @@ function onSay(cid, words, param)
       return TRUE
     end
   elseif words == "/addvip" then
-    if getPlayerAccess(cid) == 5 then
+    if getPlayerAccess(cid) >= 5 then
       local t = string.explode(param, ",")
       if not t[2] then
         doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Invalid param specified.")
@@ -81,7 +81,7 @@ function onSay(cid, words, param)
       doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Você tem " .. quantity .. " dias de VIP restantes.")
     end
   elseif words == "/delvip" then
-    if getPlayerAccess(cid) == 5 then
+    if getPlayerAccess(cid) >= 5 then
       local dec = MESSAGE_INFO_DESCR
       if param == "" then
         return TRUE, doPlayerSendTextMessage(cid, 18, "Command param required.")

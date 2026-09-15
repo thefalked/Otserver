@@ -12,10 +12,25 @@ function onSay(cid, words, param, channel)
     amount = param
   end
 
+  local function canRemoveCreature(uid)
+    if not isPlayer(uid) then
+      return true
+    end
+    -- O5: never remove equal/higher access players
+    if getPlayerAccess(uid) >= getPlayerAccess(cid) then
+      doPlayerSendCancel(cid, "You cannot remove this player.")
+      return false
+    end
+    return true
+  end
+
   toPos.stackpos = STACKPOS_TOP_MOVEABLE_ITEM_OR_CREATURE
   local tmp = getThingFromPos(toPos)
   if tmp.uid ~= 0 then
     if isCreature(tmp.uid) then
+      if not canRemoveCreature(tmp.uid) then
+        return true
+      end
       doRemoveCreature(tmp.uid)
     else
       doRemoveItem(tmp.uid, math.min(math.max(1, tmp.type), amount))
@@ -36,6 +51,9 @@ function onSay(cid, words, param, channel)
   toPos.stackpos = STACKPOS_TOP_CREATURE
   tmp = getThingFromPos(toPos)
   if tmp.uid ~= 0 then
+    if not canRemoveCreature(tmp.uid) then
+      return true
+    end
     doRemoveCreature(tmp.uid)
     doSendMagicEffect(toPos, CONST_ME_MAGIC_RED)
     return true
@@ -46,6 +64,9 @@ function onSay(cid, words, param, channel)
     tmp = getThingFromPos(toPos)
     if tmp.uid ~= 0 then
       if isCreature(tmp.uid) then
+        if not canRemoveCreature(tmp.uid) then
+          return true
+        end
         doRemoveCreature(tmp.uid)
       else
         doRemoveItem(tmp.uid, math.min(math.max(1, tmp.type), amount))
