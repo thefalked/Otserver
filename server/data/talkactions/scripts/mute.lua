@@ -21,7 +21,7 @@ function onSay(cid, words, param)
       return TRUE
     end
     doPlayerSendTextMessage(
-    cid,
+      cid,
       MESSAGE_INFO_DESCR,
       "Você mutou o jogador " .. t[1] .. " por " .. minutes .. " minutos."
     )
