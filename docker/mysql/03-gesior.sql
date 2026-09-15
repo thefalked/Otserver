@@ -228,8 +228,8 @@ CREATE TABLE IF NOT EXISTS `auction_system` (
 -- Move Account Manager to Baiak temple coords from TIBIA.rar schema
 UPDATE `players` SET `posx` = 32360, `posy` = 31782, `posz` = 7, `town_id` = 1 WHERE `name` = 'Account Manager';
 
--- Admin panel access for account 1
-UPDATE `accounts` SET `page_access` = 3, `flag` = 'unknown' WHERE `name` = '1';
+// A2: Account Manager (name/id 1) is for the game client only — no AAC admin.
+UPDATE `accounts` SET `page_access` = 0, `flag` = 'unknown' WHERE `name` = '1' OR `id` = 1;
 
 -- Sample vocation templates for website character creation (cloned by Gesior).
 -- deleted=1 keeps them off the account 1/1 login charlist; OTS_Player::find still loads them.

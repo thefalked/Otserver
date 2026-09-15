@@ -35,10 +35,19 @@ if ($action == 'logout') {
 //##### LOGIN #####
 $logged = false;
 $group_id_of_acc_logged = 0;
+// A2: Gesior Account Manager (id 1 / name "1") stays for the game client only — never AAC session.
+$account_manager_denied = false;
 if (isset($_SESSION['account'])) {
   $account_logged = $ots->createObject('Account');
   $account_logged->load((int) $_SESSION['account']);
-  if ($account_logged->isLoaded()) {
+  if ($account_logged->isLoaded() && (int) $account_logged->getId() === 1) {
+    unset($_SESSION['account']);
+    unset($_SESSION['password']);
+    unset($account_logged);
+    $logged = false;
+    $group_id_of_acc_logged = 0;
+    $account_manager_denied = true;
+  } elseif ($account_logged->isLoaded()) {
     $logged = true;
     $group_id_of_acc_logged = $account_logged->getPageAccess();
   } else {
@@ -60,12 +69,22 @@ if (!$logged && $login_account !== '' && $login_password !== '') {
     $account_logged->find($login_account);
     if ($account_logged->isLoaded()) {
       if (hash_equals((string) $account_logged->getPassword(), (string) $login_password_hash)) {
-        session_regenerate_id(true);
-        $_SESSION['account'] = $account_logged->getId();
-        unset($_SESSION['password']);
-        $logged = true;
-        $account_logged->setCustomField('page_lastday', time());
-        $group_id_of_acc_logged = $account_logged->getPageAccess();
+        if ((int) $account_logged->getId() === 1) {
+          // Password OK for game, but website login is blocked.
+          unset($_SESSION['account']);
+          unset($_SESSION['password']);
+          $logged = false;
+          $group_id_of_acc_logged = 0;
+          $account_manager_denied = true;
+          unset($account_logged);
+        } else {
+          session_regenerate_id(true);
+          $_SESSION['account'] = $account_logged->getId();
+          unset($_SESSION['password']);
+          $logged = true;
+          $account_logged->setCustomField('page_lastday', time());
+          $group_id_of_acc_logged = $account_logged->getPageAccess();
+        }
       } else {
         $logged = false;
       }
@@ -361,4 +380,3 @@ if ($logged) {
 $layout_header .= " var activeSubmenuItem='" . $subtopic . "';</script>";
 include $layout_name . '/layout.php';
 ob_end_flush();
-?>

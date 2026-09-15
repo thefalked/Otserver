@@ -62,8 +62,7 @@
       if (ie5 || opera) {
         marginbottom = document.body.clientHeight
         marginright = document.body.clientWidth
-      }
-      else if (ns6) {
+      } else if (ns6) {
         marginbottom = window.innerHeight
         marginright = window.innerWidth
       }
@@ -78,10 +77,18 @@
         snow[i].style.fontSize = snow[i].size
         snow[i].style.color = snowcolor[randommaker(snowcolor.length)]
         snow[i].sink = sinkspeed * snow[i].size / 5
-        if (snowingzone == 1) { snow[i].posx = randommaker(marginright - snow[i].size) }
-        if (snowingzone == 2) { snow[i].posx = randommaker(marginright / 2 - snow[i].size) }
-        if (snowingzone == 3) { snow[i].posx = randommaker(marginright / 2 - snow[i].size) + marginright / 4 }
-        if (snowingzone == 4) { snow[i].posx = randommaker(marginright / 2 - snow[i].size) + marginright / 2 }
+        if (snowingzone == 1) {
+          snow[i].posx = randommaker(marginright - snow[i].size)
+        }
+        if (snowingzone == 2) {
+          snow[i].posx = randommaker(marginright / 2 - snow[i].size)
+        }
+        if (snowingzone == 3) {
+          snow[i].posx = randommaker(marginright / 2 - snow[i].size) + marginright / 4
+        }
+        if (snowingzone == 4) {
+          snow[i].posx = randommaker(marginright / 2 - snow[i].size) + marginright / 2
+        }
         snow[i].posy = randommaker(2 * marginbottom - marginbottom - 2 * snow[i].size)
         snow[i].style.left = snow[i].posx
         snow[i].style.top = snow[i].posy
@@ -97,10 +104,18 @@
         snow[i].style.top = snow[i].posy
 
         if (snow[i].posy >= marginbottom - 2 * snow[i].size || parseInt(snow[i].style.left) > (marginright - 3 * lftrght[i])) {
-          if (snowingzone == 1) { snow[i].posx = randommaker(marginright - snow[i].size) }
-          if (snowingzone == 2) { snow[i].posx = randommaker(marginright / 2 - snow[i].size) }
-          if (snowingzone == 3) { snow[i].posx = randommaker(marginright / 2 - snow[i].size) + marginright / 4 }
-          if (snowingzone == 4) { snow[i].posx = randommaker(marginright / 2 - snow[i].size) + marginright / 2 }
+          if (snowingzone == 1) {
+            snow[i].posx = randommaker(marginright - snow[i].size)
+          }
+          if (snowingzone == 2) {
+            snow[i].posx = randommaker(marginright / 2 - snow[i].size)
+          }
+          if (snowingzone == 3) {
+            snow[i].posx = randommaker(marginright / 2 - snow[i].size) + marginright / 4
+          }
+          if (snowingzone == 4) {
+            snow[i].posx = randommaker(marginright / 2 - snow[i].size) + marginright / 2
+          }
           snow[i].posy = 0
         }
       }
@@ -116,7 +131,6 @@
   </SCRIPT>
   <title><?php echo $title; ?></title>
   <meta name="description" content="Tibia is a free massive multiplayer online role playing game (MMORPG)." />
-  <meta name="author" content="Gesior | Modified by [ADM] Energy" />
   <meta http-equiv="content-language" content="pt_br" />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="keywords"
@@ -126,26 +140,32 @@
   <?php echo $layout_header; ?>
   <link href="<?php echo $layout_name; ?>/basic.css?v=3" rel="stylesheet" type="text/css">
   <script
-    type='text/javascript'> var IMAGES = 0; IMAGES = '<?php echo $layout_name; ?>/images'; var g_FormField = ''; var LINK_ACCOUNT = 0; LINK_ACCOUNT = '';</script>
+    type='text/javascript'>
+    var IMAGES = 0;
+    IMAGES = '<?php echo $layout_name; ?>/images';
+    var g_FormField = '';
+    var LINK_ACCOUNT = 0;
+    LINK_ACCOUNT = '';
+  </script>
   <script type="text/javascript" src="<?php echo $layout_name; ?>/initialize.js?v=3"></script>
   <SCRIPT TYPE="text/javascript">
     <!-- // Framekiller
-    setTimeout ("changePage()", 18000);
-    function changePage()
-    {
+    setTimeout("changePage()", 18000);
+
+    function changePage() {
       if (parent.frames.length > 2) {
         if (browserTyp == "ie") {
-          parent.location=document.location;
+          parent.location = document.location;
         } else {
-          self.top.location=document.location;
+          self.top.location = document.location;
         }
       }
     }
-    // -->
+    // 
+    -->
   </SCRIPT>
   <title><?php echo $title; ?></title>
   <meta name="description" content="Tibia is a free massive multiplayer online role playing game (MMORPG)." />
-  <meta name="author" content="Gesior | Modified by [ADM] Energy" />
   <meta http-equiv="content-language" content="pt_br" />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="keywords"
@@ -155,26 +175,32 @@
   <?php echo $layout_header; ?>
   <link href="<?php echo $layout_name; ?>/basic.css?v=3" rel="stylesheet" type="text/css">
   <script
-    type='text/javascript'> var IMAGES = 0; IMAGES = '<?php echo $layout_name; ?>/images'; var g_FormField = ''; var LINK_ACCOUNT = 0; LINK_ACCOUNT = '';</script>
+    type='text/javascript'>
+    var IMAGES = 0;
+    IMAGES = '<?php echo $layout_name; ?>/images';
+    var g_FormField = '';
+    var LINK_ACCOUNT = 0;
+    LINK_ACCOUNT = '';
+  </script>
   <script type="text/javascript" src="<?php echo $layout_name; ?>/initialize.js?v=3"></script>
   <SCRIPT TYPE="text/javascript">
     <!-- // Framekiller
-    setTimeout ("changePage()", 18000);
-    function changePage()
-    {
+    setTimeout("changePage()", 18000);
+
+    function changePage() {
       if (parent.frames.length > 2) {
         if (browserTyp == "ie") {
-          parent.location=document.location;
+          parent.location = document.location;
         } else {
-          self.top.location=document.location;
+          self.top.location = document.location;
         }
       }
     }
-    // -->
+    // 
+    -->
   </SCRIPT>
   <title><?php echo $title; ?></title>
   <meta name="description" content="Tibia is a free massive multiplayer online role playing game (MMORPG)." />
-  <meta name="author" content="Gesior | Modified by [ADM] Energy" />
   <meta http-equiv="content-language" content="pt_br" />
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="keywords"
@@ -184,22 +210,29 @@
   <?php echo $layout_header; ?>
   <link href="<?php echo $layout_name; ?>/basic.css?v=3" rel="stylesheet" type="text/css">
   <script
-    type='text/javascript'> var IMAGES = 0; IMAGES = '<?php echo $layout_name; ?>/images'; var g_FormField = ''; var LINK_ACCOUNT = 0; LINK_ACCOUNT = '';</script>
+    type='text/javascript'>
+    var IMAGES = 0;
+    IMAGES = '<?php echo $layout_name; ?>/images';
+    var g_FormField = '';
+    var LINK_ACCOUNT = 0;
+    LINK_ACCOUNT = '';
+  </script>
   <script type="text/javascript" src="<?php echo $layout_name; ?>/initialize.js?v=3"></script>
   <SCRIPT TYPE="text/javascript">
     <!-- // Framekiller
-    setTimeout ("changePage()", 18000);
-    function changePage()
-    {
+    setTimeout("changePage()", 18000);
+
+    function changePage() {
       if (parent.frames.length > 2) {
         if (browserTyp == "ie") {
-          parent.location=document.location;
+          parent.location = document.location;
         } else {
-          self.top.location=document.location;
+          self.top.location = document.location;
         }
       }
     }
-    // -->
+    // 
+    -->
   </SCRIPT>
 </head>
 
@@ -423,7 +456,7 @@
                 </a>
                 <?php
                 if ($config['site']['download_page'] == 1) {
-                  if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
+                  if ($logged && $group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
                     echo "<a href='?subtopic=adminpanel'>
   <div id='submenu_adminpanel' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
@@ -440,7 +473,7 @@
 </a>";
                   }
                 }
-                if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
+                if ($logged && $group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
                   echo "<a href='?subtopic=scrollnews&action=edit_ticker'> 
   <div id='submenu_polls' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'> 
     <div class='LeftChain' style='background-image:url(" .
@@ -455,7 +488,7 @@
   </div> 
 </a>";
                 }
-                if ($group_id_of_acc_logged > 0) {
+                if ($logged && $group_id_of_acc_logged > 0) {
                   echo "<a href='?subtopic=namelock'>
   <div id='submenu_namelock' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
@@ -471,7 +504,7 @@
   </div>
 </a>";
                 }
-                if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
+                if ($logged && $group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
                   echo "<a href='?subtopic=polls'>
   <div id='submenu_polls' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
@@ -854,7 +887,7 @@
   </div>
 </a>";
                   }
-                  if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
+                  if ($logged && $group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
                     echo "<a href='?subtopic=shopadmin'>
   <div id='submenu_shopadmin' class='Submenuitem' onMouseOver='MouseOverSubmenuItem(this)' onMouseOut='MouseOutSubmenuItem(this)'>
     <div class='LeftChain' style='background-image:url(" .
@@ -877,7 +910,9 @@
             <div id='MenuBottom'
               style='background-image:url(<?php echo $layout_name; ?>/images/general/box-bottom.gif);'></div>
           </div>
-          <script type='text/javascript'>InitializePage();</script>
+          <script type='text/javascript'>
+            InitializePage();
+          </script>
         </div>
         <div id="ContentColumn">
           <div class="Content">
@@ -1015,7 +1050,7 @@
     </div>';
             }
             ?>
-            <?php if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
+            <?php if ($logged && $group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
               echo '<div id="CurrentPollBox" class="Themebox" style="background-image:url(' .
                 $layout_name .
                 '/images/themeboxes/admin/admin.gif);">

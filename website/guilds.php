@@ -1899,15 +1899,13 @@ if ($action == 'manager') {
           $main_content .=
             '<tr bgcolor="' .
             $bgcolor .
-            '"><td align="center"><a href="?subtopic=guilds&guild=' .
-            $guild_name .
-            '&action=deleterank&rankid=' .
-            $rank->getId() .
-            '&' .
-            csrf_query() .
-            '" border="0"><img src="' .
-            $layout_name .
-            '/images/news/delete.png" border="0" alt="Delete Rank"></a></td><td><input type="text" name="' .
+            '"><td align="center">' .
+            csrf_post_action(
+              '?subtopic=guilds&guild=' . $guild_name . '&action=deleterank',
+              '<img src="' . $layout_name . '/images/news/delete.png" border="0" alt="Delete Rank">',
+              ['rankid' => $rank->getId()]
+            ) .
+            '</td><td><input type="text" name="' .
             $rank->getId() .
             '_name" value="' .
             $rank->getName() .

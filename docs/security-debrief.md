@@ -1,11 +1,11 @@
 # Security findings debrief — Baiak Vip9
 
 **Host:** <https://baiakvip9.servegame.com/>  
-**Mode:** fixes in progress (batch: host)  
+**Mode:** fixes in progress  
 **Date:** 2026-09-14  
-**Fixed in repo (pending deploy):** F1, F2, W1, W2, W5 (partial: namelock + forum remove → POST), W6, W7, W8, W9, W10, H2, H3, H4, H5, H6, H8, H9, H11, O1–O8, O10–O15, A1  
-**Deferred:** **H7** non-root containers — quick `-u 1000` test segfaulted; needs dedicated USER + data ownership  
-**Accepted / kept as-is:** F3 (status protocol still reports SOFTWARE_NAME / SOFTWARE_VERSION)  
+**Fixed in repo (pending deploy):** F1, F2, F4, W1, W2, W5, W6–W11, H1–H6, H8, H9, H11, O1–O8, O10–O15, A1, A2 (AAC)  
+**Deferred:** see `docs/security-backlog.md` (**W4** captcha, **H7** non-root)  
+**Accepted / kept as-is:** F3 (status protocol), **H10** (`:latest`), **W3** (SHA1), **O9** (rates)
 
 Sources: code review; Docker/VPS audit; OTServer Lua audit; Gesior PHP audit; live probes against the host above.
 
@@ -42,7 +42,7 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 
 | ID | Area | Finding | Location | Live? |
 | --- | --- | --- | --- | --- |
-| **H1** | Host | Hawser publishes `:2376` with `/var/run/docker.sock`; UFW allows 2376 from anywhere. Stolen/weak TOKEN or agent bug → full host root | `docker-compose.vps.yml`, `scripts/setup-hawser.sh`, `scripts/setup-vps.sh` | **Confirmed open** |
+| **H1** | Host | Hawser publishes `:2376` with `/var/run/docker.sock`; UFW allows 2376 from anywhere. Stolen/weak TOKEN or agent bug → full host root | `docker-compose.vps.yml`, nginx stream SNI | **Fixed in repo** — nginx SNI allowlist for `SITE_MAINTENANCE_DOMAIN` only; hawser internal |
 | **O1** | OT | Any player can `/addvip` (no XML `access=`; script allows `group_id >= 1`). Bad target names can crash the script | `server/data/talkactions/talkactions.xml`, `…/scripts/addvip2.lua` | Listed on public serverinfo |
 | **O2** | OT | `!notice` crashes if `noticias.txt` missing (`io.open` without nil check) | `server/data/talkactions/scripts/notice.lua` | Code-only |
 
@@ -63,9 +63,9 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 | **O7** | OT | Unbounded `/mkick` range → map-wide kick | `masskick.lua` | Code-only |
 | **W1** | Web | Forum stored XSS: topic/author injected raw into mod `confirm('…')` | `website/forum.php` | **Fixed in repo** |
 | **W2** | Web | Namelock accept/reject via GET; ACL only `page_access > 0`; no CSRF | `website/namelocks.php` | **Fixed in repo** |
-| **W3** | Web/OT | Unsalted SHA1 account passwords — DB leak → fast offline crack | `encryptionType = "sha1"`, site hash helpers | Protocol/TFS constraint |
-| **A1** | Acc | `god` / `godadmin` password re-applied on every `ensure-schema` run | `docker/mysql/08-god-energy.sql` | Code-only |
-| **A2** | Acc | Default account `1` / `1` with Gesior admin `page_access` | `docker/mysql/03-gesior.sql`, README | Ops / change passwords |
+| **W3** | Web/OT | Unsalted SHA1 account passwords — DB leak → fast offline crack | `encryptionType = "sha1"`, site hash helpers | **Kept** — TFS 0.4 / backlog |
+| **A1** | Acc | `god` / `godadmin` password re-applied on every `ensure-schema` run | `docker/mysql/08-god-energy.sql` | **Fixed in repo** |
+| **A2** | Acc | Default account `1` / `1` with Gesior admin `page_access` | game OK; AAC | **Fixed in repo** — refuse AAC session for id 1; `page_access=0` for AM; layout requires `$logged` |
 
 ---
 
@@ -76,23 +76,23 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 | **F1** | Fingerprint | Apache + PHP version leak | `website/Dockerfile`, live 404/`X-Powered-By` | **Fixed in repo** (rebuild website) |
 | **F2** | Fingerprint | nginx can forward upstream identity; version already hidden | `docker/nginx/nginx.conf` + HTTPS writers | **Fixed in repo** (`proxy_hide_header`) |
 | **F3** | Fingerprint | Status XML advertises `The Forgotten Server` / `0.4_SVN` | `src/status.cpp`, `src/definitions.h` | **Accepted** — kept; site does not display these fields; 7173 not public |
-| **F4** | Fingerprint | HTML meta author reveals Gesior | `website/layouts/tibiacom/layout.php` | **Confirmed** |
+| **F4** | Fingerprint | HTML meta author reveals Gesior | `website/layouts/tibiacom/layout.php` | **Fixed in repo** |
 | **O8** | OT | Jail timer never stops; XML missing access (script gates group ≥ 5) | `cadeia.lua`, `talkactions.xml` | Code-only |
-| **O9** | OT | Extreme rates / `freePremium` / weak idle kick / etc. | `server/config.lua.template` | **Confirmed** rates live |
+| **O9** | OT | Extreme rates / `freePremium` / weak idle kick / etc. | `server/config.lua.template` | **Intentional** |
 | **O10** | OT | Guild war payment not refunded on reject/cancel | `war.lua` | Code-only |
 | **O11** | OT | Poll “one vote per account” is per character | `poll_system.lua` | Code-only |
 | **O12** | OT | `!myhouse` / eject uses undefined `NO_OWNER_PHRASE` | `eject.lua` | **Fixed in repo** — clears with `setHouseOwner(..., 0)` |
 | **O13** | OT | Zombie event `playersNeededToStartEvent = 1` (solo farm) | `zombie_event.lua` | Code-only |
-| **W4** | Web | Captcha off — automated account creation (session rate limit only) | `website/config/config.php` | Config |
-| **W5** | Web | CSRF tokens in GET URLs (Referer/logs leak) | forum/admin/etc. | **Partial** (namelock + forum remove) |
+| **W4** | Web | Captcha off — automated account creation (session rate limit only) | `website/config/config.php` | **Deferred** — `docs/security-backlog.md` |
+| **W5** | Web | CSRF tokens in GET URLs (Referer/logs leak) | forum/admin/etc. | **Fixed in repo** — POST + `csrf_post_action` |
 | **W6** | Web | Docker `chmod 777` fallbacks on runtime dirs | `website/docker-entrypoint.sh` | **Fixed in repo** |
 | **W7** | Web | Guild logo `unlink` without path sanitize | `website/guilds.php` | **Fixed in repo** |
 | **W8** | Web | Admin mass-mail HTML unsanitized (SMTP currently off) | `website/mail.php` | **Fixed in repo** |
 | **H6** | Host | Website RW bind-mount persists RCE on host tree | `docker-compose.yml` | **Fixed in repo** — PHP tree `:ro` + RW subdirs |
-| **H7** | Host | Containers as root; TFS built with root permission | Dockerfiles | **Deferred** — non-root test segfaulted |
+| **H7** | Host | Containers as root; TFS built with root permission | Dockerfiles | **Deferred** — backlog |
 | **H8** | Host | Setup secrets briefly under `/tmp` on VPS | `scripts/setup-from-pc.sh` | **Fixed in repo** — `/root/otserver-pc-setup.$$` |
 | **H9** | Host | GitHub PAT in `~/.git-credentials` | setup scripts | **Fixed in repo** — opt-in only |
-| **H10** | Host | Hawser image `:latest` (supply chain) | `docker-compose.vps.yml` | Code-only |
+| **H10** | Host | Hawser image `:latest` (supply chain) | `docker-compose.vps.yml` | **Kept** — backlog optional pin |
 
 ---
 
@@ -102,7 +102,7 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 | --- | --- | --- | --- |
 | **W9** | Web | Admin reflected XSS on spell name | `website/adminpanel.php` — **Fixed in repo** |
 | **W10** | Web | Account/email enumeration via AJAX | `website/ajax/check_account.php`, `check_email.php` — **Fixed in repo** (rate limit + softer copy) |
-| **W11** | Web | Non-`hash_equals` password compares in some account flows | e.g. `accountmanagement.php` |
+| **W11** | Web | Non-`hash_equals` password compares in some account flows | `accountmanagement.php` — **Fixed in repo** |
 | **H11** | Host | `render-config.sh` defaults `MYSQL_PASSWORD=otserver` if env empty | `docker/render-config.sh` — **Fixed in repo** (fail if unset) |
 | **O14** | OT | `systemvip` / `/delvip` weak XML access; exact `access == 5` misses ADM 6 | talkactions + scripts |
 | **O15** | OT | Dormant `account.lua` SQL injection (not registered in XML) | `talkactions/scripts/account.lua` |
@@ -123,21 +123,10 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 
 ---
 
-## Suggested pick lists (optional)
-
-**Hardening / fingerprint (live-confirmed):** `F1, F4, H1, H3, W10`
-
-**Stop breakage / abuse:** `O1, O2, O3, O4, O5, O6, O7, W1, W2, A1`
-
-**Host blast radius:** `H1, H3, H4`
-
-**Intentional Baiak / defer:** `O9` (rates), `W3` (SHA1 / TFS 0.4)
-
----
-
 ## Status
 
-- **Fingerprint batch:** F1, F2 fixed; **F3 accepted**.
-- **Web batch:** W1, W2, W5 (namelock + forum remove), W6–W10 fixed + committed.
-- **Host batch:** H2–H6, H8, H9, H11 committed; live VPS: `sudo bash scripts/apply-host-hardening.sh` then optional `disable-ssh-passwords.sh`. **H7 deferred**.
-- **OT batch:** O1–O8, O10–O15 + **A1** committed — reload talkactions / restart otserver to apply.
+- **Fingerprint:** F1, F2, F4 fixed; **F3 accepted**.
+- **Web:** W1, W2, W5–W11 fixed; **W3 kept**; **W4** deferred (backlog MD).
+- **Host:** H1–H6, H8, H9, H11 in repo; **H7** deferred; **H10** keep `:latest`. Live: `sudo bash scripts/apply-host-hardening.sh` (recreates nginx+hawser for H1 SNI).
+- **OT:** O1–O8, O10–O15 + **A1** committed; **O9** intentional.
+- **Accounts:** **A2** — game keeps `1`/`1`; website rejects Account Manager AAC login (no session / no admin panel).

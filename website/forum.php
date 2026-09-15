@@ -476,19 +476,18 @@ if ($action == 'show_board') {
       }
       if ($logged && $group_id_of_acc_logged >= $group_not_blocked) {
         $main_content .=
-          '<a href="?subtopic=forum&action=close_thread&id=' .
-          $thread['id'] .
-          '&' .
-          csrf_query() .
-          '")">' .
-          $closed .
-          '</a> <a href="?subtopic=forum&action=stick_post&id=' .
-          $thread['id'] .
-          '&' .
-          csrf_query() .
-          '")">' .
-          $stix .
-          '</a> <a href="?subtopic=forum&action=move_thread&id=' .
+          csrf_post_action(
+            '?subtopic=forum&action=close_thread',
+            $closed,
+            ['id' => (int) $thread['id']]
+          ) .
+          ' ' .
+          csrf_post_action(
+            '?subtopic=forum&action=stick_post',
+            $stix,
+            ['id' => (int) $thread['id']]
+          ) .
+          ' <a href="?subtopic=forum&action=move_thread&id=' .
           $thread['id'] .
           '"\')"><span style="color:darkgreen">[MOVE]</span></a> <form style="display:inline" method="post" action="?subtopic=forum&action=remove_post" onsubmit="return confirm(\'Are you sure you want remove thread > \' + ' .
           js_str($thread['post_topic']) .

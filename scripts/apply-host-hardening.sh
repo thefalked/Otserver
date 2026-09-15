@@ -17,7 +17,7 @@
 #
 # What the default run does:
 #   - Drop UFW allow 8080 if present (H3)
-#   - docker compose up -d --force-recreate website nginx (H3/H4/H6/H11)
+#   - docker compose up -d --force-recreate website nginx hawser (H1/H3/H4/H6/H11)
 set -euo pipefail
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -121,7 +121,7 @@ else
 fi
 
 if [ "${DO_COMPOSE}" = "1" ]; then
-	echo "==> Recreate website + nginx (H3/H4/H6/H11 compose bits)"
+	echo "==> Recreate website + nginx (+ hawser if VPS overlay) (H1/H3/H4/H6/H11)"
 	if [ ! -f "${REPO_ROOT}/docker-compose.yml" ]; then
 		echo "No docker-compose.yml in ${REPO_ROOT}" >&2
 		exit 1
@@ -136,11 +136,17 @@ if [ "${DO_COMPOSE}" = "1" ]; then
 	touch "${_new}" 2>/dev/null || true
 	(
 		cd "${REPO_ROOT}"
-		docker compose up -d --force-recreate website nginx
+		# H1: recreate nginx (SNI :2376) + hawser (no host publish) when vps overlay is present.
+		if docker compose config --services 2>/dev/null | grep -qx hawser; then
+			docker compose up -d --force-recreate website nginx hawser
+		else
+			docker compose up -d --force-recreate website nginx
+		fi
 	)
 	echo "Compose recreated (brief 502 possible while ensure-schema runs)."
 	echo "Check: curl -sI http://127.0.0.1:8080/ | head -5"
 	echo "Public :8080 should be closed; HTTPS on 443 unchanged."
+	echo "H1 Dockhand: use https://SITE_MAINTENANCE_DOMAIN:2376 (SNI must match)."
 fi
 
 echo

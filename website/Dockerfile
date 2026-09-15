@@ -49,6 +49,7 @@ RUN mkdir -p /usr/local/share/otserver \
 COPY docker/mysql/07-lottery.sql /usr/local/share/otserver/07-lottery.sql
 COPY docker/mysql/08-god-energy.sql /usr/local/share/otserver/08-god-energy.sql
 COPY docker/mysql/09-hide-sample-chars.sql /usr/local/share/otserver/09-hide-sample-chars.sql
+COPY docker/mysql/10-a2-account-manager.sql /usr/local/share/otserver/10-a2-account-manager.sql
 
 WORKDIR /var/www/html
 ENTRYPOINT ["website-entrypoint.sh"]

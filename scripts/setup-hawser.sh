@@ -131,12 +131,12 @@ if ! command -v docker >/dev/null 2>&1; then
 	exit 1
 fi
 
-echo "==> Starting otserver-hawser"
+echo "==> Starting otserver-hawser + nginx (H1: SNI proxy on :2376)"
 cd "${REPO_ROOT}"
 if id "${OWNER}" >/dev/null 2>&1 && [ "${OWNER}" != "root" ]; then
-	sudo -u "${OWNER}" docker compose up -d hawser
+	sudo -u "${OWNER}" docker compose up -d hawser nginx
 else
-	docker compose up -d hawser
+	docker compose up -d hawser nginx
 fi
 
 _site=""
@@ -164,9 +164,10 @@ fi
 _dockhand="${_maint:-${_site:-SITE_DOMAIN}}"
 
 echo
-echo "Hawser is up. Dockhand (maintenance): https://${_dockhand}:2376"
+echo "Hawser is up (internal). Public Dockhand: https://${_dockhand}:2376"
+echo "  H1: nginx publishes :2376 and only proxies SNI=${_dockhand}"
 echo "  TOKEN from /etc/hawser/config"
-echo "  TLS: maintenance-fullchain.pem (separate from public SITE_DOMAIN cert)"
+echo "  TLS: maintenance-fullchain.pem (on hawser; SNI must be maintenance hostname)"
 echo "  Public site: https://${_site:-SITE_DOMAIN}/"
-echo "  docker compose ps hawser"
+echo "  docker compose ps hawser nginx"
 echo "  docker compose logs -f hawser"

@@ -265,10 +265,11 @@ If issuance fails, check DNS, port 80, and `docker compose logs nginx`.
 
 ## Hawser (Dockhand agent)
 
-Hawser listens on **2376** with the **maintenance** cert only
-(`maintenance-fullchain.pem`), so Dockhand stays on
-`https://baiakvip9.thefalked.dev:2376` without sharing a CT-visible SAN with
-the public domain.
+nginx publishes **2376** and only proxies TLS clients whose **SNI** is
+`SITE_MAINTENANCE_DOMAIN` (e.g. `baiakvip9.thefalked.dev`). Hawser itself is
+internal (`expose` only) and still uses the **maintenance** cert
+(`maintenance-fullchain.pem`). Dockhand must use that hostname — not the
+public servegame name and not a bare IP (wrong/missing SNI is dropped).
 
 `TOKEN` lives in **`/etc/hawser/config`**; `setup-hawser.sh` mirrors it to
 `/etc/hawser/token` for compose `TOKEN_FILE`.
@@ -277,6 +278,7 @@ the public domain.
 
 ```bash
 sudo bash scripts/setup-hawser.sh
+# or after git pull of H1: sudo bash scripts/apply-host-hardening.sh
 ```
 
 Dockhand: `https://baiakvip9.thefalked.dev:2376` + token from `/etc/hawser/config`.

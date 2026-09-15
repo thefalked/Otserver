@@ -1,11 +1,15 @@
 # Overlay used by scripts/setup-vps.sh (COMPOSE_FILE=docker-compose.yml:docker-compose.vps.yml).
 # Publishes HTTP/HTTPS on the host. nginx.conf already listens on 80/443 inside the container.
 # Hawser uses the **maintenance** TLS cert (separate from the public SITE_DOMAIN cert).
+#
+# H1: Hawser is not published on the host. nginx listens on :2376 and only
+# proxies TLS clients whose SNI matches SITE_MAINTENANCE_DOMAIN (thefalked.dev).
 services:
   nginx:
     ports:
       - "80:80"
       - "443:443"
+      - "2376:2376"
 
   # Remote Docker agent for Dockhand (local-only Dockhand connects here).
   # TOKEN via TOKEN_FILE bind-mount (not compose env_file): /etc/hawser/config is
@@ -27,5 +31,8 @@ services:
       - /opt/hawser-stacks:/opt/hawser-stacks
       - ./docker/nginx/certs:/certs:ro
       - /etc/hawser/token:/run/secrets/hawser_token:ro
-    ports:
-      - "2376:2376"
+    # Internal only — public :2376 is nginx stream + SNI allowlist (H1).
+    expose:
+      - "2376"
+    networks:
+      - otnet

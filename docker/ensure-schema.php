@@ -22,6 +22,7 @@ $files = [
   '/usr/local/share/otserver/07-lottery.sql',
   '/usr/local/share/otserver/08-god-energy.sql',
   '/usr/local/share/otserver/09-hide-sample-chars.sql',
+  '/usr/local/share/otserver/10-a2-account-manager.sql',
 ];
 
 $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";

@@ -286,13 +286,11 @@ foreach ($change_data as $log) {
     '';
   if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
     $change_rows .=
-      '<a href="index.php?subtopic=changelog&action=delete&id=' .
-      (int) $log['date'] .
-      '&' .
-      csrf_query() .
-      '"><img src="' .
-      $layout_name .
-      '/images/news/delete.png" border="0"></a>';
+      csrf_post_action(
+        'index.php?subtopic=changelog&action=delete',
+        '<img src="' . $layout_name . '/images/news/delete.png" border="0">',
+        ['id' => (int) $log['date']]
+      );
   }
 
   $change_rows .= '</td></tr>';

@@ -105,14 +105,20 @@ showednewnews_state = "0";
       '><td width="150"><font color="red"><b>Option</b></font></td><td><font color="red"><b>Description</b></font></td></tr>
 <tr bgcolor=' .
       $config['site']['lightborder'] .
-      '><td width="150"><b><a href="?subtopic=adminpanel&action=install_monsters&' .
-      csrf_query() .
-      '">Reload Monsters</a></b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
+      '><td width="150"><b>' .
+      csrf_post_action(
+        '?subtopic=adminpanel&action=install_monsters',
+        'Reload Monsters'
+      ) .
+      '</b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
 <tr bgcolor=' .
       $config['site']['darkborder'] .
-      '><td width="150"><b><a href="?subtopic=adminpanel&action=install_spells&' .
-      csrf_query() .
-      '">Reload Spells</a></b></td><td><b>Load information about spells from file "your_server_path/data/spells/spells.xml". Delete old spells configuration!</b></td></tr>
+      '><td width="150"><b>' .
+      csrf_post_action(
+        '?subtopic=adminpanel&action=install_spells',
+        'Reload Spells'
+      ) .
+      '</b></td><td><b>Load information about spells from file "your_server_path/data/spells/spells.xml". Delete old spells configuration!</b></td></tr>
 </table>';
   }
 
@@ -125,14 +131,20 @@ showednewnews_state = "0";
       '><td width="150"><font color="red"><b>Option</b></font></td><td><font color="red"><b>Description</b></font></td></tr>
 <tr bgcolor=' .
       $config['site']['lightborder'] .
-      '><td width="150"><b><a href="?subtopic=adminpanel&action=install_monsters&' .
-      csrf_query() .
-      '">Reload Monsters</a></b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
+      '><td width="150"><b>' .
+      csrf_post_action(
+        '?subtopic=adminpanel&action=install_monsters',
+        'Reload Monsters'
+      ) .
+      '</b></td><td><b>Load information about monsters from directory "your_server_path/data/monsters/". Delete old mosters configuration!</b></td></tr>
 <tr bgcolor=' .
       $config['site']['darkborder'] .
-      '><td width="150"><b><a href="?subtopic=adminpanel&action=install_spells&' .
-      csrf_query() .
-      '">Reload Spells</a></b></td><td><b>Load information about spells from file "your_server_path/data/spells/spells.xml". Delete old spells configuration!</b></td></tr>
+      '><td width="150"><b>' .
+      csrf_post_action(
+        '?subtopic=adminpanel&action=install_spells',
+        'Reload Spells'
+      ) .
+      '</b></td><td><b>Load information about spells from file "your_server_path/data/spells/spells.xml". Delete old spells configuration!</b></td></tr>
 </table>';
     $main_content .=
       '<br/><center><form action="?subtopic=adminpanel" METHOD=post><div class="BigButton" style="background-image:url(' .
@@ -236,9 +248,13 @@ showednewnews_state = "0";
       } catch (PDOException $error) {
       }
       $main_content .=
-        '<center><h2>Edit monsters</h2></center><h3>Visible monsters</h3><h4><a href="?subtopic=adminpanel&action=editmonsters&todo=setall&visibility=hidden&' .
-        csrf_query() .
-        '">Set all monsters HIDDEN</a></h4><form action="?subtopic=adminpanel&action=editmonsters&todo=hide_monsters" method=POST>' .
+        '<center><h2>Edit monsters</h2></center><h3>Visible monsters</h3><h4>' .
+        csrf_post_action(
+          '?subtopic=adminpanel&action=editmonsters',
+          'Set all monsters HIDDEN',
+          ['todo' => 'setall', 'visibility' => 'hidden']
+        ) .
+        '</h4><form action="?subtopic=adminpanel&action=editmonsters&todo=hide_monsters" method=POST>' .
         csrf_field() .
         '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
         $config['site']['vdarkborder'] .
@@ -278,9 +294,13 @@ showednewnews_state = "0";
       } catch (PDOException $error) {
       }
       $main_content .=
-        '<h3>Hidden monsters:</h3><h4><a href="?subtopic=adminpanel&action=editmonsters&todo=setall&visibility=visible&' .
-        csrf_query() .
-        '">Set all monsters VISIBLE</a></h4><form action="?subtopic=adminpanel&action=editmonsters&todo=show_monsters" method=POST>' .
+        '<h3>Hidden monsters:</h3><h4>' .
+        csrf_post_action(
+          '?subtopic=adminpanel&action=editmonsters',
+          'Set all monsters VISIBLE',
+          ['todo' => 'setall', 'visibility' => 'visible']
+        ) .
+        '</h4><form action="?subtopic=adminpanel&action=editmonsters&todo=show_monsters" method=POST>' .
         csrf_field() .
         '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
         $config['site']['vdarkborder'] .
@@ -391,9 +411,13 @@ showednewnews_state = "0";
 </TABLE></FORM>';
     //show visible spells
     $main_content .=
-      '<h3>Visible spells list:</h3><a href="?subtopic=adminpanel&action=editspells&allspells=hidden&' .
-      csrf_query() .
-      '">Set all spells: HIDDEN</a><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
+      '<h3>Visible spells list:</h3>' .
+      csrf_post_action(
+        '?subtopic=adminpanel&action=editspells',
+        'Set all spells: HIDDEN',
+        ['allspells' => 'hidden']
+      ) .
+      '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
       $config['site']['vdarkborder'] .
       '><TD><B><font CLASS=white>Name</font></B></TD><TD><B><font CLASS=white>Sentence</font></a></B></TD><TD><B><font CLASS=white>Type<br/>(count)</font></B></TD><TD><B><font CLASS=white>Mana</font></B></TD><TD><B><font CLASS=white>Exp.<br/>Level</font></B></TD><TD><B><font CLASS=white>Magic<br/>Level</font></B></TD><TD><B><font CLASS=white>Soul</font></B></TD><TD CLASS=white><B>Need<br/>PACC?</B></TD></TR>';
     try {
@@ -432,9 +456,13 @@ showednewnews_state = "0";
     $main_content .= '</TABLE>';
     //show hidden spells
     $main_content .=
-      '<h3>Hidden spells list:</h3><a href="?subtopic=adminpanel&action=editspells&allspells=visible&' .
-      csrf_query() .
-      '">Set all spells: VISIBLE</a><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
+      '<h3>Hidden spells list:</h3>' .
+      csrf_post_action(
+        '?subtopic=adminpanel&action=editspells',
+        'Set all spells: VISIBLE',
+        ['allspells' => 'visible']
+      ) .
+      '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
       $config['site']['vdarkborder'] .
       '><TD><B><font CLASS=white>Name</font></B></TD><TD><B><font CLASS=white>Sentence</font></a></B></TD><TD><B><font CLASS=white>Type<br/>(count)</font></B></TD><TD><B><font CLASS=white>Mana</font></B></TD><TD><B><font CLASS=white>Exp.<br/>Level</font></B></TD><TD><B><font CLASS=white>Magic<br/>Level</font></B></TD><TD><B><font CLASS=white>Soul</font></B></TD><TD CLASS=white><B>Need<br/>PACC?</B></TD></TR>';
     try {

@@ -1,5 +1,27 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?php if (!$logged) {
+<?php
+$account_manager_denied_html =
+  '<div class="TableContainer" > <table class="Table1" cellpadding="0" cellspacing="0" > <div class="CaptionContainer" > <div class="CaptionInnerContainer" > <span class="CaptionEdgeLeftTop" style="background-image:url(' .
+  $layout_name .
+  '/images/content/box-frame-edge.gif);" /></span> <span class="CaptionEdgeRightTop" style="background-image:url(' .
+  $layout_name .
+  '/images/content/box-frame-edge.gif);" /></span> <span class="CaptionBorderTop" style="background-image:url(' .
+  $layout_name .
+  '/images/content/table-headline-border.gif);" ></span> <span class="CaptionVerticalLeft" style="background-image:url(' .
+  $layout_name .
+  '/images/content/box-frame-vertical.gif);" /></span> <div class="Text" >Acesso Negado</div> <span class="CaptionVerticalRight" style="background-image:url(' .
+  $layout_name .
+  '/images/content/box-frame-vertical.gif);" /></span> <span class="CaptionBorderBottom" style="background-image:url(' .
+  $layout_name .
+  '/images/content/table-headline-border.gif);" ></span> <span class="CaptionEdgeLeftBottom" style="background-image:url(' .
+  $layout_name .
+  '/images/content/box-frame-edge.gif);" /></span> <span class="CaptionEdgeRightBottom" style="background-image:url(' .
+  $layout_name .
+  '/images/content/box-frame-edge.gif);" /></span> </div> </div> <tr> <td> <div class="InnerTableContainer" > <table style="width:100%;" ><tr><td>Você não pode acessar a conta do Account Manager. Para entrar em sua conta, <a href="?subtopic=accountmanagement" >clique aqui</a>.</td></tr></table> </div> </table></div></td></tr>';
+
+if (!empty($account_manager_denied)) {
+  $main_content .= $account_manager_denied_html;
+} elseif (!$logged) {
   if ($action == 'logout') {
     $main_content .=
       '<div class="TableContainer" ><table class="Table1" cellpadding="0" cellspacing="0" ><div class="CaptionContainer" > <div class="CaptionInnerContainer" > <span class="CaptionEdgeLeftTop" style="background-image:url(' .
@@ -56,7 +78,7 @@
       '/images/buttons/_sbutton_accountlost.gif" ></div></div></td></tr></form></table></td></tr></table>';
   }
 } else {
-  if ($_POST['account_login'] != '1' && $account_logged->getId() != '1') {
+  if ((int) $account_logged->getId() !== 1) {
     if ($action == '') {
       $account_reckey = $account_logged->getRecoveryKey();
       if (!$account_logged->isPremium()) {
@@ -480,7 +502,7 @@
             $show_msgs[] = 'New password contains illegal chars (a-z, A-Z and 0-9 only!) or lenght.';
           }
           $old_password = password_ency($old_password);
-          if ($old_password != $account_logged->getPassword()) {
+          if (!hash_equals((string) $account_logged->getPassword(), (string) $old_password)) {
             $show_msgs[] = 'Current password is incorrect!';
           }
         }
@@ -641,7 +663,7 @@
             $change_email_errors[] = 'Please enter password to your account.';
           } else {
             $post_password = password_ency($post_password);
-            if ($post_password != $account_logged->getPassword()) {
+            if (!hash_equals((string) $account_logged->getPassword(), (string) $post_password)) {
               $change_email_errors[] = 'Wrong password to account.';
             }
           }
@@ -993,7 +1015,7 @@
       $reg_password = password_ency(trim($_POST['reg_password']));
       $old_key = $account_logged->getRecoveryKey('key');
       if ($_POST['registeraccountsave'] == '1') {
-        if ($reg_password == $account_logged->getPassword()) {
+        if (hash_equals((string) $account_logged->getPassword(), (string) $reg_password)) {
           if (empty($old_key)) {
             $dontshowtableagain = 1;
             $acceptedChars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
@@ -1154,7 +1176,7 @@
       } else {
         $points = $account_logged->getPremiumPoints();
         if ($_POST['registeraccountsave'] == '1') {
-          if ($reg_password == $account_logged->getPassword()) {
+          if (hash_equals((string) $account_logged->getPassword(), (string) $reg_password)) {
             if ($points >= $config['site']['generate_new_reckey_price']) {
               $dontshowtableagain = 1;
               $acceptedChars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
@@ -1518,7 +1540,7 @@
             if ($player->isLoaded()) {
               $player_account = $player->getAccount();
               if ($account_logged->getId() == $player_account->getId()) {
-                if ($password_verify == $account_logged->getPassword()) {
+                if (hash_equals((string) $account_logged->getPassword(), (string) $password_verify)) {
                   if (!$player->isOnline()) {
                     //dont show table "delete character" again
                     $dontshowtableagain = 1;
@@ -2526,28 +2548,12 @@ document.getElementById("name_check").innerHTML=nameHttp.responseText;
     }
   } else {
     $logged = false;
+    $group_id_of_acc_logged = 0;
     unset($_SESSION['account']);
     unset($_SESSION['password']);
     session_unset();
     session_destroy();
-    $main_content =
-      '<div class="TableContainer" ><table class="Table1" cellpadding="0" cellspacing="0" ><div class="CaptionContainer" > <div class="CaptionInnerContainer" > <span class="CaptionEdgeLeftTop" style="background-image:url(' .
-      $layout_name .
-      '/images/content/box-frame-edge.gif);" /></span> <span class="CaptionEdgeRightTop" style="background-image:url(' .
-      $layout_name .
-      '/images/content/box-frame-edge.gif);" /></span> <span class="CaptionBorderTop" style="background-image:url(' .
-      $layout_name .
-      '/images/content/table-headline-border.gif);" ></span> <span class="CaptionVerticalLeft" style="background-image:url(' .
-      $layout_name .
-      '/images/content/box-frame-vertical.gif);" /></span> <div class="Text" >Acesso Negado</div> <span class="CaptionVerticalRight" style="background-image:url(' .
-      $layout_name .
-      '/images/content/box-frame-vertical.gif);" /></span> <span class="CaptionBorderBottom" style="background-image:url(' .
-      $layout_name .
-      '/images/content/table-headline-border.gif);" ></span> <span class="CaptionEdgeLeftBottom" style="background-image:url(' .
-      $layout_name .
-      '/images/content/box-frame-edge.gif);" /></span> <span class="CaptionEdgeRightBottom" style="background-image:url(' .
-      $layout_name .
-      '/images/content/box-frame-edge.gif);" /></span> </div> </div> <tr> <td> <div class="InnerTableContainer" > <table style="width:100%;" ><tr><td>Você não pode acessar a conta do Account Manager. Para entrar em sua conta, <a href="?subtopic=accountmanagement" >clique aqui</a>.</td></tr></table> </div> </table></div></td></tr>';
+    $main_content = $account_manager_denied_html;
   }
 }
 ?>

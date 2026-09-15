@@ -162,23 +162,43 @@ function js_str($s)
 
 function csrf_query()
 {
+  // Deprecated for mutations (W5): prefer csrf_post_action() / csrf_field() on POST forms.
   return 'csrf_token=' . rawurlencode(csrf_token());
+}
+
+/** Inline POST control (button or image HTML) so CSRF tokens stay out of GET URLs. */
+function csrf_post_action($action_url, $label_html, array $hidden = [], $confirm_message = null)
+{
+  $onsubmit = '';
+  if ($confirm_message !== null && $confirm_message !== '') {
+    $onsubmit = ' onsubmit="return confirm(' . js_str($confirm_message) . ')"';
+  }
+  $html =
+    '<form style="display:inline" method="post" action="' .
+    h($action_url) .
+    '"' .
+    $onsubmit .
+    '>' .
+    csrf_field();
+  foreach ($hidden as $name => $value) {
+    $html .= '<input type="hidden" name="' . h((string) $name) . '" value="' . h((string) $value) . '">';
+  }
+  $html .=
+    '<button type="submit" style="background:none;border:none;padding:0;cursor:pointer;font:inherit;color:inherit">' .
+    $label_html .
+    '</button></form>';
+  return $html;
 }
 
 function csrf_ok()
 {
-  $token = '';
-  if (isset($_POST['csrf_token'])) {
-    $token = (string) $_POST['csrf_token'];
-  } elseif (isset($_GET['csrf_token'])) {
-    $token = (string) $_GET['csrf_token'];
-  }
+  $token = isset($_POST['csrf_token']) ? (string) $_POST['csrf_token'] : '';
   return $token !== '' && isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
 
 function csrf_require()
 {
-  if (!csrf_ok()) {
+  if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !csrf_ok()) {
     http_response_code(403);
     die('Invalid or missing CSRF token. Go back and try again.');
   }

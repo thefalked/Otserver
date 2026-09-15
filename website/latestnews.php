@@ -203,26 +203,20 @@ if ($action == 'newticker') {
         date('j M Y', $time) .
         ' -</span>
       <div id="TickerEntry-1-ShortText" class="NewsTickerShortText">';
-      $news_content .=
-        '<a href="?subtopic=latestnews&action=deleteticker&id=' .
-        $time .
-        '&' .
-        csrf_query() .
-        '"><img src="' .
-        $layout_name .
-        '/images/news/delete.png" border="0"></a>';
+      $news_content .= csrf_post_action(
+        '?subtopic=latestnews&action=deleteticker',
+        '<img src="' . $layout_name . '/images/news/delete.png" border="0">',
+        ['id' => (int) $time]
+      );
       $news_content .=
         short_text($ticker_text, 60) .
         '</div>
       <div id="TickerEntry-1-FullText" class="NewsTickerFullText">';
-      $news_content .=
-        '<a href="?subtopic=latestnews&action=deleteticker&id=' .
-        $time .
-        '&' .
-        csrf_query() .
-        '"><img src="' .
-        $layout_name .
-        '/images/news/delete.png" border="0"></a>';
+      $news_content .= csrf_post_action(
+        '?subtopic=latestnews&action=deleteticker',
+        '<img src="' . $layout_name . '/images/news/delete.png" border="0">',
+        ['id' => (int) $time]
+      );
       $news_content .=
         $ticker_text .
         '</div>
@@ -316,14 +310,11 @@ if (is_object($tickers)) {
       '-ShortText" class="NewsTickerShortText">';
     //if admin show button to delete (hide) ticker
     if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-      $tickers_to_add .=
-        '<a href="?subtopic=latestnews&action=deleteticker&id=' .
-        $ticker['date'] .
-        '&' .
-        csrf_query() .
-        '"><img src="' .
-        $layout_name .
-        '/images/news/delete.png" border="0"></a>';
+      $tickers_to_add .= csrf_post_action(
+        '?subtopic=latestnews&action=deleteticker',
+        '<img src="' . $layout_name . '/images/news/delete.png" border="0">',
+        ['id' => (int) $ticker['date']]
+      );
     }
     $tickers_to_add .=
       short_text(h($ticker['text']), 60) .
@@ -333,14 +324,11 @@ if (is_object($tickers)) {
       '-FullText" class="NewsTickerFullText">';
     //if admin show button to delete (hide) ticker
     if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-      $tickers_to_add .=
-        '<a href="?subtopic=latestnews&action=deleteticker&id=' .
-        $ticker['date'] .
-        '&' .
-        csrf_query() .
-        '"><img src="' .
-        $layout_name .
-        '/images/news/delete.png" border="0"></a>';
+      $tickers_to_add .= csrf_post_action(
+        '?subtopic=latestnews&action=deleteticker',
+        '<img src="' . $layout_name . '/images/news/delete.png" border="0">',
+        ['id' => (int) $ticker['date']]
+      );
     }
     $tickers_to_add .=
       h($ticker['text']) .
@@ -673,11 +661,14 @@ foreach ($zapytanie as $row) {
       $message .
       '<br><h6><i>Posted by </i><font color="green">' .
       h($row['name']) .
-      '</font></h6><p align="right"><a href="?subtopic=forum&action=remove_post&id=' .
-      $row['id'] .
-      '&' .
-      csrf_query() .
-      '"><font color="red">[Delete this news]</font></a>  <a href="?subtopic=forum&action=edit_post&id=' .
+      '</font></h6><p align="right">' .
+      csrf_post_action(
+        '?subtopic=forum&action=remove_post',
+        '<font color="red">[Delete this news]</font>',
+        ['id' => (int) $row['id']],
+        'Delete this news?'
+      ) .
+      '  <a href="?subtopic=forum&action=edit_post&id=' .
       $row['id'] .
       '"><font color="green">[Edit this news]</font></a>      <a href="?subtopic=forum&action=show_thread&id=' .
       $row['id'] .
