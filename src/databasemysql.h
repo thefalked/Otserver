@@ -53,6 +53,10 @@ class DatabaseMySQL : public _Database
 	protected:
 		DATABASE_VIRTUAL void keepAlive();
 
+		void configureOptions();
+		bool connect();
+		bool reconnect();
+
 		MYSQL m_handle;
 		uint32_t m_timeoutTask;
 };
