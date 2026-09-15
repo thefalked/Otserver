@@ -103,7 +103,7 @@ EOF
 	rm -f "${ASKPASS}"
 	trap - EXIT
 	git -C "${OTSERVER_DIR}" remote set-url origin "$(origin_public)"
-	echo "Clone done. Token stays in env only so setup-vps.sh can enable git pull for the sudo user."
+	echo "Clone done. Token stays in env only for this bootstrap (not written to disk by default)."
 fi
 
 if [ ! -f "${OTSERVER_DIR}/scripts/setup-vps.sh" ]; then

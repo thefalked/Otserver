@@ -20,10 +20,11 @@ ensure_dir() {
 			_owner="$(stat -c '%U' "$_dir" 2>/dev/null || stat -f '%Su' "$_dir" 2>/dev/null || echo unknown)"
 			if [ "$_owner" = "www-data" ]; then
 				echo "website-entrypoint: $_dir owned by www-data but not writable" >&2
-			else
+			elif chmod 777 "$_dir" 2>/dev/null && [ -w "$_dir" ]; then
+				# W6: only fall back to world-writable when chown could not claim the bind mount.
 				echo "website-entrypoint: world-writable fallback for $_dir (owner=$_owner)" >&2
-				chmod 777 "$_dir" 2>/dev/null || true
 			fi
+			# else: read-only mount (H6) — skip
 		fi
 	fi
 }
@@ -40,9 +41,8 @@ ensure_file() {
 			_owner="$(stat -c '%U' "$_file" 2>/dev/null || stat -f '%Su' "$_file" 2>/dev/null || echo unknown)"
 			if [ "$_owner" = "www-data" ]; then
 				echo "website-entrypoint: $_file owned by www-data but not writable" >&2
-			else
+			elif chmod 666 "$_file" 2>/dev/null && [ -w "$_file" ]; then
 				echo "website-entrypoint: world-writable fallback for $_file (owner=$_owner)" >&2
-				chmod 666 "$_file" 2>/dev/null || true
 			fi
 		fi
 	fi
@@ -54,8 +54,13 @@ ensure_dir "$WEBROOT/config"
 ensure_file "$WEBROOT/config/serverstatus"
 ensure_file "$WEBROOT/config/config.ini"
 
-# Page-view counter
-ensure_file "$WEBROOT/usercounter.dat"
+# Page-view counter (under config/ — RW mount; avoids Docker file-bind → dir footgun)
+_legacy_counter="$WEBROOT/usercounter.dat"
+_counter="$WEBROOT/config/usercounter.dat"
+if [ -f "$_legacy_counter" ] && [ ! -f "$_counter" ]; then
+	cp -a "$_legacy_counter" "$_counter" 2>/dev/null || true
+fi
+ensure_file "$_counter"
 
 # headline.php PNG cache
 ensure_dir "$WEBROOT/images/head"

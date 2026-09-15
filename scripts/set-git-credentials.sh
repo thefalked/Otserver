@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-# Save a GitHub HTTPS token for `git pull` on this private repo.
+# Save a GitHub HTTPS token for `git pull` on this private repo (opt-in).
 #
-# setup-vps.sh writes ~/.git-credentials only when GITHUB_TOKEN is set during
-# bootstrap. If that file is missing (older run, wrong user, revoked token),
-# run this as the sudo user that owns /opt/otserver:
+# setup-vps.sh does **not** write ~/.git-credentials by default (H9). Prefer a
+# deploy key. If you still want a stored PAT:
 #   bash scripts/set-git-credentials.sh
 # Or as root for that user:
 #   sudo bash scripts/set-git-credentials.sh --user YOUR_SUDO_USER
-set -euo pipefail
+# Bootstrap opt-in: OTSERVER_SAVE_GIT_CREDENTIALS=1 with GITHUB_TOKEN set.set -euo pipefail
 
 TARGET_USER=""
 TOKEN="${GITHUB_TOKEN:-}"

@@ -18,11 +18,12 @@ That script asks you for **everything on your laptop** (no remote prompts):
 
 It then SSHs in (host key / VPS root password if the provider did not inject your laptop key), installs git, clones into `/opt/otserver` (full history), and runs `setup-vps.sh` with those values. It also starts Docker Compose and tries Let’s Encrypt if you gave an email.
 
-The token is stored only as `~sudo-user/.git-credentials` (mode 600), not in `git remote`. Anyone who can read that file can `git pull` this private repo — treat it like a secret. If that file is missing:
+The GitHub token is **not** stored on disk by default (H9). Prefer a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) for later `git pull`. Opt-in PAT store:
 
 ```bash
 # as the sudo user, from /opt/otserver — or:
 sudo bash scripts/set-git-credentials.sh --user YOUR_SUDO_USER
+# or during bootstrap: OTSERVER_SAVE_GIT_CREDENTIALS=1
 ```
 
 Later:
@@ -31,9 +32,42 @@ Later:
 ssh USER@VPS
 cd /opt/otserver
 git pull
+sudo docker compose ps   # user is not in group docker by default (H5)
 ```
 
 If you are already root on the VPS with `GITHUB_TOKEN` set: `sudo bash scripts/setup-vps.sh`.
+
+## Already-running VPS (host hardening without re-bootstrap)
+
+`setup-vps.sh` only runs on first install. After you pull host-security changes on a live box:
+
+```bash
+cd /opt/otserver
+git pull
+sudo bash scripts/apply-host-hardening.sh
+```
+
+Safe default (idempotent, like `setup-hawser.sh`):
+
+- drops UFW `8080` if present (H3)
+- recreates `website` + `nginx` (loopback `:8080`, lean env, read-only PHP — H3/H4/H6/H11)
+
+It does **not** change SSH passwords, docker group, or `~/.git-credentials` unless you pass flags:
+
+```bash
+sudo bash scripts/apply-host-hardening.sh --remove-docker-group
+sudo bash scripts/apply-host-hardening.sh --remove-git-credentials
+sudo bash scripts/apply-host-hardening.sh --compose-only   # skip UFW
+sudo bash scripts/apply-host-hardening.sh --no-compose     # UFW (+ optional flags) only
+```
+
+Password SSH: after a **tested** key login in another terminal:
+
+```bash
+sudo bash scripts/disable-ssh-passwords.sh
+```
+
+Expect a short 502 while `website` recreates (`ensure-schema` retries). Confirm `MYSQL_PASSWORD` is set in `.env` first or the container will crash-loop.
 
 ## Change the hostname later
 
@@ -97,9 +131,10 @@ ports (raw TCP, not SSH).
 
 ## SSH keys only
 
-Password SSH is left **on** after bootstrap so you can still get in. Switch to
-keys, then turn passwords off. Do this from a laptop that already has a key,
-and **keep the current SSH session open** until a second session works.
+Password SSH stays **on** after bootstrap so you can still get in. Switch to
+keys, then turn passwords off with `scripts/disable-ssh-passwords.sh`. Do this
+from a laptop that already has a key, and **keep the current SSH session open**
+until a second session works.
 
 ### 1. Create a key on your laptop (if you do not have one)
 

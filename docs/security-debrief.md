@@ -1,9 +1,10 @@
 # Security findings debrief — Baiak Vip9
 
 **Host:** <https://baiakvip9.servegame.com/>  
-**Mode:** fixes in progress (batch: fingerprint)  
+**Mode:** fixes in progress (batch: host)  
 **Date:** 2026-09-14  
-**Fixed in repo (pending deploy):** F1, F2, W1, W2, W5 (partial: namelock + forum remove → POST), W6, W7, W8, W9, W10  
+**Fixed in repo (pending deploy):** F1, F2, W1, W2, W5 (partial: namelock + forum remove → POST), W6, W7, W8, W9, W10, H2, H3, H4, H5, H6, H8, H9, H11  
+**Deferred:** **H7** non-root containers — quick `-u 1000` test segfaulted; needs dedicated USER + data ownership  
 **Accepted / kept as-is:** F3 (status protocol still reports SOFTWARE_NAME / SOFTWARE_VERSION)  
 
 Sources: code review; Docker/VPS audit; OTServer Lua audit; Gesior PHP audit; live probes against the host above.
@@ -51,17 +52,17 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 
 | ID | Area | Finding | Location | Live? |
 | --- | --- | --- | --- | --- |
-| **H2** | Host | Password SSH left enabled after bootstrap until `disable-ssh-passwords.sh` | `scripts/setup-vps.sh` | Ops / VPS shell |
-| **H3** | Host | Public cleartext AAC on `:8080` alongside HTTPS | compose + UFW + nginx | **Confirmed** |
-| **H4** | Host | Full `.env` (incl. `MYSQL_ROOT_PASSWORD`) injected into `website` / `nginx` | `docker-compose.yml` | Code-only |
-| **H5** | Host | Admin user in `docker` group ≈ host root without sudo | `scripts/setup-vps.sh` | Ops |
+| **H2** | Host | Password SSH left enabled after bootstrap until `disable-ssh-passwords.sh` | `scripts/setup-vps.sh` | **Fixed in repo** — stays on until explicit disable script |
+| **H3** | Host | Public cleartext AAC on `:8080` alongside HTTPS | compose + UFW + nginx | **Fixed in repo** — `127.0.0.1:8080` + UFW 8080 removed |
+| **H4** | Host | Full `.env` (incl. `MYSQL_ROOT_PASSWORD`) injected into `website` / `nginx` | `docker-compose.yml` | **Fixed in repo** — explicit env only |
+| **H5** | Host | Admin user in `docker` group ≈ host root without sudo | `scripts/setup-vps.sh` | **Fixed in repo** — opt-in `OTSERVER_DOCKER_GROUP=1` |
 | **O3** | OT | `!afk` / `!treinando` schedule parallel `addEvent` chains without `stopEvent` → CPU/event DoS | `afk.lua`, `treinando.lua` | Code-only |
 | **O4** | OT | `/mute` with invalid minutes → nil condition crash | `mute.lua` | Code-only |
 | **O5** | OT | GM `/r` removes creatures/players with no access comparison | `remove.lua` | Code-only |
 | **O6** | OT | Unbounded `/i` amount (CM+) → lag / economy bomb | `createitem.lua` | Code-only |
 | **O7** | OT | Unbounded `/mkick` range → map-wide kick | `masskick.lua` | Code-only |
-| **W1** | Web | Forum stored XSS: topic/author injected raw into mod `confirm('…')` | `website/forum.php` | Needs mod session |
-| **W2** | Web | Namelock accept/reject via GET; ACL only `page_access > 0`; no CSRF | `website/namelocks.php` | Unauth blocked; CSRF needs staff login |
+| **W1** | Web | Forum stored XSS: topic/author injected raw into mod `confirm('…')` | `website/forum.php` | **Fixed in repo** |
+| **W2** | Web | Namelock accept/reject via GET; ACL only `page_access > 0`; no CSRF | `website/namelocks.php` | **Fixed in repo** |
 | **W3** | Web/OT | Unsalted SHA1 account passwords — DB leak → fast offline crack | `encryptionType = "sha1"`, site hash helpers | Protocol/TFS constraint |
 | **A1** | Acc | `god` / `godadmin` password re-applied on every `ensure-schema` run | `docker/mysql/08-god-energy.sql` | Code-only |
 | **A2** | Acc | Default account `1` / `1` with Gesior admin `page_access` | `docker/mysql/03-gesior.sql`, README | Ops / change passwords |
@@ -83,14 +84,14 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 | **O12** | OT | `!myhouse` / eject uses undefined `NO_OWNER_PHRASE` | `eject.lua` | Code-only |
 | **O13** | OT | Zombie event `playersNeededToStartEvent = 1` (solo farm) | `zombie_event.lua` | Code-only |
 | **W4** | Web | Captcha off — automated account creation (session rate limit only) | `website/config/config.php` | Config |
-| **W5** | Web | CSRF tokens in GET URLs (Referer/logs leak) | forum/admin/etc. | Code-only |
-| **W6** | Web | Docker `chmod 777` fallbacks on runtime dirs | `website/docker-entrypoint.sh` | Code-only |
-| **W7** | Web | Guild logo `unlink` without path sanitize | `website/guilds.php` | Code-only |
-| **W8** | Web | Admin mass-mail HTML unsanitized (SMTP currently off) | `website/mail.php` | Code-only |
-| **H6** | Host | Website RW bind-mount persists RCE on host tree | `docker-compose.yml` | Code-only |
-| **H7** | Host | Containers as root; TFS built with root permission | Dockerfiles | Code-only |
-| **H8** | Host | Setup secrets briefly under `/tmp` on VPS | `scripts/setup-from-pc.sh` | Ops |
-| **H9** | Host | GitHub PAT in `~/.git-credentials` | setup scripts | Ops |
+| **W5** | Web | CSRF tokens in GET URLs (Referer/logs leak) | forum/admin/etc. | **Partial** (namelock + forum remove) |
+| **W6** | Web | Docker `chmod 777` fallbacks on runtime dirs | `website/docker-entrypoint.sh` | **Fixed in repo** |
+| **W7** | Web | Guild logo `unlink` without path sanitize | `website/guilds.php` | **Fixed in repo** |
+| **W8** | Web | Admin mass-mail HTML unsanitized (SMTP currently off) | `website/mail.php` | **Fixed in repo** |
+| **H6** | Host | Website RW bind-mount persists RCE on host tree | `docker-compose.yml` | **Fixed in repo** — PHP tree `:ro` + RW subdirs |
+| **H7** | Host | Containers as root; TFS built with root permission | Dockerfiles | **Deferred** — non-root test segfaulted |
+| **H8** | Host | Setup secrets briefly under `/tmp` on VPS | `scripts/setup-from-pc.sh` | **Fixed in repo** — `/root/otserver-pc-setup.$$` |
+| **H9** | Host | GitHub PAT in `~/.git-credentials` | setup scripts | **Fixed in repo** — opt-in only |
 | **H10** | Host | Hawser image `:latest` (supply chain) | `docker-compose.vps.yml` | Code-only |
 
 ---
@@ -99,10 +100,10 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 
 | ID | Area | Finding | Location |
 | --- | --- | --- | --- |
-| **W9** | Web | Admin reflected XSS on spell name | `website/adminpanel.php` |
-| **W10** | Web | Account/email enumeration via AJAX | `website/ajax/check_account.php`, `check_email.php` — **live confirmed** for accounts |
+| **W9** | Web | Admin reflected XSS on spell name | `website/adminpanel.php` — **Fixed in repo** |
+| **W10** | Web | Account/email enumeration via AJAX | `website/ajax/check_account.php`, `check_email.php` — **Fixed in repo** (rate limit + softer copy) |
 | **W11** | Web | Non-`hash_equals` password compares in some account flows | e.g. `accountmanagement.php` |
-| **H11** | Host | `render-config.sh` defaults `MYSQL_PASSWORD=otserver` if env empty | `docker/render-config.sh` |
+| **H11** | Host | `render-config.sh` defaults `MYSQL_PASSWORD=otserver` if env empty | `docker/render-config.sh` — **Fixed in repo** (fail if unset) |
 | **O14** | OT | `systemvip` / `/delvip` weak XML access; exact `access == 5` misses ADM 6 | talkactions + scripts |
 | **O15** | OT | Dormant `account.lua` SQL injection (not registered in XML) | `talkactions/scripts/account.lua` |
 
@@ -137,5 +138,6 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 ## Status
 
 - **Fingerprint batch:** F1, F2 fixed; **F3 accepted**.
-- **Web batch:** W1, W2, W5 (namelock + forum remove), W6–W10 fixed in repo.
-- Next batches (awaiting your go): host → OT.
+- **Web batch:** W1, W2, W5 (namelock + forum remove), W6–W10 fixed + committed.
+- **Host batch:** H2–H6, H8, H9, H11 committed; live VPS: `sudo bash scripts/apply-host-hardening.sh` then optional `disable-ssh-passwords.sh`. **H7 deferred**.
+- Next batch: **OT** (O1–O8, O10, O11, O13–O15) + **A1**.

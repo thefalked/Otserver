@@ -4,8 +4,8 @@
 # Do not run this stack and the home-server wrapper at the same time.
 #
 # Public ports are on nginx (HTTP) and otserver (OT TCP).
-#   8080 HTTP site | 7171/7172 game (direct to otserver — see service ports)
-# VPS overlay (docker-compose.vps.yml) also publishes 80 → HTTPS and 443.
+#   127.0.0.1:8080 HTTP site (localhost only — H3) | 7171/7172 game
+# VPS overlay (docker-compose.vps.yml) also publishes 80/443.
 # Clients: set OT_IP in .env to the hostname/IP clients should use after login.
 
 services:
@@ -75,6 +75,7 @@ services:
       - ./server/config.lua.template:/ot/config.lua.template:ro
       - ./server/data:/ot/data
       - ./server/mods:/ot/mods
+      - ./docker/render-config.sh:/usr/local/bin/render-config.sh:ro
       - ot_logs:/ot/logs
     # Publish login/game on the host directly. If nginx streams these, TFS sees
     # the proxy's Docker IP and the charlist advertises 172.x (client times out).
@@ -96,7 +97,7 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    env_file: .env
+    # H4: no env_file — do not inject MYSQL_ROOT_PASSWORD / unrelated secrets.
     environment:
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_PORT: ${MYSQL_PORT}
@@ -107,9 +108,17 @@ services:
       CONFIG_TEMPLATE: /ot/config.lua.template
       CONFIG_OUT: /ot/config.lua
     volumes:
-      - ./website:/var/www/html
+      # H6: PHP sources :ro so RCE cannot rewrite forum.php etc.; writable dirs remounted RW.
+      - ./website:/var/www/html:ro
+      - ./website/cache:/var/www/html/cache
+      - ./website/guilds:/var/www/html/guilds
+      - ./website/images/head:/var/www/html/images/head
+      - ./website/bdsave:/var/www/html/bdsave
+      - ./website/config:/var/www/html/config
       - ./server/config.lua.template:/ot/config.lua.template:ro
       - ./server/data:/ot/data:ro
+      - ./docker/render-config.sh:/usr/local/bin/render-config.sh:ro
+      - ./website/docker-entrypoint.sh:/usr/local/bin/website-entrypoint.sh:ro
     expose:
       - "80"
     mem_limit: 2g
@@ -127,17 +136,19 @@ services:
     depends_on:
       - website
       - otserver
-    env_file: .env
+    # H4: only domain/IP vars — no MySQL secrets.
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
       SITE_MAINTENANCE_DOMAIN: ${SITE_MAINTENANCE_DOMAIN:-}
+      SITE_DOMAIN_ALIASES: ${SITE_DOMAIN_ALIASES:-}
       OT_IP: ${OT_IP}
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/nginx/certs:/etc/nginx/certs
       - ./docker/nginx/acme:/var/www/certbot:ro
     ports:
-      - "${WEBSITE_PORT:-8080}:8080"
+      # H3: cleartext AAC only on loopback (public HTTPS is 80/443 via vps overlay).
+      - "127.0.0.1:${WEBSITE_PORT:-8080}:8080"
       # 7171/7172 are on otserver (not nginx) so charlist gets the real client IP
     mem_limit: 256m
     memswap_limit: 256m

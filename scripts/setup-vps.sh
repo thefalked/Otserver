@@ -29,13 +29,20 @@
 #
 # Prefill without prompts (what setup-from-pc.sh exports):
 #   OTSERVER_USERNAME OTSERVER_PASSWORD SITE_DOMAIN LETSENCRYPT_EMAIL
-#   MYSQL_ROOT_PASSWORD MYSQL_PASSWORD  (and GITHUB_TOKEN for git credentials)
+#   MYSQL_ROOT_PASSWORD MYSQL_PASSWORD
+# Optional: GITHUB_TOKEN + OTSERVER_SAVE_GIT_CREDENTIALS=1 to write ~/.git-credentials
+# (H9: off by default — use scripts/set-git-credentials.sh or a deploy key).
+# Optional: OTSERVER_DOCKER_GROUP=1 to add the sudo user to group docker (H5: off
+# by default — prefer `sudo docker compose`).
 #
 # Change the hostname later without re-running this: scripts/set-domain.sh
 #
 # Keep the current SSH session open until you can log in as the new user.
 # Root SSH is turned off at the end of the SSH section. Password SSH stays on
-# until you run scripts/disable-ssh-passwords.sh (see docs/vps.md).
+# until you confirm key login, then: scripts/disable-ssh-passwords.sh (H2).
+#
+# Already-running VPS (do not re-run this whole script): after git pull,
+#   sudo bash scripts/apply-host-hardening.sh
 # =============================================================================
 set -euo pipefail
 
@@ -165,7 +172,7 @@ echo "User:        ${USERNAME}"
 echo "TLS CN:      ${SITE_DOMAIN}"
 echo "TLS maint:   ${SITE_MAINTENANCE_DOMAIN:-"(none)"}"
 echo "LE email:    ${LETSENCRYPT_EMAIL:-"(set later)"}"
-echo "Open ports:  22, 80, 443, 8080, 2376, 7171, 7172"
+echo "Open ports:  22, 80, 443, 2376, 7171, 7172 (8080 loopback-only)"
 echo
 
 # -----------------------------------------------------------------------------
@@ -242,7 +249,13 @@ else
 	rm -f "${_docker_install}"
 	trap - EXIT
 fi
-usermod -aG docker "${USERNAME}"
+# H5: group docker ≈ root without sudo. Opt-in only.
+if [ "${OTSERVER_DOCKER_GROUP:-0}" = "1" ]; then
+	usermod -aG docker "${USERNAME}"
+	echo "Added ${USERNAME} to group docker (OTSERVER_DOCKER_GROUP=1)."
+else
+	echo "Skipping docker group for ${USERNAME} (use: sudo docker compose). Set OTSERVER_DOCKER_GROUP=1 to opt in."
+fi
 
 # -----------------------------------------------------------------------------
 # SSH: disable root login
@@ -253,9 +266,8 @@ usermod -aG docker "${USERNAME}"
 # top of sshd_config, so a file named 00-* is parsed before Ubuntu cloud-init's
 # 50-cloud-init.conf (which often sets PasswordAuthentication no).
 #
-# PasswordAuthentication is left ON on purpose: you just set a password and
-# may not have a key yet. Switch it to `no` once key login works (fail2ban
-# + keys are the follow-up hardening).
+# H2: PasswordAuthentication stays ON until you verify key login, then run
+# scripts/disable-ssh-passwords.sh (that script counts real keys under /home).
 # -----------------------------------------------------------------------------
 echo "==> Disabling SSH root login"
 install -d -m 755 /etc/ssh/sshd_config.d
@@ -359,10 +371,10 @@ fi
 #   22    SSH
 #   80    HTTP (nginx redirects to HTTPS on the VPS overlay)
 #   443   HTTPS Gesior site
-#   8080  HTTP Gesior (legacy / until you drop it)
 #   2376  Hawser / Dockhand agent (TLS + TOKEN; prefer restrict to your IP later)
 #   7171  OT login protocol (raw TCP, not HTTP)
 #   7172  OT game protocol
+# Port 8080 is NOT opened (H3): cleartext AAC is bound to 127.0.0.1 only.
 # MySQL 3306 is NOT opened — it stays on the Docker network only.
 #
 # --force enable skips the "did you allow SSH?" yes/no prompt so we cannot
@@ -370,7 +382,7 @@ fi
 #
 # Caveat: Docker publishes ports via its own iptables rules and can bypass
 # UFW for those published ports. Safety here is also "do not publish extra
-# compose ports" (no 3306, no Docker API).
+# compose ports" (no 3306, no Docker API) and bind 8080 to loopback.
 # -----------------------------------------------------------------------------
 echo "==> Configuring UFW (deny incoming, allow SSH + site + game)"
 ufw default deny incoming
@@ -378,7 +390,8 @@ ufw default allow outgoing
 ufw allow 22/tcp comment 'SSH'
 ufw allow 80/tcp comment 'HTTP'
 ufw allow 443/tcp comment 'HTTPS'
-ufw allow 8080/tcp comment 'Website HTTP'
+# Drop legacy cleartext AAC rule if a previous bootstrap added it (H3).
+ufw delete allow 8080/tcp >/dev/null 2>&1 || true
 ufw allow 2376/tcp comment 'Hawser Dockhand'
 ufw allow 7171/tcp comment 'OT login'
 ufw allow 7172/tcp comment 'OT game'
@@ -531,10 +544,10 @@ if [ "$(stat -c %u "${REPO_ROOT}" 2>/dev/null || echo 0)" = "0" ]; then
 	chown -R "${USERNAME}:${USERNAME}" "${REPO_ROOT}"
 fi
 
-# Persist GitHub HTTPS auth for the sudo user (remote URL stays token-free).
-# They can later: cd /opt/otserver && git pull
-if [ -n "${GITHUB_TOKEN:-}" ]; then
-	echo "==> Saving git credentials for ${USERNAME} (git pull on this private repo)"
+# H9: do not persist the GitHub PAT by default. Opt in with
+# OTSERVER_SAVE_GIT_CREDENTIALS=1, or later: scripts/set-git-credentials.sh
+if [ -n "${GITHUB_TOKEN:-}" ] && [ "${OTSERVER_SAVE_GIT_CREDENTIALS:-0}" = "1" ]; then
+	echo "==> Saving git credentials for ${USERNAME} (OTSERVER_SAVE_GIT_CREDENTIALS=1)"
 	USER_HOME="$(getent passwd "${USERNAME}" | cut -d: -f6)"
 	USER_HOME="${USER_HOME:-/home/${USERNAME}}"
 	install -d -m 700 -o "${USERNAME}" -g "${USERNAME}" "${USER_HOME}"
@@ -546,6 +559,14 @@ if [ -n "${GITHUB_TOKEN:-}" ]; then
 		install -m 600 -o "${USERNAME}" -g "${USERNAME}" /dev/null "${USER_HOME}/.gitconfig"
 	fi
 	sudo -u "${USERNAME}" git config --global credential.helper store
+	sudo -u "${USERNAME}" git config --global --add safe.directory "${REPO_ROOT}" || true
+elif [ -n "${GITHUB_TOKEN:-}" ]; then
+	echo "==> Skipping ~/.git-credentials (H9). For later pulls: deploy key, or scripts/set-git-credentials.sh"
+	USER_HOME="$(getent passwd "${USERNAME}" | cut -d: -f6)"
+	USER_HOME="${USER_HOME:-/home/${USERNAME}}"
+	if [ ! -f "${USER_HOME}/.gitconfig" ]; then
+		install -m 600 -o "${USERNAME}" -g "${USERNAME}" /dev/null "${USER_HOME}/.gitconfig"
+	fi
 	sudo -u "${USERNAME}" git config --global --add safe.directory "${REPO_ROOT}" || true
 fi
 
@@ -595,8 +616,8 @@ echo "Root SSH login is disabled. Keep this session open until you can log in as
 echo
 echo "On the VPS as ${USERNAME}:"
 echo "  cd ${REPO_ROOT}"
-echo "  git pull                  # token in ~${USERNAME}/.git-credentials (mode 600; treat like a secret)"
-echo "  docker compose ps"
+echo "  sudo docker compose ps"
+echo "  git pull                  # needs deploy key or: sudo bash scripts/set-git-credentials.sh --user ${USERNAME}"
 echo
 echo "Change hostname later:  sudo bash scripts/set-domain.sh new.example.com"
 echo
@@ -606,8 +627,8 @@ echo "  sudo bash scripts/disable-ssh-passwords.sh   # only after a key login wo
 echo
 echo "Open:"
 echo "  https://${SITE_DOMAIN}/"
-echo "  http://${SITE_DOMAIN}:8080/"
 echo "  TCP ${SITE_DOMAIN}:7171 / 7172"
+echo "  (cleartext :8080 is loopback-only — not public)"
 echo
 echo "Log in from another terminal before closing this one:"
 echo "  ssh ${USERNAME}@<this-host>"

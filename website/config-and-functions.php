@@ -661,7 +661,7 @@ if (($config['status']['serverStatus_lastCheck'] ?? 0) + $statustimeout < time()
 }
 
 //PAGE VIEWS COUNTER :)
-$views_counter = 'usercounter.dat';
+$views_counter = 'config/usercounter.dat';
 // checking if the file exists
 if (file_exists($views_counter)) {
   $actie = @fopen($views_counter, 'r+');
