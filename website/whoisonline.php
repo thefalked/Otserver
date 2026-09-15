@@ -162,15 +162,27 @@ if (file_exists($f) && filemtime($f) > time() - $cache_sec) {
   }
 } else {
   $cp = '';
-  $q = 'SELECT name,level,vocation,promotion FROM players WHERE world_id=' . $id . ' AND online=1';
-  if (in_array($order, ['name_asc', 'name_desc', 'level_asc', 'level_desc'])) {
-    $q .= ' ORDER BY ' . str_replace('_', ' ', $order);
+  $onlinePlayers = [];
+  if ($config['status']['serverStatus_online'] == 1 && !empty($config['status']['serverStatus_roster'])) {
+    $onlinePlayers = $config['status']['serverStatus_roster'];
+  } else {
+    $q = 'SELECT name,level,vocation,promotion FROM players WHERE world_id=' . (int) $id . ' AND online=1';
+    if (in_array($order, ['name_asc', 'name_desc', 'level_asc', 'level_desc'])) {
+      $q .= ' ORDER BY ' . str_replace('_', ' ', $order);
+    } elseif (in_array($order, ['vocation_asc', 'vocation_desc'])) {
+      $q .= ' ORDER BY level desc';
+    }
+    foreach ($SQL->query($q)->fetchAll() as $row) {
+      $onlinePlayers[] = $row;
+    }
   }
 
   if (in_array($order, ['vocation_asc', 'vocation_desc'])) {
     $a = [];
-    $q .= ' ORDER BY level desc';
-    foreach ($SQL->query($q)->fetchAll() as $p) {
+    foreach ($onlinePlayers as $p) {
+      if (!isset($p['promotion'])) {
+        $p['promotion'] = 0;
+      }
       $a[] = [$p['name'], $p['level'], $vocation_name[$id][$p['promotion']][$p['vocation']]];
     }
     function cmp($a, $b)
@@ -200,8 +212,25 @@ if (file_exists($f) && filemtime($f) > time() - $cache_sec) {
         '</td></tr>';
     }
   } else {
+    if ($config['status']['serverStatus_online'] == 1 && !empty($config['status']['serverStatus_roster'])) {
+      usort($onlinePlayers, function ($a, $b) use ($order) {
+        if ($order === 'name_desc') {
+          return strcasecmp($b['name'], $a['name']);
+        }
+        if ($order === 'level_asc') {
+          return $a['level'] <=> $b['level'];
+        }
+        if ($order === 'level_desc') {
+          return $b['level'] <=> $a['level'];
+        }
+        return strcasecmp($a['name'], $b['name']);
+      });
+    }
     $l = [];
-    foreach ($SQL->query($q)->fetchAll() as $p) {
+    foreach ($onlinePlayers as $p) {
+      if (!isset($p['promotion'])) {
+        $p['promotion'] = 0;
+      }
       $n++;
       $cp .=
         '<tr class="' .
@@ -233,8 +262,12 @@ if (!$cached) {
   $c = $r['r'] . ' players (on ' . date('d/M/Y,H:i:s T', $r['t']) . ')';
   @file_put_contents($ff, $n . '|' . $c);
 }
+$players_online_count =
+  $config['status']['serverStatus_online'] == 1
+  ? (int) $config['status']['serverStatus_players']
+  : (int) $n;
 $main_content .=
-  $n .
+  $players_online_count .
   '</td>
 						</tr>
 						<tr>
@@ -361,4 +394,3 @@ $main_content .=
   '/images/buttons/sbutton_over.gif)"></div><input class="ButtonText" type="image" name="Submit" alt="Submit" src="' .
   $layout_name .
   '/images/buttons/_sbutton_submit.gif"></div></div></td></tr>          </table>        </div>  </table></div></td></tr></form></center>';
-?>

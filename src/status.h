@@ -78,6 +78,9 @@ class Status
 		std::string getStatusString(bool sendPlayers) const;
 		void getInfo(uint32_t requestedInfo, OutputMessage_ptr output, NetworkMessage& msg) const;
 
+		// otservlist: count connected players only, max 4 per IP (Gunz / xinn rule).
+		uint32_t getPlayersOnlineCount() const;
+
 		uint32_t getUptime() const {return (OTSYS_TIME() - m_start) / 1000;}
 		int64_t getStart() const {return m_start;}
 

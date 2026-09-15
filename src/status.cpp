@@ -103,6 +103,31 @@ void ProtocolStatus::deleteProtocolTask()
 	Protocol::deleteProtocolTask();
 }
 
+uint32_t Status::getPlayersOnlineCount() const
+{
+	// Adapted from Gunz (otservlist ≤4 MC/IP) + skip x-logged / ghosts / Account Manager.
+	uint32_t real = 0;
+	std::map<uint32_t, uint32_t> listIP;
+
+	for(AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it)
+	{
+		Player* player = it->second;
+		if(!player || player->isRemoved() || player->isGhost() || player->isAccountManager() || !player->hasClient())
+			continue;
+
+		const uint32_t ip = player->getIP();
+		if(ip == 0)
+			continue;
+
+		uint32_t& fromIp = listIP[ip];
+		++fromIp;
+		if(fromIp < 5)
+			++real;
+	}
+
+	return real;
+}
+
 std::string Status::getStatusString(bool sendPlayers) const
 {
 	char buffer[90];
@@ -135,7 +160,7 @@ std::string Status::getStatusString(bool sendPlayers) const
 	xmlAddChild(root, p);
 
 	p = xmlNewNode(NULL,(const xmlChar*)"players");
-	sprintf(buffer, "%d", g_game.getPlayersOnline());
+	sprintf(buffer, "%u", getPlayersOnlineCount());
 	xmlSetProp(p, (const xmlChar*)"online", (const xmlChar*)buffer);
 	sprintf(buffer, "%d", g_config.getNumber(ConfigManager::MAX_PLAYERS));
 	xmlSetProp(p, (const xmlChar*)"max", (const xmlChar*)buffer);
@@ -144,15 +169,26 @@ std::string Status::getStatusString(bool sendPlayers) const
 	if(sendPlayers)
 	{
 		std::stringstream ss;
+		std::map<uint32_t, uint32_t> listIP;
 		for(AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it)
 		{
-			if(it->second->isRemoved() || it->second->isGhost())
+			Player* player = it->second;
+			if(!player || player->isRemoved() || player->isGhost() || player->isAccountManager() || !player->hasClient())
+				continue;
+
+			const uint32_t ip = player->getIP();
+			if(ip == 0)
+				continue;
+
+			uint32_t& fromIp = listIP[ip];
+			++fromIp;
+			if(fromIp >= 5)
 				continue;
 
 			if(!ss.str().empty())
 				ss << ";";
 
-			ss << it->second->getName() << "," << it->second->getVocationId() << "," << it->second->getLevel();
+			ss << player->getName() << "," << player->getVocationId() << "," << player->getLevel();
 		}
 
 		xmlNodeSetContent(p, (const xmlChar*)ss.str().c_str());
@@ -233,7 +269,7 @@ void Status::getInfo(uint32_t requestedInfo, OutputMessage_ptr output, NetworkMe
 	if(requestedInfo & REQUEST_PLAYERS_INFO)
 	{
 		output->put<char>(0x20);
-		output->put<uint32_t>(g_game.getPlayersOnline());
+		output->put<uint32_t>(getPlayersOnlineCount());
 		output->put<uint32_t>(g_config.getNumber(ConfigManager::MAX_PLAYERS));
 		output->put<uint32_t>(g_game.getPlayersRecord());
 	}
@@ -254,10 +290,23 @@ void Status::getInfo(uint32_t requestedInfo, OutputMessage_ptr output, NetworkMe
 	{
 		output->put<char>(0x21);
 		std::list<std::pair<std::string, uint32_t> > players;
+		std::map<uint32_t, uint32_t> listIP;
 		for(AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it)
 		{
-			if(!it->second->isRemoved() && !it->second->isGhost())
-				players.push_back(std::make_pair(it->second->getName(), it->second->getLevel()));
+			Player* player = it->second;
+			if(!player || player->isRemoved() || player->isGhost() || player->isAccountManager() || !player->hasClient())
+				continue;
+
+			const uint32_t ip = player->getIP();
+			if(ip == 0)
+				continue;
+
+			uint32_t& fromIp = listIP[ip];
+			++fromIp;
+			if(fromIp >= 5)
+				continue;
+
+			players.push_back(std::make_pair(player->getName(), player->getLevel()));
 		}
 
 		output->put<uint32_t>(players.size());
@@ -274,7 +323,7 @@ void Status::getInfo(uint32_t requestedInfo, OutputMessage_ptr output, NetworkMe
 		const std::string name = msg.getString();
 
 		Player* p = NULL;
-		if(g_game.getPlayerByNameWildcard(name, p) == RET_NOERROR && !p->isGhost())
+		if(g_game.getPlayerByNameWildcard(name, p) == RET_NOERROR && !p->isGhost() && p->hasClient())
 			output->put<char>(0x01);
 		else
 			output->put<char>(0x00);

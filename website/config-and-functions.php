@@ -12,6 +12,7 @@ if ($config['site']['install'] != 'no') {
 }
 //load server config
 include_once __DIR__ . '/parse_config_lua.php';
+include_once __DIR__ . '/server-status.php';
 $config['server'] = parse_config_lua($config['site']['server_path'] . 'config.lua');
 if (empty($config['server']['sqlHost'])) {
   die('Cannot read sqlHost from ' . $config['site']['server_path'] . 'config.lua');
@@ -633,45 +634,44 @@ if (!is_array($config['status'])) {
     'serverStatus_players' => 0,
     'serverStatus_playersMax' => 0,
     'serverStatus_uptime' => '0h 0m',
-    'serverStatus_monsters' => 0
+    'serverStatus_monsters' => 0,
+    'serverStatus_roster' => '',
   ];
 }
+$config['status']['serverStatus_roster'] = otserver_status_roster_decode($config['status']['serverStatus_roster'] ?? '');
 if (($config['status']['serverStatus_lastCheck'] ?? 0) + $statustimeout < time()) {
   $config['status']['serverStatus_checkInterval'] = $statustimeout + 3;
   $config['status']['serverStatus_lastCheck'] = time();
-  $info = chr(6) . chr(0) . chr(255) . chr(255) . 'info';
   $status_host = !empty($config['site']['status_host']) ? $config['site']['status_host'] : $config['server']['ip'];
-  $sock = @fsockopen($status_host, $config['server']['statusPort'], $errno, $errstr, 1);
-  if ($sock) {
-    fwrite($sock, $info);
-    $data = '';
-    while (!feof($sock)) {
-      $data .= fgets($sock, 10000000);
-    }
-    fclose($sock);
-    preg_match('/players online="(\d+)" max="(\d+)"/', $data, $matches);
+  $status_port = otserver_status_port($config['server']);
+  $status = otserver_status_fetch($status_host, $status_port, true);
+  if ($status !== null) {
     $config['status']['serverStatus_online'] = 1;
-    $config['status']['serverStatus_players'] = $matches[1];
-    $config['status']['serverStatus_playersMax'] = $matches[2];
-    preg_match('/uptime="(\d+)"/', $data, $matches);
-    $h = floor($matches[1] / 3600);
-    $m = floor(($matches[1] - $h * 3600) / 60);
+    $config['status']['serverStatus_players'] = $status['players'];
+    $config['status']['serverStatus_playersMax'] = $status['max'];
+    $h = floor($status['uptime'] / 3600);
+    $m = floor(($status['uptime'] - $h * 3600) / 60);
     $config['status']['serverStatus_uptime'] = $h . 'h ' . $m . 'm';
-    preg_match('/monsters total="(\d+)"/', $data, $matches);
-    $config['status']['serverStatus_monsters'] = $matches[1];
+    $config['status']['serverStatus_monsters'] = $status['monsters'];
+    $config['status']['serverStatus_roster'] = $status['roster'];
   } else {
     $config['status']['serverStatus_online'] = 0;
     $config['status']['serverStatus_players'] = 0;
     $config['status']['serverStatus_playersMax'] = 0;
+    $config['status']['serverStatus_roster'] = [];
   }
   $file = @fopen('config/serverstatus', 'w');
   if ($file !== false) {
     $file_data = '';
+    $roster_b64 = base64_encode(json_encode($config['status']['serverStatus_roster']));
     foreach ($config['status'] as $param => $data) {
+      if ($param === 'serverStatus_roster') {
+        $data = $roster_b64;
+      }
       $file_data .=
         $param .
         ' = "' .
-        str_replace('"', '', $data) .
+        str_replace('"', '', (string) $data) .
         '"
 ';
     }
