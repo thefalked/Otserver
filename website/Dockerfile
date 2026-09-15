@@ -19,7 +19,20 @@ RUN printf '%s\n' \
   'default_charset = UTF-8' \
   'session.cookie_httponly = 1' \
   'session.use_strict_mode = 1' \
+  'expose_php = Off' \
   > /usr/local/etc/php/conf.d/aac.ini
+
+# Hide Apache/PHP fingerprints (F1): no version in Server/X-Powered-By or 404 footers.
+RUN printf '%s\n' \
+  'ServerTokens Prod' \
+  'ServerSignature Off' \
+  'Header always unset X-Powered-By' \
+  'Header always unset Server' \
+  'Header always set X-Content-Type-Options "nosniff"' \
+  'Header always set X-Frame-Options "SAMEORIGIN"' \
+  'Header always set Referrer-Policy "strict-origin-when-cross-origin"' \
+  > /etc/apache2/conf-available/hardening.conf \
+  && a2enconf hardening
 
 RUN printf '%s\n' 'ServerName baiakvip9.thefalked.dev' \
   > /etc/apache2/conf-available/servername.conf \
