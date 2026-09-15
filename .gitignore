@@ -3,11 +3,14 @@
 docker/nginx/certs/*.pem
 docker/nginx/certs/*.key
 docker/nginx/certs/*.crt
+docker/nginx/certs/https-servers.conf
 docker/nginx/acme/*
 !docker/nginx/acme/.gitkeep
 backups/
 website/config/config.local.php
 website/config/serverstatus
+website/config/usercounter.dat
+website/usercounter.dat
 website/cache/*.tmp
 server/data/logs/**/*.log
 # Generated from config.lua.template + .env (see docker/render-config.sh)
