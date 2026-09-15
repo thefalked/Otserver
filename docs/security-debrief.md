@@ -3,7 +3,7 @@
 **Host:** <https://baiakvip9.servegame.com/>  
 **Mode:** fixes in progress (batch: fingerprint)  
 **Date:** 2026-09-14  
-**Fixed in repo (pending deploy):** F1, F2  
+**Fixed in repo (pending deploy):** F1, F2, W1, W2, W5 (partial: namelock + forum remove → POST), W6, W7, W8, W9, W10  
 **Accepted / kept as-is:** F3 (status protocol still reports SOFTWARE_NAME / SOFTWARE_VERSION)  
 
 Sources: code review; Docker/VPS audit; OTServer Lua audit; Gesior PHP audit; live probes against the host above.
@@ -136,6 +136,6 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 
 ## Status
 
-- **Fingerprint batch:** F1, F2 fixed in repo; **F3 reverted / accepted** (status.cpp unchanged from stock branding).
-- Next batches (awaiting your go): web → host → OT.
-- Reply with IDs or “continue web” when ready.
+- **Fingerprint batch:** F1, F2 fixed; **F3 accepted**.
+- **Web batch:** W1, W2, W5 (namelock + forum remove), W6–W10 fixed in repo.
+- Next batches (awaiting your go): host → OT.

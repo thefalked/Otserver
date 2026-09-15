@@ -2064,11 +2064,23 @@ if ($action == 'changelogo') {
           }
           if (empty($upload_errors)) {
             $guild_logo = $guild->getCustomField('logo_gfx_name');
+            foreach (['/', '\\', '..'] as $char) {
+              $guild_logo = str_replace($char, '', (string) $guild_logo);
+            }
+            $guild_logo = basename((string) $guild_logo);
             if (empty($guild_logo) || !file_exists('guilds/' . $guild_logo)) {
               $guild_logo = 'default_logo.gif';
             }
             if ($guild_logo != 'default_logo.gif' && $guild_logo != $save_file_name . '.' . $extension) {
-              unlink('guilds/' . $guild_logo);
+              $unlink_path = realpath('guilds/' . $guild_logo);
+              $guilds_root = realpath('guilds');
+              if (
+                $unlink_path !== false &&
+                $guilds_root !== false &&
+                str_starts_with($unlink_path, $guilds_root . DIRECTORY_SEPARATOR)
+              ) {
+                unlink($unlink_path);
+              }
             }
           }
           //show errors or save file
@@ -3455,4 +3467,3 @@ if ($action == 'change_nick') {
   }
   $main_content .= '<center><h3><a href="?subtopic=guilds' . $addtolink . '">BACK</a></h3></center>';
 }
-?>

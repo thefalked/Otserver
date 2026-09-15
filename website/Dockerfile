@@ -23,16 +23,19 @@ RUN printf '%s\n' \
   > /usr/local/etc/php/conf.d/aac.ini
 
 # Hide Apache/PHP fingerprints (F1): no version in Server/X-Powered-By or 404 footers.
-RUN printf '%s\n' \
-  'ServerTokens Prod' \
-  'ServerSignature Off' \
+# security.conf ships ServerTokens OS / ServerSignature On — override those first.
+RUN sed -i \
+  -e 's/^ServerTokens OS/ServerTokens Prod/' \
+  -e 's/^ServerSignature On/ServerSignature Off/' \
+  /etc/apache2/conf-available/security.conf \
+ && printf '%s\n' \
   'Header always unset X-Powered-By' \
   'Header always unset Server' \
   'Header always set X-Content-Type-Options "nosniff"' \
   'Header always set X-Frame-Options "SAMEORIGIN"' \
   'Header always set Referrer-Policy "strict-origin-when-cross-origin"' \
-  > /etc/apache2/conf-available/hardening.conf \
-  && a2enconf hardening
+  > /etc/apache2/conf-available/zzz-hardening.conf \
+  && a2enconf zzz-hardening
 
 RUN printf '%s\n' 'ServerName baiakvip9.thefalked.dev' \
   > /etc/apache2/conf-available/servername.conf \

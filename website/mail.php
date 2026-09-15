@@ -24,11 +24,12 @@
       } else {
         $mail->IsMail();
       }
-      $mail->IsHTML(true);
+      $mail->IsHTML(false);
       $mail->From = $config['site']['mail_address'];
       $mail->AddAddress($emails['email']);
       $mail->Subject = $subject;
-      $mail->Body = $mail_content;
+      // W8: send plain text only (no raw HTML blast from admin form)
+      $mail->Body = strip_tags($mail_content);
     }
     if ($mail->Send()) {
       $main_content .= '<br />Mass emails has been sent.';
@@ -39,4 +40,3 @@
 } else {
   $main_content .= 'Sorry, you have not the rights to access this page.';
 }
-?>

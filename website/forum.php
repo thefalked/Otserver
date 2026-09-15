@@ -490,13 +490,13 @@ if ($action == 'show_board') {
           $stix .
           '</a> <a href="?subtopic=forum&action=move_thread&id=' .
           $thread['id'] .
-          '"\')"><span style="color:darkgreen">[MOVE]</span></a> <a href="?subtopic=forum&action=remove_post&id=' .
-          $thread['id'] .
-          '&' .
-          csrf_query() .
-          '" onclick="return confirm(\'Are you sure you want remove thread > ' .
-          $thread['post_topic'] .
-          ' <?\')"><span style="color:red">[REMOVE]</span></a><br/>';
+          '"\')"><span style="color:darkgreen">[MOVE]</span></a> <form style="display:inline" method="post" action="?subtopic=forum&action=remove_post" onsubmit="return confirm(\'Are you sure you want remove thread > \' + ' .
+          js_str($thread['post_topic']) .
+          ' + \'?\')">' .
+          csrf_field() .
+          '<input type="hidden" name="id" value="' .
+          (int) $thread['id'] .
+          '"><button type="submit" style="background:none;border:none;padding:0;color:red;cursor:pointer;font:inherit">[REMOVE]</button></form><br/>';
       }
       $main_content .=
         '<b>' .
@@ -699,22 +699,22 @@ if ($action == 'show_thread') {
       if ($logged && $group_id_of_acc_logged >= $group_not_blocked) {
         if ($thread['first_post'] != $thread['id']) {
           $main_content .=
-            '<a href="?subtopic=forum&action=remove_post&id=' .
-            $thread['id'] .
-            '&' .
-            csrf_query() .
-            '" onclick="return confirm(\'Are you sure you want remove post of ' .
-            $thread['name'] .
-            '?\')"><font color="red">REMOVE POST</font></a>';
+            '<form style="display:inline" method="post" action="?subtopic=forum&action=remove_post" onsubmit="return confirm(\'Are you sure you want remove post of \' + ' .
+            js_str($thread['name']) .
+            ' + \'?\')">' .
+            csrf_field() .
+            '<input type="hidden" name="id" value="' .
+            (int) $thread['id'] .
+            '"><button type="submit" style="background:none;border:none;padding:0;color:red;cursor:pointer;font:inherit"><font color="red">REMOVE POST</font></button></form>';
         } else {
           $main_content .=
-            '<a href="?subtopic=forum&action=remove_post&id=' .
-            $thread['id'] .
-            '&' .
-            csrf_query() .
-            '" onclick="return confirm(\'Are you sure you want remove thread > ' .
-            $thread['post_topic'] .
-            ' <?\')"><font color="red">REMOVE THREAD</font></a>';
+            '<form style="display:inline" method="post" action="?subtopic=forum&action=remove_post" onsubmit="return confirm(\'Are you sure you want remove thread > \' + ' .
+            js_str($thread['post_topic']) .
+            ' + \'?\')">' .
+            csrf_field() .
+            '<input type="hidden" name="id" value="' .
+            (int) $thread['id'] .
+            '"><button type="submit" style="background:none;border:none;padding:0;color:red;cursor:pointer;font:inherit"><font color="red">REMOVE THREAD</font></button></form>';
         }
       }
       if (

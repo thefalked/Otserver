@@ -149,6 +149,17 @@ function csrf_field()
   return '<input type="hidden" name="csrf_token" value="' . h(csrf_token()) . '">';
 }
 
+/** Escape a string for safe use inside a JS single-quoted confirm()/string literal. */
+/** JS string literal safe inside a double-quoted HTML attribute (e.g. onsubmit). */
+function js_str($s)
+{
+  return htmlspecialchars(
+    json_encode((string) $s, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE),
+    ENT_QUOTES | ENT_SUBSTITUTE,
+    'UTF-8'
+  );
+}
+
 function csrf_query()
 {
   return 'csrf_token=' . rawurlencode(csrf_token());
@@ -1033,5 +1044,3 @@ function verifyimage($file)
   }
   return true;
 }
-
-?>

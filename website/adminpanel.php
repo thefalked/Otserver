@@ -350,14 +350,14 @@ showednewnews_state = "0";
             $SQL->query('UPDATE z_spells SET hide_spell = 0 WHERE name = ' . $SQL->quote($_REQUEST['spell_name']));
           } catch (PDOException $error) {
           }
-          $main_content .= "<b>'" . $_REQUEST['spell_name'] . "'</b> is now VISIBLE!";
+          $main_content .= "<b>'" . h($_REQUEST['spell_name']) . "'</b> is now VISIBLE!";
         }
         if ($_REQUEST['visible'] == 'no') {
           try {
             $SQL->query('UPDATE z_spells SET hide_spell = 1 WHERE name = ' . $SQL->quote($_REQUEST['spell_name']));
           } catch (PDOException $error) {
           }
-          $main_content .= "<b>'" . $_REQUEST['spell_name'] . "'</b> is now HIDDEN!";
+          $main_content .= "<b>'" . h($_REQUEST['spell_name']) . "'</b> is now HIDDEN!";
         }
       }
     }
@@ -861,4 +861,3 @@ showednewnews_state = "0";
     $layout_name .
     '/images/buttons/_sbutton_back.gif" ></div></div></form></center>';
 }
-?>

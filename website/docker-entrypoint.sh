@@ -14,10 +14,16 @@ ensure_dir() {
 	mkdir -p "$_dir" 2>/dev/null || true
 	if [ -d "$_dir" ]; then
 		chown www-data:www-data "$_dir" 2>/dev/null || true
-		# Prefer group-writable; fall back to world-writable if chown is a no-op on the mount.
 		chmod 775 "$_dir" 2>/dev/null || true
+		# W6: only fall back to world-writable when chown could not claim the bind mount.
 		if [ ! -w "$_dir" ]; then
-			chmod 777 "$_dir" 2>/dev/null || true
+			_owner="$(stat -c '%U' "$_dir" 2>/dev/null || stat -f '%Su' "$_dir" 2>/dev/null || echo unknown)"
+			if [ "$_owner" = "www-data" ]; then
+				echo "website-entrypoint: $_dir owned by www-data but not writable" >&2
+			else
+				echo "website-entrypoint: world-writable fallback for $_dir (owner=$_owner)" >&2
+				chmod 777 "$_dir" 2>/dev/null || true
+			fi
 		fi
 	fi
 }
@@ -31,7 +37,13 @@ ensure_file() {
 		chown www-data:www-data "$_file" 2>/dev/null || true
 		chmod 664 "$_file" 2>/dev/null || true
 		if [ ! -w "$_file" ]; then
-			chmod 666 "$_file" 2>/dev/null || true
+			_owner="$(stat -c '%U' "$_file" 2>/dev/null || stat -f '%Su' "$_file" 2>/dev/null || echo unknown)"
+			if [ "$_owner" = "www-data" ]; then
+				echo "website-entrypoint: $_file owned by www-data but not writable" >&2
+			else
+				echo "website-entrypoint: world-writable fallback for $_file (owner=$_owner)" >&2
+				chmod 666 "$_file" 2>/dev/null || true
+			fi
 		fi
 	fi
 }
