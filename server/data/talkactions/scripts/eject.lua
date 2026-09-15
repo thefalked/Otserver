@@ -16,17 +16,20 @@ function onSay(cid, words, param)
     return true
   end
 
-  local days = 3 * 24 * 60 * 60
+  -- Inactive threshold: 3 real days without login (see lastlogin check below).
+  local inactiveDays = 3
+  local inactiveSeconds = inactiveDays * 24 * 60 * 60
   local own = getHouseOwner(getHouseFromPos(positions))
   local qry = db.getResult("SELECT `lastlogin` FROM `players` WHERE `id` = " .. own)
 
   if qry:getID() ~= -1 then
     last = tonumber(qry:getDataInt("lastlogin"))
-    if last < os.time() - days then
-      setHouseOwner(getHouseFromPos(positions), NO_OWNER_PHRASE, true)
+    if last < os.time() - inactiveSeconds then
+      -- Clear owner (same as leavehouse.lua); NO_OWNER_PHRASE was undefined here (O12).
+      setHouseOwner(getHouseFromPos(positions), 0, true)
       doPlayerSendTextMessage(cid, 27, "A Casa agora esta sem dono, voce ou outro jogador pode compra-la")
     end
-    if last > os.time() - days then
+    if last > os.time() - inactiveSeconds then
       doPlayerSendTextMessage(cid, 27, "O proprietario desta casa ainda esta ativo no servidor, tente outra casa.")
     end
   end

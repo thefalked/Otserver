@@ -3,7 +3,7 @@
 **Host:** <https://baiakvip9.servegame.com/>  
 **Mode:** fixes in progress (batch: host)  
 **Date:** 2026-09-14  
-**Fixed in repo (pending deploy):** F1, F2, W1, W2, W5 (partial: namelock + forum remove → POST), W6, W7, W8, W9, W10, H2, H3, H4, H5, H6, H8, H9, H11, O1–O8, O10, O11, O13–O15, A1  
+**Fixed in repo (pending deploy):** F1, F2, W1, W2, W5 (partial: namelock + forum remove → POST), W6, W7, W8, W9, W10, H2, H3, H4, H5, H6, H8, H9, H11, O1–O8, O10–O15, A1  
 **Deferred:** **H7** non-root containers — quick `-u 1000` test segfaulted; needs dedicated USER + data ownership  
 **Accepted / kept as-is:** F3 (status protocol still reports SOFTWARE_NAME / SOFTWARE_VERSION)  
 
@@ -81,7 +81,7 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 | **O9** | OT | Extreme rates / `freePremium` / weak idle kick / etc. | `server/config.lua.template` | **Confirmed** rates live |
 | **O10** | OT | Guild war payment not refunded on reject/cancel | `war.lua` | Code-only |
 | **O11** | OT | Poll “one vote per account” is per character | `poll_system.lua` | Code-only |
-| **O12** | OT | `!myhouse` / eject uses undefined `NO_OWNER_PHRASE` | `eject.lua` | Code-only |
+| **O12** | OT | `!myhouse` / eject uses undefined `NO_OWNER_PHRASE` | `eject.lua` | **Fixed in repo** — clears with `setHouseOwner(..., 0)` |
 | **O13** | OT | Zombie event `playersNeededToStartEvent = 1` (solo farm) | `zombie_event.lua` | Code-only |
 | **W4** | Web | Captcha off — automated account creation (session rate limit only) | `website/config/config.php` | Config |
 | **W5** | Web | CSRF tokens in GET URLs (Referer/logs leak) | forum/admin/etc. | **Partial** (namelock + forum remove) |
@@ -140,4 +140,4 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 - **Fingerprint batch:** F1, F2 fixed; **F3 accepted**.
 - **Web batch:** W1, W2, W5 (namelock + forum remove), W6–W10 fixed + committed.
 - **Host batch:** H2–H6, H8, H9, H11 committed; live VPS: `sudo bash scripts/apply-host-hardening.sh` then optional `disable-ssh-passwords.sh`. **H7 deferred**.
-- **OT batch:** O1–O8, O10, O11, O13–O15 + **A1** committed — reload talkactions / restart otserver to apply.
+- **OT batch:** O1–O8, O10–O15 + **A1** committed — reload talkactions / restart otserver to apply.
