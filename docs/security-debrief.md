@@ -3,9 +3,10 @@
 **Host:** <https://baiakvip9.servegame.com/>  
 **Mode:** fixes in progress  
 **Date:** 2026-09-14  
-**Fixed in repo (pending deploy):** F1, F2, F4, W1, W2, W5, W6–W11, H1–H6, H8, H9, H11, O1–O8, O10–O15, A1, A2 (AAC)  
-**Deferred:** see `docs/security-backlog.md` (**W4** captcha, **H7** non-root)  
-**Accepted / kept as-is:** F3 (status protocol), **H10** (`:latest`), **W3** (SHA1), **O9** (rates)
+**Fixed in repo (pending deploy):** F1, F2, F4, W1, W2, W5, W6–W11, H1–H9, H11, O1–O8, O10–O15, A1, A2 (AAC)  
+**Deferred:** see `docs/security-backlog.md` (**W4** captcha)  
+**Accepted / kept as-is:** F3 (status protocol), **H10** (`:latest`), **W3** (SHA1), **O9** (rates)  
+**Partial by design:** website Apache master + nginx master stay root to bind privileged ports; workers drop (`www-data` / `nginx`). Hawser keeps root for `docker.sock`.
 
 Sources: code review; Docker/VPS audit; OTServer Lua audit; Gesior PHP audit; live probes against the host above.
 
@@ -89,7 +90,7 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 | **W7** | Web | Guild logo `unlink` without path sanitize | `website/guilds.php` | **Fixed in repo** |
 | **W8** | Web | Admin mass-mail HTML unsanitized (SMTP currently off) | `website/mail.php` | **Fixed in repo** |
 | **H6** | Host | Website RW bind-mount persists RCE on host tree | `docker-compose.yml` | **Fixed in repo** — PHP tree `:ro` + RW subdirs |
-| **H7** | Host | Containers as root; TFS built with root permission | Dockerfiles | **Deferred** — backlog |
+| **H7** | Host | Containers as root; TFS built with root permission | Dockerfiles / entrypoint | **Fixed in repo** — otserver drops to uid `otserver` (1000); binary built **without** `--enable-root-permission` |
 | **H8** | Host | Setup secrets briefly under `/tmp` on VPS | `scripts/setup-from-pc.sh` | **Fixed in repo** — `/root/otserver-pc-setup.$$` |
 | **H9** | Host | GitHub PAT in `~/.git-credentials` | setup scripts | **Fixed in repo** — opt-in only |
 | **H10** | Host | Hawser image `:latest` (supply chain) | `docker-compose.vps.yml` | **Kept** — backlog optional pin |
@@ -127,6 +128,6 @@ Probed read-only against <https://baiakvip9.servegame.com/> on 2026-09-14.
 
 - **Fingerprint:** F1, F2, F4 fixed; **F3 accepted**.
 - **Web:** W1, W2, W5–W11 fixed; **W3 kept**; **W4** deferred (backlog MD).
-- **Host:** H1–H6, H8, H9, H11 in repo; **H7** deferred; **H10** keep `:latest`. Live: `sudo bash scripts/apply-host-hardening.sh` (recreates nginx+hawser for H1 SNI).
+- **Host:** H1–H9, H11 in repo; **H10** keep `:latest`. Live: `sudo bash scripts/apply-host-hardening.sh` (recreates nginx+hawser for H1 SNI). **H7:** rebuild/recreate `otserver` (`docker compose build otserver && docker compose up -d otserver`).
 - **OT:** O1–O8, O10–O15 + **A1** committed; **O9** intentional.
 - **Accounts:** **A2** — game keeps `1`/`1`; website rejects Account Manager AAC login (no session / no admin panel).

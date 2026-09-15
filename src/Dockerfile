@@ -30,7 +30,7 @@ COPY . /src/
 
 RUN chmod +x autogen.sh build.sh \
 	&& ./autogen.sh \
-	&& ./configure --enable-mysql --enable-root-permission \
+	&& ./configure --enable-mysql \
 	&& make -j$(nproc) \
 	&& strip theforgottenserver
 

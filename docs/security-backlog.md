@@ -16,14 +16,6 @@ Items we intentionally skip for now. Pick one when ready; do not treat this file
 
 ---
 
-## H7 — Non-root containers
-
-**Status:** deferred  
-**Finding:** Compose services run as root; quick `-u 1000` smoke test segfaulted TFS.  
-**Later:** Dedicated USER in Dockerfiles, fix data dir ownership, re-test otserver + website.
-
----
-
 ## H10 — Hawser image pin
 
 **Status:** keep `:latest` for now (ops choice)  

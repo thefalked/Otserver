@@ -34,7 +34,7 @@ COPY src/ /src/
 
 RUN chmod +x autogen.sh build.sh \
 	&& ./autogen.sh \
-	&& ./configure --enable-mysql --enable-root-permission \
+	&& ./configure --enable-mysql \
 	&& make -j"$(nproc)" \
 	&& strip theforgottenserver
 
@@ -47,6 +47,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	ca-certificates \
 	coreutils \
 	gettext-base \
+	util-linux \
 	libboost-thread1.90.0 \
 	libboost-regex1.90.0 \
 	libboost-filesystem1.90.0 \
@@ -57,7 +58,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	libcrypto++8t64 \
 	libssl3t64 \
 	libmysqlclient24 \
-	&& rm -rf /var/lib/apt/lists/*
+	&& rm -rf /var/lib/apt/lists/* \
+	# H7: locked-down runtime user (uid 1000). Ubuntu images ship login user "ubuntu".
+	&& usermod -l otserver -d /ot -s /usr/sbin/nologin ubuntu \
+	&& groupmod -n otserver ubuntu
 
 WORKDIR /ot
 COPY --from=builder /src/theforgottenserver /usr/local/bin/theforgottenserver
@@ -65,7 +69,10 @@ COPY docker/render-config.sh docker/entrypoint-otserver.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/theforgottenserver \
 	/usr/local/bin/render-config.sh \
 	/usr/local/bin/entrypoint-otserver.sh \
-	&& ln -sf entrypoint-otserver.sh /usr/local/bin/docker-entrypoint.sh
+	&& ln -sf entrypoint-otserver.sh /usr/local/bin/docker-entrypoint.sh \
+	&& mkdir -p /ot/logs \
+	&& chown -R otserver:otserver /ot
 
 EXPOSE 7171 7172
+USER root
 ENTRYPOINT ["entrypoint-otserver.sh"]

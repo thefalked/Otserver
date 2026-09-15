@@ -52,6 +52,7 @@ services:
       - otnet
 
   # Compiles TFS inside the image for the host arch (see server/Dockerfile).
+  # H7: entrypoint drops to user otserver (uid 1000) after render-config.
   otserver:
     build:
       context: .
