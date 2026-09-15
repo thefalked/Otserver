@@ -43,9 +43,15 @@ If you are already root on the VPS with `GITHUB_TOKEN` set: `sudo bash scripts/s
 
 ```bash
 cd /opt/otserver
+# If git pull fails with "unable to unlink ... Permission denied":
+sudo bash scripts/fix-repo-ownership.sh
 git pull
 sudo bash scripts/apply-host-hardening.sh
 ```
+
+`fix-repo-ownership.sh` / `apply-host-hardening.sh` keep the repo owned by your
+deploy user. Website/otserver entrypoints no longer `chown` bind mounts to
+container users (that used to break `git pull`).
 
 Safe default (idempotent, like `setup-hawser.sh`):
 

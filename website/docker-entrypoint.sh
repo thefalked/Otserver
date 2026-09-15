@@ -5,26 +5,19 @@ set -eu
 # Idempotent DB fixes (initdb scripts do not re-run on existing volumes).
 php /usr/local/bin/ensure-schema.php || true
 
-# Bind-mounted website tree is often root/host-owned; Apache runs as www-data.
-# Cover every path PHP writes at runtime so Permission denied does not 500 pages.
+# Bind-mounted paths must stay owned by the *host* deploy user so `git pull` works.
+# Never chown www-data on bind mounts (that steals host ownership → Permission denied).
+# Make runtime dirs/files writable for Apache (www-data) via mode bits only.
 WEBROOT="${APACHE_DOCUMENT_ROOT:-/var/www/html}"
 
 ensure_dir() {
 	_dir="$1"
 	mkdir -p "$_dir" 2>/dev/null || true
 	if [ -d "$_dir" ]; then
-		chown www-data:www-data "$_dir" 2>/dev/null || true
-		chmod 775 "$_dir" 2>/dev/null || true
-		# W6: only fall back to world-writable when chown could not claim the bind mount.
+		# Prefer group/other write without changing owner.
+		chmod 777 "$_dir" 2>/dev/null || chmod 775 "$_dir" 2>/dev/null || true
 		if [ ! -w "$_dir" ]; then
-			_owner="$(stat -c '%U' "$_dir" 2>/dev/null || stat -f '%Su' "$_dir" 2>/dev/null || echo unknown)"
-			if [ "$_owner" = "www-data" ]; then
-				echo "website-entrypoint: $_dir owned by www-data but not writable" >&2
-			elif chmod 777 "$_dir" 2>/dev/null && [ -w "$_dir" ]; then
-				# W6: only fall back to world-writable when chown could not claim the bind mount.
-				echo "website-entrypoint: world-writable fallback for $_dir (owner=$_owner)" >&2
-			fi
-			# else: read-only mount (H6) — skip
+			echo "website-entrypoint: $_dir not writable (read-only mount?)" >&2
 		fi
 	fi
 }
@@ -35,15 +28,9 @@ ensure_file() {
 	ensure_dir "$_parent"
 	touch "$_file" 2>/dev/null || true
 	if [ -f "$_file" ]; then
-		chown www-data:www-data "$_file" 2>/dev/null || true
-		chmod 664 "$_file" 2>/dev/null || true
+		chmod 666 "$_file" 2>/dev/null || chmod 664 "$_file" 2>/dev/null || true
 		if [ ! -w "$_file" ]; then
-			_owner="$(stat -c '%U' "$_file" 2>/dev/null || stat -f '%Su' "$_file" 2>/dev/null || echo unknown)"
-			if [ "$_owner" = "www-data" ]; then
-				echo "website-entrypoint: $_file owned by www-data but not writable" >&2
-			elif chmod 666 "$_file" 2>/dev/null && [ -w "$_file" ]; then
-				echo "website-entrypoint: world-writable fallback for $_file (owner=$_owner)" >&2
-			fi
+			echo "website-entrypoint: $_file not writable (read-only mount?)" >&2
 		fi
 	fi
 }

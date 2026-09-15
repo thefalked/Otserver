@@ -17,6 +17,7 @@
 #
 # What the default run does:
 #   - Drop UFW allow 8080 if present (H3)
+#   - Restore repo ownership so git pull works (website not left as root/www-data)
 #   - docker compose up -d --force-recreate website nginx hawser (H1/H3/H4/H6/H11)
 set -euo pipefail
 
@@ -120,6 +121,9 @@ else
 	echo "==> git credentials (H9): left unchanged (pass --remove-git-credentials to delete)."
 fi
 
+echo "==> Repo ownership (git pull must work as ${OWNER:-deploy user})"
+bash "${SCRIPT_DIR}/fix-repo-ownership.sh" "${REPO_ROOT}"
+
 if [ "${DO_COMPOSE}" = "1" ]; then
 	echo "==> Recreate website + nginx (+ hawser if VPS overlay) (H1/H3/H4/H6/H11)"
 	if [ ! -f "${REPO_ROOT}/docker-compose.yml" ]; then
@@ -143,6 +147,8 @@ if [ "${DO_COMPOSE}" = "1" ]; then
 			docker compose up -d --force-recreate website nginx
 		fi
 	)
+	# Entrypoints must not steal ownership; re-assert after recreate.
+	bash "${SCRIPT_DIR}/fix-repo-ownership.sh" "${REPO_ROOT}"
 	echo "Compose recreated (brief 502 possible while ensure-schema runs)."
 	echo "Check: curl -sI http://127.0.0.1:8080/ | head -5"
 	echo "Public :8080 should be closed; HTTPS on 443 unchanged."
