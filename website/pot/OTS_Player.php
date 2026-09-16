@@ -418,20 +418,20 @@ class OTS_Player extends OTS_Row_DAO
 
   public function getCreated()
   {
-    if (!isset($this->data['created'])) {
+    if (!$this->isLoaded()) {
       throw new E_OTS_NotLoaded();
     }
 
-    return $this->data['created'];
+    return (int) ($this->data['created'] ?? 0);
   }
 
   public function getComment()
   {
-    if (!isset($this->data['comment'])) {
+    if (!$this->isLoaded()) {
       throw new E_OTS_NotLoaded();
     }
 
-    return $this->data['comment'];
+    return (string) ($this->data['comment'] ?? '');
   }
 
   /**
