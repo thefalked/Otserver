@@ -340,8 +340,10 @@ if (is_object($tickers)) {
   }
 }
 
-if (!empty($tickers_to_add)) {
-  // only emit newsticker box when there are tickers (avoids unclosed #newsticker nesting ThemeboxesColumn)
+$can_manage_tickers =
+  $logged && $group_id_of_acc_logged >= $config['site']['access_admin_panel'] && $action != 'newticker';
+// Show box for visitors when tickers exist; always for admins so AddTicker works with an empty list.
+if (!empty($tickers_to_add) || $can_manage_tickers) {
   $news_content .=
     '<div id="newsticker" class="Box">
     <div class="Corner-tl" style="background-image: url(' .
@@ -365,7 +367,7 @@ if (!empty($tickers_to_add)) {
     $layout_name .
     '/images/content/scroll.gif);">';
 
-  if ($group_id_of_acc_logged >= $config['site']['access_admin_panel'] && $action != 'newticker') {
+  if ($can_manage_tickers) {
     $news_content .=
       '<script type="text/javascript">
 var showednewticker_state = "0";
