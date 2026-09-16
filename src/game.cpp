@@ -415,6 +415,7 @@ void Game::preparePendingRemoval(Player* player)
 	// Keep party/channels until the real remove so a reconnect can resume cleanly.
 	// Stay on the logout tile; ghost is applied by the caller.
 	player->loginPosition = player->getPosition();
+	player->lastLogout = time(NULL);
 }
 
 void Game::doFlushDirtyPlayers()
@@ -441,6 +442,8 @@ void Game::doFlushDirtyPlayers()
 
 		std::map<uint32_t, PendingRemoval>::iterator pending = pendingRemovals.find(*it);
 		player->loginPosition = player->getPosition();
+		if(pending != pendingRemovals.end() && pending->second.isLogout)
+			player->lastLogout = time(NULL);
 		// Temporary pending ghost is omitted from DB serialize; keep them ghosted in-world.
 		if(!IOLoginData::getInstance()->savePlayer(player))
 			continue;
@@ -483,6 +486,14 @@ void Game::safeRemovePlayer(uint32_t playerId, bool isLogout/* = true*/, bool fo
 	}
 	else
 		player->logoutScriptsDone = false;
+
+	// savePlayer writes loginPosition, not the live tile. Update before the early
+	// save so skipSaveOnRemove does not leave the previous login tile in the DB.
+	if(isLogout)
+	{
+		player->loginPosition = player->getPosition();
+		player->lastLogout = time(NULL);
+	}
 
 	for(uint32_t tries = 0; tries < 3; ++tries)
 	{
@@ -548,6 +559,8 @@ void Game::retryPendingPlayerRemoval(uint32_t playerId, bool isLogout, uint32_t 
 		return;
 
 	player->loginPosition = player->getPosition();
+	if(isLogout)
+		player->lastLogout = time(NULL);
 	// Stay ghosted; temporary ghost is skipped in DB serialize.
 	if(IOLoginData::getInstance()->savePlayer(player))
 	{
