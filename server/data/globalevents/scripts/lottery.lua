@@ -1,8 +1,23 @@
 -- Lottery System
 local config = {
   lottery_hour = "30 minutos", -- Tempo ate a proxima loteria (Esse tempo vai aparecer somente como broadcast message)
-  rewards_id = { 9693, 7424, 7417, 2157 }, -- ID dos Itens Sorteados na Loteria
-  crystal_counts = 5,
+  -- All items from Baiakzik Seller (baiakzik_seller.xml shop_buyable)
+  rewards_id = {
+    5468, -- Real stamina
+    7417, -- Baiakzik Sword
+    8926, -- Baiakzik Axe
+    7368, -- Baiakzik Star
+    7451, -- Baiakzik Club
+    7424, -- Baiakzik Staff
+    2538, -- Baiakzik Shield
+    2503, -- Baiakzik Armor
+    2474, -- Baiakzik Helmet
+    2504, -- Baiakzik Legs
+    9693, -- Addon Doll
+    2641, -- Baiakzik Boots
+    2157, -- gold nugget (uses quantity)
+  },
+  quantity = 50,
   website = "yes", -- Only if you have php scripts and table `lottery` in your database!
 }
 function onThink(interval, lastExecution)
@@ -19,12 +34,12 @@ function onThink(interval, lastExecution)
   local random_item = config.rewards_id[math.random(1, #config.rewards_id)]
 
   if random_item == 2157 then
-    doPlayerAddItem(winner, random_item, config.crystal_counts)
+    doPlayerAddItem(winner, random_item, config.quantity)
     doBroadcastMessage(
       "[LOTTERY SYSTEM] Winner: "
         .. getCreatureName(winner)
         .. ", Reward: "
-        .. config.crystal_counts
+        .. config.quantity
         .. " "
         .. getItemNameById(random_item)
         .. "s! Congratulations! (Proxima Loteria em "
