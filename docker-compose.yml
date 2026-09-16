@@ -37,8 +37,6 @@ services:
       - ./docker/mysql/09-hide-sample-chars.sql:/docker-entrypoint-initdb.d/09-hide-sample-chars.sql:ro
       - ./docker/mysql/10-a2-account-manager.sql:/docker-entrypoint-initdb.d/10-a2-account-manager.sql:ro
       - ./docker/mysql/11-gesior-created.sql:/docker-entrypoint-initdb.d/11-gesior-created.sql:ro
-    mem_limit: 4g
-    memswap_limit: 4g
     healthcheck:
       test:
         [
@@ -85,8 +83,6 @@ services:
     ports:
       - "7171:7171"
       - "7172:7172"
-    mem_limit: 6g
-    memswap_limit: 6g
     networks:
       - otnet
 
