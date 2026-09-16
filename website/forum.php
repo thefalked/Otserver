@@ -172,8 +172,8 @@ function replaceAll($text, $smile)
     }
     $repl =
       $safe === ''
-        ? h($url)
-        : '<a href="' . h($safe) . '" target="_blank" rel="noopener noreferrer">' . h($url) . '</a>';
+      ? h($url)
+      : '<a href="' . h($safe) . '" target="_blank" rel="noopener noreferrer">' . h($url) . '</a>';
     $text = str_ireplace('[url]' . $url . '[/url]', $repl, $text);
   }
   while (stripos($text, '[player]') !== false && stripos($text, '[/player]') !== false) {
@@ -968,6 +968,7 @@ if ($action == 'new_post') {
           $post_topic = stripslashes(trim($_REQUEST['topic']));
           $smile = (int) $_REQUEST['smile'];
           $saved = false;
+          $errors = [];
           if (isset($_REQUEST['quote'])) {
             $quoted_post = $SQL
               ->query(
@@ -1205,6 +1206,7 @@ if ($action == 'edit_post') {
               )
               ->fetchAll();
             $saved = false;
+            $errors = [];
             if (isset($_REQUEST['save'])) {
               $text = stripslashes(trim(codeLower($_REQUEST['text'])));
               $char_id = (int) $_REQUEST['char_id'];
@@ -1379,6 +1381,7 @@ if ($action == 'new_topic') {
         $sections[$section_id] .
         '</a> >> <b>Post new thread</b><br />';
       if (isset($sections[$section_id])) {
+        $errors = [];
         if ($section_id == 1 && $group_id_of_acc_logged < $group_not_blocked) {
           $errors[] = 'Only moderators and admins can post on news board.';
         }
@@ -1533,4 +1536,3 @@ if ($action == 'new_topic') {
     $main_content .= 'Login first.';
   }
 }
-?>
