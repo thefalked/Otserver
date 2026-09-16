@@ -1,68 +1,68 @@
-# Website paste pack — Spell balance (2026-09-16)
+# Pacote para o site — Balanceamento de magias (2026-09-16)
 
-Use this after deploying the spell script changes. Reload spells or restart the game server first.
+Use depois de publicar as alterações dos scripts de magia. Recarregue as magias ou reinicie o servidor de jogo primeiro.
 
-Technical detail: [spell-balance-15k.md](spell-balance-15k.md)
+Detalhe técnico: [spell-balance-15k.md](spell-balance-15k.md)
 
 ---
 
-## Latest News (paste into Admin → New News)
+## Últimas Notícias (colar em Admin → Nova Notícia)
 
-**Topic:**
+**Tópico:**
 
 ```text
-Spell Balance Update — High Level (up to 15k)
+Atualização de Balanceamento de Magias — High Level (até 15k)
 ```
 
-**Body (plain text / HTML-ish Gesior style):**
+**Texto:**
 
 ```text
-We rebalanced several vocation spells for high-level play (about level 2000–15000).
+Rebalanceamos várias magias de vocação para o high level (cerca de nível 2000–15000).
 
 Elite Knight
-- Wound Cleansing (exana mort): much stronger heal, now scales closer to Mana Rune (a bit less).
-- Fierce Berserk (exori gran): better level scaling in melee AoE.
+- Wound Cleansing (exana mort): cura bem mais forte, agora escala perto da Mana Rune (um pouco menos).
+- Fierce Berserk (exori gran): melhor escala de nível no AoE corpo a corpo.
 
 Master Sorcerer
-- Hell's Core (exevo gran mas flam) and Rage of the Skies (exevo gran mas vis): stronger AoE.
-- suden death (exevo gran mas mort) stays the strongest mage AoE (smaller path).
+- Hell's Core (exevo gran mas flam) e Rage of the Skies (exevo gran mas vis): AoE mais forte.
+- suden death (exevo gran mas mort) continua o AoE mais forte de mage (caminho menor).
 
 Elder Druid
-- Eternal Winter (exevo gran mas frigo): stronger AoE, still below flam/vis/mort.
+- Eternal Winter (exevo gran mas frigo): AoE mais forte, ainda abaixo de flam/vis/mort.
 
 Royal Paladin
-- Divine Caldera (exevo mas san): scales properly again at high level.
+- Divine Caldera (exevo mas san): volta a escalar direito em high level.
 
-Not changed: Sudden Death rune (SD), suden death (exevo gran mas mort).
+Sem mudança: Sudden Death rune (SD), suden death (exevo gran mas mort).
 
-Please report odd numbers in-game so we can fine-tune.
+Se ver números estranhos no jogo, avise para ajustarmos.
 ```
 
 ---
 
-## News ticker (optional, short)
+## Ticker de notícias (opcional, curto)
 
 ```text
-Spell balance live: stronger EK heal (exana mort), buffed mage AoE (flam/vis/frigo), Fierce Berserk + Divine Caldera. Mort stays #1 AoE.
+Balanceamento ao vivo: cura EK (exana mort) mais forte, AoE mage (flam/vis/frigo) buffado, Fierce Berserk + Divine Caldera. Mort segue #1 no AoE.
 ```
 
 ---
 
-## Changelog page (`?subtopic=changelog`)
+## Changelog (`?subtopic=changelog`)
 
-Gesior changelog descriptions are short (about 150 characters). Add these as **Type: Add**, **Where: Server**:
+Descrições curtas (cerca de 150 caracteres). Adicionar como **Type: Add**, **Where: Server**:
 
-1. `Buffed Wound Cleansing (exana mort): EK heal now scales near Mana Rune strength.`
-2. `Buffed Hell's Core (exevo gran mas flam) and Rage of the Skies (exevo gran mas vis).`
-3. `Buffed Eternal Winter (exevo gran mas frigo). Mort AoE stays strongest.`
-4. `Buffed Fierce Berserk (exori gran) level scaling and Divine Caldera (exevo mas san).`
+1. `Buff em Wound Cleansing (exana mort): cura do EK agora escala perto da Mana Rune.`
+2. `Buff em Hell's Core (exevo gran mas flam) e Rage of the Skies (exevo gran mas vis).`
+3. `Buff em Eternal Winter (exevo gran mas frigo). AoE mort continua o mais forte.`
+4. `Buff na escala de Fierce Berserk (exori gran) e Divine Caldera (exevo mas san).`
 
-### Optional SQL (run on website DB if you prefer not to use the admin form)
+### SQL opcional (banco do site)
 
 ```sql
 INSERT INTO `z_changelog` (`type`, `where`, `date`, `description`) VALUES
-('Add', 'Server', UNIX_TIMESTAMP(), 'Buffed Wound Cleansing (exana mort): EK heal now scales near Mana Rune strength.'),
-('Add', 'Server', UNIX_TIMESTAMP(), 'Buffed Hell''s Core (exevo gran mas flam) and Rage of the Skies (exevo gran mas vis).'),
-('Add', 'Server', UNIX_TIMESTAMP(), 'Buffed Eternal Winter (exevo gran mas frigo). Mort AoE stays strongest.'),
-('Add', 'Server', UNIX_TIMESTAMP(), 'Buffed Fierce Berserk (exori gran) level scaling and Divine Caldera (exevo mas san).');
+('Add', 'Server', UNIX_TIMESTAMP(), 'Buff em Wound Cleansing (exana mort): cura do EK agora escala perto da Mana Rune.'),
+('Add', 'Server', UNIX_TIMESTAMP(), 'Buff em Hell''s Core (exevo gran mas flam) e Rage of the Skies (exevo gran mas vis).'),
+('Add', 'Server', UNIX_TIMESTAMP(), 'Buff em Eternal Winter (exevo gran mas frigo). AoE mort continua o mais forte.'),
+('Add', 'Server', UNIX_TIMESTAMP(), 'Buff na escala de Fierce Berserk (exori gran) e Divine Caldera (exevo mas san).');
 ```
