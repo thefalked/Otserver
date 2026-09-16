@@ -7,7 +7,8 @@ local area = createCombatArea(AREA_SQUARE1X1)
 setCombatArea(combat, area)
 
 function onGetFormulaValues(cid, level, skill, attack, factor)
-  local skillTotal, levelTotal = skill + attack * 3, level / 8
+  -- level/5 matches Berserk/Groundshaker floor. See docs/spell-balance-15k.md
+  local skillTotal, levelTotal = skill + attack * 3, level / 5
   return -(skillTotal * 2.2 + levelTotal), -(skillTotal * 6 + levelTotal)
 end
 
