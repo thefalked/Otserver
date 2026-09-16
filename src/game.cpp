@@ -110,6 +110,8 @@ void Game::start(ServiceManager* servicer)
 #endif
 
 	services = servicer;
+	Database::getInstance()->setReconnectCallback(boost::bind(&Game::flushDirtyPlayers, this));
+
 	if(!g_config.getBool(ConfigManager::GLOBALSAVE_ENABLED) || g_config.getNumber(ConfigManager::GLOBALSAVE_H) < 1 ||
 		g_config.getNumber(ConfigManager::GLOBALSAVE_H) > 24 || g_config.getNumber(ConfigManager::GLOBALSAVE_M) < 0
 		|| g_config.getNumber(ConfigManager::GLOBALSAVE_M) > 59)
@@ -268,7 +270,10 @@ void Game::saveGameState(bool shallow)
 	for(AutoList<Player>::iterator it = Player::autoList.begin(); it != Player::autoList.end(); ++it)
 	{
 		it->second->loginPosition = it->second->getPosition();
-		io->savePlayer(it->second, false, shallow);
+		if(!io->savePlayer(it->second, false, shallow))
+			markPlayerDirty(it->second->getID());
+		else if(!shallow)
+			clearPlayerDirty(it->second->getID());
 	}
 
 	std::string storage = "relational";
@@ -282,6 +287,303 @@ void Game::saveGameState(bool shallow)
 
 	std::clog << "> SAVE: Complete in " << (OTSYS_TIME() - start) / (1000.) << " seconds using "
 		<< storage << " house storage." << std::endl;
+}
+
+void Game::markPlayerDirty(uint32_t playerId)
+{
+	dirtyPlayers.insert(playerId);
+}
+
+void Game::clearPlayerDirty(uint32_t playerId)
+{
+	dirtyPlayers.erase(playerId);
+}
+
+bool Game::isPlayerPendingRemoval(uint32_t playerId) const
+{
+	return pendingRemovals.find(playerId) != pendingRemovals.end();
+}
+
+bool Game::isTemporaryPendingGhost(uint32_t playerId) const
+{
+	std::map<uint32_t, PendingRemoval>::const_iterator it = pendingRemovals.find(playerId);
+	return it != pendingRemovals.end() && it->second.addedGhost;
+}
+
+void Game::cancelPendingRemoval(uint32_t playerId)
+{
+	std::map<uint32_t, PendingRemoval>::iterator it = pendingRemovals.find(playerId);
+	if(it == pendingRemovals.end())
+		return;
+
+	const bool addedGhost = it->second.addedGhost;
+	pendingRemovals.erase(it);
+
+	std::clog << "> Cancelled deferred logout for player id " << playerId << " (client reconnected)." << std::endl;
+	Player* player = getPlayerByID(playerId);
+	if(!player || player->isRemoved())
+		return;
+
+	if(addedGhost)
+		revealPendingPlayer(player);
+
+	player->logoutScriptsDone = false;
+}
+
+void Game::flushDirtyPlayers()
+{
+	// May be called from MySQL reconnect inside an active query — defer to dispatcher.
+	Dispatcher::getInstance().addTask(createTask(
+		boost::bind(&Game::doFlushDirtyPlayers, this)));
+}
+
+void Game::revealPendingPlayer(Player* player)
+{
+	if(!player || player->isRemoved())
+		return;
+
+	if(Condition* condition = player->getCondition(CONDITION_GAMEMASTER, CONDITIONID_DEFAULT, GAMEMASTER_INVISIBLE))
+	{
+		player->removeCondition(condition);
+		internalCreatureChangeVisible(player, VISIBLE_GHOST_APPEAR);
+	}
+}
+
+bool Game::hidePendingPlayer(Player* player)
+{
+	if(!player || player->isRemoved() || player->isGhost())
+		return false;
+
+	if(Condition* condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_GAMEMASTER, -1, 0, false, GAMEMASTER_INVISIBLE))
+	{
+		player->addCondition(condition);
+		internalCreatureChangeVisible(player, VISIBLE_GHOST_DISAPPEAR);
+		return true;
+	}
+
+	return false;
+}
+
+void Game::clearPendingOnlineStatus(Player* player)
+{
+	if(!player || player->isRemoved())
+		return;
+
+	for(uint32_t tries = 0; tries < 3; ++tries)
+	{
+		if(IOLoginData::getInstance()->updateOnlineStatus(player->getGUID(), false))
+			return;
+	}
+
+	// Last chance: un-ghost so onCreatureDisappear retries the online clear.
+	std::clog << "> WARNING: Failed to clear online status for " << player->getName()
+		<< " while ghosted; revealing for logout cleanup." << std::endl;
+	revealPendingPlayer(player);
+}
+
+void Game::clearDamagingConditions(Player* player)
+{
+	if(!player || player->isRemoved())
+		return;
+
+	static const ConditionType_t damagingTypes[] = {
+		CONDITION_POISON, CONDITION_FIRE, CONDITION_ENERGY, CONDITION_PHYSICAL,
+		CONDITION_DROWN, CONDITION_FREEZING, CONDITION_DAZZLED, CONDITION_CURSED,
+		CONDITION_INFIGHT, CONDITION_PACIFIED, CONDITION_PARALYZE, CONDITION_DRUNK,
+		CONDITION_EXHAUST, CONDITION_HUNTING
+	};
+
+	for(size_t i = 0; i < sizeof(damagingTypes) / sizeof(damagingTypes[0]); ++i)
+		player->removeCondition(damagingTypes[i]);
+}
+
+void Game::preparePendingRemoval(Player* player)
+{
+	if(!player || player->isRemoved())
+		return;
+
+	player->setAttackedCreature(NULL);
+	player->setFollowCreature(NULL);
+
+	player->closeShopWindow(false);
+	if(player->tradePartner)
+		internalCloseTrade(player);
+
+	clearDamagingConditions(player);
+	cancelRuleViolation(player);
+
+	// Keep party/channels until the real remove so a reconnect can resume cleanly.
+	// Stay on the logout tile; ghost is applied by the caller.
+	player->loginPosition = player->getPosition();
+}
+
+void Game::doFlushDirtyPlayers()
+{
+	if(dirtyPlayers.empty() && pendingRemovals.empty())
+		return;
+
+	std::clog << "> Flushing dirty players after database reconnect (" << dirtyPlayers.size()
+		<< " dirty, " << pendingRemovals.size() << " pending logout)..." << std::endl;
+
+	std::set<uint32_t> ids = dirtyPlayers;
+	for(std::map<uint32_t, PendingRemoval>::iterator it = pendingRemovals.begin(); it != pendingRemovals.end(); ++it)
+		ids.insert(it->first);
+
+	for(std::set<uint32_t>::iterator it = ids.begin(); it != ids.end(); ++it)
+	{
+		Player* player = getPlayerByID(*it);
+		if(!player || player->isRemoved())
+		{
+			dirtyPlayers.erase(*it);
+			pendingRemovals.erase(*it);
+			continue;
+		}
+
+		std::map<uint32_t, PendingRemoval>::iterator pending = pendingRemovals.find(*it);
+		player->loginPosition = player->getPosition();
+		// Temporary pending ghost is omitted from DB serialize; keep them ghosted in-world.
+		if(!IOLoginData::getInstance()->savePlayer(player))
+			continue;
+
+		// Partial success (shallow / save-disabled) leaves the dirty bit set — keep waiting.
+		if(dirtyPlayers.find(*it) != dirtyPlayers.end())
+			continue;
+
+		if(pending != pendingRemovals.end())
+		{
+			bool isLogout = pending->second.isLogout;
+			pendingRemovals.erase(pending);
+			player->skipSaveOnRemove = true;
+			// Ghosts skip online clear in onCreatureDisappear (temp or real GM ghost).
+			if(player->isGhost())
+				clearPendingOnlineStatus(player);
+			removeCreature(player, isLogout);
+		}
+	}
+}
+
+void Game::safeRemovePlayer(uint32_t playerId, bool isLogout/* = true*/, bool forceRemove/* = false*/, bool forceLogout/* = false*/)
+{
+	Player* player = getPlayerByID(playerId);
+	if(!player || player->isRemoved())
+	{
+		dirtyPlayers.erase(playerId);
+		pendingRemovals.erase(playerId);
+		return;
+	}
+
+	if(!forceRemove && pendingRemovals.find(playerId) != pendingRemovals.end())
+		return;
+
+	const bool forceScripts = forceLogout || forceRemove;
+	if(!player->logoutScriptsDone)
+	{
+		if(!g_creatureEvents->playerLogout(player, forceScripts) && !forceScripts)
+			return;
+	}
+	else
+		player->logoutScriptsDone = false;
+
+	for(uint32_t tries = 0; tries < 3; ++tries)
+	{
+		if(IOLoginData::getInstance()->savePlayer(player))
+		{
+			clearPlayerDirty(playerId);
+			pendingRemovals.erase(playerId);
+			player->skipSaveOnRemove = true;
+			// Ghosts skip online clear in onCreatureDisappear (temp or real GM ghost).
+			if(player->isGhost())
+				clearPendingOnlineStatus(player);
+			removeCreature(player, isLogout);
+			return;
+		}
+	}
+
+	if(forceRemove)
+	{
+		std::clog << "> WARNING: Failed to save player " << player->getName()
+			<< " before forced remove; removing anyway." << std::endl;
+		std::map<uint32_t, PendingRemoval>::iterator pending = pendingRemovals.find(playerId);
+		if(pending != pendingRemovals.end() && pending->second.addedGhost)
+			revealPendingPlayer(player);
+		clearPlayerDirty(playerId);
+		pendingRemovals.erase(playerId);
+		// Ghosts skip online clear in onCreatureDisappear (temp or real GM ghost).
+		if(player->isGhost())
+			clearPendingOnlineStatus(player);
+		// Let onCreatureDisappear attempt one more save — we did not succeed above.
+		removeCreature(player, isLogout);
+		// SaveDirtyGuard may re-mark dirty if that last save failed after free.
+		clearPlayerDirty(playerId);
+		return;
+	}
+
+	if(pendingRemovals.find(playerId) != pendingRemovals.end())
+		return;
+
+	std::clog << "> WARNING: Failed to save player " << player->getName()
+		<< " before logout; keeping ghosted in memory until MySQL recovers." << std::endl;
+	preparePendingRemoval(player);
+	PendingRemoval info;
+	info.isLogout = isLogout;
+	info.addedGhost = hidePendingPlayer(player);
+	markPlayerDirty(playerId);
+	pendingRemovals[playerId] = info;
+	Scheduler::getInstance().addEvent(createSchedulerTask(1000,
+		boost::bind(&Game::retryPendingPlayerRemoval, this, playerId, isLogout, 1)));
+}
+
+void Game::retryPendingPlayerRemoval(uint32_t playerId, bool isLogout, uint32_t attempt)
+{
+	Player* player = getPlayerByID(playerId);
+	if(!player || player->isRemoved())
+	{
+		dirtyPlayers.erase(playerId);
+		pendingRemovals.erase(playerId);
+		return;
+	}
+
+	std::map<uint32_t, PendingRemoval>::iterator pending = pendingRemovals.find(playerId);
+	if(pending == pendingRemovals.end())
+		return;
+
+	player->loginPosition = player->getPosition();
+	// Stay ghosted; temporary ghost is skipped in DB serialize.
+	if(IOLoginData::getInstance()->savePlayer(player))
+	{
+		clearPlayerDirty(playerId);
+		pendingRemovals.erase(pending);
+		std::clog << "> Deferred logout save succeeded for " << player->getName() << "." << std::endl;
+		player->skipSaveOnRemove = true;
+		// Ghosts skip online clear in onCreatureDisappear (temp or real GM ghost).
+		if(player->isGhost())
+			clearPendingOnlineStatus(player);
+		removeCreature(player, isLogout);
+		return;
+	}
+
+	if(attempt >= 40)
+	{
+		std::clog << "> ERROR: Giving up deferred save for " << player->getName()
+			<< " after " << attempt << " attempts; forcing remove." << std::endl;
+		if(pending->second.addedGhost)
+			revealPendingPlayer(player);
+		clearPlayerDirty(playerId);
+		pendingRemovals.erase(playerId);
+		// Last-chance save happens in onCreatureDisappear.
+		removeCreature(player, isLogout);
+		clearPlayerDirty(playerId);
+		return;
+	}
+
+	uint32_t delay = 1000;
+	if(attempt >= 5)
+		delay = 30000;
+	else
+		delay = 1000 * (1 << (attempt - 1));
+
+	Scheduler::getInstance().addEvent(createSchedulerTask(delay,
+		boost::bind(&Game::retryPendingPlayerRemoval, this, playerId, isLogout, attempt + 1)));
 }
 
 int32_t Game::loadMap(std::string filename)

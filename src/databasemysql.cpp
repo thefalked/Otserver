@@ -119,6 +119,7 @@ bool DatabaseMySQL::reconnect()
 		return false;
 
 	std::clog << "> MySQL reconnected successfully." << std::endl;
+	notifyReconnect();
 	return true;
 }
 

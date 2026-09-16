@@ -21,6 +21,7 @@
 
 #include "enums.h"
 #include <sstream>
+#include <boost/function.hpp>
 
 #ifdef MULTI_SQL_DRIVERS
 #define DATABASE_VIRTUAL virtual
@@ -102,7 +103,15 @@ class _Database
 		*/
 		DATABASE_VIRTUAL void use() {m_use = OTSYS_TIME();}
 
+		typedef boost::function<void()> ReconnectCallback;
+		static void setReconnectCallback(ReconnectCallback cb) {reconnectCallback = cb;}
+
 	protected:
+		static void notifyReconnect()
+		{
+			if(reconnectCallback)
+				reconnectCallback();
+		}
 		/**
 		* Transaction related methods.
 		*
@@ -193,6 +202,7 @@ class _Database
 
 	private:
 		static Database* _instance;
+		static ReconnectCallback reconnectCallback;
 };
 
 class _DBResult

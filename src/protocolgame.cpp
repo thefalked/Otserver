@@ -308,15 +308,14 @@ bool ProtocolGame::logout(bool displayEffect, bool forceLogout)
 					player->sendCancelMessage(RET_YOUMAYNOTLOGOUTDURINGAFIGHT);
 					return false;
 				}
-
-				if(!g_creatureEvents->playerLogout(player, false)) //let the script handle the error message
-					return false;
 			}
-			else
-				g_creatureEvents->playerLogout(player, true);
 		}
-		else if(!g_creatureEvents->playerLogout(player, true))
+
+		// Run cancelable onLogout before closing the socket so scripts can still abort.
+		if(!g_creatureEvents->playerLogout(player, forceLogout) && !forceLogout)
 			return false;
+
+		player->logoutScriptsDone = true;
 
 		if(displayEffect && !player->isGhost())
 			g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_POFF);
@@ -328,7 +327,10 @@ bool ProtocolGame::logout(bool displayEffect, bool forceLogout)
 	if(player->isRemoved())
 		return true;
 
-	return g_game.removeCreature(player);
+	const bool forceRemove = (g_game.getGameState() == GAMESTATE_SHUTDOWN
+		|| g_game.getGameState() == GAMESTATE_CLOSED);
+	g_game.safeRemovePlayer(player->getID(), true, forceRemove, forceLogout);
+	return true;
 }
 
 bool ProtocolGame::connect(uint32_t playerId, OperatingSystem_t operatingSystem, uint16_t version)
@@ -347,6 +349,7 @@ bool ProtocolGame::connect(uint32_t playerId, OperatingSystem_t operatingSystem,
 	player->addRef();
 	player->client = this;
 	player->isConnecting = false;
+	g_game.cancelPendingRemoval(player->getID());
 
 	player->sendCreatureAppear(player);
 	player->setOperatingSystem(operatingSystem);

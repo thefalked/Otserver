@@ -263,10 +263,12 @@ class Player : public Creature, public Cylinder
 		Group* getGroup() const {return group;}
 
 		virtual bool isGhost() const {return hasCondition(CONDITION_GAMEMASTER, GAMEMASTER_INVISIBLE) || hasFlag(PlayerFlag_CannotBeSeen);}
-		virtual bool isWalkable() const {return hasCustomFlag(PlayerCustomFlag_IsWalkable);}
+		virtual bool isWalkable() const;
 
 		void switchSaving() {saving = !saving;}
 		bool isSaving() const {return saving;}
+		bool logoutScriptsDone;
+		bool skipSaveOnRemove;
 
 		uint32_t getIdleTime() const {return idleTime;}
 		void setIdleTime(uint32_t amount) {idleTime = amount;}

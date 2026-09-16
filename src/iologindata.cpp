@@ -756,6 +756,24 @@ void IOLoginData::loadItems(ItemMap& itemMap, DBResult* result)
 
 bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shallow/* = false*/)
 {
+	struct SaveDirtyGuard
+	{
+		Player* player;
+		bool ok;
+		bool skip;
+
+		SaveDirtyGuard(Player* p): player(p), ok(false), skip(false) {}
+		~SaveDirtyGuard()
+		{
+			if(!player || player->isVirtual() || skip)
+				return;
+			if(ok)
+				g_game.clearPlayerDirty(player->getID());
+			else if(!player->isRemoved())
+				g_game.markPlayerDirty(player->getID());
+		}
+	} guard(player);
+
 	if(preSave && player->health <= 0)
 	{
 		if(player->getSkull() == SKULL_BLACK)
@@ -793,7 +811,11 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 		if(!db->query(query.str()))
 			return false;
 
-		return trans.commit();
+		// Lastlogin-only write is not a full save — leave dirty set unchanged.
+		if(!trans.commit())
+			return false;
+		guard.skip = true;
+		return true;
 	}
 
 	query << ", ";
@@ -843,6 +865,11 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 	PropWriteStream propWriteStream;
 	for(ConditionList::const_iterator it = player->conditions.begin(); it != player->conditions.end(); ++it)
 	{
+		if((*it)->getType() == CONDITION_GAMEMASTER
+			&& (*it)->getSubId() == GAMEMASTER_INVISIBLE
+			&& g_game.isTemporaryPendingGhost(player->getID()))
+			continue;
+
 		if((*it)->isPersistent() || (*it)->getType() == CONDITION_GAMEMASTER)
 		{
 			if(!(*it)->serialize(propWriteStream))
@@ -892,7 +919,13 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 	}
 
 	if(shallow)
-		return trans.commit();
+	{
+		// Shallow save skips items/spells — leave dirty set unchanged.
+		if(!trans.commit())
+			return false;
+		guard.skip = true;
+		return true;
+	}
 
 	// learned spells
 	query.str("");
@@ -1030,7 +1063,7 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 		return false;
 
 	//End the transaction
-	return trans.commit();
+	return (guard.ok = trans.commit());
 }
 
 bool IOLoginData::saveItems(const Player* player, const ItemBlockList& itemList, DBInsert& query_insert)

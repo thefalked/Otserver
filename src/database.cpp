@@ -35,6 +35,7 @@ extern ConfigManager g_config;
 
 boost::recursive_mutex DBQuery::databaseLock;
 Database* _Database::_instance = NULL;
+_Database::ReconnectCallback _Database::reconnectCallback;
 
 Database* _Database::getInstance()
 {

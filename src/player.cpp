@@ -55,7 +55,7 @@ Player::Player(const std::string& _name, ProtocolGame* p):
 	if(client)
 		client->setPlayer(this);
 
-	pzLocked = isConnecting = addAttackSkillPoint = requestedOutfit = false;
+	pzLocked = isConnecting = addAttackSkillPoint = requestedOutfit = logoutScriptsDone = skipSaveOnRemove = false;
 	saving = true;
 
 	lastAttackBlockType = BLOCK_NONE;
@@ -1456,6 +1456,12 @@ void Player::onCreatureDisappear(const Creature* creature, bool isLogout)
 	if(g_config.getBool(ConfigManager::DISPLAY_LOGGING))
 		std::clog << getName() << " has logged out." << std::endl;
 
+	if(skipSaveOnRemove)
+	{
+		skipSaveOnRemove = false;
+		return;
+	}
+
 	bool saved = false;
 	for(uint32_t tries = 0; !saved && tries < 3; ++tries)
 	{
@@ -1716,10 +1722,13 @@ void Player::onThink(uint32_t interval)
 	if((timeNow - lastPong) >= 60000 && !getTile()->hasFlag(TILESTATE_NOLOGOUT)
 		&& !isConnecting && !pzLocked && !hasCondition(CONDITION_INFIGHT))
 	{
+		if(g_game.isPlayerPendingRemoval(getID()))
+			return;
+
 		if(client)
 			client->logout(true, true);
-		else if(g_creatureEvents->playerLogout(this, false))
-			g_game.removeCreature(this, true);
+		else
+			g_game.safeRemovePlayer(getID(), true, false, true);
 	}
 
 	messageTicks += interval;
@@ -2224,8 +2233,7 @@ bool Player::onDeath()
 		sendStats();
 		sendSkills();
 
-		g_creatureEvents->playerLogout(this, true);
-		g_game.removeCreature(this, false);
+		g_game.safeRemovePlayer(getID(), false, true, true);
 		sendReLoginWindow();
 	}
 	else
@@ -2234,8 +2242,7 @@ bool Player::onDeath()
 		if(preventLoss)
 		{
 			loginPosition = masterPosition;
-			g_creatureEvents->playerLogout(this, true);
-			g_game.removeCreature(this, false);
+			g_game.safeRemovePlayer(getID(), false, true, true);
 			sendReLoginWindow();
 		}
 	}
@@ -2399,11 +2406,11 @@ void Player::addList()
 
 void Player::kick(bool displayEffect, bool forceLogout)
 {
+	const bool forceRemove = (g_game.getGameState() == GAMESTATE_SHUTDOWN
+		|| g_game.getGameState() == GAMESTATE_CLOSED);
+
 	if(!client)
-	{
-		if(g_creatureEvents->playerLogout(this, forceLogout))
-			g_game.removeCreature(this);
-	}
+		g_game.safeRemovePlayer(getID(), true, forceRemove, forceLogout);
 	else
 		client->logout(displayEffect, forceLogout);
 }
@@ -3931,7 +3938,13 @@ bool Player::isImmune(ConditionType_t type) const
 
 bool Player::isAttackable() const
 {
-	return (!hasFlag(PlayerFlag_CannotBeAttacked) && !isAccountManager());
+	return (!g_game.isPlayerPendingRemoval(getID()) && !hasFlag(PlayerFlag_CannotBeAttacked) && !isAccountManager());
+}
+
+bool Player::isWalkable() const
+{
+	// Pending logout bodies stay ghosted in place but must not block tiles.
+	return hasCustomFlag(PlayerCustomFlag_IsWalkable) || g_game.isPlayerPendingRemoval(getID());
 }
 
 void Player::changeHealth(int32_t healthChange)

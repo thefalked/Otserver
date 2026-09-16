@@ -570,6 +570,14 @@ class Game
 		void saveGameState(bool shallow);
 		void loadGameState();
 
+		void markPlayerDirty(uint32_t playerId);
+		void clearPlayerDirty(uint32_t playerId);
+		void flushDirtyPlayers();
+		bool isPlayerPendingRemoval(uint32_t playerId) const;
+		bool isTemporaryPendingGhost(uint32_t playerId) const;
+		void cancelPendingRemoval(uint32_t playerId);
+		void safeRemovePlayer(uint32_t playerId, bool isLogout = true, bool forceRemove = false, bool forceLogout = false);
+
 		void cleanMapEx(uint32_t& count);
 		void cleanMap();
 
@@ -684,6 +692,21 @@ class Game
 		uint32_t checkWarsEvent;
 #endif
 		bool globalSaveMessage[2];
+
+		std::set<uint32_t> dirtyPlayers;
+		struct PendingRemoval
+		{
+			bool isLogout;
+			bool addedGhost;
+		};
+		std::map<uint32_t, PendingRemoval> pendingRemovals;
+		void doFlushDirtyPlayers();
+		void preparePendingRemoval(Player* player);
+		bool hidePendingPlayer(Player* player);
+		void revealPendingPlayer(Player* player);
+		void clearPendingOnlineStatus(Player* player);
+		void clearDamagingConditions(Player* player);
+		void retryPendingPlayerRemoval(uint32_t playerId, bool isLogout, uint32_t attempt);
 
 		RefreshTiles refreshTiles;
 		Trash trash;
