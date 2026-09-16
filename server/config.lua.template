@@ -159,6 +159,7 @@ maxMessageBuffer = 4
 bufferMutedOnSpellFailure = false
 
 dataDirectory = "data/"
+logsDirectory = "logs/"
 allowChangeOutfit = true
 allowChangeColors = true
 allowChangeAddons = true
@@ -247,6 +248,8 @@ adminLogsEnabled = false
 displayPlayersLogging = true
 prefixChannelLogs = ""
 runFile = ""
-outLogName = ""
-errorLogName = ""
-truncateLogsOnStartup = false
+-- File logging (survives container restart). Keys must match configmanager.cpp.
+outputLog = "server.log"
+truncateLogOnStartup = false
+-- Legacy Baiak names (ignored by this binary; kept for reference):
+-- outLogName / errorLogName / truncateLogsOnStartup
