@@ -35,7 +35,9 @@ Atualização de Balanceamento de Magias — High Level (até 15k)
 
 [b]Sem mudança:[/b] Sudden Death rune ([i]SD[/i]), suden death ([i]exevo gran mas mort[/i]).
 
-Se ver números estranhos no jogo, avise para ajustarmos. :)
+Comente nesta notícia como ficou o balanceamento no jogo. Feedback ajuda a ajustar. :)
+
+Digite [b]!notice[/b] no jogo para ver o resumo das mudanças.
 ```
 
 ---

@@ -76,6 +76,7 @@ services:
       - ./server/config.lua.template:/ot/config.lua.template:ro
       - ./server/data:/ot/data
       - ./server/mods:/ot/mods
+      - ./server/noticias.txt:/ot/noticias.txt:ro
       - ./docker/render-config.sh:/usr/local/bin/render-config.sh:ro
       - ot_logs:/ot/logs
     # Publish login/game on the host directly. If nginx streams these, TFS sees

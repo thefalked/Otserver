@@ -1,0 +1,22 @@
+* Noticias e Atualizacoes *
+
+Balanceamento de magias (high level ~2000-15000)
+
+Elite Knight
+- Wound Cleansing (exana mort): cura bem mais forte, perto da Mana Rune
+- Fierce Berserk (exori gran): melhor escala de level no AoE
+
+Master Sorcerer
+- Hell's Core (exevo gran mas flam) e Rage of the Skies (exevo gran mas vis): AoE mais forte
+- suden death (exevo gran mas mort) continua o AoE mais forte de mage
+
+Elder Druid
+- Eternal Winter (exevo gran mas frigo): AoE mais forte, ainda abaixo de flam/vis/mort
+
+Royal Paladin
+- Divine Caldera (exevo mas san): volta a escalar direito em high level
+
+Sem mudanca: Sudden Death rune (SD) e suden death (exevo gran mas mort)
+
+Comente no site (Ultimas Noticias) como ficou o balanceamento no jogo.
+Feedback ajuda a ajustar. Digite !notice para ver de novo.
