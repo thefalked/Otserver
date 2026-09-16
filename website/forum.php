@@ -85,40 +85,6 @@ function canPost($account)
   return false;
 }
 
-function replaceSmile($text, $smile)
-{
-  $smileys = [
-    ';D' => 1,
-    ':D' => 1,
-    ':cool:' => 2,
-    ';cool;' => 2,
-    ':ekk:' => 3,
-    ';ekk;' => 3,
-    ';o' => 4,
-    ';O' => 4,
-    ':o' => 4,
-    ':O' => 4,
-    ':(' => 5,
-    ';(' => 5,
-    ':mad:' => 6,
-    ';mad;' => 6,
-    ';rolleyes;' => 7,
-    ':rolleyes:' => 7,
-    ':)' => 8,
-    ';d' => 9,
-    ':d' => 9,
-    ';)' => 10
-  ];
-  if ($smile == 1) {
-    return $text;
-  } else {
-    foreach ($smileys as $search => $replace) {
-      $text = str_replace($search, '<img src="images/smile/' . $replace . '.gif" />', $text);
-    }
-    return $text;
-  }
-}
-
 function replaceAll($text, $smile)
 {
   $rows = 0;

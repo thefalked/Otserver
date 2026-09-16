@@ -598,7 +598,7 @@ showednewnews_state = "0";
 ///show news
 $zapytanie = $SQL
   ->query(
-    "SELECT `z_forum`.`icon_id`, `z_forum`.`post_topic`, `z_forum`.`author_guid`, `z_forum`.`post_date`, `z_forum`.`post_text`, `z_forum`.`id`, `z_forum`.`replies`, `players`.`name` FROM `z_forum`, `players` WHERE `section` = '1' AND `z_forum`.`id` = `first_post` AND `players`.`id` = `z_forum`.`author_guid` ORDER BY `post_date` DESC LIMIT 3;"
+    "SELECT `z_forum`.`icon_id`, `z_forum`.`post_topic`, `z_forum`.`author_guid`, `z_forum`.`post_date`, `z_forum`.`post_text`, `z_forum`.`post_smile`, `z_forum`.`id`, `z_forum`.`replies`, `players`.`name` FROM `z_forum`, `players` WHERE `section` = '1' AND `z_forum`.`id` = `first_post` AND `players`.`id` = `z_forum`.`author_guid` ORDER BY `post_date` DESC LIMIT 3;"
   )
   ->fetchAll();
 foreach ($zapytanie as $row) {
@@ -607,15 +607,15 @@ foreach ($zapytanie as $row) {
     '/\[b\](.*?)\[\/b\]/is' => '<strong>$1</strong>',
     '/\[center\](.*?)\[\/center\]/is' => '<center>$1</center>',
     '/\[quote\](.*?)\[\/quote\]/is' =>
-      '<table cellpadding="0" style="background-color: #c4c4c4; width: 480px; border-style: dotted; border-color: #007900; border-width: 2px"><tr><td>$1</td></tr></table>',
+    '<table cellpadding="0" style="background-color: #c4c4c4; width: 480px; border-style: dotted; border-color: #007900; border-width: 2px"><tr><td>$1</td></tr></table>',
     '/\[u\](.*?)\[\/u\]/is' => '<u>$1</u>',
     '/\[i\](.*?)\[\/i\]/is' => '<i>$1</i>',
     '/\[letter\]([A-Za-z0-9])\[\/letter\]/is' => '<img src="images/letters/$1.gif" alt="$1" />',
     '/\[color\=(black|blue|brown|cyan|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|violet|white|yellow)\](.*?)\[\/color\]/is' =>
-      '<span style="color: $1;">$2</span>',
+    '<span style="color: $1;">$2</span>',
     '/\[player\](.*?)\[\/player\]/is' => '<a href="?subtopic=characters&amp;name=$1">$1</a>',
     '/\[code\](.*?)\[\/code\]/is' =>
-      '<div dir="ltr" style="margin: 0px;padding: 2px;border: 1px inset;width: 500px;height: 290px;text-align: left;overflow: auto"><code style="white-space:nowrap">$1</code></div>'
+    '<div dir="ltr" style="margin: 0px;padding: 2px;border: 1px inset;width: 500px;height: 290px;text-align: left;overflow: auto"><code style="white-space:nowrap">$1</code></div>'
   ];
   $message = preg_replace(array_keys($BB), array_values($BB), nl2br($safeText));
   $message = preg_replace_callback(
@@ -634,6 +634,8 @@ foreach ($zapytanie as $row) {
     },
     $message
   );
+  // Same smileys as forum (images/smile/*.gif). post_smile=1 disables them.
+  $message = replaceSmile($message, (int) ($row['post_smile'] ?? 0));
   $main_content .=
     '<div class=\'NewsHeadline\'>
 		<div class=\'NewsHeadlineBackground\' style=\'background-image:url(' .
@@ -696,5 +698,3 @@ foreach ($zapytanie as $row) {
     '/images/global/general/blank.gif" width=10 height=1 border=0 alt=\'\' /></td>
 		</tr></table>';
 }
-
-?>

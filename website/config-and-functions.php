@@ -775,6 +775,47 @@ function parsesmileys($message)
   return $message;
 }
 
+/**
+ * Forum / news smileys (images/smile/*.gif).
+ * $smile === 1 means "Disable Smileys" (same as forum checkbox).
+ */
+function replaceSmile($text, $smile = 0)
+{
+  // Longer tokens first so :rolleyes: is not broken by shorter matches.
+  $smileys = [
+    ':rolleyes:' => 7,
+    ';rolleyes;' => 7,
+    ':cool:' => 2,
+    ';cool;' => 2,
+    ':eek:' => 3,
+    ':ekk:' => 3,
+    ';ekk;' => 3,
+    ':mad:' => 6,
+    ';mad;' => 6,
+    ';D' => 1,
+    ':D' => 1,
+    ';d' => 9,
+    ':d' => 9,
+    ';o' => 4,
+    ';O' => 4,
+    ':o' => 4,
+    ':O' => 4,
+    ':p' => 9,
+    ':P' => 9,
+    ':(' => 5,
+    ';(' => 5,
+    ':)' => 8,
+    ';)' => 10
+  ];
+  if ((int) $smile === 1) {
+    return $text;
+  }
+  foreach ($smileys as $search => $replace) {
+    $text = str_replace($search, '<img src="images/smile/' . $replace . '.gif" alt="" />', $text);
+  }
+  return $text;
+}
+
 // Parse bbcode into HTML code (URLs restricted to http/https)
 function parseubb($text)
 {

@@ -14,28 +14,28 @@ Detalhe técnico: [spell-balance-15k.md](spell-balance-15k.md)
 Atualização de Balanceamento de Magias — High Level (até 15k)
 ```
 
-**Texto:**
+**Texto (BBCode):**
 
 ```text
-Rebalanceamos várias magias de vocação para o high level (cerca de nível 2000–15000).
+:cool: Rebalanceamos várias magias de vocação para o [b]high level[/b] (cerca de nível [b]2000–15000[/b]).
 
-Elite Knight
-- Wound Cleansing (exana mort): cura bem mais forte, agora escala perto da Mana Rune (um pouco menos).
-- Fierce Berserk (exori gran): melhor escala de nível no AoE corpo a corpo.
+[b]Elite Knight[/b]
+[b]Wound Cleansing[/b] ([i]exana mort[/i]): cura bem mais forte, agora escala perto da Mana Rune (um pouco menos).
+[b]Fierce Berserk[/b] ([i]exori gran[/i]): melhor escala de nível no AoE corpo a corpo.
 
-Master Sorcerer
-- Hell's Core (exevo gran mas flam) e Rage of the Skies (exevo gran mas vis): AoE mais forte.
-- suden death (exevo gran mas mort) continua o AoE mais forte de mage (caminho menor).
+[b]Master Sorcerer[/b]
+[b]Hell's Core[/b] ([i]exevo gran mas flam[/i]) e [b]Rage of the Skies[/b] ([i]exevo gran mas vis[/i]): AoE mais forte.
+[b]suden death[/b] ([i]exevo gran mas mort[/i]) continua o AoE mais forte de mage (caminho menor).
 
-Elder Druid
-- Eternal Winter (exevo gran mas frigo): AoE mais forte, ainda abaixo de flam/vis/mort.
+[b]Elder Druid[/b]
+[b]Eternal Winter[/b] ([i]exevo gran mas frigo[/i]): AoE mais forte, ainda abaixo de flam/vis/mort.
 
-Royal Paladin
-- Divine Caldera (exevo mas san): volta a escalar direito em high level.
+[b]Royal Paladin[/b]
+[b]Divine Caldera[/b] ([i]exevo mas san[/i]): volta a escalar direito em high level.
 
-Sem mudança: Sudden Death rune (SD), suden death (exevo gran mas mort).
+[b]Sem mudança:[/b] Sudden Death rune ([i]SD[/i]), suden death ([i]exevo gran mas mort[/i]).
 
-Se ver números estranhos no jogo, avise para ajustarmos.
+Se ver números estranhos no jogo, avise para ajustarmos. :)
 ```
 
 ---
