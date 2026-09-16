@@ -2,12 +2,17 @@ local shutdownEvent = 0
 local shutdownEta = ""
 local MAX_SHUTDOWN_MINUTES = 1440
 
+-- Tibia 8.6 / OTClient expect ISO-8859-1 (Latin-1), not UTF-8.
+-- Accents use decimal escapes so this file stays ASCII-safe.
+-- a-acute=225 e-acute=233 i-acute=237 o-acute=243 u-acute=250
+-- a-tilde=227 a-grave=224 a-circumflex=226 c-cedilla=231
+
 local function etaSuffix()
   if shutdownEta == "" then
     return ""
   end
   local eta = shutdownEta:gsub("[%.!]+$", "")
-  return " Previsão de retorno: " .. eta .. "."
+  return " Previs\227o de retorno: " .. eta .. "."
 end
 
 local function sendUsage(cid)
@@ -15,14 +20,14 @@ local function sendUsage(cid)
   doPlayerSendTextMessage(
     cid,
     MESSAGE_STATUS_CONSOLE_BLUE,
-    "/shutdown <minutos>[, previsão de retorno] - agenda o desligamento (1-"
+    "/shutdown <minutos>[, previs\227o de retorno] - agenda o desligamento (1-"
       .. MAX_SHUTDOWN_MINUTES
       .. " min, ou 0/now)"
   )
   doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "/shutdown now|0 - desliga o servidor agora")
   doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "/shutdown stop|parar - cancela a contagem")
   doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "/shutdown kill - encerra o processo do servidor")
-  doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Exemplo: /shutdown 10, amanhã às 15h")
+  doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Exemplo: /shutdown 10, amanh\227 \224s 15h")
 end
 
 local function clearShutdownEvent()
@@ -67,12 +72,12 @@ function onSay(cid, words, param, channel)
 
   minutes = tonumber(minutes)
   if not minutes then
-    doPlayerSendCancel(cid, "Parâmetro inválido. Digite /shutdown para ver o uso.")
+    doPlayerSendCancel(cid, "Par\226metro inv\225lido. Digite /shutdown para ver o uso.")
     return true
   end
 
   if minutes > MAX_SHUTDOWN_MINUTES then
-    doPlayerSendCancel(cid, "Máximo de " .. MAX_SHUTDOWN_MINUTES .. " minutos (1 dia).")
+    doPlayerSendCancel(cid, "M\225ximo de " .. MAX_SHUTDOWN_MINUTES .. " minutos (1 dia).")
     return true
   end
 
@@ -83,7 +88,7 @@ end
 
 function prepareShutdown(minutes)
   if minutes <= 0 then
-    doBroadcastMessage("O servidor está desligando..." .. etaSuffix())
+    doBroadcastMessage("O servidor est\225 desligando..." .. etaSuffix())
     shutdownEvent = 0
     shutdownEta = ""
     doSetGameState(GAMESTATE_SHUTDOWN)
