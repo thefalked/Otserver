@@ -11,31 +11,31 @@ Detalhe técnico: [spell-balance-15k.md](spell-balance-15k.md)
 **Tópico:**
 
 ```text
-Atualização de Balanceamento de Magias — High Level (até 15k)
+⚡ Atualização de Balanceamento de Magias — High Level (até 15k)
 ```
 
-**Texto (BBCode):**
+**Texto (BBCode + emoji Unicode):**
 
 ```text
-:cool: Rebalanceamos várias magias de vocação para o [b]high level[/b] (cerca de nível [b]2000–15000[/b]).
+😎 Rebalanceamos várias magias de vocação para o [b]high level[/b] (cerca de nível [b]2000–15000[/b]).
 
-[b]Elite Knight[/b]
+⚔️ [b]Elite Knight[/b]
 [b]Wound Cleansing[/b] ([i]exana mort[/i]): cura bem mais forte, agora escala perto da Mana Rune (um pouco menos).
 [b]Fierce Berserk[/b] ([i]exori gran[/i]): melhor escala de nível no AoE corpo a corpo.
 
-[b]Master Sorcerer[/b]
+🔥 [b]Master Sorcerer[/b]
 [b]Hell's Core[/b] ([i]exevo gran mas flam[/i]) e [b]Rage of the Skies[/b] ([i]exevo gran mas vis[/i]): AoE mais forte.
 [b]suden death[/b] ([i]exevo gran mas mort[/i]) continua o AoE mais forte de mage (caminho menor).
 
-[b]Elder Druid[/b]
+❄️ [b]Elder Druid[/b]
 [b]Eternal Winter[/b] ([i]exevo gran mas frigo[/i]): AoE mais forte, ainda abaixo de flam/vis/mort.
 
-[b]Royal Paladin[/b]
+🏹 [b]Royal Paladin[/b]
 [b]Divine Caldera[/b] ([i]exevo mas san[/i]): volta a escalar direito em high level.
 
-[b]Sem mudança:[/b] Sudden Death rune ([i]SD[/i]), suden death ([i]exevo gran mas mort[/i]).
+📌 [b]Sem mudança:[/b] Sudden Death rune ([i]SD[/i]), suden death ([i]exevo gran mas mort[/i]).
 
-Comente nesta notícia como ficou o balanceamento no jogo. Feedback ajuda a ajustar. :)
+Comente nesta notícia como ficou o balanceamento no jogo. Feedback ajuda a ajustar. 🙂
 
 Digite [b]!notice[/b] no jogo para ver o resumo das mudanças.
 ```
@@ -45,7 +45,7 @@ Digite [b]!notice[/b] no jogo para ver o resumo das mudanças.
 ## Ticker de notícias (opcional, curto)
 
 ```text
-Balanceamento ao vivo: cura EK (exana mort) mais forte, AoE mage (flam/vis/frigo) buffado, Fierce Berserk + Divine Caldera. Mort segue #1 no AoE.
+⚡ Balanceamento: 💚 cura EK (exana mort), 🔥 AoE mage (flam/vis/frigo), ⚔️ Fierce Berserk + 🏹 Divine Caldera. Mort segue #1 no AoE.
 ```
 
 ---

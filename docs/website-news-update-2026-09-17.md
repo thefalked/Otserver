@@ -19,19 +19,19 @@ Detalhe técnico: [death-penalty.md](death-penalty.md), [vip-level-gates.md](vip
 **Tópico:**
 
 ```text
-Atualização — Morte, VIPs por level, casas inativas e Master set
+🔥 Atualização — Morte, VIPs por level, casas inativas e Master set
 ```
 
-**Texto (BBCode):**
+**Texto (BBCode + emoji Unicode):**
 
 ```text
-:cool: Nova atualização no ar. Resumo do que muda no jogo:
+😎 Nova atualização no ar. Resumo do que muda no jogo:
 
-[b]Pena de morte[/b]
+💀 [b]Pena de morte[/b]
 A perda de experiência na morte ficou bem mais forte (cerca de [b]8x[/b] a curva anterior).
 Use [b]!bless[/b] antes de caçar. Bless reduz um pouco a perda de exp e protege itens/bags.
 
-[b]Portões de level nas VIPs[/b]
+🚪 [b]Portões de level nas VIPs[/b]
 Ter VIP não basta para entrar em Vip2–Vip9. Cada área exige level mínimo:
 
 Vip2: 800 | Vip3: 1200 | Vip4: 1800 | Vip5: 2500
@@ -39,23 +39,23 @@ Vip6: 3000 | Vip7: 4000 | Vip8: 5000 | Vip9: 6500
 
 Sem o level, você volta pro temple com aviso.
 
-[b]VIP7 e VIP8[/b]
+👑 [b]VIP7 e VIP8[/b]
 Para virar Vip7 você precisa ser Vip6.
 Para virar Vip8 você precisa ser Vip7.
 
-[b]Casas inativas[/b]
+🏠 [b]Casas inativas[/b]
 Casa com dono offline há [b]3 dias[/b] ou mais é liberada automaticamente.
 Itens pickupáveis vão pro depot do dono quando o personagem carrega.
 Olhe para a porta e digite [b]!myhouse[/b] para liberar uma casa inativa e comprar pelo fluxo normal.
 
-[b]Cura EK / RP[/b]
+💚 [b]Cura EK / RP[/b]
 Exhaust da cura principal: [b]1.0s para 0.5s[/b] (Wound Cleansing e Divine Healing).
 
-[b]Master set (VIP9)[/b]
+⚔️ [b]Master set (VIP9)[/b]
 Master Spellscroll: ML +6 agora aplica no equip.
 Master Armor / Helmet / Legs / Boots / Shield: resists e stats retunados.
 
-Comente nesta notícia o que achou. Feedback ajuda a ajustar. :)
+Comente nesta notícia o que achou. Feedback ajuda a ajustar. 🙂
 
 Digite [b]!notice[/b] no jogo para ver o resumo.
 ```
@@ -65,7 +65,7 @@ Digite [b]!notice[/b] no jogo para ver o resumo.
 ## Ticker de notícias (opcional, curto)
 
 ```text
-Morte ~8x (use !bless). VIPs com level mínimo. VIP7/8 em sequência. Casas livres após 3 dias offline (!myhouse). Cura EK/RP mais rápida. Master set retunado.
+💀 Morte ~8x (!bless). 🚪 VIPs com level. 👑 VIP7/8 em sequência. 🏠 Casas livres após 3 dias (!myhouse). 💚 Cura EK/RP mais rápida. ⚔️ Master set retunado.
 ```
 
 ---
