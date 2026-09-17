@@ -38,6 +38,7 @@ services:
       - ./docker/mysql/10-a2-account-manager.sql:/docker-entrypoint-initdb.d/10-a2-account-manager.sql:ro
       - ./docker/mysql/11-gesior-created.sql:/docker-entrypoint-initdb.d/11-gesior-created.sql:ro
       - ./docker/mysql/12-news-utf8mb4.sql:/docker-entrypoint-initdb.d/12-news-utf8mb4.sql:ro
+      - ./docker/mysql/13-player-advances.sql:/docker-entrypoint-initdb.d/13-player-advances.sql:ro
     healthcheck:
       test:
         [
@@ -128,6 +129,7 @@ services:
       - ./docker/mysql/10-a2-account-manager.sql:/usr/local/share/otserver/10-a2-account-manager.sql:ro
       - ./docker/mysql/11-gesior-created.sql:/usr/local/share/otserver/11-gesior-created.sql:ro
       - ./docker/mysql/12-news-utf8mb4.sql:/usr/local/share/otserver/12-news-utf8mb4.sql:ro
+      - ./docker/mysql/13-player-advances.sql:/usr/local/share/otserver/13-player-advances.sql:ro
       - ./website/docker-entrypoint.sh:/usr/local/bin/website-entrypoint.sh:ro
     expose:
       - "80"

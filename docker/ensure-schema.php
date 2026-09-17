@@ -26,6 +26,7 @@ $files = [
   '/usr/local/share/otserver/10-a2-account-manager.sql',
   '/usr/local/share/otserver/11-gesior-created.sql',
   '/usr/local/share/otserver/12-news-utf8mb4.sql',
+  '/usr/local/share/otserver/13-player-advances.sql',
 ];
 
 $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
