@@ -5,72 +5,117 @@ $skills = $SQL->query(
     ' AND account_id != 1 ORDER BY level DESC LIMIT 5'
 ); ?>
 <style type="text/css" media="all">
-  .Toplevelbox {
+  #Themeboxes #Topbar.Toplevelbox {
     position: relative;
     margin-bottom: 10px;
     width: 180px;
-    height: 200px;
-  }
-  .top_level {
-    position: absolute;
-    top: 30px;
-    left: 6px;
-    height: 180px;
-    width: 168px;
-    z-index: 20;
-    text-align: center;
-    padding-top: 6px;
-    font-family: Tahoma, Geneva, sans-serif;
-    font-size: 9.2pt;
-    color: #FFF;
-    font-weight: bold;
-    text-align: right;
-    text-decoration: inherit;
-    text-shadow: 0.1em 0.1em #333
+    height: auto;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: top center;
   }
 
-  #Topbar a {
-  text-decoration: none;
-  cursor: auto;
+  #Themeboxes #Topbar .top_level {
+    position: relative;
+    box-sizing: border-box;
+    margin: 29px 6px 0;
+    width: 168px;
+    min-height: 0;
+    height: auto;
+    z-index: 20;
+    padding: 6px 4px 14px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 9.2pt;
+    color: #fff;
+    font-weight: bold;
+    text-align: left;
+    text-shadow: 0.1em 0.1em #333;
+    background-repeat: repeat-y !important;
+    background-position: top center;
+    overflow: hidden;
   }
-  a.topfont {
-    font-family: Verdana, Arial, Helvetica; 
-    font-size: 13px; 
-    color: #0F0;
-    text-decoration: none
+
+  #Themeboxes #Topbar .top_level .rank-row {
+    display: block;
+    margin: 0 0 6px;
+    padding: 0 2px;
+    overflow: hidden;
+    text-align: left;
   }
-  a:hover.topfont {
-    font-family: Verdana, Arial, Helvetica; 
-    font-size: 13px;  
-    color: #CCC; 
-    text-decoration:none
+
+  #Themeboxes #Topbar a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  #Themeboxes #Topbar a.topfont {
+    display: block;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    line-height: 1.25;
+    color: #0f0;
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  #Themeboxes #Topbar a.topfont .rank-name {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  #Themeboxes #Topbar a.topfont .rank-level {
+    display: block;
+    color: #fff;
+    font-size: 10px;
+    font-weight: normal;
+  }
+
+  #Themeboxes #Topbar a:hover.topfont {
+    color: #ccc;
+    text-decoration: none;
+  }
+
+  #Themeboxes #Topbar a:hover.topfont .rank-level {
+    color: #ccc;
+  }
+
+  #Themeboxes #Topbar .Bottom {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    height: 12px;
+    width: 180px;
+    background-repeat: no-repeat;
   }
 </style>
 
 <div id="Topbar" class="Toplevelbox" style="background-image:url(<?php echo $layout_name; ?>/images/top_level.png);">
-  <div class="top_level" style="background:url(<?php echo $layout_name; ?>/images/bg_top.png)" align="left">
+  <div class="top_level" style="background-image:url(<?php echo $layout_name; ?>/images/bg_top.png);">
     <?php
     $a = 1;
     foreach ($skills as $skill) {
-      echo '<div align="left"><a href="?subtopic=characters&name=' .
-        $skill['name'] .
-        '" class="topfont">
-        <font color="#CCC">&nbsp;&nbsp;&nbsp;&nbsp;' .
+      $name = htmlspecialchars($skill['name'], ENT_QUOTES, 'UTF-8');
+      $level = (int) $skill['level'];
+      echo '<div class="rank-row"><a href="?subtopic=characters&amp;name=' .
+        rawurlencode($skill['name']) .
+        '" class="topfont" title="' .
+        $name .
+        '">' .
+        '<span class="rank-name">' .
         $a .
-        ' - </font>' .
-        $skill['name'] .
-        '
-        <br>
-        <small><font color="white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nível: (' .
-        $skill['level'] .
-        ')</font></small>
-        <br>
-      </a>
-      </div>';
+        ' - ' .
+        $name .
+        '</span>' .
+        '<span class="rank-level">Nível: (' .
+        $level .
+        ')</span>' .
+        '</a></div>';
       $a++;
     }
     ?>
-    <div class="Bottom" style="background-image:url(http://tremera-global.com/templates/tibia/images/global/general/box-bottom.gif); left:-5px;">
-    </div>
   </div>
+  <div class="Bottom"
+    style="background-image:url(<?php echo $layout_name; ?>/images/general/box-bottom.gif);"></div>
 </div>
