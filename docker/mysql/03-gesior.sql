@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `z_forum` (
   `post_ip` varchar(15) NOT NULL default '0.0.0.0',
   PRIMARY KEY (`id`),
   KEY `section` (`section`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `z_news_tickers` (
   `date` int(11) NOT NULL DEFAULT '1',
@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `z_news_tickers` (
   `image_id` int(3) NOT NULL DEFAULT '0',
   `text` text NOT NULL,
   `hide_ticker` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `auction_system` (
   `id` int(11) NOT NULL auto_increment,

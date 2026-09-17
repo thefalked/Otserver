@@ -551,7 +551,7 @@ if ($_REQUEST['page'] == 'step') {
 						`image_id` int(3) NOT NULL default '0',
 						`text` text NOT NULL,
 						`hide_ticker` tinyint(1) NOT NULL
-						) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
+						) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
           echo '<font color=\"green\">Added table <b>z_news_tickers</b></font><br/>';
         } catch (PDOException $error) {
           echo "<font color=\"red\">Table <b>z_news_tickers</b> not added.</font> Already exist?<br/>";
@@ -759,7 +759,7 @@ if ($_REQUEST['page'] == 'step') {
 						`post_ip` varchar(32) NOT NULL default '0.0.0.0',
 						PRIMARY KEY  (`id`),
 						KEY `section` (`section`)
-						) ENGINE=MyISAM AUTO_INCREMENT=1;");
+						) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
           echo "<font color=\"green\">Added table <b>z_forum</b> (forum).<br/></font>";
         } catch (PDOException $error) {
           echo "<font color=\"red\">Table <b>z_forum</b> not added.</font> Already exist?<br/>";

@@ -52,6 +52,7 @@ COPY docker/mysql/08-god-energy.sql /usr/local/share/otserver/08-god-energy.sql
 COPY docker/mysql/09-hide-sample-chars.sql /usr/local/share/otserver/09-hide-sample-chars.sql
 COPY docker/mysql/10-a2-account-manager.sql /usr/local/share/otserver/10-a2-account-manager.sql
 COPY docker/mysql/11-gesior-created.sql /usr/local/share/otserver/11-gesior-created.sql
+COPY docker/mysql/12-news-utf8mb4.sql /usr/local/share/otserver/12-news-utf8mb4.sql
 
 WORKDIR /var/www/html
 ENTRYPOINT ["website-entrypoint.sh"]
