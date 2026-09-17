@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+Disallow: /config/
+Disallow: /cache/
+Disallow: /pot/
+Disallow: /phpmailer/
+Disallow: /ajax/
+Disallow: /install.php
+Disallow: /*?subtopic=accountmanagement*
+Disallow: /*?subtopic=adminpanel*
+Disallow: /*?subtopic=shopadmin*
+Disallow: /*?subtopic=mail*
+Disallow: /*?subtopic=namelock*
+Disallow: /*?subtopic=pag_retorno*
+Disallow: /*?subtopic=retpagseguro*
+
+Sitemap: https://baiakvip9.servegame.com/sitemap.php

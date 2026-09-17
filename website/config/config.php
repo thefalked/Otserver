@@ -523,6 +523,14 @@ $config['site']['show_mana_information'] = 1; //Show mana bar
 $config['site']['show_exp_information'] = 1; //Show exp bar
 $config['site']['number_of_advances'] = 5; // number of latest skill advances to show on character page
 
+// SEO / Open Graph (canonical public hostname)
+$config['site']['site_url'] = 'https://baiakvip9.servegame.com';
+$config['site']['seo_description'] =
+  'Baiak Vip9 é um Open Tibia Server (OTS) 8.60 Baiakzik Vip9 com rates altos (exp 13000x), PvP aberto, loja, guildas e comunidade ativa. Jogue grátis.';
+$config['site']['og_image'] = '/layouts/tibiacom/images/header/background-artwork.jpg';
+$config['site']['og_image_width'] = 1600;
+$config['site']['og_image_height'] = 800;
+
 // PagSeguro — cleared (callback disabled). Leave empty unless you re-enable payments.
 $config['pagseguro']['email'] = '';
 $config['pagseguro']['produtoNome'] = 'Pontos Premium';

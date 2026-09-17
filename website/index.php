@@ -93,6 +93,18 @@ if (!$logged && $login_account !== '' && $login_password !== '') {
 }
 
 //#### LOAD PAGE ##########
+// Canonical homepage is "/". Redirect explicit latestnews query to avoid duplicates.
+if (
+  isset($_GET['subtopic']) &&
+  (string) $_GET['subtopic'] === 'latestnews' &&
+  strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'GET'
+) {
+  $seo_redirect_base = rtrim((string) ($config['site']['site_url'] ?? ''), '/');
+  if ($seo_redirect_base !== '') {
+    header('Location: ' . $seo_redirect_base . '/', true, 301);
+    exit;
+  }
+}
 if (empty($_REQUEST['subtopic'])) {
   $_REQUEST['subtopic'] = 'latestnews';
   $subtopic = 'latestnews';
@@ -332,6 +344,8 @@ switch ($_REQUEST['subtopic']) {
 if (empty($topic)) {
   $title = $GLOBALS['config']['server']['serverName'] . ' - OTS';
   $main_content .= 'Tópico inválido. Não foi possível carregar a página.';
+} elseif ($subtopic === 'latestnews') {
+  $title = $GLOBALS['config']['server']['serverName'] . ' - OTServer 8.60 Baiakzik Vip9';
 } else {
   $title = $GLOBALS['config']['server']['serverName'] . ' - ' . $topic;
 }

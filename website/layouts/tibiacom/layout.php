@@ -1,6 +1,269 @@
-<html xmlns="http://www.w3.org/1999/xhtml">
+<?php
+$seo_server_name = (string) ($config['server']['serverName'] ?? 'Baiak Vip9');
+$seo_site_url = rtrim((string) ($config['site']['site_url'] ?? 'https://baiakvip9.servegame.com'), '/');
+$seo_subtopic = (string) ($subtopic ?? 'latestnews');
+$seo_title = (string) ($title ?? $seo_server_name);
+$seo_description = (string) ($config['site']['seo_description'] ?? '');
+$seo_og_image_path = (string) ($config['site']['og_image'] ?? '/layouts/tibiacom/images/header/background-artwork.jpg');
+$seo_og_image =
+  strpos($seo_og_image_path, 'http://') === 0 || strpos($seo_og_image_path, 'https://') === 0
+  ? $seo_og_image_path
+  : $seo_site_url . '/' . ltrim($seo_og_image_path, '/');
+$seo_og_image_width = (int) ($config['site']['og_image_width'] ?? 1600);
+$seo_og_image_height = (int) ($config['site']['og_image_height'] ?? 800);
+$seo_noindex_pages = [
+  'accountmanagement',
+  'adminpanel',
+  'shopadmin',
+  'mail',
+  'namelock',
+  'pag_retorno',
+  'retpagseguro'
+];
+$seo_robots = in_array($seo_subtopic, $seo_noindex_pages, true)
+  ? 'noindex, nofollow'
+  : 'index, follow, max-image-preview:large';
+$seo_page_descriptions = [
+  'latestnews' => $seo_description,
+  'createaccount' =>
+  'Crie sua conta grátis no ' .
+    $seo_server_name .
+    '. Cadastro rápido para começar a jogar com rates altos e PvP aberto.',
+  'downloads' =>
+  'Baixe o cliente do ' .
+    $seo_server_name .
+    ' e conecte-se ao servidor em poucos minutos.',
+  'serverinfo' =>
+  'Consulte IP, porta, rates e detalhes técnicos do servidor ' .
+    $seo_server_name .
+    '.',
+  'whoisonline' =>
+  'Veja quem está online agora no ' .
+    $seo_server_name .
+    ' e acompanhe a lista de jogadores em tempo real.',
+  'highscores' =>
+  'Confira o ranking de skills e levels dos melhores jogadores do ' .
+    $seo_server_name .
+    '.',
+  'characters' =>
+  'Busque um personagem no ' .
+    $seo_server_name .
+    ' e veja level, vocação e dados públicos.',
+  'guilds' =>
+  'Explore guildas ativas no ' .
+    $seo_server_name .
+    ', veja membros e encontre um grupo para jogar.',
+  'forum' =>
+  'Participe do fórum do ' .
+    $seo_server_name .
+    ': notícias, tutoriais, trocas e discussões da comunidade.',
+  'changelog' =>
+  'Acompanhe o changelog do ' .
+    $seo_server_name .
+    ' com patches, balanceamentos e novidades.',
+  'tibiarules' =>
+  'Leia as regras do ' .
+    $seo_server_name .
+    ' antes de jogar e evite punições.',
+  'team' =>
+  'Conheça a staff e a equipe responsável pelo ' .
+    $seo_server_name .
+    '.',
+  'spells' =>
+  'Lista de magias disponíveis no ' .
+    $seo_server_name .
+    ', com vocações e requisitos.',
+  'creatures' =>
+  'Guia de criaturas e monstros do ' .
+    $seo_server_name .
+    ', com informações de hunt.',
+  'shopsystem' =>
+  'Veja itens e vantagens da loja do ' .
+    $seo_server_name .
+    '.',
+  'donate' =>
+  'Apoie o ' .
+    $seo_server_name .
+    ' e confira as opções de doação disponíveis.',
+  'vantagens' =>
+  'Conheça benefícios e vantagens oferecidos no ' .
+    $seo_server_name .
+    '.',
+  'war' =>
+  'Acompanhe guerras de guildas em andamento no ' .
+    $seo_server_name .
+    '.',
+  'frags' =>
+  'Estatísticas de frags e confrontos PvP no ' .
+    $seo_server_name .
+    '.',
+  'topguilds' =>
+  'Ranking das guildas mais fortes do ' .
+    $seo_server_name .
+    '.',
+  'bans' =>
+  'Lista pública de banimentos aplicados no ' .
+    $seo_server_name .
+    '.',
+  'killstatistics' =>
+  'Estatísticas de kills e mortes registradas no ' .
+    $seo_server_name .
+    '.',
+  'experiencetable' =>
+  'Tabela de experiência por level no ' .
+    $seo_server_name .
+    '.',
+  'archive' =>
+  'Arquivo histórico de notícias publicadas no ' .
+    $seo_server_name .
+    '.',
+  'records' =>
+  'Recordes e marcas históricas da comunidade do ' .
+    $seo_server_name .
+    '.',
+  'gallery' =>
+  'Galeria de imagens enviadas pela comunidade do ' .
+    $seo_server_name .
+    '.',
+  'lottery' =>
+  'Participe da loteria e veja sorteios ativos no ' .
+    $seo_server_name .
+    '.',
+  'polls' =>
+  'Vote nas enquetes da comunidade do ' .
+    $seo_server_name .
+    '.',
+  'bugtracker' =>
+  'Reporte bugs e acompanhe correções do ' .
+    $seo_server_name .
+    '.',
+  'fragers' =>
+  'Veja o top de fraggers e o ranking PvP do ' .
+    $seo_server_name .
+    '.',
+  'scrollnews' =>
+  'Notícias rápidas e avisos recentes do ' .
+    $seo_server_name .
+    '.'
+];
+if ($seo_subtopic === 'latestnews') {
+  $seo_canonical = $seo_site_url . '/';
+} else {
+  $seo_canonical = $seo_site_url . '/?subtopic=' . rawurlencode($seo_subtopic);
+}
+if (isset($seo_page_descriptions[$seo_subtopic])) {
+  $seo_page_description = $seo_page_descriptions[$seo_subtopic];
+} else {
+  $topic_label = (string) ($topic ?? $seo_subtopic);
+  $seo_page_description = $seo_server_name . ' - ' . $topic_label . '.';
+}
+$seo_json_ld = [
+  '@context' => 'https://schema.org',
+  '@type' => 'WebSite',
+  'name' => $seo_server_name,
+  'alternateName' => ['Baiakzik Vip9', 'Baiak Vip9 OTServer'],
+  'url' => $seo_site_url . '/',
+  'description' => $seo_description,
+  'inLanguage' => 'pt-BR'
+];
+$seo_json_ld_game = null;
+if ($seo_subtopic === 'latestnews') {
+  $seo_json_ld_game = [
+    '@context' => 'https://schema.org',
+    '@type' => 'VideoGame',
+    'name' => $seo_server_name,
+    'alternateName' => 'Baiakzik Vip9',
+    'url' => $seo_site_url . '/',
+    'description' => $seo_description,
+    'image' => $seo_og_image,
+    'gamePlatform' => 'PC',
+    'applicationCategory' => 'Game',
+    'operatingSystem' => 'Windows',
+    'genre' => ['MMORPG', 'Open Tibia Server'],
+    'inLanguage' => 'pt-BR',
+    'offers' => [
+      '@type' => 'Offer',
+      'price' => '0',
+      'priceCurrency' => 'BRL',
+      'availability' => 'https://schema.org/InStock'
+    ]
+  ];
+}
+?>
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="content-language" content="pt-BR" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><?php echo h($seo_title); ?></title>
+  <meta name="description" content="<?php echo h($seo_page_description); ?>" />
+  <meta name="robots" content="<?php echo h($seo_robots); ?>" />
+  <meta name="author" content="<?php echo h($seo_server_name); ?>" />
+  <meta name="theme-color" content="#1a310e" />
+  <link rel="canonical" href="<?php echo h($seo_canonical); ?>" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="<?php echo h($seo_server_name); ?>" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:title" content="<?php echo h($seo_title); ?>" />
+  <meta property="og:description" content="<?php echo h($seo_page_description); ?>" />
+  <meta property="og:url" content="<?php echo h($seo_canonical); ?>" />
+  <meta property="og:image" content="<?php echo h($seo_og_image); ?>" />
+  <meta property="og:image:secure_url" content="<?php echo h($seo_og_image); ?>" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="<?php echo (int) $seo_og_image_width; ?>" />
+  <meta property="og:image:height" content="<?php echo (int) $seo_og_image_height; ?>" />
+  <meta property="og:image:alt" content="<?php echo h($seo_server_name . ' - OTServer 8.60'); ?>" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<?php echo h($seo_title); ?>" />
+  <meta name="twitter:description" content="<?php echo h($seo_page_description); ?>" />
+  <meta name="twitter:image" content="<?php echo h($seo_og_image); ?>" />
+  <meta name="twitter:image:alt" content="<?php echo h($seo_server_name . ' - OTServer 8.60'); ?>" />
+
+  <script type="application/ld+json">
+    <?php echo json_encode(
+      $seo_json_ld,
+      JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP
+    ); ?>
+  </script>
+  <?php if ($seo_json_ld_game !== null) { ?>
+    <script type="application/ld+json">
+      <?php echo json_encode(
+        $seo_json_ld_game,
+        JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP
+      ); ?>
+    </script>
+  <?php } ?>
+
+  <link rel="shortcut icon" href="<?php echo h($seo_site_url); ?>/images/server.ico" type="image/x-icon" />
+  <link rel="icon" href="<?php echo h($seo_site_url); ?>/images/server.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="<?php echo h($seo_site_url); ?>/images/apple-touch-icon.png" sizes="180x180" />
+  <?php echo $layout_header; ?>
+  <link href="<?php echo $layout_name; ?>/basic.css?v=3" rel="stylesheet" type="text/css">
+  <script type="text/javascript">
+    var IMAGES = 0;
+    IMAGES = '<?php echo $layout_name; ?>/images';
+    var g_FormField = '';
+    var LINK_ACCOUNT = 0;
+    LINK_ACCOUNT = '';
+  </script>
+  <script type="text/javascript" src="<?php echo $layout_name; ?>/initialize.js?v=3"></script>
+  <script type="text/javascript">
+    setTimeout("changePage()", 18000);
+
+    function changePage() {
+      if (parent.frames.length > 2) {
+        if (browserTyp == "ie") {
+          parent.location = document.location;
+        } else {
+          self.top.location = document.location;
+        }
+      }
+    }
+  </script>
   <script type="text/javascript">
     /*
     Snow Fall 1 - no images - Java Script
@@ -30,7 +293,7 @@
     var snowminsize = 8
 
     // Set the snowing-zone
-    // Set 1 for all-over-snowing, set 2 for left-side-snowing 
+    // Set 1 for all-over-snowing, set 2 for left-side-snowing
     // Set 3 for center-snowing, set 4 for right-side-snowing
     var snowingzone = 1
 
@@ -128,112 +391,7 @@
     if (browserok) {
       window.onload = initsnow
     }
-  </SCRIPT>
-  <title><?php echo $title; ?></title>
-  <meta name="description" content="Tibia is a free massive multiplayer online role playing game (MMORPG)." />
-  <meta http-equiv="content-language" content="pt_br" />
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta name="keywords"
-    content="free online game, free multiplayer game, ots, open tibia server, baiakzik, baiak, vip9, 24h, baiakzik24h, baiakzikvip9,baiakzikvip924h.servegame.com" />
-  <link rel="shortcut icon" href="images/server.ico" type="image/x-icon">
-  <link rel="icon" href="images/server.ico" type="image/x-icon">
-  <?php echo $layout_header; ?>
-  <link href="<?php echo $layout_name; ?>/basic.css?v=3" rel="stylesheet" type="text/css">
-  <script
-    type='text/javascript'>
-    var IMAGES = 0;
-    IMAGES = '<?php echo $layout_name; ?>/images';
-    var g_FormField = '';
-    var LINK_ACCOUNT = 0;
-    LINK_ACCOUNT = '';
   </script>
-  <script type="text/javascript" src="<?php echo $layout_name; ?>/initialize.js?v=3"></script>
-  <SCRIPT TYPE="text/javascript">
-    <!-- // Framekiller
-    setTimeout("changePage()", 18000);
-
-    function changePage() {
-      if (parent.frames.length > 2) {
-        if (browserTyp == "ie") {
-          parent.location = document.location;
-        } else {
-          self.top.location = document.location;
-        }
-      }
-    }
-    // 
-    -->
-  </SCRIPT>
-  <title><?php echo $title; ?></title>
-  <meta name="description" content="Tibia is a free massive multiplayer online role playing game (MMORPG)." />
-  <meta http-equiv="content-language" content="pt_br" />
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta name="keywords"
-    content="free online game, free multiplayer game, ots, open tibia server, baiakzik, baiak, vip9, 24h, baiakzik24h, baiakzikvip9,baiakzikvip924h.servegame.com" />
-  <link rel="shortcut icon" href="images/server.ico" type="image/x-icon">
-  <link rel="icon" href="images/server.ico" type="image/x-icon">
-  <?php echo $layout_header; ?>
-  <link href="<?php echo $layout_name; ?>/basic.css?v=3" rel="stylesheet" type="text/css">
-  <script
-    type='text/javascript'>
-    var IMAGES = 0;
-    IMAGES = '<?php echo $layout_name; ?>/images';
-    var g_FormField = '';
-    var LINK_ACCOUNT = 0;
-    LINK_ACCOUNT = '';
-  </script>
-  <script type="text/javascript" src="<?php echo $layout_name; ?>/initialize.js?v=3"></script>
-  <SCRIPT TYPE="text/javascript">
-    <!-- // Framekiller
-    setTimeout("changePage()", 18000);
-
-    function changePage() {
-      if (parent.frames.length > 2) {
-        if (browserTyp == "ie") {
-          parent.location = document.location;
-        } else {
-          self.top.location = document.location;
-        }
-      }
-    }
-    // 
-    -->
-  </SCRIPT>
-  <title><?php echo $title; ?></title>
-  <meta name="description" content="Tibia is a free massive multiplayer online role playing game (MMORPG)." />
-  <meta http-equiv="content-language" content="pt_br" />
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <meta name="keywords"
-    content="free online game, free multiplayer game, ots, open tibia server, baiakzik, baiak, vip9, 24h, baiakzik24h, baiakzikvip9,baiakzikvip924h.servegame.com" />
-  <link rel="shortcut icon" href="images/server.ico" type="image/x-icon">
-  <link rel="icon" href="images/server.ico" type="image/x-icon">
-  <?php echo $layout_header; ?>
-  <link href="<?php echo $layout_name; ?>/basic.css?v=3" rel="stylesheet" type="text/css">
-  <script
-    type='text/javascript'>
-    var IMAGES = 0;
-    IMAGES = '<?php echo $layout_name; ?>/images';
-    var g_FormField = '';
-    var LINK_ACCOUNT = 0;
-    LINK_ACCOUNT = '';
-  </script>
-  <script type="text/javascript" src="<?php echo $layout_name; ?>/initialize.js?v=3"></script>
-  <SCRIPT TYPE="text/javascript">
-    <!-- // Framekiller
-    setTimeout("changePage()", 18000);
-
-    function changePage() {
-      if (parent.frames.length > 2) {
-        if (browserTyp == "ie") {
-          parent.location = document.location;
-        } else {
-          self.top.location = document.location;
-        }
-      }
-    }
-    // 
-    -->
-  </SCRIPT>
 </head>
 
 <body onBeforeUnLoad="SaveMenu();" onUnload="SaveMenu();">
@@ -253,12 +411,12 @@
       <div id="ContentRow">
         <div id="MenuColumn">
           <div id="LeftArtwork">
-            <img id="Statue_1" src="<?php echo $layout_name; ?>/images/header/animated-statue.gif" alt="logoartwork" />
+            <img id="Statue_1" src="<?php echo $layout_name; ?>/images/header/animated-statue.gif" alt="<?php echo h($seo_server_name); ?>" />
             <img id="TibiaLogoArtworkTop" src="<?php echo $layout_name; ?>/images/header/tibia-logo-artwork-top.gif"
-              onClick="window.location = '?subtopic=latestnews';" alt="logoartwork" />
+              onClick="window.location = '?subtopic=latestnews';" alt="<?php echo h($seo_server_name . ' - OTServer 8.60'); ?>" />
             <img id="TibiaLogoArtworkBottom"
-              src="<?php echo $layout_name; ?>/images/header/tibia-logo-artwork-bottom.gif" alt="logoartwork" />
-            <img id="Statue_2" src="<?php echo $layout_name; ?>/images/header/animated-statue.gif" alt="logoartwork" />
+              src="<?php echo $layout_name; ?>/images/header/tibia-logo-artwork-bottom.gif" alt="<?php echo h($seo_server_name); ?>" />
+            <img id="Statue_2" src="<?php echo $layout_name; ?>/images/header/animated-statue.gif" alt="<?php echo h($seo_server_name); ?>" />
           </div>
 
           <div id="Loginbox">
