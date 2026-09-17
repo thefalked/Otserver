@@ -317,17 +317,25 @@ void Game::cancelPendingRemoval(uint32_t playerId)
 		return;
 
 	const bool addedGhost = it->second.addedGhost;
-	pendingRemovals.erase(it);
-
-	std::clog << "> Cancelled deferred logout for player id " << playerId << " (client reconnected)." << std::endl;
 	Player* player = getPlayerByID(playerId);
+	std::clog << "> Cancelled deferred logout for player id " << playerId << " (client reconnected)." << std::endl;
 	if(!player || player->isRemoved())
+	{
+		pendingRemovals.erase(it);
 		return;
+	}
 
+	// Reveal while still pending so getGhostAccess stays elevated and clients
+	// that could not see the body get a proper appear packet.
 	if(addedGhost)
 		revealPendingPlayer(player);
 
+	pendingRemovals.erase(it);
 	player->logoutScriptsDone = false;
+	player->setIdleTime(0);
+	// Pending entry may have cleared players.online; restore it on resume.
+	if(!player->isGhost())
+		IOLoginData::getInstance()->updateOnlineStatus(player->getGUID(), true);
 }
 
 void Game::flushDirtyPlayers()
@@ -375,10 +383,11 @@ void Game::clearPendingOnlineStatus(Player* player)
 			return;
 	}
 
-	// Last chance: un-ghost so onCreatureDisappear retries the online clear.
+	// Do not reveal pending ghosts here: that would flash them to players before remove.
 	std::clog << "> WARNING: Failed to clear online status for " << player->getName()
-		<< " while ghosted; revealing for logout cleanup." << std::endl;
-	revealPendingPlayer(player);
+		<< " while ghosted." << std::endl;
+	if(!isPlayerPendingRemoval(player->getID()))
+		revealPendingPlayer(player);
 }
 
 void Game::clearDamagingConditions(Player* player)
@@ -416,6 +425,7 @@ void Game::preparePendingRemoval(Player* player)
 	// Stay on the logout tile; ghost is applied by the caller.
 	player->loginPosition = player->getPosition();
 	player->lastLogout = time(NULL);
+	player->setIdleTime(0);
 }
 
 void Game::doFlushDirtyPlayers()
@@ -455,11 +465,11 @@ void Game::doFlushDirtyPlayers()
 		if(pending != pendingRemovals.end())
 		{
 			bool isLogout = pending->second.isLogout;
-			pendingRemovals.erase(pending);
 			player->skipSaveOnRemove = true;
 			// Ghosts skip online clear in onCreatureDisappear (temp or real GM ghost).
 			if(player->isGhost())
 				clearPendingOnlineStatus(player);
+			pendingRemovals.erase(pending);
 			removeCreature(player, isLogout);
 		}
 	}
@@ -475,10 +485,16 @@ void Game::safeRemovePlayer(uint32_t playerId, bool isLogout/* = true*/, bool fo
 		return;
 	}
 
-	if(!forceRemove && pendingRemovals.find(playerId) != pendingRemovals.end())
-		return;
+	// Kick / forceLogout must be able to break out of deferred logout.
+	bool removeNow = forceRemove;
+	if(pendingRemovals.find(playerId) != pendingRemovals.end())
+	{
+		if(!removeNow && !forceLogout)
+			return;
+		removeNow = true;
+	}
 
-	const bool forceScripts = forceLogout || forceRemove;
+	const bool forceScripts = forceLogout || removeNow;
 	if(!player->logoutScriptsDone)
 	{
 		if(!g_creatureEvents->playerLogout(player, forceScripts) && !forceScripts)
@@ -500,28 +516,25 @@ void Game::safeRemovePlayer(uint32_t playerId, bool isLogout/* = true*/, bool fo
 		if(IOLoginData::getInstance()->savePlayer(player))
 		{
 			clearPlayerDirty(playerId);
-			pendingRemovals.erase(playerId);
 			player->skipSaveOnRemove = true;
 			// Ghosts skip online clear in onCreatureDisappear (temp or real GM ghost).
 			if(player->isGhost())
 				clearPendingOnlineStatus(player);
+			pendingRemovals.erase(playerId);
 			removeCreature(player, isLogout);
 			return;
 		}
 	}
 
-	if(forceRemove)
+	if(removeNow)
 	{
 		std::clog << "> WARNING: Failed to save player " << player->getName()
 			<< " before forced remove; removing anyway." << std::endl;
-		std::map<uint32_t, PendingRemoval>::iterator pending = pendingRemovals.find(playerId);
-		if(pending != pendingRemovals.end() && pending->second.addedGhost)
-			revealPendingPlayer(player);
 		clearPlayerDirty(playerId);
-		pendingRemovals.erase(playerId);
-		// Ghosts skip online clear in onCreatureDisappear (temp or real GM ghost).
+		// Clear online while still ghosted/pending so players never see a flash.
 		if(player->isGhost())
 			clearPendingOnlineStatus(player);
+		pendingRemovals.erase(playerId);
 		// Let onCreatureDisappear attempt one more save — we did not succeed above.
 		removeCreature(player, isLogout);
 		// SaveDirtyGuard may re-mark dirty if that last save failed after free.
@@ -537,9 +550,19 @@ void Game::safeRemovePlayer(uint32_t playerId, bool isLogout/* = true*/, bool fo
 	preparePendingRemoval(player);
 	PendingRemoval info;
 	info.isLogout = isLogout;
-	info.addedGhost = hidePendingPlayer(player);
+	info.addedGhost = false;
 	markPlayerDirty(playerId);
+	// Register pending before hide so getGhostAccess is elevated during disappear.
 	pendingRemovals[playerId] = info;
+	info.addedGhost = hidePendingPlayer(player);
+	pendingRemovals[playerId] = info;
+	// Keep ghost in memory for save retry, but do not leave players.online = 1.
+	// Do not use clearPendingOnlineStatus here: on failure it reveals the ghost.
+	for(uint32_t tries = 0; tries < 3; ++tries)
+	{
+		if(IOLoginData::getInstance()->updateOnlineStatus(player->getGUID(), false))
+			break;
+	}
 	Scheduler::getInstance().addEvent(createSchedulerTask(1000,
 		boost::bind(&Game::retryPendingPlayerRemoval, this, playerId, isLogout, 1)));
 }
@@ -565,12 +588,12 @@ void Game::retryPendingPlayerRemoval(uint32_t playerId, bool isLogout, uint32_t 
 	if(IOLoginData::getInstance()->savePlayer(player))
 	{
 		clearPlayerDirty(playerId);
-		pendingRemovals.erase(pending);
 		std::clog << "> Deferred logout save succeeded for " << player->getName() << "." << std::endl;
 		player->skipSaveOnRemove = true;
 		// Ghosts skip online clear in onCreatureDisappear (temp or real GM ghost).
 		if(player->isGhost())
 			clearPendingOnlineStatus(player);
+		pendingRemovals.erase(pending);
 		removeCreature(player, isLogout);
 		return;
 	}
@@ -579,9 +602,10 @@ void Game::retryPendingPlayerRemoval(uint32_t playerId, bool isLogout, uint32_t 
 	{
 		std::clog << "> ERROR: Giving up deferred save for " << player->getName()
 			<< " after " << attempt << " attempts; forcing remove." << std::endl;
-		if(pending->second.addedGhost)
-			revealPendingPlayer(player);
 		clearPlayerDirty(playerId);
+		// Clear online while still ghosted/pending so players never see a flash.
+		if(player->isGhost())
+			clearPendingOnlineStatus(player);
 		pendingRemovals.erase(playerId);
 		// Last-chance save happens in onCreatureDisappear.
 		removeCreature(player, isLogout);

@@ -842,13 +842,31 @@ bool Player::canSee(const Position& pos) const
 	return false;
 }
 
+uint16_t Player::getGhostAccess() const
+{
+	uint16_t access = group ? group->getGhostAccess() : 0;
+	// Deferred-logout bodies require ghostAccess >= 3 (GM+) to be seen via
+	// getGhostAccess. canSeeCreature also lets access >= 3 through as a fallback.
+	if(g_game.isPlayerPendingRemoval(getID()))
+		return std::max<uint16_t>(access, 3);
+
+	return access;
+}
+
 bool Player::canSeeCreature(const Creature* creature) const
 {
 	if(creature == this)
 		return true;
 
 	if(const Player* player = creature->getPlayer())
-		return !player->isGhost() || getGhostAccess() >= player->getGhostAccess();
+	{
+		if(!player->isGhost())
+			return true;
+		if(getGhostAccess() >= player->getGhostAccess())
+			return true;
+		// GM+ (access >= 3) can see deferred-logout stuck bodies even if ghostAccess is unset.
+		return g_game.isPlayerPendingRemoval(player->getID()) && getAccess() >= 3;
+	}
 
 	return !creature->isInvisible() || canSeeInvisibility();
 }
@@ -1229,7 +1247,9 @@ void Player::sendCreatureChangeVisible(const Creature* creature, Visible_t visib
 		return;
 
 	const Player* player = creature->getPlayer();
-	if(player == this || (player && (visible < VISIBLE_GHOST_APPEAR || getGhostAccess() >= player->getGhostAccess()))
+	const bool canSeeGhost = player && (getGhostAccess() >= player->getGhostAccess()
+		|| (g_game.isPlayerPendingRemoval(player->getID()) && getAccess() >= 3));
+	if(player == this || (player && (visible < VISIBLE_GHOST_APPEAR || canSeeGhost))
 		|| (!player && canSeeInvisibility()))
 		sendCreatureChangeOutfit(creature, creature->getCurrentOutfit());
 	else if(visible == VISIBLE_DISAPPEAR || visible == VISIBLE_GHOST_DISAPPEAR)
@@ -1708,6 +1728,11 @@ uint32_t Player::getNextActionTime() const
 
 void Player::onThink(uint32_t interval)
 {
+	// Deferred-logout ghosts must not run creature scripts (idle kick, etc.)
+	// or ping-timeout removal while waiting for MySQL.
+	if(g_game.isPlayerPendingRemoval(getID()))
+		return;
+
 	Creature::onThink(interval);
 	int64_t timeNow = OTSYS_TIME();
 	if(timeNow - lastPing >= 5000)
@@ -1722,9 +1747,6 @@ void Player::onThink(uint32_t interval)
 	if((timeNow - lastPong) >= 60000 && !getTile()->hasFlag(TILESTATE_NOLOGOUT)
 		&& !isConnecting && !pzLocked && !hasCondition(CONDITION_INFIGHT))
 	{
-		if(g_game.isPlayerPendingRemoval(getID()))
-			return;
-
 		if(client)
 			client->logout(true, true);
 		else
@@ -2407,8 +2429,11 @@ void Player::addList()
 
 void Player::kick(bool displayEffect, bool forceLogout)
 {
-	const bool forceRemove = (g_game.getGameState() == GAMESTATE_SHUTDOWN
-		|| g_game.getGameState() == GAMESTATE_CLOSED);
+	// Pending deferred-logout ghosts have no client; staff kicks must force-remove them.
+	const bool forceRemove = forceLogout
+		|| g_game.isPlayerPendingRemoval(getID())
+		|| g_game.getGameState() == GAMESTATE_SHUTDOWN
+		|| g_game.getGameState() == GAMESTATE_CLOSED;
 
 	if(!client)
 		g_game.safeRemovePlayer(getID(), true, forceRemove, forceLogout);

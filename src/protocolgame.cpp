@@ -95,6 +95,29 @@ bool ProtocolGame::login(const std::string& name, uint32_t id, const std::string
 	if(!players.empty())
 		_player = players[random_range(0, (players.size() - 1))];
 
+	// Deferred-logout ghosts still hold unsaved progress in memory. Resume that
+	// body with a full login packet (connect). Reset idle/pong so idle.lua and
+	// ping-timeout do not disconnect them right away (client error 54).
+	if(_player && g_game.isPlayerPendingRemoval(_player->getID()))
+	{
+		if(gamemaster && !_player->hasCustomFlag(PlayerCustomFlag_GamemasterPrivileges))
+		{
+			disconnectClient(0x14, "You are not a gamemaster! Turn off the gamemaster mode in your IP changer.");
+			return false;
+		}
+
+		if(_player->client)
+		{
+			_player->disconnect();
+			_player->client = NULL;
+		}
+
+		_player->setIdleTime(0);
+		_player->receivePing();
+		addRef();
+		return connect(_player->getID(), operatingSystem, version);
+	}
+
 	if(!_player || name == "Account Manager" || g_config.getNumber(ConfigManager::ALLOW_CLONES) > (int32_t)players.size())
 	{
 		player = new Player(name, this);

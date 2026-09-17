@@ -279,7 +279,7 @@ class Player : public Creature, public Cylinder
 		uint32_t getAccount() const {return accountId;}
 		std::string getAccountName() const {return account;}
 		uint16_t getAccess() const {return group ? group->getAccess() : 0;}
-		uint16_t getGhostAccess() const {return group ? group->getGhostAccess() : 0;}
+		uint16_t getGhostAccess() const;
 
 		uint32_t getLevel() const {return level;}
 		uint64_t getExperience() const {return experience;}

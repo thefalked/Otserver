@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <groups>
   <group id="1" name="Player" />
-  <group id="2" name="Tutor" flags="16809984" customFlags="2" access="1" violationReasons="4" nameViolationFlags="2" />
-  <group id="3" name="Senior Tutor" flags="68736352256" customFlags="14" access="2" violationReasons="10" nameViolationFlags="2" statementViolationFlags="63" maxVips="200" />
+  <group id="2" name="Tutor" flags="16809984" customFlags="2" access="1" ghostAccess="1"
+    violationReasons="4" nameViolationFlags="2" />
+  <group id="3" name="Senior Tutor" flags="68736352256" customFlags="14" access="2" ghostAccess="2"
+    violationReasons="10" nameViolationFlags="2" statementViolationFlags="63" maxVips="200" />
   <group
     id="4"
     name="Gamemaster"
     flags="3808558964575"
     customFlags="257215"
     access="3"
+    ghostAccess="3"
     violationReasons="19"
     nameViolationFlags="10"
     statementViolationFlags="69"
@@ -22,6 +25,7 @@
     flags="3840774348794"
     customFlags="781823"
     access="4"
+    ghostAccess="4"
     violationReasons="23"
     nameViolationFlags="170"
     statementViolationFlags="213"
@@ -35,6 +39,7 @@
     flags="3845069447162"
     customFlags="2097151"
     access="5"
+    ghostAccess="5"
     violationReasons="23"
     nameViolationFlags="170"
     statementViolationFlags="213"
@@ -48,6 +53,7 @@
     flags="3845069447162"
     customFlags="2097151"
     access="6"
+    ghostAccess="6"
     violationReasons="23"
     nameViolationFlags="170"
     statementViolationFlags="213"
