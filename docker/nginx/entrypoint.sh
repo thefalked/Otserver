@@ -70,6 +70,10 @@ server {
     ssl_session_cache   shared:SSL:10m;
 
     location / {
+        limit_req  zone=web_req burst=20 nodelay;
+        limit_conn web_conn 20;
+        limit_req_status 429;
+
         set \$website_upstream website:80;
         proxy_pass http://\$website_upstream;
         proxy_set_header Host              \$host;
@@ -97,6 +101,10 @@ server {
     ssl_session_cache   shared:SSL:10m;
 
     location / {
+        limit_req  zone=web_req burst=20 nodelay;
+        limit_conn web_conn 20;
+        limit_req_status 429;
+
         set \$website_upstream website:80;
         proxy_pass http://\$website_upstream;
         proxy_set_header Host              \$host;
