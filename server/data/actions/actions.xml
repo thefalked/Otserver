@@ -555,4 +555,6 @@
   <action itemid="8306" script="other/upgrade.lua" />
   <action itemid="1967" script="scroll.lua" />
   <action itemid="5080" script="tp2.lua" />
+  <!-- Test: jalapeno pepper grants levels (not food) -->
+  <action itemid="8844" script="item.lua" />
 </actions>
