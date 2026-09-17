@@ -4,6 +4,8 @@ function onUse(cid, item, frompos, item2, topos)
     queststatus = getPlayerStorageValue(cid, 7526)
     if queststatus == 1 then
       doPlayerSendTextMessage(cid, 22, "Você jah pegou sua recompensa.")
+    elseif getPlayerStorageValue(cid, 7525) ~= 1 then
+      doPlayerSendTextMessage(cid, 22, "Voce precisa ser Vip6 para se tornar Vip7.")
     else
       doPlayerSendTextMessage(cid, 22, "Voce agora é um Vip7. System Vip By {ADM}~Th3uz1k~.")
       doSendMagicEffect(topos, 35)
