@@ -1,32 +1,10 @@
 * Notícias e Atualizações *
 
-Atualização 17/09 - morte, VIP, casas e Master set
+Vip9 sem level mínimo
 
-Pena de morte
-- Perda de exp bem mais forte (cerca de 8x)
-- Use !bless antes de caçar (reduz um pouco a perda e protege itens)
-
-Portões de level nas VIPs
-- Vip2: 800 | Vip3: 1200 | Vip4: 1800 | Vip5: 2500
-- Vip6: 3000 | Vip7: 4000 | Vip8: 5000 | Vip9: 6500
-- Sem o level mínimo, volta ao temple
-
-VIP7 e VIP8
-- VIP7 exige Vip6
-- VIP8 exige Vip7
-
-Casas inativas
-- Dono offline 3+ dias: casa liberada automaticamente
-- Itens pickupáveis vão ao depot do dono (se carregar)
-- Olhe a porta e digite !myhouse para liberar e comprar
-
-Cura EK / RP
-- Exhaust da cura principal: 1.0s para 0.5s
-  (Wound Cleansing / Divine Healing)
-
-Master set (VIP9)
-- Master Spellscroll: ML +6 agora aplica no equip
-- Armor / Helmet / Legs / Boots / Shield retunados
+- Removido o level 6500 para entrar em Vip9
+- Continua exigindo status Vip9 (quest Vip8)
+- Vip2 a Vip8 seguem com level mínimo (800 até 5000)
 
 Comente no site (Últimas Notícias) como ficou.
-Feedback ajuda a ajustar. Digite !notice para ver de novo.
+Digite !notice para ver de novo.

@@ -1,8 +1,8 @@
 # VIP level entry gates (Vip2-Vip9)
 
-VIP status alone is not enough to enter Vip2-Vip9 areas. Each StepIn tile also checks player level. Underleveled players are kicked to the temple at `{155, 52, 7}` with a cancel message.
+VIP status alone is not enough to enter Vip2-Vip8 areas. Each of those StepIn tiles also checks player level. Underleveled players are kicked to the temple at `{155, 52, 7}` with a cancel message.
 
-Vip2-Vip6 still gate by level. They use lower thresholds so a ~3000 player can use mid VIP hunts. Vip7-Vip9 stay locked until higher levels.
+Vip2-Vip6 still gate by level. They use lower thresholds so a ~3000 player can use mid VIP hunts. Vip7-Vip8 stay locked until higher levels. Vip9 has no level gate. It only checks VIP9 storage.
 
 Paid VIP (`vipe.lua`, uniqueid `13700`) has **no** level gate. It only checks VIP days storage `13545`.
 
@@ -18,7 +18,7 @@ Paid VIP (`vipe.lua`, uniqueid `13700`) has **no** level gate. It only checks VI
 | Vip6 (Mega Vip) | 3000 | `vip6.lua` | `7525` |
 | Vip7 | 4000 | `vip7.lua` | `7526` |
 | Vip8 | 5000 | `vip8.lua` | `7527` |
-| Vip9 | 6500 | `vip9.lua` | `13589` |
+| Vip9 | *(none)* | `vip9.lua` | `13589` |
 
 Scripts live under `server/data/movements/scripts/`. Wiring is in `server/data/movements/movements.xml`.
 
@@ -30,12 +30,14 @@ The Baiakzik set chest (`uniqueid="7514"`, `baiakzik_set.lua`) is separate. It g
 
 ## Design notes
 
-VIP quests are easy. A ~3000 player can finish through Vip8. Level gates stop a low-level character with VIP status from sitting in high VIP hunts, while keeping mid VIP usable around that pace.
+VIP quests are easy. A ~3000 player can finish through Vip8. Level gates stop a low-level character with VIP status from sitting in Vip2-Vip8 hunts, while keeping mid VIP usable around that pace. Vip9 only checks VIP status.
 
-Check order on StepIn:
+Check order on StepIn (Vip2-Vip8):
 
 1. Level (`requiredLevel`)
 2. VIP storage (existing quest / status check)
+
+Vip9 skips the level check and only runs the VIP storage check.
 
 ## How to change
 
