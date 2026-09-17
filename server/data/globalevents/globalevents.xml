@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <globalevents>
   <globalevent name="save" interval="1800000" event="script" value="save.lua" />
   <globalevent name="clean" interval="1600000" event="script" value="clean.lua" />
@@ -9,4 +9,6 @@
   <globalevent name="playersrecord" type="record" event="script" value="record.lua" />
   <globalevent name="safe_shutdown" interval="5000" event="script" value="restarter.lua" />
   <globalevent name="init" type="startup" event="script" value="init.lua" />
+  <globalevent name="house_clean_old" interval="1800000" event="script"
+    value="house_clean_old.lua" />
 </globalevents>
