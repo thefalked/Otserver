@@ -1,7 +1,13 @@
 * Notícias e Atualizações *
 
-Vip9 sem level mínimo
+Pena de morte + Vip9
 
+Pena de morte
+- Curva forte (~8x) ficou pesada demais
+- Perda de exp bem mais leve (~1/4 da anterior)
+- Use !bless antes de caçar
+
+Vip9 sem level mínimo
 - Removido o level 6500 para entrar em Vip9
 - Continua exigindo status Vip9 (quest Vip8)
 - Vip2 a Vip8 seguem com level mínimo (800 até 5000)
