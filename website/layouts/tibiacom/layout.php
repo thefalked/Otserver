@@ -1117,7 +1117,7 @@ if ($seo_subtopic === 'latestnews') {
             $time = $time_end - $time_start;
             ?>
             <font color="yellow">&copy; <?php echo date('Y'); ?>
-              <?php echo htmlspecialchars($config['server']['serverName'], ENT_QUOTES, 'UTF-8'); ?> —
+              <?php echo htmlspecialchars($config['server']['serverName'], ENT_QUOTES, 'UTF-8'); ?> -
               Todos os direitos reservados.<br />
               <font color="white">Tempo de carregamento: <?php echo round($time, 4); ?> segundos</font>
             </font>

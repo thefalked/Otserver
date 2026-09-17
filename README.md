@@ -52,7 +52,7 @@ cp otserver/.env.example otserver/.env   # set MYSQL_* / OT_IP
 cd otserver && docker compose up -d --build
 ```
 
-That compose builds from this checkout (`../../Otserver`), puts MySQL/logs under `home-server/otserver/otserver_data/`, exposes the Gesior site via Traefik (`baiakvip9.thefalked.dev`), and publishes login/game TCP **7171** / **7172** on the `otserver` container (raw OT protocol — not Traefik). Do **not** run this repo’s `docker compose up` and the home-server wrapper at the same time (port and container-name conflicts). C++ rebuilds still use `./server/compile.sh` here. Keep this repo’s `docker-compose.yml` service/SQL/port layout in sync with `home-server/otserver/docker-compose.yml`.
+That compose builds from this checkout (`../../Otserver`), puts MySQL/logs under `home-server/otserver/otserver_data/`, exposes the Gesior site via Traefik (`baiakvip9.thefalked.dev`), and publishes login/game TCP **7171** / **7172** on the `otserver` container (raw OT protocol. not Traefik). Do **not** run this repo’s `docker compose up` and the home-server wrapper at the same time (port and container-name conflicts). C++ rebuilds still use `./server/compile.sh` here. Keep this repo’s `docker-compose.yml` service/SQL/port layout in sync with `home-server/otserver/docker-compose.yml`.
 
 ## Quick start
 
@@ -96,7 +96,7 @@ Copy `.env.example` → `.env`. Compose and the containers read these values:
 
 | Variable | Default | Purpose |
 | ---------- | --------- | --------- |
-| `MYSQL_ROOT_PASSWORD` | *(required)* | MySQL root — set in `.env` |
+| `MYSQL_ROOT_PASSWORD` | *(required)* | MySQL root. set in `.env` |
 | `MYSQL_DATABASE` | `ot` | Database name |
 | `MYSQL_USER` / `MYSQL_PASSWORD` | `ot` / *(required)* | App DB user |
 | `MYSQL_HOST` / `MYSQL_PORT` | `mysql` / `3306` | Host inside Docker network |

@@ -114,7 +114,7 @@ def print_matrix(levels: list[int], ml_mage: int, ml_rp: int, ml_ek: int) -> Non
             print(f"{label:<42} {level:>6} {before:>10.0f} {after:>10.0f} {after - before:>+10.0f}")
         print()
 
-    print("=== Mage AoE order (NEW, ML mage) — mort must stay #1 ===\n")
+    print("=== Mage AoE order (NEW, ML mage). mort must stay #1 ===\n")
     order = [
         "suden death (exevo gran mas mort)",
         "Hell's Core (exevo gran mas flam) NEW",

@@ -86,7 +86,7 @@ WORD_FIXES = [
     (r"\bMissao\b", "Missão"),
     (r"\bparabens\b", "parabéns"),
     (r"\bParabens\b", "Parabéns"),
-    # Do not rewrite "noticias" — it is also the on-disk filename noticias.txt.
+    # Do not rewrite "noticias". it is also the on-disk filename noticias.txt.
     (r"\bcomecar\b", "começar"),
     (r"\bComecar\b", "Começar"),
     (r"\bproxima\b", "próxima"),

@@ -35,13 +35,13 @@ ensure_file() {
 	fi
 }
 
-# config/serverstatus — online status cache (config-and-functions.php)
-# config/config.ini — install / saveconfig_ini
+# config/serverstatus: online status cache (config-and-functions.php)
+# config/config.ini: install / saveconfig_ini
 ensure_dir "$WEBROOT/config"
 ensure_file "$WEBROOT/config/serverstatus"
 ensure_file "$WEBROOT/config/config.ini"
 
-# Page-view counter (under config/ — RW mount; avoids Docker file-bind → dir footgun)
+# Page-view counter (under config/: RW mount. Avoids Docker file-bind to dir footgun)
 _legacy_counter="$WEBROOT/usercounter.dat"
 _counter="$WEBROOT/config/usercounter.dat"
 if [ -f "$_legacy_counter" ] && [ ! -f "$_counter" ]; then

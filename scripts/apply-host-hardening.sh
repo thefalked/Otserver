@@ -4,7 +4,7 @@
 #
 # Idempotent. Does not re-run full bootstrap.
 #
-# Safe default (UFW + compose only — no SSH / docker-group / git changes):
+# Safe default (UFW + compose only. no SSH / docker-group / git changes):
 #   sudo bash scripts/apply-host-hardening.sh
 #
 #   sudo bash scripts/apply-host-hardening.sh --compose-only
@@ -58,7 +58,7 @@ done
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Prefer the invoking sudo user — never treat root's keys/creds as the admin's.
+# Prefer the invoking sudo user. Never treat root's keys/creds as the admin's.
 OWNER="${SUDO_USER:-}"
 if [ -z "${OWNER}" ] || [ "${OWNER}" = "root" ]; then
 	_repo_owner="$(stat -c '%U' "${REPO_ROOT}" 2>/dev/null || echo "")"
@@ -89,11 +89,11 @@ echo "Left unchanged. After a working key login in another terminal:"
 echo "  sudo bash ${REPO_ROOT}/scripts/disable-ssh-passwords.sh"
 
 if [ "${REMOVE_DOCKER_GROUP}" = "1" ]; then
-	echo "==> docker group (H5) — --remove-docker-group"
+	echo "==> docker group (H5). --remove-docker-group"
 	if [ -z "${OWNER}" ]; then
 		echo "Cannot resolve sudo user; skip docker group change." >&2
 	elif [ "${OTSERVER_DOCKER_GROUP:-0}" = "1" ]; then
-		echo "OTSERVER_DOCKER_GROUP=1 set — not removing."
+		echo "OTSERVER_DOCKER_GROUP=1 set. not removing."
 	elif id "${OWNER}" >/dev/null 2>&1 && id -nG "${OWNER}" 2>/dev/null | grep -qw docker; then
 		gpasswd -d "${OWNER}" docker
 		echo "Removed ${OWNER} from group docker (use: sudo docker compose)."
@@ -106,11 +106,11 @@ else
 fi
 
 if [ "${REMOVE_GIT_CREDENTIALS}" = "1" ]; then
-	echo "==> git credentials (H9) — --remove-git-credentials"
+	echo "==> git credentials (H9). --remove-git-credentials"
 	if [ -z "${OWNER_HOME}" ]; then
 		echo "Cannot resolve sudo user home; skip." >&2
 	elif [ "${OTSERVER_SAVE_GIT_CREDENTIALS:-0}" = "1" ]; then
-		echo "OTSERVER_SAVE_GIT_CREDENTIALS=1 — leaving credentials alone."
+		echo "OTSERVER_SAVE_GIT_CREDENTIALS=1. leaving credentials alone."
 	elif [ -f "${OWNER_HOME}/.git-credentials" ]; then
 		rm -f "${OWNER_HOME}/.git-credentials"
 		echo "Removed ${OWNER_HOME}/.git-credentials. Prefer a deploy key, or scripts/set-git-credentials.sh"

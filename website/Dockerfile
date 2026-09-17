@@ -23,7 +23,7 @@ RUN printf '%s\n' \
   > /usr/local/etc/php/conf.d/aac.ini
 
 # Hide Apache/PHP fingerprints (F1): no version in Server/X-Powered-By or 404 footers.
-# security.conf ships ServerTokens OS / ServerSignature On — override those first.
+# security.conf ships ServerTokens OS / ServerSignature On. override those first.
 RUN sed -i \
   -e 's/^ServerTokens OS/ServerTokens Prod/' \
   -e 's/^ServerSignature On/ServerSignature Off/' \

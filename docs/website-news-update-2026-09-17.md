@@ -1,11 +1,11 @@
-# Pacote para o site — Atualização 2026-09-17
+# Pacote para o site: Atualização 2026-09-17
 
 Use depois de publicar os commits locais (ainda não enviados ao remote). Reinicie o servidor de jogo ou recarregue globalevents/talkactions/movements/creaturescripts conforme o que mudou.
 
 Commits cobertos (10, desde o último push):
 
 - balance: death exp ~8x, heal exhaust EK/RP, Master set
-- VIP: level gates Vip2–Vip9, VIP7/8 exigem tier anterior
+- VIP: level gates Vip2-Vip9, VIP7/8 exigem tier anterior
 - houses: limpa donos inativos após 3 dias + `!myhouse`
 - website: SEO / sitemap
 - fixes: afk/treinando, acentos Latin-1 no client, nginx rate-limit (ops), item de teste (interno)
@@ -19,7 +19,7 @@ Detalhe técnico: [death-penalty.md](death-penalty.md), [vip-level-gates.md](vip
 **Tópico:**
 
 ```text
-🔥 Atualização — Morte, VIPs por level, casas inativas e Master set
+🔥 Atualização: Morte, VIPs, casas e Master set
 ```
 
 **Texto (BBCode + emoji Unicode):**
@@ -32,7 +32,7 @@ A perda de experiência na morte ficou bem mais forte (cerca de [b]8x[/b] a curv
 Use [b]!bless[/b] antes de caçar. Bless reduz um pouco a perda de exp e protege itens/bags.
 
 🚪 [b]Portões de level nas VIPs[/b]
-Ter VIP não basta para entrar em Vip2–Vip9. Cada área exige level mínimo:
+Ter VIP não basta para entrar em Vip2-Vip9. Cada área exige level mínimo:
 
 Vip2: 800 | Vip3: 1200 | Vip4: 1800 | Vip5: 2500
 Vip6: 3000 | Vip7: 4000 | Vip8: 5000 | Vip9: 6500
@@ -74,21 +74,21 @@ Digite [b]!notice[/b] no jogo para ver o resumo.
 
 Descrições curtas (máx. 150 caracteres).
 
-### Server — Type: Add
+### Server: Type: Add
 
 1. `Pena de morte bem mais forte (~8x). Use !bless para reduzir perda de exp e proteger itens.`
-2. `Vip2–Vip9 exigem level mínimo para entrar (800 até 6500). Sem level, volta ao temple.`
+2. `Vip2-Vip9 exigem level mínimo para entrar (800 até 6500). Sem level, volta ao temple.`
 3. `VIP7 exige Vip6 e VIP8 exige Vip7 (boneca e bau).`
 4. `Casas com dono offline 3+ dias são liberadas. Itens vão ao depot. Use !myhouse na porta.`
 5. `Exhaust da cura EK/RP (exana mort / exura san): 1.0s para 0.5s.`
 6. `Master set VIP9 retunado: Spellscroll ML +6 no equip, resists e boots ajustados.`
 
-### Server — Type: Remove (bugfix, opcional)
+### Server: Type: Remove (bugfix, opcional)
 
 1. `Correção em !afk / !treinando: eventos não acumulam mais após logout ou reuso de cid.`
 2. `Textos do client com acentos corrigidos (Latin-1) em vários scripts.`
 
-### Website — Type: Add
+### Website: Type: Add
 
 1. `SEO: meta tags, Open Graph, robots.txt e sitemap para indexação do site.`
 
@@ -97,7 +97,7 @@ Descrições curtas (máx. 150 caracteres).
 ```sql
 INSERT INTO `z_changelog` (`type`, `where`, `date`, `description`) VALUES
 ('Add', 'Server', UNIX_TIMESTAMP(), 'Pena de morte bem mais forte (~8x). Use !bless para reduzir perda de exp e proteger itens.'),
-('Add', 'Server', UNIX_TIMESTAMP(), 'Vip2–Vip9 exigem level mínimo para entrar (800 até 6500). Sem level, volta ao temple.'),
+('Add', 'Server', UNIX_TIMESTAMP(), 'Vip2-Vip9 exigem level mínimo para entrar (800 até 6500). Sem level, volta ao temple.'),
 ('Add', 'Server', UNIX_TIMESTAMP(), 'VIP7 exige Vip6 e VIP8 exige Vip7 (boneca e bau).'),
 ('Add', 'Server', UNIX_TIMESTAMP(), 'Casas com dono offline 3+ dias são liberadas. Itens vão ao depot. Use !myhouse na porta.'),
 ('Add', 'Server', UNIX_TIMESTAMP(), 'Exhaust da cura EK/RP (exana mort / exura san): 1.0s para 0.5s.'),

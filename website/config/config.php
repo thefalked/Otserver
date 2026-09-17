@@ -475,7 +475,7 @@ $config['site']['guild_description_chars_limit'] = 1000; // limit of guild descr
 $config['site']['guild_description_lines_limit'] = 6; // limit of lines, if description has more lines it will be showed as long text, without 'enters'
 $config['site']['guild_motd_chars_limit'] = 150; // limit of MOTD (show in game?)
 
-// E-MAIL / SMTP — cleared (unused). Set values here only if you enable send_emails.
+// E-MAIL / SMTP: cleared (unused). Set values here only if you enable send_emails.
 $config['site']['send_emails'] = 0;
 $config['site']['mail_address'] = '';
 $config['site']['smtp_enabled'] = 'no';
@@ -531,7 +531,7 @@ $config['site']['og_image'] = '/layouts/tibiacom/images/header/background-artwor
 $config['site']['og_image_width'] = 1600;
 $config['site']['og_image_height'] = 800;
 
-// PagSeguro — cleared (callback disabled). Leave empty unless you re-enable payments.
+// PagSeguro: cleared (callback disabled). Leave empty unless you re-enable payments.
 $config['pagseguro']['email'] = '';
 $config['pagseguro']['produtoNome'] = 'Pontos Premium';
 $config['pagseguro']['Token'] = '';

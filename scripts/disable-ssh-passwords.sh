@@ -28,7 +28,7 @@ if [ "${key_count}" -lt 1 ]; then
 	echo "No SSH public keys found in /home/*/.ssh/authorized_keys." >&2
 	echo "Add a key for your sudo user first (docs/vps.md). Aborting so you are not locked out." >&2
 	if [ -f /root/.ssh/authorized_keys ]; then
-		echo "(Root has authorized_keys, but PermitRootLogin is off — those keys do not count.)" >&2
+		echo "(Root has authorized_keys, but PermitRootLogin is off. those keys do not count.)" >&2
 	fi
 	exit 1
 fi

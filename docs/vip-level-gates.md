@@ -1,8 +1,8 @@
-# VIP level entry gates (Vip2–Vip9)
+# VIP level entry gates (Vip2-Vip9)
 
-VIP status alone is not enough to enter Vip2–Vip9 areas. Each StepIn tile also checks player level. Underleveled players are kicked to the temple at `{155, 52, 7}` with a cancel message.
+VIP status alone is not enough to enter Vip2-Vip9 areas. Each StepIn tile also checks player level. Underleveled players are kicked to the temple at `{155, 52, 7}` with a cancel message.
 
-Vip2–Vip6 still gate by level. They use lower thresholds so a ~3000 player can use mid VIP hunts. Vip7–Vip9 stay locked until higher levels.
+Vip2-Vip6 still gate by level. They use lower thresholds so a ~3000 player can use mid VIP hunts. Vip7-Vip9 stay locked until higher levels.
 
 Paid VIP (`vipe.lua`, uniqueid `13700`) has **no** level gate. It only checks VIP days storage `13545`.
 
@@ -22,9 +22,9 @@ Paid VIP (`vipe.lua`, uniqueid `13700`) has **no** level gate. It only checks VI
 
 Scripts live under `server/data/movements/scripts/`. Wiring is in `server/data/movements/movements.xml`.
 
-Map checks (live tiles): ActionID and UniqueID match for Vip3–Vip9 gates. The live Vip4 entry is `5722` (`vip4.lua`). Uniqueid `5721` (`vip4b.lua`) is kept as an orphan gate with no matching map tile found.
+Map checks (live tiles): ActionID and UniqueID match for Vip3-Vip9 gates. The live Vip4 entry is `5722` (`vip4.lua`). Uniqueid `5721` (`vip4b.lua`) is kept as an orphan gate with no matching map tile found.
 
-Matching quest reward chests live under `server/data/actions/scripts/` with the same VIP names (`vip3.lua`, `vip4.lua`, `vip5.lua`–`vip8.lua`). Those scripts grant VIP storage on use. The Vip4 chest (`uniqueid="7515"`) sets storage `5722`.
+Matching quest reward chests live under `server/data/actions/scripts/` with the same VIP names (`vip3.lua`, `vip4.lua`, `vip5.lua`-`vip8.lua`). Those scripts grant VIP storage on use. The Vip4 chest (`uniqueid="7515"`) sets storage `5722`.
 
 The Baiakzik set chest (`uniqueid="7514"`, `baiakzik_set.lua`) is separate. It grants set items and uses storage `7514`. It does not grant VIP entry status.
 

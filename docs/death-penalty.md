@@ -6,8 +6,8 @@
 | -------- | ------: | ------ |
 | `deathLostPercent` | `80` | Base death hardness. Applied in `login.lua` as `loss * 10`. |
 | `eachBlessReduction` | `2` | Each blessing subtracts 2 from the experience loss scale. |
-| Vip Baiak `lessloss` (ids 5–8) | `10` | Subtracted from the experience loss scale at death. |
-| Epic `lessloss` (ids 9–12, commented out) | `30` | Same, if those vocations are enabled. |
+| Vip Baiak `lessloss` (ids 5-8) | `10` | Subtracted from the experience loss scale at death. |
+| Epic `lessloss` (ids 9-12, commented out) | `30` | Same, if those vocations are enabled. |
 
 Design baseline for published tables: **5 blessings**. Live players buy all five at once with `!bless` (`server/data/talkactions/scripts/bless.lua`, 80k gold). Tables still show `0b` for unblessed deaths.
 
@@ -38,10 +38,10 @@ Vip Baiak lessLoss = 10
 
 | Player type | Vocation | `lessLoss` | Bless | percent | Above level 25 approx |
 | ------------- | ---------- | ----------: | ------: | --------: | ------------------------ |
-| Non-VIP | Base vocations (ids 1–4) | 0 | 0 | `800 / 100 = 8.0` | `((level + 50) / 100) * 8.0` |
-| Non-VIP | Base vocations (ids 1–4) | 0 | 5 | `(800 - 10) / 100 = 7.9` | `((level + 50) / 100) * 7.9` |
-| VIP | Vip Baiak vocations (ids 5–8) | 10 | 0 | `(800 - 10) / 100 = 7.9` | `((level + 50) / 100) * 7.9` |
-| VIP | Vip Baiak vocations (ids 5–8) | 10 | 5 | `(800 - 10 - 10) / 100 = 7.8` | `((level + 50) / 100) * 7.8` |
+| Non-VIP | Base vocations (ids 1-4) | 0 | 0 | `800 / 100 = 8.0` | `((level + 50) / 100) * 8.0` |
+| Non-VIP | Base vocations (ids 1-4) | 0 | 5 | `(800 - 10) / 100 = 7.9` | `((level + 50) / 100) * 7.9` |
+| VIP | Vip Baiak vocations (ids 5-8) | 10 | 0 | `(800 - 10) / 100 = 7.9` | `((level + 50) / 100) * 7.9` |
+| VIP | Vip Baiak vocations (ids 5-8) | 10 | 5 | `(800 - 10 - 10) / 100 = 7.8` | `((level + 50) / 100) * 7.8` |
 
 VIP classes lose a little less than non-VIP because of `lessloss="10"` in `server/data/XML/vocations.xml`. Five blessings subtract another 10 from the scale. At `deathLostPercent = 80` that is only about a **1.25%** softer death hit than unblessed.
 
@@ -104,7 +104,7 @@ Re-checked against source:
 1. `login.lua` multiplies `deathLostPercent` by `10` before `doPlayerSetLossPercent(..., PLAYERLOSS_EXPERIENCE, ...)`.
 2. `getLostExperience()` uses that value, minus `lessLoss`, minus `blessings * eachBlessReduction`.
 3. Skill / mana loss scale from how much experience was removed (`Player::onDeath`), using the pre-death experience ratio.
-4. `!bless` grants blessings 1–5 together (`server/data/talkactions/scripts/bless.lua`).
+4. `!bless` grants blessings 1-5 together (`server/data/talkactions/scripts/bless.lua`).
 
 So `deathLostPercent = 80` is **8×** the old default of `10` (which already meant full formula strength, not “10% of a level”).
 

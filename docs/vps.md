@@ -11,7 +11,7 @@ The repo is private. Do **not** anonymous-clone on the VPS. From this repo on yo
 That script asks you for **everything on your laptop** (no remote prompts):
 
 1. VPS IP/hostname, SSH user (`root` on a new machine), SSH port
-2. GitHub token (hidden) — fine-grained **Contents: Read-only** on this repo, or classic `repo`
+2. GitHub token (hidden): fine-grained **Contents: Read-only** on this repo, or classic `repo`
 3. New sudo username + password
 4. Website hostname (default **baiakvip9.servegame.com**), Let’s Encrypt email
 5. MySQL root and app passwords
@@ -21,7 +21,7 @@ It then SSHs in (host key / VPS root password if the provider did not inject you
 The GitHub token is **not** stored on disk by default (H9). Prefer a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) for later `git pull`. Opt-in PAT store:
 
 ```bash
-# as the sudo user, from /opt/otserver — or:
+# as the sudo user, from /opt/otserver. or:
 sudo bash scripts/set-git-credentials.sh --user YOUR_SUDO_USER
 # or during bootstrap: OTSERVER_SAVE_GIT_CREDENTIALS=1
 ```
@@ -56,7 +56,7 @@ container users (that used to break `git pull`).
 Safe default (idempotent, like `setup-hawser.sh`):
 
 - drops UFW `8080` if present (H3)
-- recreates `website` + `nginx` (loopback `:8080`, lean env, read-only PHP — H3/H4/H6/H11)
+- recreates `website` + `nginx` (loopback `:8080`, lean env, read-only PHP. H3/H4/H6/H11)
 
 It does **not** change SSH passwords, docker group, or `~/.git-credentials` unless you pass flags:
 
@@ -102,8 +102,8 @@ if a **kernel** update landed (check `apt list --upgradable` / `needrestart -l`)
 `setup-vps.sh` enables **unattended-upgrades** so apt security/updates install
 on their own, with:
 
-- `Unattended-Upgrade::Automatic-Reboot false` — the box does not reboot itself
-- needrestart **skips** `docker`, `containerd`, and `ssh` — a libc upgrade will
+- `Unattended-Upgrade::Automatic-Reboot false`. The box does not reboot itself
+- needrestart **skips** `docker`, `containerd`, and `ssh`. a libc upgrade will
   not bounce the game stack or drop your SSH session
 
 Services other than those three may still restart when a library they use is
@@ -114,7 +114,7 @@ patched (short blip). Docker/OT/MySQL keep running the old libraries until
 sudo apt update
 sudo apt upgrade            # already happening daily; this is the manual path
 # when you are ready for kernel / docker:
-sudo systemctl restart docker   # drops compose for a few seconds — pick off-peak
+sudo systemctl restart docker   # drops compose for a few seconds. pick off-peak
 sudo reboot                     # only when a kernel update says so
 ```
 
@@ -274,7 +274,7 @@ If issuance fails, check DNS, port 80, and `docker compose logs nginx`.
 nginx publishes **2376** and only proxies TLS clients whose **SNI** is
 `SITE_MAINTENANCE_DOMAIN` (e.g. `baiakvip9.thefalked.dev`). Hawser itself is
 internal (`expose` only) and still uses the **maintenance** cert
-(`maintenance-fullchain.pem`). Dockhand must use that hostname — not the
+(`maintenance-fullchain.pem`). Dockhand must use that hostname. not the
 public servegame name and not a bare IP (wrong/missing SNI is dropped).
 
 `TOKEN` lives in **`/etc/hawser/config`**; `setup-hawser.sh` mirrors it to
@@ -307,7 +307,7 @@ Dumps older than 14 days are deleted (`BACKUP_KEEP_DAYS` to change).
 
 `setup-vps.sh` installs a systemd timer that runs this daily at 04:15 UTC.
 
-**Restore** (this *does* interrupt the site/game — take them down first):
+**Restore** (this *does* interrupt the site/game. take them down first):
 
 ```bash
 docker compose stop otserver website

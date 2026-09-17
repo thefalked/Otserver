@@ -23,7 +23,7 @@
 # Without OTSERVER_* / MYSQL_* env vars it will prompt on /dev/tty for:
 #   1) sudo username
 #   2) that user's password (twice)
-#   3) website hostname (default baiakvip9.servegame.com — Enter to keep it)
+#   3) website hostname (default baiakvip9.servegame.com. Enter to keep it)
 #   4) Let's Encrypt email
 #   5) MySQL root and app passwords
 #
@@ -31,9 +31,9 @@
 #   OTSERVER_USERNAME OTSERVER_PASSWORD SITE_DOMAIN LETSENCRYPT_EMAIL
 #   MYSQL_ROOT_PASSWORD MYSQL_PASSWORD
 # Optional: GITHUB_TOKEN + OTSERVER_SAVE_GIT_CREDENTIALS=1 to write ~/.git-credentials
-# (H9: off by default — use scripts/set-git-credentials.sh or a deploy key).
+# (H9: off by default. use scripts/set-git-credentials.sh or a deploy key).
 # Optional: OTSERVER_DOCKER_GROUP=1 to add the sudo user to group docker (H5: off
-# by default — prefer `sudo docker compose`).
+# by default. Prefer `sudo docker compose`).
 #
 # Change the hostname later without re-running this: scripts/set-domain.sh
 #
@@ -241,7 +241,7 @@ if command -v docker >/dev/null 2>&1; then
 	echo "Docker already installed: $(docker --version)"
 else
 	# Download then run (not curl|sh) so a failed fetch cannot pipe partial script.
-	# Still trusts get.docker.com — pin/mirror yourself if you need stronger supply-chain controls.
+	# Still trusts get.docker.com. pin/mirror yourself if you need stronger supply-chain controls.
 	_docker_install="$(mktemp)"
 	trap 'rm -f "${_docker_install}"' EXIT
 	curl -fsSL https://get.docker.com -o "${_docker_install}"
@@ -330,7 +330,7 @@ fi
 # Why: you asked for updates with as little downtime as possible. Security and
 # -updates install daily. Automatic-Reboot stays false so a kernel package
 # never bounces the VPS on its own. needrestart is told not to restart docker,
-# containerd, or ssh — those would drop the game or this admin session.
+# containerd, or ssh. those would drop the game or this admin session.
 # You still reboot later when you choose, if a kernel update is waiting.
 # -----------------------------------------------------------------------------
 echo "==> Enabling unattended-upgrades (no automatic reboot)"
@@ -375,7 +375,7 @@ fi
 #   7171  OT login protocol (raw TCP, not HTTP)
 #   7172  OT game protocol
 # Port 8080 is NOT opened (H3): cleartext AAC is bound to 127.0.0.1 only.
-# MySQL 3306 is NOT opened — it stays on the Docker network only.
+# MySQL 3306 is NOT opened. it stays on the Docker network only.
 #
 # --force enable skips the "did you allow SSH?" yes/no prompt so we cannot
 # hang, and 22 is already allowed above so we should not lock ourselves out.
@@ -436,11 +436,11 @@ if [ -d "${REPO_ROOT}/docker/nginx" ]; then
 fi
 
 # ACME webroot for HTTP-01. nginx.conf serves this on :80; certbot writes here.
-# :ro in compose is fine — certbot runs on the host, not in the container.
+# :ro in compose is fine. certbot runs on the host, not in the container.
 install -d -m 755 -o "${USERNAME}" -g "${USERNAME}" "${REPO_ROOT}/docker/nginx/acme"
 
 # -----------------------------------------------------------------------------
-# Let's Encrypt machinery (issue later — DNS + nginx :80 must exist first)
+# Let's Encrypt machinery (issue later. DNS + nginx :80 must exist first)
 # Why not issue now: this script runs before compose is up. HTTP-01 would fail.
 # certbot.timer renews twice daily; the deploy hook copies pems and reloads
 # nginx (no container restart, game stays up).
@@ -496,7 +496,7 @@ fi
 # example avoids a first-up failure. SITE_DOMAIN feeds the nginx cert SAN.
 # COMPOSE_FILE adds docker-compose.vps.yml so host 80/443 are published
 # (local compose leaves those off so a busy laptop port 80 does not break up).
-# MYSQL_* are left empty on purpose — you must set them before `compose up`.
+# MYSQL_* are left empty on purpose. you must set them before `compose up`.
 # -----------------------------------------------------------------------------
 upsert_env() {
 	local file="$1" key="$2" value="$3"
@@ -628,7 +628,7 @@ echo
 echo "Open:"
 echo "  https://${SITE_DOMAIN}/"
 echo "  TCP ${SITE_DOMAIN}:7171 / 7172"
-echo "  (cleartext :8080 is loopback-only — not public)"
+echo "  (cleartext :8080 is loopback-only. not public)"
 echo
 echo "Log in from another terminal before closing this one:"
 echo "  ssh ${USERNAME}@<this-host>"

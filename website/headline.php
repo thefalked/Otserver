@@ -3,7 +3,7 @@ if (!mb_check_encoding($text, 'UTF-8')) {
   $text = mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1');
 }
 $text = trim($text);
-// Letters/digits/spaces — Unicode letters allowed (pt-BR accents)
+// Letters/digits/spaces. Unicode letters allowed (pt-BR accents)
 if ($text === '' || mb_strlen($text, 'UTF-8') > 80 || !preg_match('/^[\p{L}\p{N}][\p{L}\p{N} _\-?]{0,79}$/u', $text)) {
   http_response_code(400);
   exit();

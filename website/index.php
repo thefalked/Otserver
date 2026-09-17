@@ -35,7 +35,7 @@ if ($action == 'logout') {
 //##### LOGIN #####
 $logged = false;
 $group_id_of_acc_logged = 0;
-// A2: Gesior Account Manager (id 1 / name "1") stays for the game client only — never AAC session.
+// A2: Gesior Account Manager (id 1 / name "1") stays for the game client only. Never AAC session.
 $account_manager_denied = false;
 if (isset($_SESSION['account'])) {
   $account_logged = $ots->createObject('Account');

@@ -1,4 +1,4 @@
-# Pacote para o site — Balanceamento de magias (2026-09-16)
+# Pacote para o site: Balanceamento de magias (2026-09-16)
 
 Use depois de publicar as alterações dos scripts de magia. Recarregue as magias ou reinicie o servidor de jogo primeiro.
 
@@ -11,13 +11,13 @@ Detalhe técnico: [spell-balance-15k.md](spell-balance-15k.md)
 **Tópico:**
 
 ```text
-⚡ Atualização de Balanceamento de Magias — High Level (até 15k)
+⚡ Balanceamento de Magias: High Level (até 15k)
 ```
 
 **Texto (BBCode + emoji Unicode):**
 
 ```text
-😎 Rebalanceamos várias magias de vocação para o [b]high level[/b] (cerca de nível [b]2000–15000[/b]).
+😎 Rebalanceamos várias magias de vocação para o [b]high level[/b] (cerca de nível [b]2000-15000[/b]).
 
 ⚔️ [b]Elite Knight[/b]
 [b]Wound Cleansing[/b] ([i]exana mort[/i]): cura bem mais forte, agora escala perto da Mana Rune (um pouco menos).

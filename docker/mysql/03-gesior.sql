@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `auction_system` (
 -- Move Account Manager to Baiak temple coords from TIBIA.rar schema
 UPDATE `players` SET `posx` = 32360, `posy` = 31782, `posz` = 7, `town_id` = 1 WHERE `name` = 'Account Manager';
 
-// A2: Account Manager (name/id 1) is for the game client only — no AAC admin.
+// A2: Account Manager (name/id 1) is for the game client only. No AAC admin.
 UPDATE `accounts` SET `page_access` = 0, `flag` = 'unknown' WHERE `name` = '1' OR `id` = 1;
 
 -- Sample vocation templates for website character creation (cloned by Gesior).

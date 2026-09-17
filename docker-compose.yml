@@ -4,7 +4,7 @@
 # Do not run this stack and the home-server wrapper at the same time.
 #
 # Public ports are on nginx (HTTP) and otserver (OT TCP).
-#   127.0.0.1:8080 HTTP site (localhost only — H3) | 7171/7172 game
+#   127.0.0.1:8080 HTTP site (localhost only: H3) | 7171/7172 game
 # VPS overlay (docker-compose.vps.yml) also publishes 80/443.
 # Clients: set OT_IP in .env to the hostname/IP clients should use after login.
 
@@ -88,7 +88,7 @@ services:
     networks:
       - otnet
 
-  # GesiorACC — account maker / downloads site
+  # GesiorACC: account maker / downloads site
   website:
     build:
       context: .
@@ -98,7 +98,7 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    # H4: no env_file — do not inject MYSQL_ROOT_PASSWORD / unrelated secrets.
+    # H4: no env_file. Do not inject MYSQL_ROOT_PASSWORD / unrelated secrets.
     environment:
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_PORT: ${MYSQL_PORT}
@@ -146,7 +146,7 @@ services:
     depends_on:
       - website
       - otserver
-    # H4: only domain/IP vars — no MySQL secrets.
+    # H4: only domain/IP vars. No MySQL secrets.
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN:-localhost}
       SITE_MAINTENANCE_DOMAIN: ${SITE_MAINTENANCE_DOMAIN:-}

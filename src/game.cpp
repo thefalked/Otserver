@@ -340,7 +340,7 @@ void Game::cancelPendingRemoval(uint32_t playerId)
 
 void Game::flushDirtyPlayers()
 {
-	// May be called from MySQL reconnect inside an active query — defer to dispatcher.
+	// May be called from MySQL reconnect inside an active query. defer to dispatcher.
 	Dispatcher::getInstance().addTask(createTask(
 		boost::bind(&Game::doFlushDirtyPlayers, this)));
 }
@@ -458,7 +458,7 @@ void Game::doFlushDirtyPlayers()
 		if(!IOLoginData::getInstance()->savePlayer(player))
 			continue;
 
-		// Partial success (shallow / save-disabled) leaves the dirty bit set — keep waiting.
+		// Partial success (shallow / save-disabled) leaves the dirty bit set. keep waiting.
 		if(dirtyPlayers.find(*it) != dirtyPlayers.end())
 			continue;
 
@@ -535,7 +535,7 @@ void Game::safeRemovePlayer(uint32_t playerId, bool isLogout/* = true*/, bool fo
 		if(player->isGhost())
 			clearPendingOnlineStatus(player);
 		pendingRemovals.erase(playerId);
-		// Let onCreatureDisappear attempt one more save — we did not succeed above.
+		// Let onCreatureDisappear attempt one more save. we did not succeed above.
 		removeCreature(player, isLogout);
 		// SaveDirtyGuard may re-mark dirty if that last save failed after free.
 		clearPlayerDirty(playerId);

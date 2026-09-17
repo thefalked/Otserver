@@ -57,7 +57,7 @@ if [ ! -f /etc/hawser/config ]; then
 	_hawser_tok="$(openssl rand -base64 32)"
 	umask 077
 	cat > /etc/hawser/config <<EOF
-# Hawser — TOKEN mirrored to /etc/hawser/token for otserver-hawser (compose)
+# Hawser: TOKEN mirrored to /etc/hawser/token for otserver-hawser (compose)
 PORT=2376
 TOKEN=${_hawser_tok}
 DOCKER_SOCKET=/var/run/docker.sock
@@ -121,7 +121,7 @@ case "${COMPOSE_FILE:-}" in
 	*docker-compose.vps.yml*) compose_has_vps=1 ;;
 esac
 if [ "${compose_has_vps}" -eq 0 ]; then
-	echo "COMPOSE_FILE does not include docker-compose.vps.yml — add it to .env, then re-run." >&2
+	echo "COMPOSE_FILE does not include docker-compose.vps.yml. add it to .env, then re-run." >&2
 	echo "  COMPOSE_FILE=docker-compose.yml:docker-compose.vps.yml" >&2
 	exit 1
 fi

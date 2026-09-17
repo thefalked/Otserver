@@ -31,7 +31,7 @@ services:
       - /opt/hawser-stacks:/opt/hawser-stacks
       - ./docker/nginx/certs:/certs:ro
       - /etc/hawser/token:/run/secrets/hawser_token:ro
-    # Internal only — public :2376 is nginx stream + SNI allowlist (H1).
+    # Internal only. public :2376 is nginx stream + SNI allowlist (H1).
     expose:
       - "2376"
     networks:

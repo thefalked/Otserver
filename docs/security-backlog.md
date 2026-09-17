@@ -1,4 +1,4 @@
-# Security backlog — deferred / later
+# Security backlog: deferred / later
 
 Items we intentionally skip for now. Pick one when ready; do not treat this file as “accepted forever.”
 
@@ -7,7 +7,7 @@ Items we intentionally skip for now. Pick one when ready; do not treat this file
 
 ---
 
-## W4 — Captcha / bot signup
+## W4: Captcha / bot signup
 
 **Status:** deferred  
 **Finding:** Account creation captcha is off; only session rate limiting slows automated signups.  
@@ -16,21 +16,21 @@ Items we intentionally skip for now. Pick one when ready; do not treat this file
 
 ---
 
-## H10 — Hawser image pin
+## H10: Hawser image pin
 
 **Status:** keep `:latest` for now (ops choice)  
 **Later (optional):** Pin `ghcr.io/finsys/hawser` to a digest/tag and document upgrade.
 
 ---
 
-## W3 — Unsalted SHA1 passwords
+## W3: Unsalted SHA1 passwords
 
 **Status:** keep (TFS 0.4 / client protocol)  
-**Later (major):** Only with a protocol/client migration path — not a site-only flip.
+**Later (major):** Only with a protocol/client migration path. Not a site-only flip.
 
 ---
 
-## O9 — Extreme rates / Baiak knobs
+## O9: Extreme rates / Baiak knobs
 
 **Status:** intentional game design  
 **No action** unless rates or idle/premium policy change.

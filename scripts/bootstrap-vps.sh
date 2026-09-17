@@ -37,7 +37,7 @@ export SITE_MAINTENANCE_DOMAIN="${SITE_MAINTENANCE_DOMAIN:-baiakvip9.thefalked.d
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 
-# HTTPS origin with no secrets — written back after a token clone.
+# HTTPS origin with no secrets. written back after a token clone.
 origin_public() {
 	printf '%s' "${OTSERVER_REPO}" | sed -E 's#https://[^@]+@#https://#'
 }

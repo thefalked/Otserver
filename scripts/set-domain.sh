@@ -4,7 +4,7 @@
 # What it updates in .env:
 #   SITE_DOMAIN              primary public hostname + OT_IP
 #   SITE_MAINTENANCE_DOMAIN  previous primary kept for Dockhand / ops HTTPS
-#                            (separate Let's Encrypt cert — not a SAN)
+#                            (separate Let's Encrypt cert. Not a SAN)
 #   OT_IP                    unless --keep-ot-ip
 #
 # Usage:
@@ -100,7 +100,7 @@ upsert_env() {
 		: > "${tmp}"
 	fi
 	printf '%s=%s\n' "${key}" "${value}" >> "${tmp}"
-	# install(1) preserves intended owner — plain mv as root leaves root:600
+	# install(1) preserves intended owner. plain mv as root leaves root:600
 	# and breaks unprivileged `docker compose` (.env unreadable).
 	install -m "${mode}" -o "${owner}" -g "${group}" "${tmp}" "${file}"
 	rm -f "${tmp}"

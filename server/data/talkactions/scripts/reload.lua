@@ -1,5 +1,5 @@
 --[[
-  /reload <type> — hot-reload without restarting the server.
+  /reload <type>. hot-reload without restarting the server.
 
   Works at runtime:
     actions, chat, config, creatureevents/creaturescripts, globalevents,

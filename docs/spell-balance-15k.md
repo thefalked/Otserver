@@ -1,4 +1,4 @@
-# Spell balance (level 2000–15000)
+# Spell balance (level 2000-15000)
 
 ## Why these changes
 
@@ -42,9 +42,9 @@ max = -(skillTotal * 6   + level / 5)
 
 | Role | Level range | Magic level | Other |
 | ------ | ------------- | ------------- | ------- |
-| MS / ED | 2000–15000 | 130 | — |
-| RP | 2000–15000 | 40 | — |
-| EK | 2000–15000 | 12 | skill 140, weapon attack 55 |
+| MS / ED | 2000-15000 | 130 | - |
+| RP | 2000-15000 | 40 | - |
+| EK | 2000-15000 | 12 | skill 140, weapon attack 55 |
 
 ## What changed
 

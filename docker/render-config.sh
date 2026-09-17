@@ -22,7 +22,7 @@ fi
 : "${MYSQL_DATABASE:=ot}"
 : "${OT_IP:=127.0.0.1}"
 
-# H11: never default MYSQL_PASSWORD — empty/missing must fail closed.
+# H11: never default MYSQL_PASSWORD. empty/missing must fail closed.
 if [ -z "${MYSQL_PASSWORD:-}" ]; then
 	echo "render-config: MYSQL_PASSWORD is required (set it in .env)" >&2
 	exit 1

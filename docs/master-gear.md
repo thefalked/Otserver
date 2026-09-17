@@ -25,7 +25,7 @@ Mages use **Master Spellscroll** instead of Master Shield (ML +6, lower defense)
 - ML bonus matches Baiak Cap (`12618`): **+6** (was 30, but did not apply in-game).
 - Defense lowered from 600 to **200** because the item is no longer shield-slot gated.
 - Requires mage vocations 1/2/5/6 and level 70.
-- Client protocol sends ML as one byte (0–255). If the UI already shows 255, the number may not move even when the server applies +6.
+- Client protocol sends ML as one byte (0-255). If the UI already shows 255, the number may not move even when the server applies +6.
 
 ### Boots speed context
 
@@ -47,8 +47,8 @@ Sold by NPC New master (`server/data/npc/new_master.xml`).
 | Master Axe | 3962 | axe | atk 700, def 55, extradef +10, earth +110 | level 30, K/EK |
 | Master Club | 7450 | club | atk 700, def 50, extradef +10, energy +110 | level 30, K/EK |
 | Master Spear | 3965 | distance | atk 600, range 5, no break | level 80, Pala/RP |
-| Master Wand | 8922 | wand | holy, range 3 | level 42, mana 13, **2000–2900**, Sorc/MS |
-| Master Rod | 7735 | wand | holy, range 5 | level 200, mana 50, **2000–2900**, Druid/ED |
+| Master Wand | 8922 | wand | holy, range 3 | level 42, mana 13, **2000-2900**, Sorc/MS |
+| Master Rod | 7735 | wand | holy, range 5 | level 200, mana 50, **2000-2900**, Druid/ED |
 
 Melee Masters share physical attack 700 with different elemental damage. Wand and Rod share the same holy damage band.
 

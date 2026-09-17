@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Hot MySQL backup — does not stop MySQL or the game.
+# Hot MySQL backup. does not stop MySQL or the game.
 #
 # Why this is safe to run while the server is up: InnoDB supports
 # --single-transaction, which opens one consistent snapshot and dumps from

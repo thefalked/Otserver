@@ -14,9 +14,9 @@ SET
   `page_access` = 3,
   `flag` = 'unknown'
 WHERE `name` = 'god';
--- A1: password only set on INSERT above — never reset on ensure-schema re-run.
+-- A1: password only set on INSERT above. Never reset on ensure-schema re-run.
 
--- [ADM] Energy — from backup [ADM] Socks on account god
+-- [ADM] Energy: from backup [ADM] Socks on account god
 INSERT INTO `players` (
   `name`, `world_id`, `group_id`, `account_id`, `level`, `vocation`,
   `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `lookaddons`,

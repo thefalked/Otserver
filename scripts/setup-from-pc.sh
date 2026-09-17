@@ -144,7 +144,7 @@ echo
 # Bundle scripts + a runner on the VPS, then execute the runner as a *file*.
 # That stays non-interactive even with ssh -t (needed for password auth).
 # Piping into `bash -s` with a PTY made bash interactive and broke on `*)`.
-# H8: keep secrets out of world-writable /tmp — home of the SSH user (or /root).
+# H8: keep secrets out of world-writable /tmp. home of the SSH user (or /root).
 REMOTE_BUNDLE_PARENT="/home/${SSH_USER}"
 if [ "${SSH_USER}" = "root" ]; then
 	REMOTE_BUNDLE_PARENT="/root"

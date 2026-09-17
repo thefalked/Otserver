@@ -811,7 +811,7 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 		if(!db->query(query.str()))
 			return false;
 
-		// Lastlogin-only write is not a full save — leave dirty set unchanged.
+		// Lastlogin-only write is not a full save. Leave dirty set unchanged.
 		if(!trans.commit())
 			return false;
 		guard.skip = true;
@@ -920,7 +920,7 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 
 	if(shallow)
 	{
-		// Shallow save skips items/spells — leave dirty set unchanged.
+		// Shallow save skips items/spells. Leave dirty set unchanged.
 		if(!trans.commit())
 			return false;
 		guard.skip = true;

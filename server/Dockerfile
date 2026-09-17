@@ -1,5 +1,5 @@
 # Build TFS for the *target* platform (amd64 on VPS, arm64 on Apple Silicon Docker).
-# Do not COPY a checked-in binary — that caused Exec format error on x86 VPS
+# Do not COPY a checked-in binary. that caused Exec format error on x86 VPS
 # when server/theforgottenserver was an aarch64 Mac build.
 #
 # Build from repo root: docker compose build otserver
