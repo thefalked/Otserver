@@ -59,7 +59,7 @@ fieldOwnershipDuration = 5 * 1000
 stopAttackingAtExit = false
 oldConditionAccuracy = false
 loginProtectionPeriod = 10 * 1000
-deathLostPercent = 10
+deathLostPercent = 80
 stairhopDelay = 2 * 1000
 pushCreatureDelay = 2 * 1000
 deathContainerId = 1987
@@ -190,8 +190,10 @@ premiumForPromotion = true
 
 blessingOnlyPremium = true
 blessingReductionBase = 30
-blessingReductionDecreament = 5
-eachBlessReduction = 8
+-- Engine key is blessingReductionDecrement (typo Decreament also accepted).
+blessingReductionDecrement = 5
+-- Exp loss softens by eachBlessReduction per blessing. Docs baseline assumes !bless (5).
+eachBlessReduction = 2
 
 experienceStages = "no"
 rateExperience = 13000

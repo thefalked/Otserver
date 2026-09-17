@@ -2173,8 +2173,9 @@ bool Player::onDeath()
 	if(skillLoss)
 	{
 		uint64_t lossExperience = getLostExperience();
+		// Ratio must use pre-death experience. Computing after removeExperience overstates skill/mana loss.
+		double percent = experience ? ((double)lossExperience / (double)experience) : 0.;
 		removeExperience(lossExperience, false);
-		double percent = 1. - ((double)(experience - lossExperience) / experience);
 
 		//Magic level loss
 		uint64_t sumMana = 0, lostMana = 0;
@@ -4294,8 +4295,13 @@ uint64_t Player::getLostExperience() const
 	if(!skillLoss)
 		return 0;
 
-	double percent = (double)(lossPercent[LOSS_EXPERIENCE] - vocation->getLessLoss() - (getBlessings() * g_config.getNumber(
-		ConfigManager::BLESS_REDUCTION))) / 100.;
+	// Signed math: unsigned lossPercent underflow would explode the penalty.
+	int32_t loss = (int32_t)lossPercent[LOSS_EXPERIENCE] - vocation->getLessLoss()
+		- ((int32_t)getBlessings() * g_config.getNumber(ConfigManager::BLESS_REDUCTION));
+	if(loss <= 0)
+		return 0;
+
+	double percent = (double)loss / 100.;
 	if(level <= 25)
 		return (uint64_t)std::floor((double)(experience * percent) / 10.);
 

@@ -123,7 +123,7 @@
     soulmax="200"
     gainsoulticks="15"
     fromvoc="1"
-    lessloss="30"
+    lessloss="10"
   >
     <formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0" />
     <skill fist="1.5" club="2.0" sword="2.0" axe="2.0" distance="2.0" shielding="1.5" fishing="1.1" experience="1.0" />
@@ -145,7 +145,7 @@
     soulmax="200"
     gainsoulticks="15"
     fromvoc="2"
-    lessloss="30"
+    lessloss="10"
   >
     <formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0" />
     <skill fist="1.5" club="1.8" sword="1.8" axe="1.8" distance="1.8" shielding="1.5" fishing="1.1" experience="1.0" />
@@ -167,7 +167,7 @@
     soulmax="200"
     gainsoulticks="15"
     fromvoc="3"
-    lessloss="30"
+    lessloss="10"
   >
     <formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0" />
     <skill fist="1.2" club="1.2" sword="1.2" axe="1.2" distance="1.1" shielding="1.1" fishing="1.1" experience="1.0" />
@@ -189,25 +189,25 @@
     soulmax="200"
     gainsoulticks="15"
     fromvoc="4"
-    lessloss="30"
+    lessloss="10"
   >
     <formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0" />
     <skill fist="1.1" club="1.1" sword="1.1" axe="1.1" distance="1.4" shielding="1.1" fishing="1.1" experience="1.0" />
   </vocation>
   <!--
-	<vocation id="9" name="Epic Master Sorcerer" description="an epic master sorcerer" needpremium="0" gaincap="10" gainhp="5" gainmana="30" gainhpticks="4" gainhpamount="10" gainmanaticks="2" gainmanaamount="10" manamultiplier="1.1" attackspeed="75" soulmax="200" gainsoulticks="15" fromvoc="5" lessloss="50">
+	<vocation id="9" name="Epic Master Sorcerer" description="an epic master sorcerer" needpremium="0" gaincap="10" gainhp="5" gainmana="30" gainhpticks="4" gainhpamount="10" gainmanaticks="2" gainmanaamount="10" manamultiplier="1.1" attackspeed="75" soulmax="200" gainsoulticks="15" fromvoc="5" lessloss="30">
 		<formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
 		<skill fist="1.5" club="2.0" sword="2.0" axe="2.0" distance="2.0" shielding="1.5" fishing="1.1" experience="1.0"/>
 	</vocation>
-	<vocation id="10" name="Epic Elder Druid" description="an epic elder druid" needpremium="0" gaincap="10" gainhp="5" gainmana="30" gainhpticks="4" gainhpamount="10" gainmanaticks="2" gainmanaamount="10" manamultiplier="1.1" attackspeed="75" soulmax="200" gainsoulticks="15" fromvoc="6" lessloss="50">
+	<vocation id="10" name="Epic Elder Druid" description="an epic elder druid" needpremium="0" gaincap="10" gainhp="5" gainmana="30" gainhpticks="4" gainhpamount="10" gainmanaticks="2" gainmanaamount="10" manamultiplier="1.1" attackspeed="75" soulmax="200" gainsoulticks="15" fromvoc="6" lessloss="30">
 		<formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
 		<skill fist="1.5" club="1.8" sword="1.8" axe="1.8" distance="1.8" shielding="1.5" fishing="1.1" experience="1.0"/>
 	</vocation>
-	<vocation id="11" name="Epic Royal Paladin" description="an epic royal paladin" needpremium="0" gaincap="20" gainhp="10" gainmana="15" gainhpticks="3" gainhpamount="10" gainmanaticks="3" gainmanaamount="10" manamultiplier="1.4" attackspeed="75" soulmax="200" gainsoulticks="15" fromvoc="7" lessloss="50">
+	<vocation id="11" name="Epic Royal Paladin" description="an epic royal paladin" needpremium="0" gaincap="20" gainhp="10" gainmana="15" gainhpticks="3" gainhpamount="10" gainmanaticks="3" gainmanaamount="10" manamultiplier="1.4" attackspeed="75" soulmax="200" gainsoulticks="15" fromvoc="7" lessloss="30">
 		<formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
 		<skill fist="1.2" club="1.2" sword="1.2" axe="1.2" distance="1.1" shielding="1.1" fishing="1.1" experience="1.0"/>
 	</vocation>
-	<vocation id="12" name="Epic Elite Knight" description="an epic elite knight" needpremium="0" gaincap="25" gainhp="15" gainmana="5" gainhpticks="8" gainhpamount="10" gainmanaticks="4" gainmanaamount="10" manamultiplier="3.0" attackspeed="75" soulmax="200" gainsoulticks="15" fromvoc="8" lessloss="50">
+	<vocation id="12" name="Epic Elite Knight" description="an epic elite knight" needpremium="0" gaincap="25" gainhp="15" gainmana="5" gainhpticks="8" gainhpamount="10" gainmanaticks="4" gainmanaamount="10" manamultiplier="3.0" attackspeed="75" soulmax="200" gainsoulticks="15" fromvoc="8" lessloss="30">
 		<formula meleeDamage="1.0" distDamage="1.0" wandDamage="1.0" magDamage="1.0" magHealingDamage="1.0" defense="1.0" magDefense="1.0" armor="1.0"/>
 		<skill fist="1.1" club="1.1" sword="1.1" axe="1.1" distance="1.4" shielding="1.1" fishing="1.1" experience="1.0"/>
 	</vocation>
