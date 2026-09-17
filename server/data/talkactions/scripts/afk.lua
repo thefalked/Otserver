@@ -66,8 +66,9 @@ local function SayText(cid)
 end
 
 function onSay(cid, words, param, channel)
+  local usage = "Use: !afk on or !afk off"
   if param == "" then
-    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Command param required.")
+    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, usage)
     return TRUE
   end
   local guid = getPlayerGUID(cid)
@@ -85,6 +86,8 @@ function onSay(cid, words, param, channel)
   elseif param == "off" then
     clearAfk(cid, guid)
     doPlayerSendTextMessage(cid, MESSAGE_STATUS_WARNING, "You Now stated your are not (afk).")
+  else
+    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, usage)
   end
   return TRUE
 end

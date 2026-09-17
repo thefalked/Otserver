@@ -66,8 +66,9 @@ local function SayText(cid)
 end
 
 function onSay(cid, words, param, channel)
+  local usage = "Use: !treinando on or !treinando off"
   if param == "" then
-    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Command param required.")
+    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, usage)
     return TRUE
   end
   local guid = getPlayerGUID(cid)
@@ -85,6 +86,8 @@ function onSay(cid, words, param, channel)
   elseif param == "off" then
     clearTreinando(cid, guid)
     doPlayerSendTextMessage(cid, MESSAGE_STATUS_WARNING, "You Now stated your are not (treinando).")
+  else
+    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, usage)
   end
   return TRUE
 end

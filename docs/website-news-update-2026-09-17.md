@@ -1,15 +1,16 @@
 # Pacote para o site — Atualização 2026-09-17
 
-Use depois de publicar os commits locais (ainda não enviados ao remote). Reinicie o servidor de jogo ou recarregue scripts/movements/creaturescripts conforme o que mudou.
+Use depois de publicar os commits locais (ainda não enviados ao remote). Reinicie o servidor de jogo ou recarregue globalevents/talkactions/movements/creaturescripts conforme o que mudou.
 
-Commits cobertos (8, desde o último push):
+Commits cobertos (10, desde o último push):
 
 - balance: death exp ~8x, heal exhaust EK/RP, Master set
 - VIP: level gates Vip2–Vip9, VIP7/8 exigem tier anterior
+- houses: limpa donos inativos após 3 dias + `!myhouse`
 - website: SEO / sitemap
-- fixes: afk/treinando, nginx rate-limit (ops), item de teste (interno)
+- fixes: afk/treinando, acentos Latin-1 no client, nginx rate-limit (ops), item de teste (interno)
 
-Detalhe técnico: [death-penalty.md](death-penalty.md), [vip-level-gates.md](vip-level-gates.md), [master-gear.md](master-gear.md)
+Detalhe técnico: [death-penalty.md](death-penalty.md), [vip-level-gates.md](vip-level-gates.md), [master-gear.md](master-gear.md), [house-clean-old.md](house-clean-old.md)
 
 ---
 
@@ -18,7 +19,7 @@ Detalhe técnico: [death-penalty.md](death-penalty.md), [vip-level-gates.md](vip
 **Tópico:**
 
 ```text
-Atualização — Morte mais pesada, portões de level nas VIPs e Master set
+Atualização — Morte, VIPs por level, casas inativas e Master set
 ```
 
 **Texto (BBCode):**
@@ -42,6 +43,11 @@ Sem o level, você volta pro temple com aviso.
 Para virar Vip7 você precisa ser Vip6.
 Para virar Vip8 você precisa ser Vip7.
 
+[b]Casas inativas[/b]
+Casa com dono offline há [b]3 dias[/b] ou mais é liberada automaticamente.
+Itens pickupáveis vão pro depot do dono quando o personagem carrega.
+Olhe para a porta e digite [b]!myhouse[/b] para liberar uma casa inativa e comprar pelo fluxo normal.
+
 [b]Cura EK / RP[/b]
 Exhaust da cura principal: [b]1.0s para 0.5s[/b] (Wound Cleansing e Divine Healing).
 
@@ -59,7 +65,7 @@ Digite [b]!notice[/b] no jogo para ver o resumo.
 ## Ticker de notícias (opcional, curto)
 
 ```text
-Morte ~8x mais pesada (use !bless). VIPs Vip2–Vip9 com level mínimo. VIP7 precisa VIP6, VIP8 precisa VIP7. Cura EK/RP mais rápida. Master set retunado.
+Morte ~8x (use !bless). VIPs com level mínimo. VIP7/8 em sequência. Casas livres após 3 dias offline (!myhouse). Cura EK/RP mais rápida. Master set retunado.
 ```
 
 ---
@@ -73,12 +79,14 @@ Descrições curtas (máx. 150 caracteres).
 1. `Pena de morte bem mais forte (~8x). Use !bless para reduzir perda de exp e proteger itens.`
 2. `Vip2–Vip9 exigem level mínimo para entrar (800 até 6500). Sem level, volta ao temple.`
 3. `VIP7 exige Vip6 e VIP8 exige Vip7 (boneca e bau).`
-4. `Exhaust da cura EK/RP (exana mort / exura san): 1.0s para 0.5s.`
-5. `Master set VIP9 retunado: Spellscroll ML +6 no equip, resists e boots ajustados.`
+4. `Casas com dono offline 3+ dias são liberadas. Itens vão ao depot. Use !myhouse na porta.`
+5. `Exhaust da cura EK/RP (exana mort / exura san): 1.0s para 0.5s.`
+6. `Master set VIP9 retunado: Spellscroll ML +6 no equip, resists e boots ajustados.`
 
 ### Server — Type: Remove (bugfix, opcional)
 
 1. `Correção em !afk / !treinando: eventos não acumulam mais após logout ou reuso de cid.`
+2. `Textos do client com acentos corrigidos (Latin-1) em vários scripts.`
 
 ### Website — Type: Add
 
@@ -91,9 +99,11 @@ INSERT INTO `z_changelog` (`type`, `where`, `date`, `description`) VALUES
 ('Add', 'Server', UNIX_TIMESTAMP(), 'Pena de morte bem mais forte (~8x). Use !bless para reduzir perda de exp e proteger itens.'),
 ('Add', 'Server', UNIX_TIMESTAMP(), 'Vip2–Vip9 exigem level mínimo para entrar (800 até 6500). Sem level, volta ao temple.'),
 ('Add', 'Server', UNIX_TIMESTAMP(), 'VIP7 exige Vip6 e VIP8 exige Vip7 (boneca e bau).'),
+('Add', 'Server', UNIX_TIMESTAMP(), 'Casas com dono offline 3+ dias são liberadas. Itens vão ao depot. Use !myhouse na porta.'),
 ('Add', 'Server', UNIX_TIMESTAMP(), 'Exhaust da cura EK/RP (exana mort / exura san): 1.0s para 0.5s.'),
 ('Add', 'Server', UNIX_TIMESTAMP(), 'Master set VIP9 retunado: Spellscroll ML +6 no equip, resists e boots ajustados.'),
 ('Remove', 'Server', UNIX_TIMESTAMP(), 'Correção em !afk / !treinando: eventos não acumulam mais após logout ou reuso de cid.'),
+('Remove', 'Server', UNIX_TIMESTAMP(), 'Textos do client com acentos corrigidos (Latin-1) em vários scripts.'),
 ('Add', 'Website', UNIX_TIMESTAMP(), 'SEO: meta tags, Open Graph, robots.txt e sitemap para indexação do site.');
 ```
 
