@@ -18,7 +18,7 @@ function onUse(cid, item, frompos, item2, topos)
           pos.x = topos.x - 1
         end
       else
-        doPlayerSendTextMessage(cid, 22, "Você precisa estar na frente da porta.")
+        doPlayerSendTextMessage(cid, 22, "Voc\234 precisa estar na frente da porta.")
         return 1
       end
 
@@ -44,7 +44,7 @@ function onUse(cid, item, frompos, item2, topos)
           pos.x = topos.x - 1
         end
       else
-        doPlayerSendTextMessage(cid, 22, "Você precisa estar na frente da porta.")
+        doPlayerSendTextMessage(cid, 22, "Voc\234 precisa estar na frente da porta.")
         return 1
       end
 
@@ -70,7 +70,7 @@ function onUse(cid, item, frompos, item2, topos)
           pos.x = topos.x - 1
         end
       else
-        doPlayerSendTextMessage(cid, 22, "Você precisa estar na frente da porta.")
+        doPlayerSendTextMessage(cid, 22, "Voc\234 precisa estar na frente da porta.")
         return 1
       end
 
@@ -96,7 +96,7 @@ function onUse(cid, item, frompos, item2, topos)
           pos.x = topos.x - 1
         end
       else
-        doPlayerSendTextMessage(cid, 22, "Você precisa estar na frente da porta.")
+        doPlayerSendTextMessage(cid, 22, "Voc\234 precisa estar na frente da porta.")
         return 1
       end
 

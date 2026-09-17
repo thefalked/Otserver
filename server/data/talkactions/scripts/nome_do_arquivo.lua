@@ -6,7 +6,7 @@ function onSay(cid, words, param)
     )
     doShowTextDialog(cid, 6500, getRank(param:lower(), 10))
   else
-    return doPlayerSendCancel(cid, "Esse rank nao existe ou voce nao digitou corretamente.")
+    return doPlayerSendCancel(cid, "Esse rank n\227o existe ou voc\234 n\227o digitou corretamente.")
   end
   return TRUE
 end

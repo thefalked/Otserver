@@ -5,7 +5,7 @@ function onUse(cid, item, frompos, item2, topos)
   if getPlayerStorageValue(cid, storage) >= os.time() then
     return doPlayerSendCancel(
       cid,
-      "Você tem que esperar " .. getPlayerStorageValue(cid, storage) - os.time() .. " segundos para usar novamente."
+      "Voc\234 tem que esperar " .. getPlayerStorageValue(cid, storage) - os.time() .. " segundos para usar novamente."
     )
   end
 

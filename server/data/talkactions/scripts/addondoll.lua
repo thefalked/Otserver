@@ -48,10 +48,10 @@ function onSay(cid, words, param)
     ["warmaster"] = { 336 },
     ["Wayfarer"] = { 367 },
   }
-  local msg = { "Digite o nome correto!", "Voce não possui Addon Doll!", "Bad param!", "Você recebeu seu addons!" }
+  local msg = { "Digite o nome correto!", "Voc\234 n\227o possui Addon Doll!", "Bad param!", "Voc\234 recebeu seu addons!" }
   local param = string.lower(param)
   if not isPremium(cid) then
-    doPlayerSendCancel(cid, "Você nao tem premium account.")
+    doPlayerSendCancel(cid, "Voc\234 n\227o tem premium account.")
     return TRUE
   end
   if getPlayerItemCount(cid, 9693) > 0 then

@@ -67,19 +67,19 @@ function onUse(cid, item, frompos, item2, topos)
   msg_noguild = "Eu, " .. nick .. ", dominei o castelo " .. castelo .. "!!"
 
   --- Erro. Quando o jogador não tem o level requerido para dominar castelos
-  no_lv = "Voce precisa ter level " .. lv_min .. " ou superior para dominar castelos."
+  no_lv = "Voc\234 precisa ter level " .. lv_min .. " ou superior para dominar castelos."
 
   --- Erro. Quando o castelo já foi dominado por alguém e o jogador não pertence à um castelo
-  castle_domin = "Este castelo ja foi dominado, tente na proxima vez."
+  castle_domin = "Este castelo j\225 foi dominado, tente na pr\243xima vez."
 
   --- Erro. Quando o jogador não tem access para reiniciar castelos
-  access_error = "Voce nao tem capacidade para reiniciar castelos."
+  access_error = "Voc\234 n\227o tem capacidade para reiniciar castelos."
 
   --- Mensagem. Quando o jogador que tem access para reiniciar castelos reinicia
   castle_restart = "Os castelos foram reiniciados com sucesso."
 
   --- Erro. Quando a guerra está desativada.
-  off_msg = "Os castelos nao estao em guerra."
+  off_msg = "Os castelos n\227o est\227o em guerra."
 
   -------------------- Códigos (Não altere)
   if getGlobalStorageValue(global_id) == 1 then

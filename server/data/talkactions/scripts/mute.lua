@@ -23,11 +23,11 @@ function onSay(cid, words, param)
     doPlayerSendTextMessage(
       cid,
       MESSAGE_INFO_DESCR,
-      "Você mutou o jogador " .. t[1] .. " por " .. minutes .. " minutos."
+      "Voc\234 mutou o jogador " .. t[1] .. " por " .. minutes .. " minutos."
     )
     doAddCondition(player, v[minutes])
     setPlayerStorageValue(player, 90000, os.time() + minutes * 60)
-    doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Você foi mutado por " .. minutes .. " minutos.")
+    doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Voc\234 foi mutado por " .. minutes .. " minutos.")
   elseif words == "/desmute" then
     if param == "" then
       doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Invalid param specified.")
@@ -39,13 +39,13 @@ function onSay(cid, words, param)
       return true
     end
     if getCreatureCondition(player, CONDITION_MUTED) == false then
-      doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "este jogador não está mutado.")
+      doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "este jogador n\227o est\225 mutado.")
       return true
     end
-    doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você desmutou o jogador " .. param .. ".")
+    doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc\234 desmutou o jogador " .. param .. ".")
     doRemoveCondition(player, CONDITION_MUTED)
     setPlayerStorageValue(player, 90000, -1)
-    doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Você foi desmutado.")
+    doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Voc\234 foi desmutado.")
   end
   return true
 end

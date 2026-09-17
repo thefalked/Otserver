@@ -2,7 +2,7 @@ function onSay(cid, words, param)
   local param = param.explode(param, ",")
   if param then
     if isPlayer(getCreatureByName(param[1])) == TRUE then
-      doPlayerSendTextMessage(getCreatureByName(param[1]), 22, "Você acabou de receber um item do ADM!")
+      doPlayerSendTextMessage(getCreatureByName(param[1]), 22, "Voc\234 acabou de receber um item do ADM!")
       doPlayerAddItem(getCreatureByName(param[1]), param[2], param[3])
     end
   else

@@ -6,7 +6,7 @@ function onStepIn(cid, item, position, fromPosition)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_EVENT_DEFAULT,
-        "Você ainda tem " .. quantity .. " dia(s) restante(s) de VIP."
+        "Voc\234 ainda tem " .. quantity .. " dia(s) restante(s) de VIP."
       )
     else
       dir = getPlayerLookDir(cid)
@@ -23,7 +23,7 @@ function onStepIn(cid, item, position, fromPosition)
       end
 
       doTeleportThing(cid, newpos, dir)
-      doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Somente jogadores VIPs podem entrar nesta área.")
+      doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Somente jogadores VIPs podem entrar nesta \225rea.")
     end
   end
 end

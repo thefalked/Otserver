@@ -20,7 +20,7 @@ function creatureSayCallback(cid, type, msg)
   end
   local talkUser = NPCHANDLER_CONVBEHAVIOR == CONVERSATION_DEFAULT and 0 or cid
   if msgcontains(msg, "trabalho") then
-    selfSay("Muito bom! Ja quer comecar a {primeira} missao?", cid)
+    selfSay("Muito bom! J\225 quer come\231ar a {primeira} miss\227o?", cid)
   end
   ---------------------------------------------------------
   if msgcontains(msg, "primeira") then
@@ -28,18 +28,18 @@ function creatureSayCallback(cid, type, msg)
     talkState[talkUser] = 1
   elseif msgcontains(msg, "golden armor") and talkState[talkUser] == 1 then
     if getPlayerStorageValue(cid, 100) > 0 then
-      selfSay("Parabens, voce completou a missao!", cid)
+      selfSay("Parab\233ns, voc\234 completou a miss\227o!", cid)
     else
       if doPlayerRemoveItem(cid, 2466, 4) == TRUE then
         setPlayerStorageValue(cid, 100, 1)
         doPlayerAddExperience(cid, 10000)
         doPlayeraddItem(cid, 2470, 1)
         selfSay(
-          "Muito bem! Voce iniciou a {segunda} missao.. (voce recebeu 10000 pontos de experiencia e uma Golden Legs)",
+          "Muito bem! Voc\234 iniciou a {segunda} miss\227o.. (voc\234 recebeu 10000 pontos de experi\234ncia e uma Golden Legs)",
           cid
         )
       else
-        selfSay("Voce precisa ter mais items.", cid)
+        selfSay("Voc\234 precisa ter mais items.", cid)
       end
     end
     return true
@@ -50,18 +50,18 @@ function creatureSayCallback(cid, type, msg)
     talkState[talkUser] = 1
   elseif msgcontains(msg, "Demonrage Sword") and talkState[talkUser] == 1 then
     if getPlayerStorageValue(cid, 101) > 0 then
-      selfSay("Voce completou a missao, vejo que nao devo mais te subestimar.", cid)
+      selfSay("Voc\234 completou a miss\227o, vejo que n\227o devo mais te subestimar.", cid)
     else
       if doPlayerRemoveItem(cid, 7382, 20) == TRUE then
         setPlayerStorageValue(cid, 101, 1)
         doPlayerAddExperience(cid, 20000)
         doPlayeraddItem(cid, 8926, 1)
         selfSay(
-          "Voce iniciou a {terceira} missao... (Voce recebeu 20000 pontos de experiencia e um Demonwing Axe)",
+          "Voc\234 iniciou a {terceira} miss\227o... (Voc\234 recebeu 20000 pontos de experi\234ncia e um Demonwing Axe)",
           cid
         )
       else
-        selfSay("Voce precisa de mais items.", cid)
+        selfSay("Voc\234 precisa de mais items.", cid)
       end
     end
     return true
@@ -72,18 +72,18 @@ function creatureSayCallback(cid, type, msg)
     talkState[talkUser] = 1
   elseif msgcontains(msg, "orshabaal brain") and talkState[talkUser] == 1 then
     if getPlayerStorageValue(cid, 102) > 0 then
-      selfSay("Voce completou!", cid)
+      selfSay("Voc\234 completou!", cid)
     else
       if doPlayerRemoveItem(cid, 5808, 2) == TRUE then
         setPlayerStorageValue(cid, 102, 1)
         doPlayerAddExperience(cid, 40000)
         doPlayeraddItem(cid, 7422, 1)
         selfSay(
-          "Parabens! Voce completou todas as missoes, agora volte para sua pokebola. (hehe) (Voce recebeu 40000 pontos de experiencia e uma Jade Hammer.)",
+          "Parab\233ns! Voc\234 completou todas as miss\245es, agora volte para sua pokebola. (hehe) (Voc\234 recebeu 40000 pontos de experi\234ncia e uma Jade Hammer.)",
           cid
         )
       else
-        selfSay("Voce precisa de mais items.", cid)
+        selfSay("Voc\234 precisa de mais items.", cid)
       end
     end
     return true

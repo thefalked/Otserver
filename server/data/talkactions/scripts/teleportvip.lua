@@ -45,23 +45,23 @@ function onSay(cid, words, param)
 
   local a = lugar[param]
   if not a then
-    doPlayerSendTextMessage(cid, 22, "desculpe,este lugar não existe")
+    doPlayerSendTextMessage(cid, 22, "desculpe,este lugar n\227o existe")
     doSendMagicEffect(getCreaturePosition(cid), CONST_ME_POFF)
     return TRUE
   elseif config.pz == true and getTilePzInfo(getCreaturePosition(cid)) == FALSE then
-    doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "você precisa estar em protection zone pra poder teleportar.")
+    doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "voc\234 precisa estar em protection zone pra poder teleportar.")
     return TRUE
   elseif config.premium == true and not isPremium(cid) then
     doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Apenas players com premium account podem teleportar.")
     return TRUE
   elseif config.battle == true and getCreatureCondition(cid, CONDITION_INFIGHT) == TRUE then
-    doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Você precisa estar sem battler pra poder teleportar.")
+    doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Voc\234 precisa estar sem battler pra poder teleportar.")
     return TRUE
   elseif config.need_level == true and getPlayerLevel(cid) < a.level then
     doPlayerSendTextMessage(
       cid,
       22,
-      "Desculpe,Voce não tem level. voce precisa " .. a.level .. " level ou mais para ser teleportado."
+      "Desculpe,Voc\234 n\227o tem level. voc\234 precisa " .. a.level .. " level ou mais para ser teleportado."
     )
     doSendMagicEffect(getCreaturePosition(cid), CONST_ME_POFF)
     return TRUE
@@ -69,7 +69,7 @@ function onSay(cid, words, param)
     doPlayerSendTextMessage(
       cid,
       22,
-      "Desculpe,voce nao tem dinheiro suficiente. Voce precisa " .. a.price .. " gp para ser teleportado."
+      "Desculpe,voc\234 n\227o tem dinheiro suficiente. Voc\234 precisa " .. a.price .. " gp para ser teleportado."
     )
     doSendMagicEffect(getCreaturePosition(cid), CONST_ME_POFF)
     return TRUE

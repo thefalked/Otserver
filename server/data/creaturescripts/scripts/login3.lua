@@ -1,8 +1,4 @@
-local message = [[Seja bem vindo ao Alissow OTs!
- 
-Utilize o canal help para maiores informações.
- 
-Enjoy xD]]
+local message = "Seja bem vindo ao Alissow OTs!\n \nUtilize o canal help para maiores informa\231\245es.\n \nEnjoy xD"
 
 function onLogin(cid)
   local msg = string.lower(param)

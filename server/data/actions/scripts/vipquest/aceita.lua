@@ -15,7 +15,7 @@ function onUse(cid, item, frompos, item2, topos)
     runasim = doPlayerAddItem(player1.uid, 2264, 1)
     setPlayerStorageValue(cid, 2222, 1)
     setPlayerStorageValue(player1.uid, 2222, 1)
-    doPlayerSendTextMessage(cid, 22, "Você pediu " .. nome2 .. " em casamento, tomara que ela aceite!")
+    doPlayerSendTextMessage(cid, 22, "Voc\234 pediu " .. nome2 .. " em casamento, tomara que ela aceite!")
     doPlayerSendTextMessage(
       player1.uid,
       22,
@@ -24,7 +24,7 @@ function onUse(cid, item, frompos, item2, topos)
     doSetItemSpecialDescription(runasim, "Use em " .. nome .. ", para aceitar o pedido dele!")
     doPlayerRemoveItem(cid, 2263, 1)
   else
-    doPlayerSendTextMessage(cid, 22, "Algo ocorreu, certifique-se de que nenhum dos noivos é casado!")
+    doPlayerSendTextMessage(cid, 22, "Algo ocorreu, certifique-se de que nenhum dos noivos \233 casado!")
   end
   return 1
 end

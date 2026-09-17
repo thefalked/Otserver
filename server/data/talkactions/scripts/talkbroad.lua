@@ -9,17 +9,17 @@ function onSay(cid, words, param)
   local nada = { " " }
 
   if table.isStrIn(param, nada) or param == "" then
-    doPlayerSendCancel(cid, "Voce precisa falar alguma coisa.")
+    doPlayerSendCancel(cid, "Voc\234 precisa falar alguma coisa.")
     return TRUE
   end
 
   if configs.sovip == "sim" and getPlayerStorageValue(cid, tonumber(configs.storage)) <= 0 then
-    doPlayerSendCancel(cid, "Você não é vip.")
+    doPlayerSendCancel(cid, "Voc\234 n\227o \233 vip.")
     return TRUE
   end
 
   if configs.cobrar == "sim" and not doPlayerRemoveMoney(cid, tonumber(configs.price)) then
-    doPlayerSendCancel(cid, "Você não tem dinheiro suficiente.")
+    doPlayerSendCancel(cid, "Voc\234 n\227o tem dinheiro suficiente.")
     return TRUE
   end
 

@@ -7,49 +7,49 @@ function onUse(cid, item, frompos, item2, topos)
       doPlayerAddItem(cid, 9778, 1)
       setPlayerStorageValue(cid, 11566, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você já recebeu o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 recebeu o seu pr\234mio.")
     end
   elseif voc == 2 then
     if queststatus == -1 then
       doPlayerAddItem(cid, 9778, 1)
       setPlayerStorageValue(cid, 11566, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você já recebeu o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 recebeu o seu pr\234mio.")
     end
   elseif voc == 3 then
     if queststatus == -1 then
       doPlayerAddItem(cid, 9777, 1)
       setPlayerStorageValue(cid, 11566, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você já recebeu o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 recebeu o seu pr\234mio.")
     end
   elseif voc == 4 then
     if queststatus == -1 then
       doPlayerAddItem(cid, 9776, 1)
 
       setPlayerStorageValue(cid, 11566, 1)
-      doPlayerSendTextMessage(cid, 22, "Você já recebeu o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 recebeu o seu pr\234mio.")
     end
   elseif voc == 5 then
     if queststatus == -1 then
       doPlayerAddItem(cid, 9778, 1)
 
       setPlayerStorageValue(cid, 11566, 1)
-      doPlayerSendTextMessage(cid, 22, "Você já recebeu o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 recebeu o seu pr\234mio.")
     end
   elseif voc == 6 then
     if queststatus == -1 then
       doPlayerAddItem(cid, 9778, 1)
 
       setPlayerStorageValue(cid, 11566, 1)
-      doPlayerSendTextMessage(cid, 22, "Você já recebeu o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 recebeu o seu pr\234mio.")
     end
   elseif voc == 7 then
     if queststatus == -1 then
       doPlayerAddItem(cid, 9777, 1)
 
       setPlayerStorageValue(cid, 11566, 1)
-      doPlayerSendTextMessage(cid, 22, "Você já recebeu o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 recebeu o seu pr\234mio.")
     end
   elseif voc == 8 then
     if queststatus == -1 then
@@ -57,7 +57,7 @@ function onUse(cid, item, frompos, item2, topos)
 
       setPlayerStorageValue(cid, 11566, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você já recebeu o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 recebeu o seu pr\234mio.")
     end
   else
     return 0

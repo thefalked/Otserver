@@ -42,7 +42,7 @@ function onThink(interval, lastExecution)
         .. config.quantity
         .. " "
         .. getItemNameById(random_item)
-        .. "s! Congratulations! (Proxima Loteria em "
+        .. "s! Congratulations! (Pr\243xima Loteria em "
         .. config.lottery_hour
         .. ")"
     )
@@ -52,7 +52,7 @@ function onThink(interval, lastExecution)
         .. getCreatureName(winner)
         .. ", Reward: "
         .. getItemNameById(random_item)
-        .. "! Congratulations! (Proxima Loteria em "
+        .. "! Congratulations! (Pr\243xima Loteria em "
         .. config.lottery_hour
         .. ")"
     )

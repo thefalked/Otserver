@@ -13,7 +13,7 @@ function onUse(cid, item, frompos, item2, topos)
     doPlayerAddItem(cid, premio, premio_cont)
   end
   if item.itemid == 1945 and getPlayerMoney(cid) < config.moneyneed then
-    doPlayerSendCancel(cid, "Desculpe,voce não grana suficiente para jogar!")
+    doPlayerSendCancel(cid, "Desculpe,voc\234 n\227o grana suficiente para jogar!")
     return FALSE
   end
   if item.itemid == 1945 and math.random(0, 8) == 1 then

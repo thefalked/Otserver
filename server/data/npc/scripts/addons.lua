@@ -28,9 +28,9 @@ function buyAddons(cid, message, keywords, parameters, node)
   if isPlayerPremiumCallback == nil or (isPlayerPremiumCallback(cid) and premium) then
     if doPlayerRemoveMoney(cid, cost) then
       doPlayerAddAddons(cid, addon)
-      npcHandler:say("Gratz, Você Compro um Addon!", cid)
+      npcHandler:say("Gratz, Voc\234 Compro um Addon!", cid)
     else
-      npcHandler:say("Desculpe Você Não Tem Dinheiro Suficiente.", cid)
+      npcHandler:say("Desculpe Voc\234 N\227o Tem Dinheiro Suficiente.", cid)
     end
   else
     npcHandler:say("Somente Players Premium Pode Comprar Addon.", cid)
@@ -43,7 +43,7 @@ end
 local node1 = keywordHandler:addKeyword(
   { "first addon" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "First Addon Custa 500k,Você Tem?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "First Addon Custa 500k,Voc\234 Tem?" }
 )
 node1:addChildKeyword({ "yes" }, buyAddons, { addon = 1, cost = 500000, premium = true })
 node1:addChildKeyword(
@@ -55,7 +55,7 @@ node1:addChildKeyword(
 local node2 = keywordHandler:addKeyword(
   { "second addon" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Second Addon Custa 1kk, Você Tem?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Second Addon Custa 1kk, Voc\234 Tem?" }
 )
 node2:addChildKeyword({ "yes" }, buyAddons, { addon = 2, cost = 1000000, premium = true })
 node2:addChildKeyword(

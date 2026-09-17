@@ -21,7 +21,7 @@ end
 local travelNode = keywordHandler:addKeyword(
   { "infernium" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer voar para Infernium por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer voar para Infernium por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -44,7 +44,7 @@ keywordHandler:addKeyword({ "destination" }, StdModule.say, {
 local travelNode = keywordHandler:addKeyword(
   { "dorion" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer voar para Dorion por 110 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer voar para Dorion por 110 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -67,7 +67,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "flam" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer voar para flam por 115 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer voar para flam por 115 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -90,7 +90,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "saari" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer voar para saari por 100 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer voar para saari por 100 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -113,7 +113,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "mirand theraan" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer voar para mirand theraan por 175 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer voar para mirand theraan por 175 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -136,7 +136,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "mistyc" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer voar para mystic por 100 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer voar para mystic por 100 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },

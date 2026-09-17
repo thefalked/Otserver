@@ -11,12 +11,12 @@ function onSay(cid, words, param, channel)
 
   local t = string.explode(param, ",")
   if not t[2] then
-    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "[ERROR] !service servicename, preço(gold coins)")
+    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "[ERROR] !service servicename, pre\231o(gold coins)")
     return TRUE
   end
 
   if isNumber(t[2]) == FALSE then
-    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "[ERROR] Preço can be only numbers.")
+    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "[ERROR] Pre\231o can be only numbers.")
     return TRUE
   end
 
@@ -31,7 +31,7 @@ function onSay(cid, words, param, channel)
 
   if doPlayerRemoveMoney(cid, config.priceForEachMessage) == TRUE then
     doBroadcastMessage(
-      "QuestService: " .. getPlayerName(cid) .. "'s now starting a " .. t[1] .. "! Preço: " .. t[2] .. "k.",
+      "QuestService: " .. getPlayerName(cid) .. "'s now starting a " .. t[1] .. "! Pre\231o: " .. t[2] .. "k.",
       MESSAGE_STATUS_WARNING
     )
   else

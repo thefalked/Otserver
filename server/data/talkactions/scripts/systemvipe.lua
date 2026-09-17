@@ -19,9 +19,9 @@ function onSay(cid, words, param)
       setPlayerStorageValue(cid, 13540, time)
 
       local quantity = math.floor((getPlayerStorageValue(cid, 13540) - timenow) / (24 * 60 * 60))
-      doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você tem " .. quantity .. " dias de VIP restantes.")
+      doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc\234 tem " .. quantity .. " dias de VIP restantes.")
     else
-      doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você precisa de " .. price .. " gp's para colocar vip.")
+      doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc\234 precisa de " .. price .. " gp's para colocar vip.")
     end
   elseif words == "!vipdays" then
     local timenow = os.time()
@@ -29,7 +29,7 @@ function onSay(cid, words, param)
     doPlayerSendTextMessage(
       cid,
       MESSAGE_INFO_DESCR,
-      "Você tem " .. (quantity < 0 and 0 or quantity) .. " dias de VIP no seu character."
+      "Voc\234 tem " .. (quantity < 0 and 0 or quantity) .. " dias de VIP no seu character."
     )
   elseif words == "/checkvip" then
     if getPlayerAccess(cid) == 5 then
@@ -78,7 +78,7 @@ function onSay(cid, words, param)
       )
       setPlayerStorageValue(player, 13540, time)
       local quantity = math.floor((getPlayerStorageValue(player, 13540) - timenow) / (3600 * 24))
-      doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Você tem " .. quantity .. " dias de VIP restantes.")
+      doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Voc\234 tem " .. quantity .. " dias de VIP restantes.")
     end
   elseif words == "/delvip" then
     if getPlayerAccess(cid) == 5 then
@@ -98,9 +98,9 @@ function onSay(cid, words, param)
       end
 
       if getPlayerStorageValue(C.uid, 13540) < C.time then
-        doPlayerSendTextMessage(cid, dec, "O jogador " .. t[1] .. " não possui " .. C.days .. " dias de vip.")
+        doPlayerSendTextMessage(cid, dec, "O jogador " .. t[1] .. " n\227o possui " .. C.days .. " dias de vip.")
       else
-        doPlayerSendTextMessage(cid, dec, "Você removeu " .. C.days .. " dias de vip do player " .. t[1] .. ".")
+        doPlayerSendTextMessage(cid, dec, "Voc\234 removeu " .. C.days .. " dias de vip do player " .. t[1] .. ".")
         setPlayerStorageValue(C.uid, 13540, getPlayerStorageValue(C.uid, 13540) - C.time)
       end
       doSendMagicEffect(C.pos, math.random(28, 30))

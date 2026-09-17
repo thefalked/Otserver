@@ -61,7 +61,7 @@ function onUse(cid, item, frompos, item2, topos)
     doPlayerAddSkillTry(cid, 1, 0)
     doPlayerSay(cid, "Mining!", 1)
   else
-    doPlayerSendCancel(cid, "Voce nao esta minando no lugar certo ou nao tem level minimo 10.")
+    doPlayerSendCancel(cid, "Voc\234 n\227o esta minando no lugar certo ou n\227o tem level m\237nimo 10.")
   end
   return 1
 end

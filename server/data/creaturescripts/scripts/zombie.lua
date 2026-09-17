@@ -35,7 +35,7 @@ function onStatsChange(cid, attacker, type, combat, value)
         setGlobalStorageValue(config.playerCount, getGlobalStorageValue(config.playerCount) - 1)
       elseif getGlobalStorageValue(config.playerCount) == 1 then
         if isInArea(getPlayerPosition(cid), config.fromPosition, config.toPosition) then
-          doBroadcastMessage(getPlayerName(cid) .. " Ganhou o Zombie Event! Parabens!", MESSAGE_STATUS_WARNING)
+          doBroadcastMessage(getPlayerName(cid) .. " Ganhou o Zombie Event! Parab\233ns!", MESSAGE_STATUS_WARNING)
           local goblet = doPlayerAddItem(cid, config.goblet, 1)
           doItemSetAttribute(
             goblet,

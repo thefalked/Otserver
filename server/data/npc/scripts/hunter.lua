@@ -21,7 +21,7 @@ end
 local travelNode = keywordHandler:addKeyword(
   { "cyc oeste" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Cyc Oeste por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Cyc Oeste por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -44,7 +44,7 @@ keywordHandler:addKeyword({ "destination" }, StdModule.say, {
 local travelNode = keywordHandler:addKeyword(
   { "cyc leste" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Cyc Leste por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Cyc Leste por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -67,7 +67,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "dragon lair" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Dragon Lair por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Dragon Lair por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -90,7 +90,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "dragon sul" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Dragon Sul por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Dragon Sul por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -113,7 +113,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "dragon lord sul" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Dragon Lord Sul por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Dragon Lord Sul por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -136,7 +136,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "demon cave e behe" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Demon Cave e Behe por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Demon Cave e Behe por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -159,7 +159,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "demon lair" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Demon Lair por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Demon Lair por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },
@@ -182,7 +182,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "undead hunt" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Undead Hunt por 50 gold coins?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Undead Hunt por 50 gold coins?" }
 )
 travelNode:addChildKeyword(
   { "yes" },

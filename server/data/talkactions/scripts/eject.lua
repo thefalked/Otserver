@@ -12,7 +12,7 @@ function onSay(cid, words, param)
   end
 
   if getHouseFromPos(positions) == false then
-    doPlayerSendTextMessage(cid, 27, "Voce precisa estar na frente a porta da casa para usar o comando.")
+    doPlayerSendTextMessage(cid, 27, "Voc\234 precisa estar na frente a porta da casa para usar o comando.")
     return true
   end
 
@@ -27,7 +27,7 @@ function onSay(cid, words, param)
     if last < os.time() - inactiveSeconds then
       -- Clear owner (same as leavehouse.lua); NO_OWNER_PHRASE was undefined here (O12).
       setHouseOwner(getHouseFromPos(positions), 0, true)
-      doPlayerSendTextMessage(cid, 27, "A Casa agora esta sem dono, voce ou outro jogador pode compra-la")
+      doPlayerSendTextMessage(cid, 27, "A Casa agora esta sem dono, voc\234 ou outro jogador pode compra-la")
     end
     if last > os.time() - inactiveSeconds then
       doPlayerSendTextMessage(cid, 27, "O proprietario desta casa ainda esta ativo no servidor, tente outra casa.")

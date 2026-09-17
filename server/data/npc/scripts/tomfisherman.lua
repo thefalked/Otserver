@@ -18,7 +18,7 @@ end
 function thinkCallback(cid)
   local rand = math.random(1, 100)
   if rand == 1 then
-    selfSay("OLHA O PÊXEEEEE. TÁ FRESCOOOOO QUEM VEEEEEM?")
+    selfSay("OLHA O P\202XEEEEE. T\193 FRESCOOOOO QUEM VEEEEEM?")
   end
   return true
 end

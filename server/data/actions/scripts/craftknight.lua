@@ -40,7 +40,7 @@ function onUse(cid, item, frompos, item2, topos)
     doPlayerAddSkillTry(cid, 1, 1)
     doPlayerSay(cid, "Argg!", 1)
   else
-    doPlayerSendCancel(cid, "Para craftar knight você precisa de level 25 e de 40 de club.")
+    doPlayerSendCancel(cid, "Para craftar knight voc\234 precisa de level 25 e de 40 de club.")
   end
   return 1
 end

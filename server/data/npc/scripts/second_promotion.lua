@@ -30,9 +30,9 @@ function creatureSayCallback(cid, type, msg)
     if getPlayerItemCount(cid, 2160) >= 1 then
       doPlayerRemoveItem(cid, 2160, 1)
       doPlayerSetVocation(cid, 9)
-      selfSay("VocaÃ§Ã£o trocada com sucesso , Agora vocÃª Ã© um Baiak Sorcerer.", cid)
+      selfSay("Voca\231\227o trocada com sucesso , Agora voc\234 \233 um Baiak Sorcerer.", cid)
     else
-      selfSay("VocÃª nÃ£o tem {crystal coins} Suficientes.", cid)
+      selfSay("Voc\234 n\227o tem {crystal coins} Suficientes.", cid)
     end
     talkState[talkUser] = 0
   elseif msgcontains(msg, "baiak druid") or msgcontains(msg, "baiak druida") then
@@ -42,9 +42,9 @@ function creatureSayCallback(cid, type, msg)
     if getPlayerItemCount(cid, 2160) >= 200 then
       doPlayerRemoveItem(cid, 2160, 200)
       doPlayerSetVocation(cid, 10)
-      selfSay("VocaÃ§Ã£o trocada com sucesso , Agora vocÃª Ã© um Baiak Druid.", cid)
+      selfSay("Voca\231\227o trocada com sucesso , Agora voc\234 \233 um Baiak Druid.", cid)
     else
-      selfSay("VocÃª nÃ£o tem {crystal coins} Suficientes.", cid)
+      selfSay("Voc\234 n\227o tem {crystal coins} Suficientes.", cid)
     end
     talkState[talkUser] = 0
   elseif msgcontains(msg, "baiak knight") or msgcontains(msg, "baiak kina") then
@@ -54,9 +54,9 @@ function creatureSayCallback(cid, type, msg)
     if getPlayerItemCount(cid, 2160) >= 200 then
       doPlayerRemoveItem(cid, 2160, 200)
       doPlayerSetVocation(cid, 11)
-      selfSay("VocaÃ§Ã£o trocada com sucesso , Agora vocÃª Ã© um Baiak Knight.", cid)
+      selfSay("Voca\231\227o trocada com sucesso , Agora voc\234 \233 um Baiak Knight.", cid)
     else
-      selfSay("VocÃª nÃ£o tem {crystal coins} Suficientes.", cid)
+      selfSay("Voc\234 n\227o tem {crystal coins} Suficientes.", cid)
     end
     talkState[talkUser] = 0
   elseif msgcontains(msg, "baiak paladin") or msgcontains(msg, "baiak pala") then
@@ -66,9 +66,9 @@ function creatureSayCallback(cid, type, msg)
     if getPlayerItemCount(cid, 2160) >= 200 then
       doPlayerRemoveItem(cid, 2160, 200)
       doPlayerSetVocation(cid, 12)
-      selfSay("VocaÃ§Ã£o trocada com sucesso , Agora vocÃª Ã© um baiak Paladin.", cid)
+      selfSay("Voca\231\227o trocada com sucesso , Agora voc\234 \233 um baiak Paladin.", cid)
     else
-      selfSay("VocÃª nÃ£o tem {crystal coins} Suficientes.", cid)
+      selfSay("Voc\234 n\227o tem {crystal coins} Suficientes.", cid)
     end
     talkState[talkUser] = 0
   end

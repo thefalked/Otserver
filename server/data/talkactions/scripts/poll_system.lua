@@ -214,7 +214,7 @@ function onSay(cid, words, param)
             broadcastMessage("Uma enquete foi iniciada!", MESSAGE_STATUS_WARNING)
             local EventId = addEvent(function()
               EventId = addEvent(function()
-                broadcastMessage("As opções são:", MESSAGE_STATUS_CONSOLE_RED)
+                broadcastMessage("As op\231\245es s\227o:", MESSAGE_STATUS_CONSOLE_RED)
                 for k, v in ipairs(_opt) do
                   broadcastMessage('"' .. v .. '" - Use !votepoll ' .. k .. "", MESSAGE_STATUS_CONSOLE_RED)
                 end
@@ -387,18 +387,18 @@ function onSay(cid, words, param)
         if (param == "") or (not isNumber(param)) or (param < 1) or (param > _optmax) then
           _opt = Poll:getOptionsTable(_ID)
           _poll = Poll:getNamebyID(_ID)
-          doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "A enquete é: " .. _poll)
+          doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "A enquete \233: " .. _poll)
           for k, v in ipairs(_opt) do
-            doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Opção " .. k .. ' - "' .. v .. '"')
+            doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Op\231\227o " .. k .. ' - "' .. v .. '"')
           end
-          doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "use: !votepoll Opção, Ex. !votepoll 1")
+          doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "use: !votepoll Op\231\227o, Ex. !votepoll 1")
         else
           _addvote = Poll:addVote(cid, _ID, param, _optmax)
           if _addvote == 1 then
             doPlayerSendTextMessage(
               cid,
               MESSAGE_STATUS_CONSOLE_BLUE,
-              "Você ou algum outro Character da sua account ja votou nesta enquete."
+              "Voc\234 ou algum outro Character da sua account j\225 votou nesta enquete."
             )
           else
             if _addvote ~= nil then

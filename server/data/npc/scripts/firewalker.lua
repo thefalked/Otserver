@@ -24,7 +24,7 @@ function creatureSayCallback(cid, type, msg)
   local talkUser = NPCHANDLER_CONVBEHAVIOR == CONVERSATION_DEFAULT and 0 or cid
 
   if msgcontains(msg, "reparar") or msgcontains(msg, "firewalker boots") then
-    selfSay("Voce deseja reparar sua worn firewalker boots por 30000 moedas de ouro?", cid)
+    selfSay("Voc\234 deseja reparar sua worn firewalker boots por 30000 moedas de ouro?", cid)
     talkState[talkUser] = 1
   elseif msgcontains(msg, "yes") and talkState[talkUser] == 1 then
     if getPlayerItemCount(cid, 10022) >= 1 then
@@ -36,7 +36,7 @@ function creatureSayCallback(cid, type, msg)
         selfSay("Desculpe, volte quando tiver dinheiro.", cid)
       end
     else
-      selfSay("desculpe, voce nao tem este item.", cid)
+      selfSay("desculpe, voc\234 n\227o tem este item.", cid)
     end
     talkState[talkUser] = 0
   elseif msgcontains(msg, "no") and isInArray({ 1 }, talkState[talkUser]) == TRUE then

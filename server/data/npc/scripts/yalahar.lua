@@ -38,14 +38,14 @@ function onCreatureSay(cid, type, msg)
       selfSay("Eu posso liberar o yalahar Addon 1, se estiver interessado diga: yalahar outfit")
     elseif msgcontains(msg, "yalahar outfit") then
       if getPlayerStorageValue(cid, 9996) >= 2 then
-        selfSay("Voce ja tem esse addon.")
+        selfSay("Voc\234 j\225 tem esse addon.")
       else
         if getPlayerStorageValue(cid, 9996) == 1 then
-          selfSay("Precisarei de 50 small amethyst fangs para liberar este Addon, voce os trouxe?")
+          selfSay("Precisarei de 50 small amethyst fangs para liberar este Addon, voc\234 os trouxe?")
           addon_state = 2
         else
           setPlayerStorageValue(cid, 9996, 1)
-          selfSay("Precisarei de 50 small amethyst para liberar este Addon, voce os trouxe?")
+          selfSay("Precisarei de 50 small amethyst para liberar este Addon, voc\234 os trouxe?")
         end
       end
     elseif msgcontains(msg, "yes") and addon_state == 2 then
@@ -67,7 +67,7 @@ function onCreatureSay(cid, type, msg)
       focus = 0
       talk_start = 0
     elseif msg ~= "" then
-      selfSay("Como? Eu não entendi!")
+      selfSay("Como? Eu n\227o entendi!")
       talk_state = 0
     end
   end
@@ -79,7 +79,7 @@ function onThink()
   doNpcSetCreatureFocus(focus)
   if (os.clock() - talk_start) > 30 then
     if focus > 0 then
-      selfSay("Proximo!!...")
+      selfSay("Pr\243ximo!!...")
     end
     focus = 0
     talk_start = 0

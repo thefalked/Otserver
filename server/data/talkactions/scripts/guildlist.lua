@@ -9,7 +9,7 @@ function onSay(cid, words, param, channel)
       lista:free()
       doShowTextDialog(cid, 2529, v)
     else
-      doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Não existem guilds no servidor.")
+      doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "N\227o existem guilds no servidor.")
     end
   else
     local id = getGuildId(param)
@@ -30,10 +30,10 @@ function onSay(cid, words, param, channel)
         lista:free()
         doShowTextDialog(cid, 2529, v)
       else
-        doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Não há jogadores nesta guild.")
+        doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "N\227o h\225 jogadores nesta guild.")
       end
     else
-      doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Está Guild não existe.")
+      doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Est\225 Guild n\227o existe.")
     end
   end
   return TRUE

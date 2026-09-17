@@ -5,10 +5,10 @@ function onStepIn(cid, item, pos)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_EVENT_ADVANCE,
-        "You have touched Verminor´s throne and absorbed some of his spirit."
+        "You have touched Verminor\180s throne and absorbed some of his spirit."
       )
     else
-      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Veminor´s spirit.")
+      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Veminor\180s spirit.")
     end
   elseif item.uid == 10275 then
     if getPlayerStorageValue(cid, 10275) == -1 then
@@ -16,10 +16,10 @@ function onStepIn(cid, item, pos)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_EVENT_ADVANCE,
-        "You have touched Infernatil´s throne and absorbed some of his spirit."
+        "You have touched Infernatil\180s throne and absorbed some of his spirit."
       )
     else
-      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Infernatil´s spirit.")
+      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Infernatil\180s spirit.")
     end
   elseif item.uid == 10276 then
     if getPlayerStorageValue(cid, 10276) == -1 then
@@ -27,10 +27,10 @@ function onStepIn(cid, item, pos)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_EVENT_ADVANCE,
-        "You have touched Tafariel´s throne and absorbed some of his spirit."
+        "You have touched Tafariel\180s throne and absorbed some of his spirit."
       )
     else
-      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Tafariel´s spirit.")
+      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Tafariel\180s spirit.")
     end
   elseif item.uid == 10277 then
     if getPlayerStorageValue(cid, 10277) == -1 then
@@ -38,10 +38,10 @@ function onStepIn(cid, item, pos)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_EVENT_ADVANCE,
-        "You have touched Apocalypse´s throne and absorbed some of his spirit."
+        "You have touched Apocalypse\180s throne and absorbed some of his spirit."
       )
     else
-      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Apocalypse´s spirit.")
+      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Apocalypse\180s spirit.")
     end
   elseif item.uid == 10278 then
     if getPlayerStorageValue(cid, 10278) == -1 then
@@ -49,10 +49,10 @@ function onStepIn(cid, item, pos)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_EVENT_ADVANCE,
-        "You have touched Pumin´s throne and absorbed some of his spirit."
+        "You have touched Pumin\180s throne and absorbed some of his spirit."
       )
     else
-      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Pumin´s spirit.")
+      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Pumin\180s spirit.")
     end
   elseif item.uid == 10279 then
     if getPlayerStorageValue(cid, 10279) == -1 then
@@ -60,10 +60,10 @@ function onStepIn(cid, item, pos)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_EVENT_ADVANCE,
-        "You have touched Bazir´s throne and absorbed some of his spirit."
+        "You have touched Bazir\180s throne and absorbed some of his spirit."
       )
     else
-      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Bazir´s spirit.")
+      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Bazir\180s spirit.")
     end
   elseif item.uid == 10280 then
     if getPlayerStorageValue(cid, 10280) == -1 then
@@ -71,10 +71,10 @@ function onStepIn(cid, item, pos)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_EVENT_ADVANCE,
-        "You have touched Ashfalor´s throne and absorbed some of his spirit."
+        "You have touched Ashfalor\180s throne and absorbed some of his spirit."
       )
     else
-      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Ashfalor´s spirit.")
+      doPlayerSendTextMessage(cid, MESSAGE_EVENT_ADVANCE, "You have already absorbed some of Ashfalor\180s spirit.")
     end
   elseif item.uid == 10281 and item.itemid == 1210 and pos == { x = 345, y = 1419, z = 12 } then
     if

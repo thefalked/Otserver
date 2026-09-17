@@ -2,8 +2,7 @@ function onThink(interval, lastExecution)
   -- Configurações
   local cor = 22 -- Defina a cor da mensagem (22 = branco)
   local mensagens = {
-    [[MANUTENÇÃO HOJE AS 18:30 ATÉ AS 19:00
-NO MÁXIMO]],
+    "MANUTEN\199\195O HOJE AS 18:30 AT\201 AS 19:00\nNO M\193XIMO",
   }
 
   -- Fim de Configurações

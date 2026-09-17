@@ -34,11 +34,11 @@ function onCreatureSay(cid, type, msg)
 
   if (msgcontains(msg, "hi") and focus == 0) and getDistanceToCreature(cid) < 4 then
     selfSay(
-      "Olá "
+      "Ol\225 "
         .. getCreatureName(cid)
         .. "! O que acha de apostarmos "
         .. price
-        .. ' numa disputa de par ou ímpar? Se quiser, escolha "par" ou "impar".'
+        .. ' numa disputa de par ou \237mpar? Se quiser, escolha "par" ou "impar".'
     )
     focus = cid
     talk_state = 0
@@ -62,16 +62,16 @@ function onCreatureSay(cid, type, msg)
           or player_random == 8
           or player_random == 10
         then
-          selfSay("Parabéns! Você acaba de ganhar " .. price .. "!")
+          selfSay("Parab\233ns! Voc\234 acaba de ganhar " .. price .. "!")
           doPlayerAddMoney(cid, price)
         else
-          selfSay("Que pena, você perdeu  " .. price .. ". Mais sorte da próxima vez.")
+          selfSay("Que pena, voc\234 perdeu  " .. price .. ". Mais sorte da pr\243xima vez.")
           doPlayerRemoveMoney(cid, price)
         end
 
         talk_state = 1
       else
-        selfSay("Você não tem dinheiro o suficiente para jogar.")
+        selfSay("Voc\234 n\227o tem dinheiro o suficiente para jogar.")
       end
 
       talk_state = 0
@@ -91,22 +91,22 @@ function onCreatureSay(cid, type, msg)
           or player_random == 7
           or player_random == 9
         then
-          selfSay("Parabéns! Você acaba de ganhar " .. price .. "!")
+          selfSay("Parab\233ns! Voc\234 acaba de ganhar " .. price .. "!")
           doPlayerAddMoney(cid, price)
         else
-          selfSay("Que pena, você perdeu  " .. price .. ". Mais sorte da próxima vez.")
+          selfSay("Que pena, voc\234 perdeu  " .. price .. ". Mais sorte da pr\243xima vez.")
           doPlayerRemoveMoney(cid, price)
         end
 
         talk_state = 1
       else
-        selfSay("Você não tem dinheiro o suficiente para jogar.")
+        selfSay("Voc\234 n\227o tem dinheiro o suficiente para jogar.")
       end
       talk_state = 0
     end
 
     if msgcontains(msg, "bye") and getDistanceToCreature(cid) < 4 then
-      selfSay("Até mais, " .. getCreatureName(cid) .. "!")
+      selfSay("At\233 mais, " .. getCreatureName(cid) .. "!")
       focus = 0
       talk_start = 0
     end
@@ -117,7 +117,7 @@ function onThink()
   doNpcSetCreatureFocus(focus)
   if (os.clock() - talk_start) > 45 then
     if focus > 0 then
-      selfSay("Próximo por favor...")
+      selfSay("Pr\243ximo por favor...")
     end
     focus = 0
   end

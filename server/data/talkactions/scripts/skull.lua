@@ -6,7 +6,7 @@ function onSay(cid, words, param, channel)
       doCreatureSetSkullType(cid, SKULL_NONE)
       doPlayerSendTextMessage(cid, 22, "Black Skull Retirada.")
     else
-      doPlayerSendTextMessage(cid, 22, "Voce precisa de 1kk para remover a sua black skull")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 precisa de 1kk para remover a sua black skull")
     end
   end
 
@@ -15,7 +15,7 @@ function onSay(cid, words, param, channel)
       doCreatureSetSkullType(cid, SKULL_NONE)
       doPlayerSendTextMessage(cid, 22, "Red Skull Retirada.")
     else
-      doPlayerSendTextMessage(cid, 22, "Voce precisa de 1kk para remover a sua red skull")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 precisa de 1kk para remover a sua red skull")
     end
   end
 

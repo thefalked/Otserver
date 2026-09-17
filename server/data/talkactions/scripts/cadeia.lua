@@ -22,7 +22,7 @@ function checkJailList(param)
         setPlayerStorageValue(player, jailedstoragevalue_time, 0)
         setPlayerStorageValue(player, jailedstoragevalue_bool, 0)
         table.remove(jail_list, targetID)
-        doPlayerSendTextMessage(player, MESSAGE_STATUS_CONSOLE_ORANGE, "Você foi chutado da prisão! Até logo")
+        doPlayerSendTextMessage(player, MESSAGE_STATUS_CONSOLE_ORANGE, "Voc\234 foi chutado da pris\227o! At\233 logo")
       end
     else
       table.remove(jail_list, targetID)
@@ -45,18 +45,18 @@ function onSay(cid, words, param)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_INFO_DESCR,
-        "Você está preso até "
+        "Voc\234 est\225 preso at\233 "
           .. os.date("%H:%M:%S", getPlayerStorageValue(cid, jailedstoragevalue_time))
-          .. " (Agora são: "
+          .. " (Agora s\227o: "
           .. os.date("%H:%M:%S", os.time())
           .. ")."
       )
     else
       if getPlayerStorageValue(cid, jailedstoragevalue_bool) == 1 then
         table.insert(jail_list, cid)
-        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você vai ser expulso da prisão em um segundo.")
+        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc\234 vai ser expulso da pris\227o em um segundo.")
       else
-        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você não está preso.")
+        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc\234 n\227o est\225 preso.")
       end
     end
     return TRUE
@@ -92,32 +92,32 @@ function onSay(cid, words, param)
         doPlayerSendTextMessage(
           cid,
           MESSAGE_INFO_DESCR,
-          "Você está preso "
+          "Voc\234 est\225 preso "
             .. getCreatureName(isplayer)
-            .. " até "
+            .. " at\233 "
             .. os.date("%H:%M:%S", getPlayerStorageValue(isplayer, jailedstoragevalue_time))
-            .. " (Agora são: "
+            .. " (Agora s\227o: "
             .. os.date("%H:%M:%S", os.time())
             .. ")."
         )
         doPlayerSendTextMessage(
           isplayer,
           MESSAGE_INFO_DESCR,
-          "Você foi preso por "
+          "Voc\234 foi preso por "
             .. getCreatureName(cid)
-            .. " até "
+            .. " at\233 "
             .. os.date("%H:%M:%S", getPlayerStorageValue(isplayer, jailedstoragevalue_time))
-            .. " (Agora sao: "
+            .. " (Agora s\227o: "
             .. os.date("%H:%M:%S", os.time())
             .. ")."
         )
         return TRUE
       else
-        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "O player com este nome não existe ou está offline.")
+        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "O player com este nome n\227o existe ou est\225 offline.")
         return FALSE
       end
     else
-      doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você não pode libertar outros jogadores.")
+      doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc\234 n\227o pode libertar outros jogadores.")
       return FALSE
     end
   elseif words == "!unjail" or words == "/unjail" then
@@ -130,15 +130,15 @@ function onSay(cid, words, param)
         doPlayerSendTextMessage(
           isplayer,
           MESSAGE_STATUS_CONSOLE_ORANGE,
-          getCreatureName(cid) .. "vou deixar você sair da prisão!"
+          getCreatureName(cid) .. "vou deixar voc\234 sair da pris\227o!"
         )
-        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voce está solto " .. getCreatureName(isplayer) .. ".")
+        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc\234 est\225 solto " .. getCreatureName(isplayer) .. ".")
       else
-        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "O player com este nome não existe ou está offline.")
+        doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "O player com este nome n\227o existe ou est\225 offline.")
         return FALSE
       end
     else
-      doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Você não pode libertar outros jogadores.")
+      doPlayerSendTextMessage(cid, MESSAGE_INFO_DESCR, "Voc\234 n\227o pode libertar outros jogadores.")
       return FALSE
     end
   end

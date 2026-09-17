@@ -5,7 +5,7 @@ function onSay(cid, words, param, channel)
   if exhaustion.get(cid, storage) == FALSE then
     doPlayerSave(cid)
     exhaustion.set(cid, storage, waittime)
-    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Agora Você Esta Salvo Irairairaira.")
+    doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Agora Voc\234 Esta Salvo Irairairaira.")
   else
     doPlayerSendTextMessage(
       cid,

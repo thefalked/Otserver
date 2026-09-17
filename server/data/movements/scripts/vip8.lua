@@ -15,7 +15,7 @@ function onStepIn(cid, item, pos)
       if vip == -1 then
         doPlayerSendCancel(
           cid,
-          "Esta área é exclusiva para players Vip8.Para Adquirir Vip8 Compre Um Vip8 Doll No Baiak-Zik Na Vip7"
+          "Esta \225rea \233 exclusiva para players Vip8.Para Adquirir Vip8 Compre Um Vip8 Doll No Baiak-Zik Na Vip7"
         )
 
         doTeleportThing(cid, teleport1)

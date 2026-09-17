@@ -45,10 +45,10 @@ function onUse(cid, item, frompos, item2, topos)
             teleportPlayers(2, 10) -- 2 stands for the effect on old pos, 10 for the effect on new pos.
             doTransformItem(item.uid, 1946)
           else
-            sendPlayersText(Hei, getPlayerName(player) .. " voce ja fez esta quest.")
+            sendPlayersText(Hei, getPlayerName(player) .. " voc\234 j\225 fez esta quest.")
           end
         else
-          sendPlayersText(players, getPlayerName(player) .. " nao tem level.")
+          sendPlayersText(players, getPlayerName(player) .. " n\227o tem level.")
         end
       else
         sendPlayersText(players, "You need " .. #playerPos .. " players to do this quest.")

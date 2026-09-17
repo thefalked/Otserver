@@ -18,12 +18,12 @@ end
 local node1 = keywordHandler:addKeyword(
   { "vip" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Posso promove-lo para Primeira Promotion por 20k. Voce quer?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Posso promove-lo para Primeira Promotion por 20k. Voc\234 quer?" }
 )
 node1:addChildKeyword(
   { "yes" },
   StdModule.promotePlayer,
-  { npcHandler = npcHandler, cost = 20000, level = 20, promotion = 1, text = "Agora voce tem a primeira promotion." }
+  { npcHandler = npcHandler, cost = 20000, level = 20, promotion = 1, text = "Agora voc\234 tem a primeira promotion." }
 )
 node1:addChildKeyword(
   { "no" },
@@ -34,12 +34,12 @@ node1:addChildKeyword(
 local node2 = keywordHandler:addKeyword(
   { "promotion" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Posso promove-lo para Promotion VIP por 500k. Voce quer?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Posso promove-lo para Promotion VIP por 500k. Voc\234 quer?" }
 )
 node2:addChildKeyword(
   { "yes" },
   StdModule.promotePlayer,
-  { npcHandler = npcHandler, cost = 500000, level = 200, promotion = 2, text = "Agora voce tem a VIP promotion." }
+  { npcHandler = npcHandler, cost = 500000, level = 200, promotion = 2, text = "Agora voc\234 tem a VIP promotion." }
 )
 node2:addChildKeyword(
   { "no" },

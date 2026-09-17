@@ -15,7 +15,7 @@ function onUse(cid, item, frompos, item2, topos)
     doCreatureSay(cid, "The teleport has been created!", TALKTYPE_ORANGE_1)
     addEvent(doRemoveTeleport, config.timeToRemove * 1000)
   elseif item.itemid == 1946 then
-    doPlayerSendCancel(cid, "O teleport foi criado! Se entrar agora só poderá voltar no final do desafio.")
+    doPlayerSendCancel(cid, "O teleport foi criado! Se entrar agora s\243 poder\225 voltar no final do desafio.")
     return TRUE
   end
 end

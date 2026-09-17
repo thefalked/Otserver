@@ -1,6 +1,6 @@
 function onSay(cid, words, param, channel) --made in MG by Eskylo.
   if not isInParty(cid) or getPlayerParty(cid) ~= cid then
-    return doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Você não é líder de uma party")
+    return doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Voc\234 n\227o \233 l\237der de uma party")
   end
   local outfit = getCreatureOutfit(cid)
   local addons = outfit.lookAddons

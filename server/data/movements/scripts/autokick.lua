@@ -10,7 +10,7 @@ function onStepIn(cid, item, frompos, topos)
       kick1 = addEvent(setPlayerStorageValue, config.tempo * 60 * 1000 - 1000, cid, config.storage, -1)
       kick2 = addEvent(doTeleportThing, config.tempo * 60 * 1000 - 500, cid, config.teleport)
       kick = addEvent(doRemoveCreature, config.tempo * 60 * 1000, cid)
-      doPlayerSendTextMessage(cid, 22, "Voce Não Trapara Aki. Você Tem " .. config.tempo .. " ")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 N\227o Trapara Aki. Voc\234 Tem " .. config.tempo .. " ")
       setPlayerStorageValue(cid, config.storage, 1)
     end
   end

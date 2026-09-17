@@ -6,17 +6,17 @@ function onUse(cid, item, frompos, item2, topos)
   }
 
   if (config.pz == "yes") and (getTilePzInfo(getCreaturePosition(cid)) == FALSE) then
-    doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "você precisa estar em protection zone pra poder teleportar.")
+    doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "voc\234 precisa estar em protection zone pra poder teleportar.")
     return TRUE
   end
 
   if (config.battle == "yes") and (getCreatureCondition(cid, CONDITION_INFIGHT) == TRUE) then
-    doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Você precisa estar sem battler pra poder teleportar.")
+    doPlayerSendTextMessage(cid, MESSAGE_EVENT_DEFAULT, "Voc\234 precisa estar sem battler pra poder teleportar.")
     return TRUE
   end
 
   if item.itemid == 8985 then
-    doPlayerSendTextMessage(cid, 22, "Nao espalha diabo")
+    doPlayerSendTextMessage(cid, 22, "N\227o espalha diabo")
     doTeleportThing(cid, config.pos)
     doSendMagicEffect(getCreaturePosition(cid), 10)
     doSendMagicEffect(frompos, 6)

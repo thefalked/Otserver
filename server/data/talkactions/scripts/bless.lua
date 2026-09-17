@@ -15,7 +15,7 @@ function onSay(cid, words, param)
     doCreatureSay(cid, "You are now blessed!", 19)
     doSendMagicEffect(getPlayerPosition(cid), 49)
   else
-    doPlayerSendCancel(cid, "Voce precisa de 80k para a bless.")
+    doPlayerSendCancel(cid, "Voc\234 precisa de 80k para a bless.")
   end
   return TRUE
 end

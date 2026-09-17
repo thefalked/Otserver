@@ -1,7 +1,7 @@
 local message = {
-  "O servidor vai desligar em 5 minutos. Por favor, deslogue com segurança.",
+  "O servidor vai desligar em 5 minutos. Por favor, deslogue com seguran\231a.",
   "O servidor vai desligar em 2 minutos, por favor deslogue.",
-  "O servidor está desligando...",
+  "O servidor est\225 desligando...",
 }
 local class = 21
 

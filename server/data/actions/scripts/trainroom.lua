@@ -68,7 +68,7 @@ function onUse(cid, item, frompos, item2, topos)
     doSendMagicEffect(frompos, 12)
     doSendMagicEffect(othersidePos, 10)
   else
-    doPlayerSendTextMessage(cid, 22, "Esta sala ja esta ocupada.")
+    doPlayerSendTextMessage(cid, 22, "Esta sala j\225 esta ocupada.")
   end
   -- <end> Training Room script by Alreth.
 

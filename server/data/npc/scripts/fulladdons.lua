@@ -17,7 +17,7 @@ end
 
 npcHandler:setMessage(
   MESSAGE_GREET,
-  "Ola |PLAYERNAME|. Voce pode me ajudar? Se voce me ajudar, vou te recompensar com lindos addons! Basta dizer {addons} ou {help} se voce nao sabe o que fazer."
+  "Ol\225 |PLAYERNAME|. Voc\234 pode me ajudar? Se voc\234 me ajudar, vou te recompensar com lindos addons! Basta dizer {addons} ou {help} se voc\234 n\227o sabe o que fazer."
 )
 
 function playerBuyAddonNPC(cid, message, keywords, parameters, node)
@@ -31,7 +31,7 @@ function playerBuyAddonNPC(cid, message, keywords, parameters, node)
       return true
     end
     if getPlayerStorageValue(cid, parameters.storageID) ~= -1 then
-      npcHandler:say("Voce ja tem esse addon!", cid)
+      npcHandler:say("Voc\234 j\225 tem esse addon!", cid)
       npcHandler:resetNpc()
       return true
     end
@@ -81,12 +81,12 @@ function playerBuyAddonNPC(cid, message, keywords, parameters, node)
       setPlayerStorageValue(cid, addoninfo.storageID, 1)
       npcHandler:say("Aqui esta.", cid)
     else
-      npcHandler:say("Voce nao tem os items necessarios ou dinheiro!", cid)
+      npcHandler:say("Voc\234 n\227o tem os items necess\225rios ou dinheiro!", cid)
     end
     npcHandler:resetNpc()
     return true
   elseif parameters.decline == true then
-    npcHandler:say("Este nao lhe interessa? Experimente outro!", cid)
+    npcHandler:say("Este n\227o lhe interessa? Experimente outro!", cid)
     npcHandler:resetNpc()
     return true
   end

@@ -18,7 +18,7 @@ end
 function thinkCallback(cid)
   local rand = math.random(1, 100)
   if rand == 1 then
-    selfSay("Compro todas as parafernálias inutéis encontradas em suas hunts. Aproveite pago bem.")
+    selfSay("Compro todas as parafern\225lias inut\233is encontradas em suas hunts. Aproveite pago bem.")
   end
   return true
 end

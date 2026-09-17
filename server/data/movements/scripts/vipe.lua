@@ -1,8 +1,8 @@
 -- Script Vip Sytem 1.0 --
 function onStepIn(cid, item, position, fromPosition)
   local config = {
-    msgDenied = "Você não e vip ,para adqrir sua vip fale !buyvip que custa 1KK",
-    msgWelcome = "Seja Bem Vindo a Area vip.",
+    msgDenied = "Voc\234 n\227o e vip ,para adqrir sua vip fale !buyvip que custa 1KK",
+    msgWelcome = "Seja Bem Vindo a \193rea vip.",
   }
 
   if getPlayerStorageValue(cid, 13545) - os.time() <= 0 then

@@ -55,7 +55,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
       doRemoveItem(getteleport.uid, 1)
       doCreateItem(2109, 1, teleportpos)
     else
-      doPlayerSendTextMessage(cid, 22, "Voce precisa de 2 times, 3 jogadores em cada time, para iniciar a partida!")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 precisa de 2 times, 3 jogadores em cada time, para iniciar a partida!")
     end
   else
     doPlayerSendTextMessage(cid, 22, "Need wait until previous command will end the match!")

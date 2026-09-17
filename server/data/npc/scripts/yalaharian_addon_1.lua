@@ -37,21 +37,21 @@ function onCreatureSay(cid, type, msg)
       selfSay("Para saber o que eh preciso para obter o Yalaharian addon 1 diga: addon 1")
     elseif msgcontains(msg, "addon 1") then
       if getPlayerStorageValue(cid, 999999) >= 2 then
-        selfSay("Voce ja tem esse addon.")
+        selfSay("Voc\234 j\225 tem esse addon.")
       else
         if getPlayerStorageValue(cid, 999999) == 1 then
-          selfSay("Preciso somente de 1 Golden Falcon e 10k, voce os trouxe para mim?")
+          selfSay("Preciso somente de 1 Golden Falcon e 10k, voc\234 os trouxe para mim?")
           addon_state = 2
         else
           setPlayerStorageValue(cid, 999999, 1)
-          selfSay("Preciso somente de 1 Golden Falcon e 10k, voce os trouxe para mim?")
+          selfSay("Preciso somente de 1 Golden Falcon e 10k, voc\234 os trouxe para mim?")
         end
       end
     elseif msgcontains(msg, "yes") and addon_state == 2 then
       if doPlayerRemoveItem(cid, 2160, 1) == 0 or doPlayerRemoveItem(cid, 8976, 1) == 0 then
-        selfSay("Desculpe mas voce naum os tem...")
+        selfSay("Desculpe mas voc\234 naum os tem...")
       else
-        selfSay("Obrigado, agora voce tem o novo addon da terra dos Yalaharians!.")
+        selfSay("Obrigado, agora voc\234 tem o novo addon da terra dos Yalaharians!.")
         if getPlayerSex(cid) == 0 then
           doPlayerAddOutfit(cid, 324, 1)
           setPlayerStorageValue(cid, 999999, 2)
@@ -66,7 +66,7 @@ function onCreatureSay(cid, type, msg)
       focus = 0
       talk_start = 0
     elseif msg ~= "" then
-      selfSay("Como? Eu não entendi!")
+      selfSay("Como? Eu n\227o entendi!")
       talk_state = 0
     end
   end
@@ -78,7 +78,7 @@ function onThink()
   doNpcSetCreatureFocus(focus)
   if (os.clock() - talk_start) > 30 then
     if focus > 0 then
-      selfSay("Proximo!!...")
+      selfSay("Pr\243ximo!!...")
     end
     focus = 0
     talk_start = 0

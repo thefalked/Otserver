@@ -2,11 +2,11 @@ function onUse(cid, item, frompos, item2, topos)
   if item.uid == 10013 then
     queststatus = getPlayerStorageValue(cid, 50001)
     if queststatus == -1 then
-      doPlayerSendTextMessage(cid, 22, "Você Ganhou Uma Fireborn Giant Armor!.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 Ganhou Uma Fireborn Giant Armor!.")
       doPlayerAddItem(cid, 8881, 1)
       setPlayerStorageValue(cid, 50001, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você ja fez essa quest!")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 fez essa quest!")
     end
   else
     return 0

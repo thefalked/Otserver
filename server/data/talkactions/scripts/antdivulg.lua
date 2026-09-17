@@ -33,7 +33,7 @@ end
 --
 local blocked_channels = { 5, 8, 9 } --Game-Chat, Real Chat, Help Channel
 local trade_channels = { 6, 7 } --All trade channels <- These are also blocked
-local replace = "°" --Symbols which are shown instead of forbidden links -> °
+local replace = "\176" --Symbols which are shown instead of forbidden links -> °
 local delay = { 16246, 10 } -- {empty_storage, lenght of muted}
 
 function onSay(cid, words, param, channel)
@@ -43,7 +43,7 @@ function onSay(cid, words, param, channel)
     if getPlayerStorageValue(cid, delay[1]) > os.time() then
       return doPlayerSendCancel(
         cid,
-        "Voce foi mutado por "
+        "Voc\234 foi mutado por "
           .. getPlayerStorageValue(cid, delay[1]) - os.time()
           .. " segundos, aqui e proibido divulgar."
       )

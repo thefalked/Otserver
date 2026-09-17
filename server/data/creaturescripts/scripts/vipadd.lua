@@ -12,7 +12,7 @@ function onAdvance(cid, oldlevel, newlevel)
   if getPlayerLevel(cid) == 180 and getPlayerStorageValue(cid, 9090) == -1 then
     setPlayerStorageValue(cid, 13540, time)
     setPlayerStorageValue(cid, 9090, 1)
-    doPlayerSendTextMessage(cid, 22, "Você recebeu dois dias de Vip.")
+    doPlayerSendTextMessage(cid, 22, "Voc\234 recebeu dois dias de Vip.")
   end
   return TRUE
 end

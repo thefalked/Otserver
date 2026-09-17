@@ -39,10 +39,10 @@ function onUse(cid, item, frompos, item2, topos)
         doPlayerSendTextMessage(player1.uid, 18, "FIGHT!")
         doPlayerSendTextMessage(player2.uid, 18, "FIGHT!")
       else
-        doPlayerSendCancel(cid, "Os dois lutadores devem ter no minimo level 50.")
+        doPlayerSendCancel(cid, "Os dois lutadores devem ter no m\237nimo level 50.")
       end
     else
-      doPlayerSendCancel(cid, "Voce precisa de 2 jogadores para lutar.")
+      doPlayerSendCancel(cid, "Voc\234 precisa de 2 jogadores para lutar.")
     end
   else
     return 0

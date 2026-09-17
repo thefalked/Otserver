@@ -1,31 +1,27 @@
-* Noticias e Atualizacoes *
+* Notícias e Atualizações *
 
-Balanceamento de magias (high level ~2000-15000)
+Atualização 17/09 - morte, VIP e Master set
 
-Elite Knight
-- Wound Cleansing (exana mort): cura bem mais forte, perto da Mana Rune
-- Exhaust da cura principal: 1.0s para 0.5s (mais HPS)
-- Fierce Berserk (exori gran): melhor escala de level no AoE
+Pena de morte
+- Perda de exp bem mais forte (cerca de 8x)
+- Use !bless antes de caçar (reduz um pouco a perda e protege itens)
 
-Master Sorcerer
-- Hell's Core (exevo gran mas flam) e Rage of the Skies (exevo gran mas vis): AoE mais forte
-- suden death (exevo gran mas mort) continua o AoE mais forte de mage
+Portões de level nas VIPs
+- Vip2: 800 | Vip3: 1200 | Vip4: 1800 | Vip5: 2500
+- Vip6: 3000 | Vip7: 4000 | Vip8: 5000 | Vip9: 6500
+- Sem o level mínimo, volta ao temple
 
-Elder Druid
-- Eternal Winter (exevo gran mas frigo): AoE mais forte, ainda abaixo de flam/vis/mort
+VIP7 e VIP8
+- VIP7 exige Vip6
+- VIP8 exige Vip7
 
-Royal Paladin
-- Divine Caldera (exevo mas san): volta a escalar direito em high level
-- Divine Healing (exura san): exhaust 1.0s para 0.5s (mais HPS)
+Cura EK / RP
+- Exhaust da cura principal: 1.0s para 0.5s
+  (Wound Cleansing / Divine Healing)
 
 Master set (VIP9)
-- Master Spellscroll: ML agora aplica no equip (+6), defense 200
-- Master Armor: holy +10% (antes -2%), death +25%
-- Master Boots: armor 150, speed 40, regen mantido
-- Master Helmet / Legs: resists elementais +10%
-- Master Shield: all absorb +5%, shielding +5
+- Master Spellscroll: ML +6 agora aplica no equip
+- Armor / Helmet / Legs / Boots / Shield retunados
 
-Sem mudanca: Sudden Death rune (SD) e suden death (exevo gran mas mort)
-
-Comente no site (Ultimas Noticias) como ficou o balanceamento no jogo.
+Comente no site (Últimas Notícias) como ficou.
 Feedback ajuda a ajustar. Digite !notice para ver de novo.

@@ -14,7 +14,7 @@ function onUse(cid, item, frompos, item2, topos)
       doPlayerAddItem(cid, 2173, 1)
       setPlayerStorageValue(cid, 11554, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você já pegou o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 pegou o seu pr\234mio.")
     end
   elseif voc == 2 then
     if queststatus == -1 then
@@ -28,7 +28,7 @@ function onUse(cid, item, frompos, item2, topos)
       doPlayerAddItem(cid, 2173, 1)
       setPlayerStorageValue(cid, 11554, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você já pegou o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 pegou o seu pr\234mio.")
     end
   elseif voc == 3 then
     if queststatus == -1 then
@@ -42,7 +42,7 @@ function onUse(cid, item, frompos, item2, topos)
       doPlayerAddItem(cid, 2173, 1)
       setPlayerStorageValue(cid, 11554, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você já pegou o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 pegou o seu pr\234mio.")
     end
   elseif voc == 4 then
     if queststatus == -1 then
@@ -59,7 +59,7 @@ function onUse(cid, item, frompos, item2, topos)
 
       setPlayerStorageValue(cid, 11554, 1)
     else
-      doPlayerSendTextMessage(cid, 22, "Você já pegou o seu prêmio.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 j\225 pegou o seu pr\234mio.")
     end
   else
     return 0

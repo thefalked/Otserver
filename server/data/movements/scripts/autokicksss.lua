@@ -13,7 +13,7 @@ function onStepIn(cid, item, frompos, topos)
       doPlayerSendTextMessage(
         cid,
         22,
-        "[Trainer]: Movimente-se a cada " .. config.tempo .. " minutos, caso contrário, seu char será deslogado."
+        "[Trainer]: Movimente-se a cada " .. config.tempo .. " minutos, caso contr\225rio, seu char ser\225 deslogado."
       )
       setPlayerStorageValue(cid, config.storage, 1)
     end

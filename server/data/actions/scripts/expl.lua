@@ -15,7 +15,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
     doPlayerSendTextMessage(
       cid,
       MESSAGE_STATUS_CONSOLE_RED,
-      "Você comprou uma backpack de " .. name .. "s por " .. config.cost .. " gold."
+      "Voc\234 comprou uma backpack de " .. name .. "s por " .. config.cost .. " gold."
     )
     for i = 1, 20 do
       doAddContainerItem(bp, config.item_id, 17) -- You can edit this number, it will give shots per rune.
@@ -24,7 +24,7 @@ function onUse(cid, item, fromPosition, itemEx, toPosition)
     doPlayerSendTextMessage(
       cid,
       MESSAGE_STATUS_CONSOLE_BLUE,
-      "Você precisa de " .. config.cost .. " gold para comprar uma backpack de " .. name .. "s."
+      "Voc\234 precisa de " .. config.cost .. " gold para comprar uma backpack de " .. name .. "s."
     )
   end
   return TRUE

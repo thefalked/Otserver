@@ -37,21 +37,21 @@ function onCreatureSay(cid, type, msg)
       selfSay("Para saber o que eh preciso para obter o Warmaster addon 2 diga: addon 2")
     elseif msgcontains(msg, "addon 2") then
       if getPlayerStorageValue(cid, 999998) >= 2 then
-        selfSay("Voce ja tem esse addon.")
+        selfSay("Voc\234 j\225 tem esse addon.")
       else
         if getPlayerStorageValue(cid, 999998) == 1 then
-          selfSay("Preciso de Uma Baiak Sword e 100k , Você Trouxe Para Mim ?")
+          selfSay("Preciso de Uma Baiak Sword e 100k , Voc\234 Trouxe Para Mim ?")
           addon_state = 2
         else
           setPlayerStorageValue(cid, 999998, 1)
-          selfSay("Preciso de Uma Baiak Sword e 100k , Você Trouxe Para Mim ?")
+          selfSay("Preciso de Uma Baiak Sword e 100k , Voc\234 Trouxe Para Mim ?")
         end
       end
     elseif msgcontains(msg, "yes") and addon_state == 2 then
       if doPlayerRemoveItem(cid, 2160, 10) == 0 or doPlayerRemoveItem(cid, 8931, 1) == 0 then
-        selfSay("Desculpe mas voce naum tem os 100k...")
+        selfSay("Desculpe mas voc\234 naum tem os 100k...")
       else
-        selfSay("Obrigado, agora voce tem o novo addon da terra dos Warmasters!.")
+        selfSay("Obrigado, agora voc\234 tem o novo addon da terra dos Warmasters!.")
         if getPlayerSex(cid) == 0 then
           doPlayerAddOutfit(cid, 335, 2)
           setPlayerStorageValue(cid, 999998, 2)
@@ -66,7 +66,7 @@ function onCreatureSay(cid, type, msg)
       focus = 0
       talk_start = 0
     elseif msg ~= "" then
-      selfSay("Como? Eu não entendi!")
+      selfSay("Como? Eu n\227o entendi!")
       talk_state = 0
     end
   end
@@ -78,7 +78,7 @@ function onThink()
   doNpcSetCreatureFocus(focus)
   if (os.clock() - talk_start) > 30 then
     if focus > 0 then
-      selfSay("Proximo!!...")
+      selfSay("Pr\243ximo!!...")
     end
     focus = 0
     talk_start = 0

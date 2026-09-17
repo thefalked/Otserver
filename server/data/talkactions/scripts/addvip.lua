@@ -23,7 +23,7 @@ function onSay(cid, words, param)
       )
       setPlayerStorageValue(player, 13540, time)
       quantity = math.floor((getPlayerStorageValue(player, 13540) - timenow) / (3600 * 24))
-      doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Você tem " .. quantity .. " dias de VIP restantes.")
+      doPlayerSendTextMessage(player, MESSAGE_INFO_DESCR, "Voc\234 tem " .. quantity .. " dias de VIP restantes.")
     else
       doPlayerSendTextMessage(
         cid,

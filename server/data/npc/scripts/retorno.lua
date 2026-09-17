@@ -21,7 +21,7 @@ end
 local travelNode = keywordHandler:addKeyword({ "temple of dorion city" }, StdModule.say, {
   npcHandler = npcHandler,
   onlyFocus = true,
-  text = "Voce quer viajar para Temple of Dorion City por 50 gold coins?",
+  text = "Voc\234 quer viajar para Temple of Dorion City por 50 gold coins?",
 })
 travelNode:addChildKeyword(
   { "yes" },
@@ -44,7 +44,7 @@ keywordHandler:addKeyword(
 local travelNode = keywordHandler:addKeyword(
   { "temple of angelscity" },
   StdModule.say,
-  { npcHandler = npcHandler, onlyFocus = true, text = "Voce quer viajar para Templo of AngelsCity por 50 gps ?" }
+  { npcHandler = npcHandler, onlyFocus = true, text = "Voc\234 quer viajar para Templo of AngelsCity por 50 gps ?" }
 )
 travelNode:addChildKeyword(
   { "yes" },

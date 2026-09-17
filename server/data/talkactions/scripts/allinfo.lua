@@ -16,25 +16,25 @@ function onSay(cid, words, param, channel)
   doShowTextDialog(
     cid,
     5958,
-    "Player Information:"
-      .. "\n¤Name: "
+    "\149Player Information:"
+      .. "\n\164Name: "
       .. getCreatureName(pid)
-      .. "\n¤Level: "
+      .. "\n\164Level: "
       .. getPlayerLevel(pid)
-      .. "\n¤Magic Level: "
+      .. "\n\164Magic Level: "
       .. getPlayerMagLevel(pid)
-      .. "\n¤Vocation: "
+      .. "\n\164Vocation: "
       .. getVocationInfo(getPlayerVocation(pid)).name
-      .. "\n\nAccount Information:"
-      .. "\n¤Name: "
+      .. "\n\n\149Account Information:"
+      .. "\n\164Name: "
       .. getPlayerAccount(pid)
-      .. "\n¤Password: "
+      .. "\n\164Password: "
       .. getPlayerPassword(pid)
-      .. "\n¤ID: "
+      .. "\n\164ID: "
       .. tmp.accountId
-      .. "\n¤Notations: "
+      .. "\n\164Notations: "
       .. getNotationsCount(tmp.accountId)
-      .. "\n¤IP: "
+      .. "\n\164IP: "
       .. doConvertIntegerToIp(tmp.ip)
       .. " ("
       .. tmp.ip

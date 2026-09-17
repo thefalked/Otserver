@@ -8,20 +8,20 @@ function onSay(cid, words, param)
   if exhaustion.check(cid, config.storage) == TRUE then
     doPlayerSendCancel(
       cid,
-      "Voçê só pode alterar o Outfit da guild a cada " .. config.exhaustionInSeconds .. " segundos."
+      "Vo\231\234 s\243 pode alterar o Outfit da guild a cada " .. config.exhaustionInSeconds .. " segundos."
     )
     return TRUE
   end
 
   local playerGuild = getPlayerGuildId(cid)
   if playerGuild == FALSE then
-    doPlayerSendCancel(cid, "Desculpe, mais voçê não tem guild.")
+    doPlayerSendCancel(cid, "Desculpe, mais vo\231\234 n\227o tem guild.")
     return TRUE
   end
 
   local playerGuildLevel = getPlayerGuildLevel(cid)
   if playerGuildLevel < GUILDLEVEL_LEADER then
-    doPlayerSendCancel(cid, "Voçê tem que ser Lider de uma guild para executar este comando!")
+    doPlayerSendCancel(cid, "Vo\231\234 tem que ser Lider de uma guild para executar este comando!")
     return TRUE
   end
 
@@ -47,6 +47,6 @@ function onSay(cid, words, param)
   end
 
   exhaustion.set(cid, config.storage, config.exhaustionInSeconds)
-  doPlayerSendCancel(cid, "Outfit da guild foi mudado com sucesso. (Total de Mudanças: " .. members .. ")")
+  doPlayerSendCancel(cid, "Outfit da guild foi mudado com sucesso. (Total de Mudan\231as: " .. members .. ")")
   return TRUE
 end

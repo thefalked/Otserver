@@ -26,7 +26,7 @@ function onUse(cid, item, frompos, item2, topos)
     if getPlayerAccess(cid) > 0 then
       doTransformItem(item.uid, item.itemid - 1)
     else
-      doPlayerSendCancel(cid, "O ADM nao sabe pq os players nao conseguem puxar agora chame qualquer gm")
+      doPlayerSendCancel(cid, "O ADM n\227o sabe pq os players n\227o conseguem puxar agora chame qualquer gm")
     end
   else
     return 0

@@ -26,7 +26,7 @@ function onSay(cid, item, words, param)
       line = line .. "- Spells for Level " .. spell.level .. ":\n"
       prevLevel = spell.level
     end
-    text = text .. line .. " " .. spell.words .. " - " .. spell.name .. ": " .. spell.mana .. "\n"
+    text = text .. line .. "\149 " .. spell.words .. " - " .. spell.name .. ": " .. spell.mana .. "\n"
   end
   doShowTextDialog(cid, 7528, text)
   return TRUE

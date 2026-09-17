@@ -13,7 +13,7 @@ function onStepIn(cid, item, pos)
 
       vip = getPlayerStorageValue(cid, 13540)
       if vip == -1 then
-        doPlayerSendCancel(cid, "Esta área é exclusiva para players Vips2.Para Adquirir vip2 faça a Quest Vip")
+        doPlayerSendCancel(cid, "Esta \225rea \233 exclusiva para players Vips2.Para Adquirir vip2 fa\231a a Quest Vip")
 
         doTeleportThing(cid, teleport1)
       else

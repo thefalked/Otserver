@@ -4,7 +4,7 @@ function onUse(cid, item, frompos, item2, topos)
   if item.uid == 1805 then
     queststatus = getPlayerStorageValue(cid, 1805)
     if queststatus == -1 then
-      doPlayerSendTextMessage(cid, 22, "Voce ganhou sua Vip Stone.")
+      doPlayerSendTextMessage(cid, 22, "Voc\234 ganhou sua Vip Stone.")
       doPlayerAddItem(cid, 4852, 1)
       setPlayerStorageValue(cid, 1805, 1)
     else

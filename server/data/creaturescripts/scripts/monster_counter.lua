@@ -27,7 +27,7 @@ function onKill(cid, target)
       doPlayerSendTextMessage(
         cid,
         MESSAGE_STATUS_CONSOLE_ORANGE,
-        "Você matou " .. killedMonsters .. " " .. name .. "'s."
+        "Voc\234 matou " .. killedMonsters .. " " .. name .. "'s."
       )
       setPlayerStorageValue(cid, monster, killedMonsters + 1)
     end
