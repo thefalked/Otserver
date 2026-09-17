@@ -4,6 +4,7 @@ docker/nginx/certs/*.pem
 docker/nginx/certs/*.key
 docker/nginx/certs/*.crt
 docker/nginx/certs/https-servers.conf
+docker/nginx/certs/hawser-stream.conf
 docker/nginx/acme/*
 !docker/nginx/acme/.gitkeep
 backups/
