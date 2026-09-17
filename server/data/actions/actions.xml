@@ -293,7 +293,7 @@
   <action uniqueid="1805" script="vip2.lua" />
   <action uniqueid="18654" script="vip9.lua" />
   <action uniqueid="13541" script="vipchest.lua" />
-  <action uniqueid="15966" script="masvip.lua" />
+  <action uniqueid="15966" script="vip3.lua" />
   <action uniqueid="1701" script="vipquest.lua" />
   <action uniqueid="1702" script="vipquest.lua" />
   <action uniqueid="1703" script="vipquest.lua" />
@@ -320,15 +320,15 @@
   <action uniqueid="7511" script="dwarfschest.lua" />
   <action uniqueid="7512" script="dwarfschest.lua" />
   <action uniqueid="7513" script="dwarfschest.lua" />
-  <action uniqueid="7514" script="zik.lua" />
-  <action uniqueid="7515" script="ziik.lua" />
+  <action uniqueid="7514" script="baiakzik_set.lua" />
+  <action uniqueid="7515" script="vip4.lua" />
   <action uniqueid="5251" script="transdecc.lua" />
   --cuckoo clock--
   <action uniqueid="7518" script="god.lua" />
-  <action uniqueid="7519" script="ziiik.lua" />
-  <action uniqueid="7520" script="ziiiik.lua" />
-  <action uniqueid="7521" script="ziiiiik.lua" />
-  <action uniqueid="7522" script="ziiiiiik.lua" />
+  <action uniqueid="7519" script="vip5.lua" />
+  <action uniqueid="7520" script="vip6.lua" />
+  <action uniqueid="7521" script="vip7.lua" />
+  <action uniqueid="7522" script="vip8.lua" />
   <action uniqueid="9521" script="zvip.lua" />
   <action uniqueid="7944" script="quests/firewalker.lua" />
   <action uniqueid="4787" script="quests/boots.lua" />

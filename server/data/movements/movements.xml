@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <movements>
   <!-- Decaying tiles -->
   <movevent type="StepIn" itemid="293" event="script" value="decay.lua" />
@@ -750,11 +750,13 @@
   <movevent type="DeEquip" itemid="9777" slot="legs" event="function" value="onDeEquipItem" />
 
   <!-- Shields -->
-  <movevent type="Equip" fromid="8905" toid="8909" slot="shield" level="100" event="function" value="onEquipItem">
+  <movevent type="Equip" fromid="8905" toid="8909" slot="shield" level="100" event="function"
+    value="onEquipItem">
     <vocation id="4" />
     <vocation id="8" showInDescription="0" />
   </movevent>
-  <movevent type="DeEquip" fromid="8905" toid="8909" slot="shield" event="function" value="onDeEquipItem" />
+  <movevent type="DeEquip" fromid="8905" toid="8909" slot="shield" event="function"
+    value="onDeEquipItem" />
   <movevent type="Equip" itemid="8900" slot="shield" level="30" event="function" value="onEquipItem">
     <vocation id="1" />
     <vocation id="5" showInDescription="0" />
@@ -812,19 +814,19 @@
   <movevent type="DeEquip" itemid="9956" slot="pickupable" event="function" value="onDeEquipItem" />
   <movevent type="StepIn" uniqueid="13700" event="script" value="vipe.lua" />
   <movevent type="StepIn" uniqueid="13540" event="script" value="vip.lua" />
-  <movevent type="StepIn" uniqueid="15967" event="script" value="masvip.lua" />
+  <movevent type="StepIn" uniqueid="15967" event="script" value="vip3.lua" />
   <movevent type="StepIn" uniqueid="13000" event="script" value="red.lua" />
   <movevent type="StepIn" uniqueid="13001" event="script" value="green.lua" />
   <movevent type="StepIn" uniqueid="13539" event="script" value="vip2.lua" />
   <movevent type="StepIn" uniqueid="13550" event="script" value="level.lua" />
-  <movevent type="StepIn" uniqueid="5721" event="script" value="vip3.lua" />
+  <movevent type="StepIn" uniqueid="5721" event="script" value="vip4b.lua" />
   <movevent type="StepIn" actionid="25000" event="script" value="autokick.lua" />
   <movevent type="StepOut" actionid="25000" event="script" value="autokick.lua" />
-  <movevent type="StepIn" uniqueid="5722" event="script" value="ziik.lua" />
-  <movevent type="StepIn" uniqueid="7520" event="script" value="ziiik.lua" />
+  <movevent type="StepIn" uniqueid="5722" event="script" value="vip4.lua" />
+  <movevent type="StepIn" uniqueid="7520" event="script" value="vip5.lua" />
   <movevent type="StepIn" actionid="13079" script="bemvindo.lua" />
-  <movevent type="StepIn" uniqueid="7525" event="script" value="ziiiik.lua" />
-  <movevent type="StepIn" uniqueid="7526" event="script" value="ziiiiik.lua" />
-  <movevent type="StepIn" uniqueid="7527" event="script" value="ziiiiiik.lua" />
+  <movevent type="StepIn" uniqueid="7525" event="script" value="vip6.lua" />
+  <movevent type="StepIn" uniqueid="7526" event="script" value="vip7.lua" />
+  <movevent type="StepIn" uniqueid="7527" event="script" value="vip8.lua" />
   <movevent type="StepIn" uniqueid="13589" event="script" value="vip9.lua" />
 </movements>

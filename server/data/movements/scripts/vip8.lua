@@ -4,6 +4,13 @@ function onStepIn(cid, item, pos)
 
   if isPlayer(cid) then
     if item.actionid == 7527 then
+      local requiredLevel = 5000
+      if getPlayerLevel(cid) < requiredLevel then
+        doPlayerSendCancel(cid, "Somente level " .. requiredLevel .. " ou mais podem entrar nesta VIP.")
+        doTeleportThing(cid, teleport1)
+        return false
+      end
+
       vip = getPlayerStorageValue(cid, 7527)
       if vip == -1 then
         doPlayerSendCancel(
