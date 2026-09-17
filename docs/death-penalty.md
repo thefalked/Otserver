@@ -4,7 +4,7 @@
 
 | Config | Value | Role |
 | -------- | ------: | ------ |
-| `deathLostPercent` | `80` | Base death hardness. Applied in `login.lua` as `loss * 10`. |
+| `deathLostPercent` | `20` | Base death hardness. Applied in `login.lua` as `loss * 10`. |
 | `eachBlessReduction` | `2` | Each blessing subtracts 2 from the experience loss scale. |
 | Vip Baiak `lessloss` (ids 5-8) | `10` | Subtracted from the experience loss scale at death. |
 | Epic `lessloss` (ids 9-12, commented out) | `30` | Same, if those vocations are enabled. |
@@ -30,7 +30,7 @@ percent = (LOSS_EXPERIENCE - vocation.lessLoss - blessings * eachBlessReduction)
 With current config and the `!bless` baseline:
 
 ```text
-LOSS_EXPERIENCE = 80 * 10 = 800
+LOSS_EXPERIENCE = 20 * 10 = 200
 eachBlessReduction = 2
 5 blessings => subtract 10
 Vip Baiak lessLoss = 10
@@ -38,12 +38,12 @@ Vip Baiak lessLoss = 10
 
 | Player type | Vocation | `lessLoss` | Bless | percent | Above level 25 approx |
 | ------------- | ---------- | ----------: | ------: | --------: | ------------------------ |
-| Non-VIP | Base vocations (ids 1-4) | 0 | 0 | `800 / 100 = 8.0` | `((level + 50) / 100) * 8.0` |
-| Non-VIP | Base vocations (ids 1-4) | 0 | 5 | `(800 - 10) / 100 = 7.9` | `((level + 50) / 100) * 7.9` |
-| VIP | Vip Baiak vocations (ids 5-8) | 10 | 0 | `(800 - 10) / 100 = 7.9` | `((level + 50) / 100) * 7.9` |
-| VIP | Vip Baiak vocations (ids 5-8) | 10 | 5 | `(800 - 10 - 10) / 100 = 7.8` | `((level + 50) / 100) * 7.8` |
+| Non-VIP | Base vocations (ids 1-4) | 0 | 0 | `200 / 100 = 2.0` | `((level + 50) / 100) * 2.0` |
+| Non-VIP | Base vocations (ids 1-4) | 0 | 5 | `(200 - 10) / 100 = 1.9` | `((level + 50) / 100) * 1.9` |
+| VIP | Vip Baiak vocations (ids 5-8) | 10 | 0 | `(200 - 10) / 100 = 1.9` | `((level + 50) / 100) * 1.9` |
+| VIP | Vip Baiak vocations (ids 5-8) | 10 | 5 | `(200 - 10 - 10) / 100 = 1.8` | `((level + 50) / 100) * 1.8` |
 
-VIP classes lose a little less than non-VIP because of `lessloss="10"` in `server/data/XML/vocations.xml`. Five blessings subtract another 10 from the scale. At `deathLostPercent = 80` that is only about a **1.25%** softer death hit than unblessed.
+VIP classes lose a little less than non-VIP because of `lessloss="10"` in `server/data/XML/vocations.xml`. Five blessings subtract another 10 from the scale. At `deathLostPercent = 20` that is about a **5%** softer death hit than unblessed.
 
 Then:
 
@@ -106,9 +106,9 @@ Re-checked against source:
 3. Skill / mana loss scale from how much experience was removed (`Player::onDeath`), using the pre-death experience ratio.
 4. `!bless` grants blessings 1-5 together (`server/data/talkactions/scripts/bless.lua`).
 
-So `deathLostPercent = 80` is **8×** the old default of `10` (which already meant full formula strength, not “10% of a level”).
+So `deathLostPercent = 20` is **2×** the old default of `10` (which already meant full formula strength, not “10% of a level”).
 
-## Expected level loss @ `deathLostPercent = 80`, `eachBlessReduction = 2`
+## Expected level loss @ `deathLostPercent = 20`, `eachBlessReduction = 2`
 
 Assumptions:
 
@@ -118,50 +118,50 @@ Assumptions:
 
 | Level | Non-VIP 0b lose | Non-VIP 0b ends | Non-VIP 5b lose | Non-VIP 5b ends | VIP 0b lose | VIP 0b ends | VIP 5b lose | VIP 5b ends |
 | ------: | ----------------: | ----------------: | ----------------: | ----------------: | ------------: | ------------: | ------------: | ------------: |
-| 10 | 3.84 | 6 | 3.73 | 6 | 3.73 | 6 | 3.63 | 6 |
-| 20 | 7.81 | 12 | 7.62 | 12 | 7.62 | 12 | 7.44 | 13 |
-| 30 | 7.98 | 22 | 7.84 | 22 | 7.84 | 22 | 7.69 | 22 |
-| 40 | 8.61 | 31 | 8.46 | 32 | 8.46 | 32 | 8.33 | 32 |
-| 50 | 9.36 | 41 | 9.22 | 41 | 9.22 | 41 | 9.07 | 41 |
-| 60 | 10.12 | 50 | 9.97 | 50 | 9.97 | 50 | 9.82 | 50 |
-| 70 | 10.92 | 59 | 10.76 | 59 | 10.76 | 59 | 10.60 | 59 |
-| 80 | 11.74 | 68 | 11.57 | 68 | 11.57 | 68 | 11.40 | 69 |
-| 90 | 12.58 | 77 | 12.39 | 78 | 12.39 | 78 | 12.21 | 78 |
-| 100 | 13.42 | 87 | 13.23 | 87 | 13.23 | 87 | 13.03 | 87 |
-| 150 | 17.70 | 132 | 17.45 | 133 | 17.45 | 133 | 17.20 | 133 |
-| 200 | 21.98 | 178 | 21.67 | 178 | 21.67 | 178 | 21.36 | 179 |
-| 250 | 26.30 | 224 | 25.93 | 224 | 25.93 | 224 | 25.56 | 224 |
-| 300 | 30.60 | 269 | 30.18 | 270 | 30.18 | 270 | 29.75 | 270 |
-| 400 | 39.24 | 361 | 38.69 | 361 | 38.69 | 361 | 38.15 | 362 |
-| 500 | 47.88 | 452 | 47.21 | 453 | 47.21 | 453 | 46.55 | 453 |
-| 600 | 56.52 | 543 | 55.73 | 544 | 55.73 | 544 | 54.96 | 545 |
-| 700 | 65.16 | 635 | 64.26 | 636 | 64.26 | 636 | 63.36 | 637 |
-| 800 | 73.80 | 726 | 72.78 | 727 | 72.78 | 727 | 71.77 | 728 |
-| 900 | 82.45 | 818 | 81.31 | 819 | 81.31 | 819 | 80.18 | 820 |
-| 1000 | 91.09 | 909 | 89.84 | 910 | 89.84 | 910 | 88.58 | 911 |
-| 2000 | 177.55 | 1822 | 175.11 | 1825 | 175.11 | 1825 | 172.67 | 1827 |
-| 3000 | 264.01 | 2736 | 260.38 | 2740 | 260.38 | 2740 | 256.77 | 2743 |
-| 4000 | 350.47 | 3650 | 345.66 | 3654 | 345.66 | 3654 | 340.86 | 3659 |
-| 5000 | 436.93 | 4563 | 430.94 | 4569 | 430.94 | 4569 | 424.96 | 4575 |
-| 6000 | 523.39 | 5477 | 516.22 | 5484 | 516.22 | 5484 | 509.06 | 5491 |
-| 7000 | 609.86 | 6390 | 601.49 | 6399 | 601.49 | 6399 | 593.15 | 6407 |
-| 8000 | 696.32 | 7304 | 686.77 | 7313 | 686.77 | 7313 | 677.25 | 7323 |
-| 9000 | 782.78 | 8217 | 772.05 | 8228 | 772.05 | 8228 | 761.35 | 8239 |
-| 10000 | 869.25 | 9131 | 857.33 | 9143 | 857.33 | 9143 | 845.44 | 9155 |
-| 11000 | 955.71 | 10044 | 942.61 | 10057 | 942.61 | 10057 | 929.54 | 10070 |
-| 12000 | 1042.17 | 10958 | 1027.88 | 10972 | 1027.88 | 10972 | 1013.63 | 10986 |
-| 13000 | 1128.63 | 11871 | 1113.16 | 11887 | 1113.16 | 11887 | 1097.73 | 11902 |
-| 14000 | 1215.10 | 12785 | 1198.44 | 12802 | 1198.44 | 12802 | 1181.83 | 12818 |
-| 15000 | 1301.56 | 13698 | 1283.72 | 13716 | 1283.72 | 13716 | 1265.92 | 13734 |
+| 10 | 0.63 | 9 | 0.59 | 9 | 0.59 | 9 | 0.55 | 9 |
+| 20 | 1.34 | 19 | 1.27 | 19 | 1.27 | 19 | 1.20 | 19 |
+| 30 | 1.57 | 28 | 1.48 | 29 | 1.48 | 29 | 1.40 | 29 |
+| 40 | 1.79 | 38 | 1.69 | 38 | 1.69 | 38 | 1.60 | 38 |
+| 50 | 2.00 | 48 | 1.90 | 48 | 1.90 | 48 | 1.79 | 48 |
+| 60 | 2.20 | 58 | 2.09 | 58 | 2.09 | 58 | 1.97 | 58 |
+| 70 | 2.40 | 68 | 2.28 | 68 | 2.28 | 68 | 2.15 | 68 |
+| 80 | 2.60 | 77 | 2.47 | 78 | 2.47 | 78 | 2.33 | 78 |
+| 90 | 2.81 | 87 | 2.66 | 87 | 2.66 | 87 | 2.52 | 87 |
+| 100 | 3.01 | 97 | 2.86 | 97 | 2.86 | 97 | 2.70 | 97 |
+| 150 | 4.03 | 146 | 3.82 | 146 | 3.82 | 146 | 3.61 | 146 |
+| 200 | 5.04 | 195 | 4.78 | 195 | 4.78 | 195 | 4.52 | 195 |
+| 250 | 6.05 | 244 | 5.74 | 244 | 5.74 | 244 | 5.43 | 245 |
+| 300 | 7.06 | 293 | 6.70 | 293 | 6.70 | 293 | 6.34 | 294 |
+| 400 | 9.08 | 391 | 8.62 | 391 | 8.62 | 391 | 8.15 | 392 |
+| 500 | 11.10 | 489 | 10.53 | 489 | 10.53 | 489 | 9.97 | 490 |
+| 600 | 13.12 | 587 | 12.45 | 588 | 12.45 | 588 | 11.78 | 588 |
+| 700 | 15.14 | 685 | 14.37 | 686 | 14.37 | 686 | 13.60 | 686 |
+| 800 | 17.16 | 783 | 16.29 | 784 | 16.29 | 784 | 15.41 | 785 |
+| 900 | 19.18 | 881 | 18.21 | 882 | 18.21 | 882 | 17.23 | 883 |
+| 1000 | 21.21 | 979 | 20.12 | 980 | 20.12 | 980 | 19.04 | 981 |
+| 2000 | 41.41 | 1959 | 39.30 | 1961 | 39.30 | 1961 | 37.19 | 1963 |
+| 3000 | 61.62 | 2938 | 58.48 | 2942 | 58.48 | 2942 | 55.34 | 2945 |
+| 4000 | 81.83 | 3918 | 77.65 | 3922 | 77.65 | 3922 | 73.49 | 3927 |
+| 5000 | 102.03 | 4898 | 96.83 | 4903 | 96.83 | 4903 | 91.64 | 4908 |
+| 6000 | 122.24 | 5878 | 116.00 | 5884 | 116.00 | 5884 | 109.78 | 5890 |
+| 7000 | 142.44 | 6858 | 135.18 | 6865 | 135.18 | 6865 | 127.93 | 6872 |
+| 8000 | 162.65 | 7837 | 154.36 | 7846 | 154.36 | 7846 | 146.08 | 7854 |
+| 9000 | 182.86 | 8817 | 173.53 | 8826 | 173.53 | 8826 | 164.23 | 8836 |
+| 10000 | 203.06 | 9797 | 192.71 | 9807 | 192.71 | 9807 | 182.38 | 9818 |
+| 11000 | 223.27 | 10777 | 211.88 | 10788 | 211.88 | 10788 | 200.52 | 10799 |
+| 12000 | 243.47 | 11757 | 231.06 | 11769 | 231.06 | 11769 | 218.67 | 11781 |
+| 13000 | 263.68 | 12736 | 250.24 | 12750 | 250.24 | 12750 | 236.82 | 12763 |
+| 14000 | 283.89 | 13716 | 269.41 | 13731 | 269.41 | 13731 | 254.97 | 13745 |
+| 15000 | 304.09 | 14696 | 288.59 | 14711 | 288.59 | 14711 | 273.12 | 14727 |
 
 ## Recalculate locally
 
 ```bash
 python3 scripts/death_penalty.py
-python3 scripts/death_penalty.py --death-lost 80 --each-bless 2 --bless 0,5 --compact
+python3 scripts/death_penalty.py --death-lost 20 --each-bless 2 --bless 0,5 --compact
 ```
 
-Defaults match current server settings (`deathLostPercent=80`, `eachBlessReduction=2`, bless `0,5`, VIP `lessLoss=10`). Baseline play assumes `!bless` (5 blessings).
+Defaults match current server settings (`deathLostPercent=20`, `eachBlessReduction=2`, bless `0,5`, VIP `lessLoss=10`). Baseline play assumes `!bless` (5 blessings).
 
 The script mirrors `login.lua` and `Player::getLostExperience()` / `getExpForLevel()`.
 
