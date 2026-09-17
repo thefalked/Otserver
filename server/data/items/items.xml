@@ -8275,7 +8275,9 @@
   </item>
   <item id="5462" name="Master Boots">
     <attribute key="weight" value="800" />
+    <attribute key="armor" value="150" />
     <attribute key="slotType" value="feet" />
+    <attribute key="speed" value="40" />
     <attribute key="healthGain" value="250" />
     <attribute key="healthTicks" value="2500" />
     <attribute key="manaGain" value="600" />
@@ -9000,6 +9002,8 @@
   <item id="5918" name="Master Legs">
     <attribute key="weight" value="5400" />
     <attribute key="armor" value="800" />
+    <attribute key="absorbPercentIce" value="10" />
+    <attribute key="absorbPercentEarth" value="10" />
     <attribute key="slotType" value="legs" />
   </item>
   <item id="5919" article="a" name="dragon claw">
@@ -10018,12 +10022,14 @@
     <attribute key="weight" value="2500" />
     <attribute key="armor" value="800" />
     <attribute key="absorbPercentDeath" value="25" />
-    <attribute key="absorbPercentHoly" value="-2" />
+    <attribute key="absorbPercentHoly" value="10" />
     <attribute key="slotType" value="body" />
   </item>
   <item id="6096" article="a" name="Master Helmet">
     <attribute key="weight" value="5100" />
     <attribute key="armor" value="800" />
+    <attribute key="absorbPercentFire" value="10" />
+    <attribute key="absorbPercentEnergy" value="10" />
     <attribute key="slotType" value="head" />
   </item>
   <item id="6097" article="a" name="hook" plural="hooks">
@@ -10756,6 +10762,8 @@
     <attribute key="description" value="The better Protection." />
     <attribute key="weight" value="6700" />
     <attribute key="defense" value="800" />
+    <attribute key="absorbPercentAll" value="5" />
+    <attribute key="skillShield" value="5" />
     <attribute key="weaponType" value="shield" />
   </item>
   <item id="6434" article="a" name="blue tapestry" />
@@ -15076,8 +15084,8 @@
   <item id="8904" article="a" name="Master Spellscroll">
     <attribute key="description" value="It shows your spells and can also shield against attack when worn." />
     <attribute key="weight" value="4650" />
-    <attribute key="magiclevelpoints" value="30" />
-    <attribute key="defense" value="600" />
+    <attribute key="magiclevelpoints" value="6" />
+    <attribute key="defense" value="200" />
     <attribute key="weaponType" value="shield" />
   </item>
   <item id="8905" article="a" name="rainbow shield">

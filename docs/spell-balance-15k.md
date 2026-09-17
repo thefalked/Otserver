@@ -57,6 +57,15 @@ max = -(skillTotal * 6   + level / 5)
 | Fierce Berserk | `exori gran` | EK | `level / 8` | `level / 5` | Match other EK AoE level floor |
 | Divine Caldera | `exevo mas san` | RP | `setAttackFormula(15, 15, 14, 17)` | `setAttackFormula(5, 5, 14, 17)` | Stop `level/15` collapse |
 
+### Heal exhaust (follow-up)
+
+| Spell | Words | Class | Exhaust |
+| ------- | ------- | ------- | --------- |
+| Wound Cleansing | `exana mort` | EK | `1000` → **`500`** |
+| Divine Healing | `exura san` | RP | `1000` → **`500`** |
+
+Shared heals (`exura`, `exura vita`) stay at 1000ms. HPS doubles for the class main heals. See the HPS section printed by `scripts/spell_balance_15k.py`.
+
 Target mage AoE order: **mort > flam > vis > frigo**.
 
 ## Re-run calculations after tweaks

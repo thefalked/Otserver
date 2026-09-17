@@ -269,6 +269,8 @@
   <!-- Boots -->
   <movevent type="Equip" itemid="2195" slot="feet" event="function" value="onEquipItem" />
   <movevent type="DeEquip" itemid="2195" slot="feet" event="function" value="onDeEquipItem" />
+  <movevent type="Equip" itemid="5462" slot="feet" event="function" value="onEquipItem" />
+  <movevent type="DeEquip" itemid="5462" slot="feet" event="function" value="onDeEquipItem" />
   <movevent type="Equip" itemid="6132" slot="feet" event="function" value="onEquipItem" />
   <movevent type="Equip" itemid="2641" slot="feet" event="function" value="onEquipItem" />
   <movevent type="DeEquip" itemid="6132" slot="feet" event="function" value="onDeEquipItem" />
@@ -788,13 +790,15 @@
     <vocation id="6" showInDescription="0" />
   </movevent>
   <movevent type="DeEquip" itemid="8903" slot="shield" event="function" value="onDeEquipItem" />
-  <movevent type="Equip" itemid="8904" slot="shield" level="70" event="function" value="onEquipItem">
+  <movevent type="Equip" itemid="6433" slot="shield" event="function" value="onEquipItem" />
+  <movevent type="DeEquip" itemid="6433" slot="shield" event="function" value="onDeEquipItem" />
+  <movevent type="Equip" itemid="8904" level="70" event="function" value="onEquipItem">
     <vocation id="1" />
     <vocation id="5" showInDescription="0" />
     <vocation id="2" />
     <vocation id="6" showInDescription="0" />
   </movevent>
-  <movevent type="DeEquip" itemid="8904" slot="shield" event="function" value="onDeEquipItem" />
+  <movevent type="DeEquip" itemid="8904" event="function" value="onDeEquipItem" />
   <movevent type="Equip" itemid="8918" slot="shield" level="80" event="function" value="onEquipItem">
     <vocation id="1" />
     <vocation id="5" showInDescription="0" />
