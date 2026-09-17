@@ -119,6 +119,15 @@ services:
       - ./server/config.lua.template:/ot/config.lua.template:ro
       - ./server/data:/ot/data:ro
       - ./docker/render-config.sh:/usr/local/bin/render-config.sh:ro
+      - ./docker/ensure-schema.php:/usr/local/bin/ensure-schema.php:ro
+      # Bind schema SQL so utf8mb4/news migrations apply without image rebuild.
+      - ./docker/mysql/06-gesior-player-cols.sql:/usr/local/share/otserver/06-gesior-player-cols.sql:ro
+      - ./docker/mysql/07-lottery.sql:/usr/local/share/otserver/07-lottery.sql:ro
+      - ./docker/mysql/08-god-energy.sql:/usr/local/share/otserver/08-god-energy.sql:ro
+      - ./docker/mysql/09-hide-sample-chars.sql:/usr/local/share/otserver/09-hide-sample-chars.sql:ro
+      - ./docker/mysql/10-a2-account-manager.sql:/usr/local/share/otserver/10-a2-account-manager.sql:ro
+      - ./docker/mysql/11-gesior-created.sql:/usr/local/share/otserver/11-gesior-created.sql:ro
+      - ./docker/mysql/12-news-utf8mb4.sql:/usr/local/share/otserver/12-news-utf8mb4.sql:ro
       - ./website/docker-entrypoint.sh:/usr/local/bin/website-entrypoint.sh:ro
     expose:
       - "80"

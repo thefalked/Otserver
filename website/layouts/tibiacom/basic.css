@@ -1,6 +1,6 @@
 body {
   margin: 0px;
-  padding:  0px;
+  padding: 0px;
   background-color: #061222;
 }
 
@@ -47,7 +47,7 @@ body {
   margin-right: 15px;
   margin-left: 15px;
   padding: 0px;
-  font-family:  Arial, sans-serif;
+  font-family: Arial, sans-serif;
   font-size: 10pt;
   font-weight: bold;
   line-height: 12pt;
@@ -61,7 +61,7 @@ body {
 }
 
 #ThemeboxesColumn {
-  text-align:  center;
+  text-align: center;
   position: absolute;
   top: 0px;
   right: 0px;
@@ -72,7 +72,11 @@ body {
 }
 
 #Footer {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
   font-size: 7pt;
   font-weight: normal;
   text-align: center;
@@ -87,11 +91,26 @@ body {
 }
 
 /* Footer linkes */
-#Footer a:link    { color: white; text-decoration: none; }
-#Footer a:visited { color: white; text-decoration: none; }
-#Footer a:focus   { color: white; text-decoration: none; }
-#Footer a:active  { color: white; text-decoration: underline; }
-#Footer a:hover   { color: white; text-decoration: underline; }
+#Footer a:link {
+  color: white;
+  text-decoration: none;
+}
+#Footer a:visited {
+  color: white;
+  text-decoration: none;
+}
+#Footer a:focus {
+  color: white;
+  text-decoration: none;
+}
+#Footer a:active {
+  color: white;
+  text-decoration: underline;
+}
+#Footer a:hover {
+  color: white;
+  text-decoration: underline;
+}
 
 /** -------------------------------
  *  Stylesheet declarations for the
@@ -106,7 +125,7 @@ body {
   top: -140px;
   left: 4px;
   background-repeat: no-repeat;
-  z-index:5;
+  z-index: 5;
 }
 
 #LeftArtwork #TibiaLogoArtworkTop {
@@ -128,13 +147,13 @@ body {
   z-index: 5;
 }
 
-#LeftArtwork #Statue_1{
+#LeftArtwork #Statue_1 {
   position: absolute;
   top: 0px;
   left: 5px;
   height: 30px;
   width: 32px;
-  z-index:10;
+  z-index: 10;
 }
 
 #LeftArtwork #Statue_2 {
@@ -143,7 +162,7 @@ body {
   right: 25px;
   height: 30px;
   width: 32px;
-  z-index:10;
+  z-index: 10;
 }
 
 #LeftArtwork #LogoLink {
@@ -184,7 +203,11 @@ body {
 }
 
 #RightArtwork #PlayersOnline {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
   font-size: 7pt;
   line-height: 8pt;
   text-align: center;
@@ -413,7 +436,10 @@ body {
 .LabelText {
   background-image: none !important;
   color: #f0d1a4;
-  font: bold 12px Verdana, Arial, sans-serif;
+  font:
+    bold 12px Verdana,
+    Arial,
+    sans-serif;
   line-height: 22px;
   text-shadow: 1px 1px 0 #000;
   letter-spacing: 0.5px;
@@ -422,7 +448,10 @@ body {
 #Loginbox .LoginstatusTextLabel {
   background-image: none !important;
   color: #f0d1a4;
-  font: bold 10px Verdana, Arial, sans-serif;
+  font:
+    bold 10px Verdana,
+    Arial,
+    sans-serif;
   line-height: 11px;
   white-space: nowrap;
   overflow: hidden;
@@ -436,7 +465,10 @@ body {
 #Loginbox #LoginButton #ButtonText.LoginButtonLabel {
   background-image: none !important;
   color: #f0d1a4;
-  font: bold 11px Verdana, Arial, sans-serif;
+  font:
+    bold 11px Verdana,
+    Arial,
+    sans-serif;
   line-height: 22px;
   text-align: center;
   text-shadow: 1px 1px 0 #000;
@@ -466,7 +498,7 @@ body {
   position: relative;
   margin-left: 5px;
   margin-right: 5px;
-  background-color: #0D2E2B;
+  background-color: #0d2e2b;
   width: 160px;
   display: none;
 }
@@ -498,11 +530,26 @@ body {
 }
 
 /* Submenu links */
-.Submenu a:link    { color: #d7d7d7; text-decoration: none; }
-.Submenu a:visited { color: #d7d7d7; text-decoration: none; }
-.Submenu a:focus   { color: #d7d7d7; text-decoration: none; }
-.Submenu a:active  { color: white; text-decoration: none; }
-.Submenu a:hover   { color: white; text-decoration: none; }
+.Submenu a:link {
+  color: #d7d7d7;
+  text-decoration: none;
+}
+.Submenu a:visited {
+  color: #d7d7d7;
+  text-decoration: none;
+}
+.Submenu a:focus {
+  color: #d7d7d7;
+  text-decoration: none;
+}
+.Submenu a:active {
+  color: white;
+  text-decoration: none;
+}
+.Submenu a:hover {
+  color: white;
+  text-decoration: none;
+}
 
 /** -------------------------------
  *  Stylesheet declarations for the
@@ -552,7 +599,7 @@ body {
   position: relative;
   margin: 5px;
   margin-bottom: 18px;
-  color: #5A2800;
+  color: #5a2800;
   border-left: 2px solid #3a3738;
   border-right: 2px solid #3a3738;
   background-color: #debb9d;
@@ -561,10 +608,14 @@ body {
 }
 
 .Content .BoxContent {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
   font-size: 9pt;
-  background-color: #FFF2db;
-  color: #5A2800;
+  background-color: #fff2db;
+  color: #5a2800;
   min-height: 395px;
   height: auto !important;
   height: 415px;
@@ -580,7 +631,11 @@ body {
 }
 
 .Content th {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
   font-size: 10pt;
   font-weight: bold;
   text-align: left;
@@ -589,24 +644,36 @@ body {
 }
 
 .Content .BoxContent td {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
   font-size: 10pt;
-  color: #5A2800;
- }
+  color: #5a2800;
+}
 
 /* Content Links */
 
 .Content a {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
   font-weight: bold;
   color: #004294;
   text-decoration: none;
 }
 .Content a:hover {
-  font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
   font-weight: bold;
   text-decoration: underline;
-  color: #0063DC;
+  color: #0063dc;
 }
 .Content .HelpLink {
   font-size: 7pt;
@@ -640,7 +707,7 @@ body {
 
 .Content .CornerWrapper-b {
   position: absolute;
-  width:100%;
+  width: 100%;
 }
 
 .Content .Corner-bl {
@@ -749,7 +816,7 @@ body {
   font-family: Verdana, Arial, sans-serif;
   font-weight: bold;
   line-height: 11pt;
-  color: #5A2800;
+  color: #5a2800;
   position: absolute;
   height: 90px;
   width: 150px;
@@ -769,35 +836,35 @@ body {
  */
 
 .Content .BoxContent td .white {
-  color: #EFEFEF;
+  color: #efefef;
   visibility: visible;
 }
 
 .Content .BoxContent td .whites {
-  color: #EFEFEF;
+  color: #efefef;
   visibility: visible;
   font-size: 9pt;
 }
 
 .Content .BoxContent .white {
-  color : #EFEFEF;
-  visibility : visible;
+  color: #efefef;
+  visibility: visible;
 }
 
 .Content .BoxContent td .green {
-  color : #00BF00;
+  color: #00bf00;
 }
 
 .Content .BoxContent td .yellow {
-  color : #FFBB05;
+  color: #ffbb05;
 }
 
 .Content .BoxContent td .red {
-  color : #EF0000;
+  color: #ef0000;
 }
 
 .Content .BoxContent td .grey {
-  color : #808080;
+  color: #808080;
 }
 
 /** -------------------------------
@@ -807,98 +874,146 @@ body {
  */
 
 .Content .BoxContent .ff_info {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 10pt;
-  color : #5A2800;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 10pt;
+  color: #5a2800;
+  visibility: visible;
 }
 
 .Content .ff_white a {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .Content .BoxContent .ff_white {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  color : #EFEFEF;
-  visibility : visible;
-  font-size : 7pt;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  color: #efefef;
+  visibility: visible;
+  font-size: 7pt;
   font-weight: bold;
 }
 
 .Content .BoxContent .ff_red {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  color : #EF0000;
-  visibility : visible;
-  font-size : 8pt;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  color: #ef0000;
+  visibility: visible;
+  font-size: 8pt;
   font-weight: bold;
 }
 
 .Content .BoxContent .ff_whitelarge {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  color : #EFEFEF;
-  visibility : visible;
-  font-size : 9pt;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  color: #efefef;
+  visibility: visible;
+  font-size: 9pt;
   font-weight: bold;
 }
 
 .Content .BoxContent .ff_info {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 8pt;
-  color : #5A2800;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 8pt;
+  color: #5a2800;
+  visibility: visible;
 }
 
 .Content .BoxContent .ff_infotext {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 8pt;
-  color : #5A2800;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 8pt;
+  color: #5a2800;
+  visibility: visible;
   line-height: 12pt;
 }
 
 .Content .BoxContent .ff_smallinfo {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 7pt;
-  color : #5A2800;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 7pt;
+  color: #5a2800;
+  visibility: visible;
 }
 
 .Content .BoxContent .ff_large {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 12pt;
-  color : #5A2800;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 12pt;
+  color: #5a2800;
+  visibility: visible;
 }
 
 .Content .BoxContent .ff_pagetext {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 9pt;
-  color : #5A2800;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 9pt;
+  color: #5a2800;
+  visibility: visible;
   line-height: 13pt;
 }
 
 .Content .BoxContent .ff_pagetextgrey {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 9pt;
-  color : #505050;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 9pt;
+  color: #505050;
+  visibility: visible;
   line-height: 13pt;
 }
 
 .Content .BoxContent .ff_pagetextred {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 9pt;
-  color : #F00;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 9pt;
+  color: #f00;
+  visibility: visible;
   line-height: 13pt;
 }
 
 .Content .BoxContent .ff_correct {
-  font-family : Verdana, Arial, Times New Roman, sans-serif;
-  font-size : 11pt;
-  color : #FF0000;
-  visibility : visible;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
+  font-size: 11pt;
+  color: #ff0000;
+  visibility: visible;
   font-weight: bold;
 }
 
@@ -997,7 +1112,6 @@ body {
   height: 26px;
 }
 
-
 /** ---------------------------------
  *  ### not finished versions for the
  *  ### payment process PROGRESS BAR
@@ -1083,7 +1197,7 @@ body {
   left: 0px;
   width: 100%;
   height: 7px;
-  background: #FFFFFF none repeat scroll 0%;
+  background: #ffffff none repeat scroll 0%;
 }
 * html #ProgressBar .Tube {
   top: 13px;
@@ -1119,7 +1233,6 @@ body {
   right: -77px;
 }
 
-
 /** -------------------------------
  *  Stylesheet declarations for the
  *  NEW TABLES
@@ -1149,7 +1262,7 @@ body {
   text-align: left;
 }
 .TableContainer .CaptionContainer .CaptionInnerContainer {
-	position: relative;
+  position: relative;
   background-color: #5f4d41;
   width: 100%;
   height: 100%;
@@ -1157,7 +1270,11 @@ body {
   padding-bottom: 4px;
 }
 .TableContainer .CaptionContainer .Text {
-	font-family: Verdana, Arial, Times New Roman, sans-serif;
+  font-family:
+    Verdana,
+    Arial,
+    Times New Roman,
+    sans-serif;
   font-size: 10pt;
   font-weight: bold;
   text-align: left;
@@ -1167,35 +1284,35 @@ body {
   padding-bottom: 0px;
 }
 .TableContainer .CaptionContainer .CaptionEdgeLeftTop {
-	position: absolute;
+  position: absolute;
   width: 5px;
   height: 5px;
-	top: -2px;
+  top: -2px;
   left: -2px;
   z-index: 50;
 }
 .TableContainer .CaptionContainer .CaptionEdgeRightTop {
-	position: absolute;
+  position: absolute;
   width: 5px;
   height: 5px;
-	top: -2px;
+  top: -2px;
   right: -2px;
   z-index: 50;
 }
 .TableContainer .CaptionContainer .CaptionEdgeLeftBottom {
-	position: absolute;
+  position: absolute;
   width: 5px;
   height: 5px;
-	left: -2px;
-	bottom: -3px;
+  left: -2px;
+  bottom: -3px;
   z-index: 50;
 }
 .TableContainer .CaptionContainer .CaptionEdgeRightBottom {
-	position: absolute;
+  position: absolute;
   width: 5px;
   height: 5px;
-	right: -2px;
-	bottom: -3px;
+  right: -2px;
+  bottom: -3px;
   z-index: 50;
 }
 .TableContainer .CaptionContainer .CaptionBorderTop {
@@ -1244,7 +1361,7 @@ body {
 }
 /* TABLE CONTENT */
 .TableContentContainer {
-  border: 1px solid #5F4D41;
+  border: 1px solid #5f4d41;
   position: relative;
   margin-right: 4px;
   height: 100%;
@@ -1410,7 +1527,6 @@ body {
   padding-right: 10px;
   white-space: nowrap;
   background-color: #d5c0a1;
-
 }
 .LabelH td {
   background-color: #d5c0a1;
@@ -1469,12 +1585,12 @@ body {
   z-index: 55;
 }
 .Content .BoxContent .Odd {
-  background-color: #D4C0A1;
+  background-color: #d4c0a1;
   padding: 2px;
 }
 
 .Content .BoxContent .Even {
-  background-color: #F1E0C6;
+  background-color: #f1e0c6;
   padding: 2px;
 }
 
@@ -1487,12 +1603,12 @@ body {
   background-repeat: no-repeat;
 }
 .Content .BoxContent .Odd {
-  background-color: #D4C0A1;
+  background-color: #d4c0a1;
   padding: 2px;
 }
 
 .Content .BoxContent .Even {
-  background-color: #F1E0C6;
+  background-color: #f1e0c6;
   padding: 2px;
 }
 
@@ -1505,12 +1621,12 @@ body {
   background-repeat: no-repeat;
 }
 .Content .BoxContent .Odd {
-  background-color: #D4C0A1;
+  background-color: #d4c0a1;
   padding: 2px;
 }
 
 .Content .BoxContent .Even {
-  background-color: #F1E0C6;
+  background-color: #f1e0c6;
   padding: 2px;
 }
 
@@ -1535,11 +1651,12 @@ body {
 .Content #NewsTicker .BoxContent .Row {
   position: relative;
   width: 100%;
+  min-height: 16px;
 }
 
 .Content #NewsTicker .NewsTickerIcon {
   position: absolute;
-  top: 1px;
+  top: 0px;
   left: 1px;
   height: 16px;
   width: 16px;
@@ -1550,35 +1667,48 @@ body {
   font-size: 9pt;
   position: relative;
   margin-left: 20px;
+  line-height: 16px;
+  min-height: 16px;
 }
 
 .Content #NewsTicker .NewsTickerDate {
   font-size: 7pt;
   position: absolute;
   top: 0px;
-  float: left;
+  left: 0px;
+  height: 16px;
+  line-height: 16px;
 }
 
 .Content #NewsTicker .NewsTickerShortText {
   margin-left: 85px;
-  height: 14px;
+  height: 16px;
+  line-height: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.Content #NewsTicker .NewsTickerShortText img,
+.Content #NewsTicker .NewsTickerFullText img,
+.Content #NewsTicker .NewsTickerShortText button,
+.Content #NewsTicker .NewsTickerFullText button {
+  vertical-align: middle;
 }
 
 .Content #NewsTicker .NewsTickerFullText {
   margin-left: 85px;
   margin-right: 20px;
   display: none;
+  line-height: 16px;
 }
 
 .Content #NewsTicker .NewsTickerExtend {
-  position: relative;
-  right: 0px;
-  top: 1px;
+  position: absolute;
+  top: 2px;
   right: 1px;
   height: 12px;
   width: 12px;
   background-repeat: no-repeat;
-  float: right;
   cursor: pointer;
   z-index: 10;
 }
@@ -1586,7 +1716,7 @@ body {
 /* Featured Article */
 
 .Content #FeaturedArticle .BoxContent {
-  position:relative;
+  position: relative;
   height: 100px;
   padding: 5px;
   padding-left: 10px;
@@ -1641,7 +1771,7 @@ body {
   left: 0px;
   margin-left: 5px;
   margin-right: 5px;
-  float:left;
+  float: left;
 }
 
 .Content #FeaturedArticle .NewsHeadlineDate {
@@ -1662,15 +1792,17 @@ body {
   color: white;
 }
 
-/* News */
+/* News (homepage box id is latestnews; archive may use News) */
 
-.Content #News .BoxContent {
+.Content #News .BoxContent,
+.Content #latestnews .BoxContent {
   min-height: 100px;
   height: auto !important;
   height: 110px;
 }
 
-.Content #News .NewsHeadlineBackground {
+.Content #News .NewsHeadlineBackground,
+.Content #latestnews .NewsHeadlineBackground {
   position: relative;
   height: 28px;
   margin-bottom: 5px;
@@ -1679,30 +1811,39 @@ body {
   border-right: 1px solid #000000;
 }
 
-.Content #News .NewsHeadlineIcon {
+.Content #News .NewsHeadlineIcon,
+.Content #latestnews .NewsHeadlineIcon {
   position: absolute;
-  top: -1px;
+  top: 6px;
   left: 0px;
   margin-left: 5px;
   margin-right: 5px;
 }
 
-.Content #News .NewsHeadlineDate {
+.Content #News .NewsHeadlineDate,
+.Content #latestnews .NewsHeadlineDate {
   font-size: 7pt;
   position: absolute;
-  top: 10px;
+  top: 9px;
   left: 50px;
-  width: 85px;
+  width: 95px;
   color: white;
+  line-height: 10px;
 }
 
-.Content #News .NewsHeadlineText {
+.Content #News .NewsHeadlineText,
+.Content #latestnews .NewsHeadlineText {
   position: relative;
   top: 7px;
-  left: 135px;
+  left: 150px;
+  margin-right: 10px;
   font-size: 10pt;
   font-weight: bold;
   color: white;
+  line-height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* News Archive */

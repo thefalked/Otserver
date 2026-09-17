@@ -242,7 +242,7 @@ if ($seo_subtopic === 'latestnews') {
   <link rel="icon" href="<?php echo h($seo_site_url); ?>/images/server.ico" type="image/x-icon" />
   <link rel="apple-touch-icon" href="<?php echo h($seo_site_url); ?>/images/apple-touch-icon.png" sizes="180x180" />
   <?php echo $layout_header; ?>
-  <link href="<?php echo $layout_name; ?>/basic.css?v=3" rel="stylesheet" type="text/css">
+  <link href="<?php echo $layout_name; ?>/basic.css?v=5" rel="stylesheet" type="text/css">
   <script type="text/javascript">
     var IMAGES = 0;
     IMAGES = '<?php echo $layout_name; ?>/images';

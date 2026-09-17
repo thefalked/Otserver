@@ -591,23 +591,23 @@ foreach ($zapytanie as $row) {
   );
   // Same smileys as forum (images/smile/*.gif). post_smile=1 disables them.
   $message = replaceSmile($message, (int) ($row['post_smile'] ?? 0));
+  // Match tibia CSS: absolute icon + NewsHeadlineDate/Text (needs #News or #latestnews).
   $main_content .=
     '<div class=\'NewsHeadline\'>
 		<div class=\'NewsHeadlineBackground\' style=\'background-image:url(' .
     $layout_name .
     '/images/content/title-background-green.gif)\'>
-		<table border=0><tr><td><img src="' .
+		<img src="' .
     $layout_name .
     '/images/news/icon_' .
     $row['icon_id'] .
     '.gif" class=\'NewsHeadlineIcon\' alt=\'\' />
-		</td><td><font color="' .
-    $layout_ini['news_title_color'] .
-    '">' .
+		<div class=\'NewsHeadlineDate\'>' .
     date('d.m.y H:i:s', $row['post_date']) .
-    ' - <b>' .
+    '</div>
+		<div class=\'NewsHeadlineText\'>' .
     h($row['post_topic']) .
-    '</b></font></td></tr></table>
+    '</div>
 		</div>
 		</div>
 		<table style=\'clear:both\' border=0 cellpadding=0 cellspacing=0 width=\'100%\'><tr>
