@@ -7337,19 +7337,19 @@
   <item id="4283" article="a" name="dead hydra">
     <attribute key="containerSize" value="10" />
     <attribute key="decayTo" value="4284" />
-    <attribute key="duration" value="900" />
+    <attribute key="duration" value="300" />
     <attribute key="corpseType" value="blood" />
     <attribute key="fluidSource" value="blood" />
   </item>
   <item id="4284" article="a" name="dead hydra">
     <attribute key="containerSize" value="10" />
     <attribute key="decayTo" value="4285" />
-    <attribute key="duration" value="600" />
+    <attribute key="duration" value="85" />
     <attribute key="corpseType" value="blood" />
   </item>
   <item id="4285" article="a" name="dead hydra">
     <attribute key="decayTo" value="0" />
-    <attribute key="duration" value="600" />
+    <attribute key="duration" value="85" />
     <attribute key="corpseType" value="blood" />
   </item>
   <item id="4286" article="a" name="dead panda">
@@ -10569,19 +10569,19 @@
   <item id="6341" article="a" name="slain nightmare">
     <attribute key="containerSize" value="10" />
     <attribute key="decayTo" value="6342" />
-    <attribute key="duration" value="900" />
+    <attribute key="duration" value="300" />
     <attribute key="corpseType" value="blood" />
     <attribute key="fluidSource" value="blood" />
   </item>
   <item id="6342" article="a" name="slain nightmare">
     <attribute key="containerSize" value="10" />
     <attribute key="decayTo" value="6343" />
-    <attribute key="duration" value="600" />
+    <attribute key="duration" value="85" />
     <attribute key="corpseType" value="blood" />
   </item>
   <item id="6343" article="a" name="slain nightmare">
     <attribute key="decayTo" value="0" />
-    <attribute key="duration" value="600" />
+    <attribute key="duration" value="85" />
     <attribute key="corpseType" value="blood" />
   </item>
   <item id="6344" article="a" name="slain phantasm">
@@ -11410,18 +11410,18 @@
   <item id="7092" article="a" name="dead frost dragon">
     <attribute key="containerSize" value="15" />
     <attribute key="decayTo" value="7093" />
-    <attribute key="duration" value="900" />
+    <attribute key="duration" value="300" />
     <attribute key="corpseType" value="undead" />
   </item>
   <item id="7093" article="a" name="dead frost dragon">
     <attribute key="containerSize" value="15" />
     <attribute key="decayTo" value="7094" />
-    <attribute key="duration" value="600" />
+    <attribute key="duration" value="85" />
     <attribute key="corpseType" value="undead" />
   </item>
   <item id="7094" article="a" name="dead frost dragon">
     <attribute key="decayTo" value="0" />
-    <attribute key="duration" value="600" />
+    <attribute key="duration" value="85" />
     <attribute key="corpseType" value="undead" />
   </item>
   <item fromid="7095" toid="7101" article="a" name="wooden railing" />
@@ -15394,20 +15394,20 @@
     <attribute key="weight" value="40000" />
     <attribute key="containerSize" value="8" />
     <attribute key="decayTo" value="8957" />
-    <attribute key="duration" value="900" />
+    <attribute key="duration" value="300" />
     <attribute key="corpseType" value="undead" />
   </item>
   <item id="8957" article="a" name="slain reaper">
     <attribute key="weight" value="30000" />
     <attribute key="containerSize" value="8" />
     <attribute key="decayTo" value="8958" />
-    <attribute key="duration" value="600" />
+    <attribute key="duration" value="85" />
     <attribute key="corpseType" value="undead" />
   </item>
   <item id="8958" article="a" name="slain reaper">
     <attribute key="weight" value="20000" />
     <attribute key="decayTo" value="0" />
-    <attribute key="duration" value="600" />
+    <attribute key="duration" value="85" />
     <attribute key="corpseType" value="undead" />
   </item>
   <item id="8959" article="a" name="white marble tile" />
