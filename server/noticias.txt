@@ -1,16 +1,18 @@
 * Notícias e Atualizações *
 
-Pena de morte + Vip9
+Distância, cura EK e corpos
 
-Pena de morte
-- Curva forte (~8x) ficou pesada demais
-- Perda de exp bem mais leve (~1/4 da anterior)
-- Use !bless antes de caçar
+Armas de distância
+- Arcos, stars e spears continuam atirando com pot
+- Action lock do pot não pausa mais o tiro
 
-Vip9 sem level mínimo
-- Removido o level 6500 para entrar em Vip9
-- Continua exigindo status Vip9 (quest Vip8)
-- Vip2 a Vip8 seguem com level mínimo (800 até 5000)
+Cura EK (exana mort)
+- Exhaust de 0.5s para 0.75s
+- RP Divine Healing (exura san) segue em 0.5s
+
+Corpos no chão
+- Hunt frost/hydra/reaper/nightmare: ~8 minutos (antes ~35m)
+- Menos lixo no chão
 
 Comente no site (Últimas Notícias) como ficou.
 Digite !notice para ver de novo.
