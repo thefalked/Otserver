@@ -380,7 +380,7 @@
             if (check_password($new_pass)) {
               if (check_mail($new_email)) {
                 $account->setEMail($new_email);
-                $account->setPassword(password_ency($new_pass));
+                password_set_on_account($account, $new_pass);
                 $account->save();
                 $main_content .=
                   'Your account name, new password and new e-mail.<BR>
@@ -629,7 +629,7 @@
       if ($account->isLoaded()) {
         if ($account->getCustomField('email_code') == $code) {
           if (check_password($newpassword)) {
-            $account->setPassword(password_ency($newpassword));
+            password_set_on_account($account, $newpassword);
             $account->save();
             $account->setCustomField('email_code', '');
             $main_content .=
@@ -740,4 +740,3 @@
   $main_content .=
     '<b>Account maker is not configured to send e-mails, you can\'t use Lost Account Interface. Contact with admin to get help.</b>';
 }
-?>

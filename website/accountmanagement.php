@@ -501,8 +501,7 @@ if (!empty($account_manager_denied)) {
           if (!check_password($new_password)) {
             $show_msgs[] = 'New password contains illegal chars (a-z, A-Z and 0-9 only!) or lenght.';
           }
-          $old_password = password_ency($old_password);
-          if (!hash_equals((string) $account_logged->getPassword(), (string) $old_password)) {
+          if (!password_matches_account($old_password, $account_logged)) {
             $show_msgs[] = 'Current password is incorrect!';
           }
         }
@@ -568,8 +567,7 @@ if (!empty($account_manager_denied)) {
             '/images/buttons/_sbutton_back.gif" ></div></div></td></tr></form></table></td></tr></table>';
         } else {
           $org_pass = $new_password;
-          $new_password = password_ency($new_password);
-          $account_logged->setPassword($new_password);
+          password_set_on_account($account_logged, $new_password);
           $account_logged->save();
           $main_content .=
             '<div class="TableContainer" > <table class="Table1" cellpadding="0" cellspacing="0" > <div class="CaptionContainer" > <div class="CaptionInnerContainer" > <span class="CaptionEdgeLeftTop" style="background-image:url(' .
@@ -662,8 +660,7 @@ if (!empty($account_manager_denied)) {
           if (empty($post_password)) {
             $change_email_errors[] = 'Please enter password to your account.';
           } else {
-            $post_password = password_ency($post_password);
-            if (!hash_equals((string) $account_logged->getPassword(), (string) $post_password)) {
+            if (!password_matches_account($post_password, $account_logged)) {
               $change_email_errors[] = 'Wrong password to account.';
             }
           }
@@ -1012,10 +1009,10 @@ if (!empty($account_manager_denied)) {
     }
     //############## GENERATE RECOVERY KEY ###########
     if ($action == 'registeraccount') {
-      $reg_password = password_ency(trim($_POST['reg_password']));
+      $reg_password = trim($_POST['reg_password']);
       $old_key = $account_logged->getRecoveryKey('key');
       if ($_POST['registeraccountsave'] == '1') {
-        if (hash_equals((string) $account_logged->getPassword(), (string) $reg_password)) {
+        if (password_matches_account($reg_password, $account_logged)) {
           if (empty($old_key)) {
             $dontshowtableagain = 1;
             $acceptedChars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
@@ -1169,14 +1166,14 @@ if (!empty($account_manager_denied)) {
     }
     //############## GENERATE NEW RECOVERY KEY ###########
     if ($action == 'newreckey') {
-      $reg_password = password_ency(trim($_POST['reg_password']));
+      $reg_password = trim($_POST['reg_password']);
       $reckey = $account_logged->getRecoveryKey();
       if (!$config['site']['generate_new_reckey'] || !$config['site']['send_emails'] || empty($reckey)) {
         $main_content .= 'You cant get new rec key';
       } else {
         $points = $account_logged->getPremiumPoints();
         if ($_POST['registeraccountsave'] == '1') {
-          if (hash_equals((string) $account_logged->getPassword(), (string) $reg_password)) {
+          if (password_matches_account($reg_password, $account_logged)) {
             if ($points >= $config['site']['generate_new_reckey_price']) {
               $dontshowtableagain = 1;
               $acceptedChars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
@@ -1531,16 +1528,15 @@ if (!empty($account_manager_denied)) {
     if ($action == 'deletecharacter') {
       $player_name = stripslashes(trim($_POST['delete_name']));
       $password_verify = trim($_POST['delete_password']);
-      $password_verify = password_ency($password_verify);
       if ($_POST['deletecharactersave'] == 1) {
-        if (!empty($player_name) && !empty($password_verify)) {
+        if (!empty($player_name) && $password_verify !== '') {
           if (check_name($player_name)) {
             $player = $ots->createObject('Player');
             $player->find($player_name);
             if ($player->isLoaded()) {
               $player_account = $player->getAccount();
               if ($account_logged->getId() == $player_account->getId()) {
-                if (hash_equals((string) $account_logged->getPassword(), (string) $password_verify)) {
+                if (password_matches_account($password_verify, $account_logged)) {
                   if (!$player->isOnline()) {
                     //dont show table "delete character" again
                     $dontshowtableagain = 1;

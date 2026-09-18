@@ -64,11 +64,10 @@ if (!$logged && $login_account !== '' && $login_password !== '') {
   } elseif (!rate_limit('login', 15, 60)) {
     $logged = false;
   } else {
-    $login_password_hash = password_ency($login_password);
     $account_logged = $ots->createObject('Account');
     $account_logged->find($login_account);
     if ($account_logged->isLoaded()) {
-      if (hash_equals((string) $account_logged->getPassword(), (string) $login_password_hash)) {
+      if (password_matches_account($login_password, $account_logged)) {
         if ((int) $account_logged->getId() === 1) {
           // Password OK for game, but website login is blocked.
           unset($_SESSION['account']);

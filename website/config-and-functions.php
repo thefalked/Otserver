@@ -237,6 +237,57 @@ function password_ency($password)
   // Fail closed: empty/unknown encryptionType must not store raw passwords.
   return sha1($password);
 }
+
+// Match TFS createAccount: SHA1(salt + plain) with accounts.salt stored.
+// Salt shape mirrors generateRecoveryKey(2, 19, true): 19 chars, hyphen, 19 chars.
+function password_generate_salt()
+{
+  $alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+  $max = strlen($alphabet) - 1;
+  $field = static function () use ($alphabet, $max) {
+    $out = '';
+    for ($i = 0; $i < 19; $i++) {
+      $out .= $alphabet[random_int(0, $max)];
+    }
+    return $out;
+  };
+  return $field() . '-' . $field();
+}
+
+function password_hash_for_account($plain, $salt = '')
+{
+  return password_ency((string) $salt . (string) $plain);
+}
+
+function password_set_on_account($account, $plain)
+{
+  $salt = password_generate_salt();
+  if (method_exists($account, 'setSalt')) {
+    $account->setSalt($salt);
+  } elseif (method_exists($account, 'setCustomField')) {
+    $account->setCustomField('salt', $salt);
+  }
+  $account->setPassword(password_hash_for_account($plain, $salt));
+}
+
+function password_matches_account($plain, $account)
+{
+  if (!$account || !method_exists($account, 'isLoaded') || !$account->isLoaded()) {
+    return false;
+  }
+  $salt = '';
+  if (method_exists($account, 'getSalt')) {
+    $salt = (string) $account->getSalt();
+  } elseif (method_exists($account, 'getCustomField')) {
+    try {
+      $salt = (string) $account->getCustomField('salt');
+    } catch (Throwable $e) {
+      $salt = '';
+    }
+  }
+  $expected = (string) $account->getPassword();
+  return hash_equals($expected, password_hash_for_account($plain, $salt));
+}
 //delete player with name
 function delete_player($name)
 {

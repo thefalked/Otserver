@@ -39,7 +39,7 @@ class OTS_Account extends OTS_Row_DAO implements IteratorAggregate, Countable
    * @var array
    * @version 0.1.5
    */
-  private $data = array('email' => '', 'key' => '', 'premium_points' => 0, 'blocked' => false, 'warned' => false, 'rlname' => '', 'location' => '', 'page_access' => 0, 'lastday' => 0, 'vip_time' => 0, 'premdays' => 0, 'created' => 0);
+  private $data = array('email' => '', 'key' => '', 'premium_points' => 0, 'blocked' => false, 'warned' => false, 'rlname' => '', 'location' => '', 'page_access' => 0, 'lastday' => 0, 'vip_time' => 0, 'premdays' => 0, 'created' => 0, 'salt' => '');
 
   /**
    * Creates new account.
@@ -223,7 +223,10 @@ class OTS_Account extends OTS_Row_DAO implements IteratorAggregate, Countable
   public function load($id)
   {
     // SELECT query on database
-       $this->data = $this->db->query('SELECT ' . $this->db->fieldName('id') . ', ' . $this->db->fieldName('name') . ', ' . $this->db->fieldName('password') . ', ' . $this->db->fieldName('email') . ', ' . $this->db->fieldName('blocked') . ', ' . $this->db->fieldName('rlname') . ', ' . $this->db->fieldName('vip_time') . ', ' . $this->db->fieldName('location') . ', ' . $this->db->fieldName('key') . ', ' . $this->db->fieldName('premium_points') . ', ' . $this->db->fieldName('page_access') . ', ' . $this->db->fieldName('premdays') . ', ' . $this->db->fieldName('lastday') . ',  ' . $this->db->fieldName('created') . ' FROM ' . $this->db->tableName('accounts') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . (int) $id)->fetch();
+    $this->data = $this->db->query('SELECT ' . $this->db->fieldName('id') . ', ' . $this->db->fieldName('name') . ', ' . $this->db->fieldName('password') . ', ' . $this->db->fieldName('salt') . ', ' . $this->db->fieldName('email') . ', ' . $this->db->fieldName('blocked') . ', ' . $this->db->fieldName('rlname') . ', ' . $this->db->fieldName('vip_time') . ', ' . $this->db->fieldName('location') . ', ' . $this->db->fieldName('key') . ', ' . $this->db->fieldName('premium_points') . ', ' . $this->db->fieldName('page_access') . ', ' . $this->db->fieldName('premdays') . ', ' . $this->db->fieldName('lastday') . ',  ' . $this->db->fieldName('created') . ' FROM ' . $this->db->tableName('accounts') . ' WHERE ' . $this->db->fieldName('id') . ' = ' . (int) $id)->fetch();
+    if (is_array($this->data) && !isset($this->data['salt'])) {
+      $this->data['salt'] = '';
+    }
   }
 
   /**
@@ -300,7 +303,10 @@ class OTS_Account extends OTS_Row_DAO implements IteratorAggregate, Countable
     }
 
     // UPDATE query on database
-    $this->db->query('UPDATE ' . $this->db->tableName('accounts') . ' SET ' . $this->db->fieldName('password') . ' = ' . $this->db->quote($this->data['password']) . ', ' . $this->db->fieldName('email') . ' = ' . $this->db->quote($this->data['email']) . ', ' . $this->db->fieldName('rlname') . ' = ' . $this->db->quote($this->data['rlname']) . ', ' . $this->db->fieldName('vip_time') . ' = ' . $this->db->quote($this->data['vip_time']) . ', ' . $this->db->fieldName('premium_points') . ' = ' . $this->db->quote($this->data['premium_points']) . ', ' . $this->db->fieldName('key') . ' = ' . $this->db->quote($this->data['key']) . ', ' . $this->db->fieldName('location') . ' = ' . $this->db->quote($this->data['location']) . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id']);
+    if (!isset($this->data['salt'])) {
+      $this->data['salt'] = '';
+    }
+    $this->db->query('UPDATE ' . $this->db->tableName('accounts') . ' SET ' . $this->db->fieldName('password') . ' = ' . $this->db->quote($this->data['password']) . ', ' . $this->db->fieldName('salt') . ' = ' . $this->db->quote($this->data['salt']) . ', ' . $this->db->fieldName('email') . ' = ' . $this->db->quote($this->data['email']) . ', ' . $this->db->fieldName('rlname') . ' = ' . $this->db->quote($this->data['rlname']) . ', ' . $this->db->fieldName('vip_time') . ' = ' . $this->db->quote($this->data['vip_time']) . ', ' . $this->db->fieldName('premium_points') . ' = ' . $this->db->quote($this->data['premium_points']) . ', ' . $this->db->fieldName('key') . ' = ' . $this->db->quote($this->data['key']) . ', ' . $this->db->fieldName('location') . ' = ' . $this->db->quote($this->data['location']) . ' WHERE ' . $this->db->fieldName('id') . ' = ' . $this->data['id']);
   }
 
   /**
@@ -533,6 +539,19 @@ class OTS_Account extends OTS_Row_DAO implements IteratorAggregate, Countable
   public function setPassword($password)
   {
     $this->data['password'] = (string) $password;
+  }
+
+  public function getSalt()
+  {
+    if (!isset($this->data['id'])) {
+      throw new E_OTS_NotLoaded();
+    }
+    return isset($this->data['salt']) ? (string) $this->data['salt'] : '';
+  }
+
+  public function setSalt($salt)
+  {
+    $this->data['salt'] = (string) $salt;
   }
 
   /**

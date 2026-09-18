@@ -292,7 +292,7 @@ if ($action == 'saveaccount') {
     $reg_account = $ots->createObject('Account');
     $number = $reg_account->create(0, 9999999, $reg_name);
     // saves account information in database
-    $reg_account->setPassword(password_ency($reg_password));
+    password_set_on_account($reg_account, $reg_password);
     $reg_account->setEMail($reg_email);
     $reg_account->setCustomField('flag', $reg_country);
     $reg_account->setCustomField('created', time());
