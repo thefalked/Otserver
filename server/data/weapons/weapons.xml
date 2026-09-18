@@ -432,92 +432,92 @@
   </melee>
 
   <!-- Bows and Crossbows -->
-  <distance id="2399" level="120" unproperly="1" event="function" value="default">
+  <distance swing="1" id="2399" level="120" unproperly="1" event="function" value="default">
     <!-- New Master Star -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8849" level="120" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8849" level="120" unproperly="1" event="function" value="default">
     <!-- Modified Crossbow -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8850" level="60" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8850" level="60" unproperly="1" event="function" value="default">
     <!-- Chain Bolter -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8853" level="80" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8853" level="80" unproperly="1" event="function" value="default">
     <!-- Ironworker -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8852" level="100" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8852" level="100" unproperly="1" event="function" value="default">
     <!-- Devileye -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8851" level="130" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8851" level="130" unproperly="1" event="function" value="default">
     <!-- Royal Crossbow -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8857" level="40" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8857" level="40" unproperly="1" event="function" value="default">
     <!-- Silkweaver Bow -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8855" level="50" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8855" level="50" unproperly="1" event="function" value="default">
     <!-- Composite Hornbow -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8856" level="60" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8856" level="60" unproperly="1" event="function" value="default">
     <!-- Yol's Bow -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8858" level="70" unproperly="1" event="function" value="default">
+  <distance swing="1" id="8858" level="70" unproperly="1" event="function" value="default">
     <!-- Elethriel's Elemental Bow -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="3965" level="80" unproperly="1" event="function" value="default">
+  <distance swing="1" id="3965" level="80" unproperly="1" event="function" value="default">
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="8854" level="20" event="function" value="default">
+  <distance swing="1" id="8854" level="20" event="function" value="default">
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
 
   <!-- Ammunition -->
-  <distance id="2545" event="script" value="poison_arrow.lua" />
-  <distance id="2546" event="script" value="burst_arrow.lua" />
-  <distance id="7366" event="script" value="viper_star.lua" />
-  <distance id="7838" type="energy" event="function" value="default" />
-  <distance id="7839" type="ice" event="function" value="default" />
-  <distance id="7840" type="fire" event="function" value="default" />
-  <distance id="7850" type="earth" event="function" value="default" />
-  <distance id="7378" level="25" event="function" value="default" />
+  <distance swing="1" id="2545" event="script" value="poison_arrow.lua" />
+  <distance swing="1" id="2546" event="script" value="burst_arrow.lua" />
+  <distance swing="1" id="7366" event="script" value="viper_star.lua" />
+  <distance swing="1" id="7838" type="energy" event="function" value="default" />
+  <distance swing="1" id="7839" type="ice" event="function" value="default" />
+  <distance swing="1" id="7840" type="fire" event="function" value="default" />
+  <distance swing="1" id="7850" type="earth" event="function" value="default" />
+  <distance swing="1" id="7378" level="25" event="function" value="default" />
   <!-- Royal Spear -->
-  <distance id="7367" level="500" event="function" value="default">
+  <distance swing="1" id="7367" level="500" event="function" value="default">
     <!-- Enchanted Spear -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance id="7368" level="80" event="function" value="default" />
+  <distance swing="1" id="7368" level="80" event="function" value="default" />
   <!-- Assassin Star -->
-  <distance id="7364" level="120" event="function" value="default" />
+  <distance swing="1" id="7364" level="120" event="function" value="default" />
   <!-- Sniper Arrow -->
-  <distance id="2352" level="100" event="function" value="default" />
+  <distance swing="1" id="2352" level="100" event="function" value="default" />
   <!-- Baiak Arrow -->
-  <distance id="7365" level="40" event="function" value="default" />
+  <distance swing="1" id="7365" level="40" event="function" value="default" />
   <!-- Onyx Arrow -->
-  <distance id="7363" level="30" event="function" value="default" />
+  <distance swing="1" id="7363" level="30" event="function" value="default" />
   <!-- Piercing Bolt -->
-  <distance id="2547" level="55" event="function" value="default" />
+  <distance swing="1" id="2547" level="55" event="function" value="default" />
   <!-- Power Bolt -->
-  <distance id="6529" level="70" event="function" value="default" />
+  <distance swing="1" id="6529" level="70" event="function" value="default" />
   <!-- Infernal Bolt -->
 </weapons>
