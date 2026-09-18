@@ -130,19 +130,19 @@ def print_matrix(levels: list[int], ml_mage: int, ml_rp: int, ml_ek: int) -> Non
         print(f"{level:>6}", *[f"{v:>12.0f}" for v in vals])
     print()
 
-    print("=== Heal HPS @1000ms vs @500ms exhaust ===\n")
-    print(f"{'Spell':<28} {'L':>6} {'heal_avg':>10} {'HPS@1.0s':>10} {'HPS@0.5s':>10}")
+    print("=== Heal HPS @ exhaust (EK 0.75s, RP 0.5s) ===\n")
+    print(f"{'Spell':<28} {'L':>6} {'heal_avg':>10} {'HPS@1.0s':>10} {'HPS@live':>10}")
     print("-" * 68)
     heals = [
-        ("Wound Cleansing (EK)", "Wound Cleansing (exana mort) NEW", "ek"),
-        ("Divine Healing (RP)", "Divine Healing (exura san)", "rp"),
+        ("Wound Cleansing (EK)", "Wound Cleansing (exana mort) NEW", "ek", 0.75),
+        ("Divine Healing (RP)", "Divine Healing (exura san)", "rp", 0.5),
     ]
-    for label, key, voc in heals:
+    for label, key, voc, exhaust_s in heals:
         kind, args, _ = FORMULAS[key]
         for level in levels:
             ml = ml_for(voc, ml_mage, ml_rp, ml_ek)
             avg = eval_spell(kind, args, level, ml)
-            print(f"{label:<28} {level:>6} {avg:>10.0f} {avg / 1.0:>10.0f} {avg / 0.5:>10.0f}")
+            print(f"{label:<28} {level:>6} {avg:>10.0f} {avg / 1.0:>10.0f} {avg / exhaust_s:>10.0f}")
         print()
 
 

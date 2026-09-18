@@ -61,10 +61,10 @@ max = -(skillTotal * 6   + level / 5)
 
 | Spell | Words | Class | Exhaust |
 | ------- | ------- | ------- | --------- |
-| Wound Cleansing | `exana mort` | EK | `1000` → **`500`** |
+| Wound Cleansing | `exana mort` | EK | `1000` → `500` → **`750`** |
 | Divine Healing | `exura san` | RP | `1000` → **`500`** |
 
-Shared heals (`exura`, `exura vita`) stay at 1000ms. HPS doubles for the class main heals. See the HPS section printed by `scripts/spell_balance_15k.py`.
+Shared heals (`exura`, `exura vita`) stay at 1000ms. EK main heal is 0.75s (nerfed from 0.5s). RP stays at 0.5s. See the HPS section printed by `scripts/spell_balance_15k.py`.
 
 Target mage AoE order: **mort > flam > vis > frigo**.
 
