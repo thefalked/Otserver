@@ -69,8 +69,6 @@
         white pearl
         <item id="2148" countmax="57" chance1="80000" chancemax="0" />
         --Gold
-        <item id="8904" chance="13000" />
-        --spell book of prophecies
       </inside>
     </item>
   </loot>

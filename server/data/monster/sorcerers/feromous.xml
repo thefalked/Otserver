@@ -78,8 +78,6 @@
     --small topaz
     <item id="1987" chance="100000">
       <inside>
-        <item id="8904" chance="2800" />
-        -- Spellscroll of prophecies
         <item id="2147" countmax="46" chance1="4500" />
         --small ruby
         <item id="9971" countmax="3" chance1="14000" />

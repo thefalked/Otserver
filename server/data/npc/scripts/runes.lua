@@ -72,7 +72,6 @@ shopModule:addBuyableItem({ "wand of draconia", "draconia" }, 8921, 7500, "wand 
 shopModule:addBuyableItem({ "wand of cosmic energy", "cosmic energy" }, 2189, 10000, "wand of cosmic energy")
 shopModule:addBuyableItem({ "wand of inferno", "inferno" }, 2187, 15000, "wand of inferno")
 shopModule:addBuyableItem({ "wand of starstorm", "starstorm" }, 8920, 18000, "wand of starstorm")
-shopModule:addBuyableItem({ "wand of voodoo", "voodoo" }, 8922, 22000, "wand of voodoo")
 
 shopModule:addBuyableItem({ "snakebite rod", "snakebite" }, 2182, 500, "snakebite rod")
 shopModule:addBuyableItem({ "moonlight rod", "moonlight" }, 2186, 1000, "moonlight rod")
@@ -90,7 +89,6 @@ shopModule:addSellableItem({ "wand of draconia", "draconia" }, 8921, 7500, "wand
 shopModule:addSellableItem({ "wand of cosmic energy", "cosmic energy" }, 2189, 10000, "wand of cosmic energy")
 shopModule:addSellableItem({ "wand of inferno", "inferno" }, 2187, 15000, "wand of inferno")
 shopModule:addSellableItem({ "wand of starstorm", "starstorm" }, 8920, 18000, "wand of starstorm")
-shopModule:addSellableItem({ "wand of voodoo", "voodoo" }, 8922, 22000, "wand of voodoo")
 
 shopModule:addSellableItem({ "snakebite rod", "snakebite" }, 2182, 500, "snakebite rod")
 shopModule:addSellableItem({ "moonlight rod", "moonlight" }, 2186, 1000, "moonlight rod")

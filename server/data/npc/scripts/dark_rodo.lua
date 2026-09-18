@@ -18,7 +18,6 @@ end
 local shopModule = ShopModule:new()
 npcHandler:addModule(shopModule)
 
-shopModule:addBuyableItem({ "wand of voodoo", "voodoo" }, 8922, 22000, "wand of voodoo")
 shopModule:addBuyableItem({ "wand of inferno", "inferno" }, 2187, 15000, "wand of inferno")
 shopModule:addBuyableItem({ "wand of decay", "decay" }, 2188, 5000, "wand of decay")
 shopModule:addBuyableItem({ "wand of draconia", "plague" }, 8921, 7500, "wand of draconia")
