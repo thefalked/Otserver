@@ -9,9 +9,9 @@ Mirrors:
 
 Examples:
   python3 scripts/death_penalty.py
-  python3 scripts/death_penalty.py --death-lost 20 --each-bless 2
-  python3 scripts/death_penalty.py --death-lost 20 --each-bless 2 --bless 0,5
-  python3 scripts/death_penalty.py --death-lost 20 --each-bless 2 --csv
+  python3 scripts/death_penalty.py --death-lost 15 --each-bless 6
+  python3 scripts/death_penalty.py --death-lost 15 --each-bless 6 --bless 0,5
+  python3 scripts/death_penalty.py --death-lost 15 --each-bless 6 --csv
 
 Baseline play assumes !bless (5 blessings). See docs/death-penalty.md.
 """
@@ -190,14 +190,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--death-lost",
         type=int,
-        default=20,
-        help="deathLostPercent from config (default 20)",
+        default=15,
+        help="deathLostPercent from config (default 15)",
     )
     parser.add_argument(
         "--each-bless",
         type=str,
-        default="2",
-        help="eachBlessReduction value(s), comma-separated (default 2)",
+        default="6",
+        help="eachBlessReduction value(s), comma-separated (default 6)",
     )
     parser.add_argument(
         "--bless",
