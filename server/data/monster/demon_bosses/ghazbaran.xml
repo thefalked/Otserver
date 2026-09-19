@@ -18,20 +18,20 @@
     <flag runonhealth="0" />
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" skill="230" attack="235" />
-    <attack name="manadrain" interval="4000" chance="18" radius="8" target="0" min="-600" max="-1100">
+    <attack name="melee" interval="2000" skill="280" attack="280" />
+    <attack name="manadrain" interval="4000" chance="18" radius="8" target="0" min="-1200" max="-2200">
       <attribute key="areaEffect" value="bluebubble" />
     </attack>
-    <attack name="physical" interval="30000" chance="100" range="4" target="1" radius="4" min="-300" max="-530">
+    <attack name="physical" interval="30000" chance="100" range="4" target="1" radius="4" min="-600" max="-1060">
       <attribute key="areaEffect" value="teleport" />
     </attack>
-    <attack name="physical" interval="5000" chance="20" range="2" target="1" min="-50" max="-1175">
+    <attack name="physical" interval="5000" chance="20" range="2" target="1" min="-100" max="-2350">
       <attribute key="shootEffect" value="whirlwindsword" />
     </attack>
-    <attack name="death" interval="3000" chance="15" length="8" spread="0" min="-250" max="-600">
+    <attack name="death" interval="3000" chance="15" length="8" spread="0" min="-500" max="-1200">
       <attribute key="areaEffect" value="mortarea" />
     </attack>
-    <attack name="ice" interval="3000" chance="18" radius="6" target="0" min="-660" max="-780">
+    <attack name="ice" interval="3000" chance="18" radius="6" target="0" min="-1320" max="-1560">
       <attribute key="areaEffect" value="bigplants" />
     </attack>
   </attacks>
