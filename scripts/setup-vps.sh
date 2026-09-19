@@ -172,7 +172,7 @@ echo "User:        ${USERNAME}"
 echo "TLS CN:      ${SITE_DOMAIN}"
 echo "TLS maint:   ${SITE_MAINTENANCE_DOMAIN:-"(none)"}"
 echo "LE email:    ${LETSENCRYPT_EMAIL:-"(set later)"}"
-echo "Open ports:  22, 80, 443, 2376, 7171, 7172 (8080 loopback-only)"
+echo "Open ports:  22, 80, 443, 2376, 45876, 7171, 7172 (8080 loopback-only)"
 echo
 
 # -----------------------------------------------------------------------------
@@ -372,6 +372,7 @@ fi
 #   80    HTTP (nginx redirects to HTTPS on the VPS overlay)
 #   443   HTTPS Gesior site
 #   2376  Hawser / Dockhand agent (TLS + TOKEN; prefer restrict to your IP later)
+#   45876 Beszel agent (hub scrapes this host)
 #   7171  OT login protocol (raw TCP, not HTTP)
 #   7172  OT game protocol
 # Port 8080 is NOT opened (H3): cleartext AAC is bound to 127.0.0.1 only.
@@ -393,6 +394,7 @@ ufw allow 443/tcp comment 'HTTPS'
 # Drop legacy cleartext AAC rule if a previous bootstrap added it (H3).
 ufw delete allow 8080/tcp >/dev/null 2>&1 || true
 ufw allow 2376/tcp comment 'Hawser Dockhand'
+ufw allow 45876/tcp comment 'Beszel agent'
 ufw allow 7171/tcp comment 'OT login'
 ufw allow 7172/tcp comment 'OT game'
 ufw --force enable

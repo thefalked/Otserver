@@ -1,5 +1,6 @@
 # Runtime / local
 .env
+beszel_agent_data/
 docker/nginx/certs/*.pem
 docker/nginx/certs/*.key
 docker/nginx/certs/*.crt
