@@ -1,15 +1,12 @@
 * Notícias e Atualizações *
 
-Morte, bless e bosses de quest
+Master set e bosses de quest
 
-Pena de morte
-- Base mais leve: deathLostPercent 20 para 15 (~25% menos)
+Master set (slots)
+- Armor, Helmet e Legs só no slot certo
+- Sem stack de resists em escudo/flecha
 
-!bless
-- Cada blessing reduz bem mais a perda de XP
-- Use !bless antes de caçar (80k)
-
-Bosses de quest (mais dano, 2a passada)
+Bosses de quest (mais dano)
 - Meta: cerca de 2 jogadores
 - Guardian of The Sea, Ghazbaran, Abominator
 - Quara Abominator, Dark Abominator
