@@ -18,17 +18,18 @@
     <flag runonhealth="0" />
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" skill="190" attack="190" />
-    <attack name="energy" interval="1000" chance="11" length="8" spread="0" min="-690" max="-2250">
+    <attack name="melee" interval="2000" skill="240" attack="240" />
+    <attack name="energy" interval="1000" chance="11" length="8" spread="0" min="-900" max="-2925">
       <attribute key="areaEffect" value="purpleenergy" />
     </attack>
-    <attack name="manadrain" interval="2000" chance="14" radius="5" target="0" min="-250" max="-1375">
+    <attack name="manadrain" interval="2000" chance="14" radius="5" target="0" min="-325"
+      max="-1790">
       <attribute key="areaEffect" value="stun" />
     </attack>
-    <attack name="fire" interval="1000" chance="11" radius="5" target="1" min="-140" max="-1430">
+    <attack name="fire" interval="1000" chance="11" radius="5" target="1" min="-180" max="-1860">
       <attribute key="areaEffect" value="firearea" />
     </attack>
-    <attack name="lifedrain" interval="2000" chance="5" radius="7" target="0" min="0" max="-410">
+    <attack name="lifedrain" interval="2000" chance="5" radius="7" target="0" min="0" max="-535">
       <attribute key="areaEffect" value="poff" />
     </attack>
   </attacks>

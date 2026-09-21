@@ -18,27 +18,32 @@
     <flag runonhealth="0" />
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" min="-2400" max="-3200" />
-    <attack name="fire" interval="3000" chance="35" range="7" radius="7" target="1" min="-160" max="-1600">
+    <attack name="melee" interval="2000" min="-2760" max="-3680" />
+    <attack name="fire" interval="3000" chance="35" range="7" radius="7" target="1" min="-180"
+      max="-1840">
       <attribute key="shootEffect" value="fire" />
       <attribute key="areaEffect" value="firearea" />
     </attack>
-    <attack name="melee" interval="1800" chance="40" range="7" radius="5" target="0" min="-560" max="-1760">
+    <attack name="melee" interval="1800" chance="40" range="7" radius="5" target="0" min="-640"
+      max="-2020">
       <attribute key="areaEffect" value="blackspark" />
     </attack>
-    <attack name="energy" interval="3000" chance="30" length="8" spread="0" min="-480" max="-1120">
+    <attack name="energy" interval="3000" chance="30" length="8" spread="0" min="-550" max="-1290">
       <attribute key="areaEffect" value="energy" />
     </attack>
-    <attack name="physical" interval="2500" chance="20" range="7" radius="5" target="0" min="-480" max="-640">
+    <attack name="physical" interval="2500" chance="20" range="7" radius="5" target="0" min="-550"
+      max="-740">
       <attribute key="areaEffect" value="greenshimmer" />
     </attack>
-    <attack name="physical" interval="2000" chance="15" range="7" radius="13" target="0" min="-400" max="-800">
+    <attack name="physical" interval="2000" chance="15" range="7" radius="13" target="0" min="-460"
+      max="-920">
       <attribute key="areaEffect" value="rednote" />
     </attack>
-    <attack name="physical" interval="2000" chance="20" radius="14" target="0" min="-400" max="-560">
+    <attack name="physical" interval="2000" chance="20" radius="14" target="0" min="-460" max="-640">
       <attribute key="areaEffect" value="bluebubble" />
     </attack>
-    <attack name="melee" interval="3000" chance="15" range="7" radius="3" target="0" min="-240" max="-480">
+    <attack name="melee" interval="3000" chance="15" range="7" radius="3" target="0" min="-280"
+      max="-550">
       <attribute key="areaEffect" value="blueshimmer" />
     </attack>
   </attacks>

@@ -17,28 +17,29 @@
     <flag runonhealth="3000" />
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" skill="210" attack="260" />
-    <attack name="firecondition" interval="1000" chance="7" range="2" min="-800" max="-1200">
+    <attack name="melee" interval="2000" skill="260" attack="320" />
+    <attack name="firecondition" interval="1000" chance="7" range="2" min="-2000" max="-3000">
       <attribute key="shootEffect" value="fire" />
       <attribute key="areaEffect" value="yellowspark" />
     </attack>
-    <attack name="physical" interval="1000" chance="7" radius="6" target="0" min="-250" max="-750">
+    <attack name="physical" interval="1000" chance="7" radius="6" target="0" min="-625" max="-1875">
       <attribute key="areaEffect" value="explosion" />
     </attack>
-    <attack name="fire" interval="1000" chance="50" radius="5" target="0" min="-200" max="-500">
+    <attack name="fire" interval="1000" chance="50" radius="5" target="0" min="-500" max="-1250">
       <attribute key="areaEffect" value="yellowspark" />
     </attack>
     <attack name="firefield" interval="1000" chance="4" radius="8" target="0">
       <attribute key="areaEffect" value="explosion" />
     </attack>
-    <attack name="fire" interval="1000" chance="34" range="7" radius="7" target="1" min="-350" max="-850">
+    <attack name="fire" interval="1000" chance="34" range="7" radius="7" target="1" min="-875"
+      max="-2125">
       <attribute key="shootEffect" value="fire" />
       <attribute key="areaEffect" value="firearea" />
     </attack>
-    <attack name="fire" interval="1000" chance="13" length="8" spread="0" min="-500" max="-1000">
+    <attack name="fire" interval="1000" chance="13" length="8" spread="0" min="-1250" max="-2500">
       <attribute key="areaEffect" value="explosion" />
     </attack>
-    <attack name="fire" interval="1000" chance="10" length="8" spread="3" min="-300" max="-1500">
+    <attack name="fire" interval="1000" chance="10" length="8" spread="3" min="-750" max="-3750">
       <attribute key="areaEffect" value="firearea" />
     </attack>
   </attacks>

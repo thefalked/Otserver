@@ -18,29 +18,33 @@
     <flag runonhealth="2500" />
   </flags>
   <attacks>
-    <attack name="manadrain" interval="2000" chance="20" range="7" min="-1050" max="-2100">
+    <attack name="manadrain" interval="2000" chance="20" range="7" min="-1310" max="-2625">
       <attribute key="areaEffect" value="redshimmer" />
     </attack>
-    <attack name="poison" interval="3000" chance="20" radius="6" target="0" min="-1260" max="-2100">
+    <attack name="poison" interval="3000" chance="20" radius="6" target="0" min="-1575" max="-2625">
       <attribute key="areaEffect" value="poison" />
     </attack>
-    <attack name="energy" interval="2000" chance="18" radius="6" target="0" min="-1260" max="-2520">
+    <attack name="energy" interval="2000" chance="18" radius="6" target="0" min="-1575" max="-3150">
       <attribute key="areaEffect" value="energy" />
     </attack>
-    <attack name="manadrain" interval="2000" chance="16" radius="6" target="0" min="-1310" max="-2260">
+    <attack name="manadrain" interval="2000" chance="16" radius="6" target="0" min="-1640"
+      max="-2825">
       <attribute key="areaEffect" value="redshimmer" />
     </attack>
-    <attack name="lifedrain" interval="2000" chance="21" radius="6" target="0" min="-1260" max="-2205">
+    <attack name="lifedrain" interval="2000" chance="21" radius="6" target="0" min="-1575"
+      max="-2755">
       <attribute key="areaEffect" value="poff" />
     </attack>
-    <attack name="effect" interval="3000" chance="20" radius="5" target="0" min="-1260" max="-2520">
+    <attack name="effect" interval="3000" chance="20" radius="5" target="0" min="-1575" max="-3150">
       <attribute key="areaEffect" value="blackspark" />
     </attack>
-    <attack name="firecondition" interval="3000" chance="20" range="7" radius="7" target="1" min="-1050" max="-2100">
+    <attack name="firecondition" interval="3000" chance="20" range="7" radius="7" target="1"
+      min="-1310" max="-2625">
       <attribute key="shootEffect" value="fire" />
       <attribute key="areaEffect" value="firearea" />
     </attack>
-    <attack name="lifedrain" interval="2000" chance="25" length="8" spread="0" min="-735" max="-1575">
+    <attack name="lifedrain" interval="2000" chance="25" length="8" spread="0" min="-920"
+      max="-1970">
       <attribute key="areaEffect" value="greenspark" />
     </attack>
   </attacks>

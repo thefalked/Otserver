@@ -9,11 +9,13 @@ Pena de morte
 - Cada blessing reduz bem mais a perda de XP
 - Use !bless antes de caçar (80k)
 
-Bosses de quest (mais dano)
+Bosses de quest (mais dano, 2a passada)
 - Meta: cerca de 2 jogadores
 - Guardian of The Sea, Ghazbaran, Abominator
 - Quara Abominator, Dark Abominator
 - Ferumbras, Bossing of Baiak, Hellgorak
+- Infernatil (muito HP, dano aumentado)
+- Orshabaal (aumento leve)
 
 Comente no site (Últimas Notícias) como ficou.
 Digite !notice para ver de novo.

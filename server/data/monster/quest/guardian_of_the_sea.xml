@@ -18,8 +18,8 @@
     <flag runonhealth="40" />
   </flags>
   <attacks>
-    <attack name="melee" interval="1000" skill="210" attack="150" />
-    <attack name="ice" interval="2000" chance="25" radius="3" target="0" min="-700" max="-1400">
+    <attack name="melee" interval="1000" skill="260" attack="190" />
+    <attack name="ice" interval="2000" chance="25" radius="3" target="0" min="-910" max="-1820">
       <attribute key="areaEffect" value="icearea" />
     </attack>
   </attacks>
