@@ -405,6 +405,8 @@
   <movevent type="DeEquip" itemid="6301" slot="ring" event="function" value="onDeEquipItem" />
 
   <!-- Helmets -->
+  <movevent type="Equip" itemid="6096" slot="head" event="function" value="onEquipItem" />
+  <movevent type="DeEquip" itemid="6096" slot="head" event="function" value="onDeEquipItem" />
   <movevent type="Equip" itemid="5461" slot="head" event="function" value="onEquipItem" />
   <movevent type="DeEquip" itemid="5461" slot="head" event="function" value="onDeEquipItem" />
   <movevent type="Equip" itemid="2474" slot="head" event="function" value="onEquipItem" />
@@ -469,6 +471,8 @@
   <movevent type="DeEquip" itemid="10016" slot="head" event="function" value="onDeEquipItem" />
 
   <!-- Armors -->
+  <movevent type="Equip" itemid="6095" slot="armor" event="function" value="onEquipItem" />
+  <movevent type="DeEquip" itemid="6095" slot="armor" event="function" value="onDeEquipItem" />
   <movevent type="Equip" itemid="2472" slot="armor" event="function" value="onEquipItem">
     <vocation id="4" />
     <vocation id="8" showInDescription="0" />
@@ -692,6 +696,8 @@
   <movevent type="DeEquip" itemid="9776" slot="armor" event="function" value="onDeEquipItem" />
 
   <!-- Legs -->
+  <movevent type="Equip" itemid="5918" slot="legs" event="function" value="onEquipItem" />
+  <movevent type="DeEquip" itemid="5918" slot="legs" event="function" value="onDeEquipItem" />
   <movevent type="Equip" itemid="2477" slot="legs" event="function" value="onEquipItem">
     <vocation id="4" />
     <vocation id="8" showInDescription="0" />

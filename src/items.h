@@ -42,7 +42,7 @@
 #define	SLOTP_AMMO 1 << 9
 #define	SLOTP_DEPOT 1 << 10
 #define	SLOTP_TWO_HAND 1 << 11
-#define SLOTP_HAND SLOTP_LEFT | SLOTP_RIGHT
+#define SLOTP_HAND (SLOTP_LEFT | SLOTP_RIGHT)
 
 enum ItemTypes_t
 {

@@ -812,7 +812,10 @@ void Items::parseItemNode(xmlNodePtr itemNode, uint32_t id)
 					else if(tmpStrValue == "axe")
 						it.weaponType = WEAPON_AXE;
 					else if(tmpStrValue == "shield")
+					{
 						it.weaponType = WEAPON_SHIELD;
+						it.slotPosition &= ~SLOTP_AMMO;
+					}
 					else if(tmpStrValue == "distance" || tmpStrValue == "dist")
 						it.weaponType = WEAPON_DIST;
 					else if(tmpStrValue == "wand" || tmpStrValue == "rod")
@@ -830,48 +833,62 @@ void Items::parseItemNode(xmlNodePtr itemNode, uint32_t id)
 				if(readXMLString(itemAttributesNode, "value", strValue))
 				{
 					tmpStrValue = asLowerCaseString(strValue);
+					// Default slotPosition is HAND|AMMO. Wearables must drop those
+					// flags or armor pieces can also equip in shield/arrow slots.
 					if(tmpStrValue == "head")
 					{
+						it.slotPosition &= ~(SLOTP_HAND | SLOTP_AMMO);
 						it.slotPosition |= SLOTP_HEAD;
 						it.wieldPosition = SLOT_HEAD;
 					}
 					else if(tmpStrValue == "body")
 					{
+						it.slotPosition &= ~(SLOTP_HAND | SLOTP_AMMO);
 						it.slotPosition |= SLOTP_ARMOR;
 						it.wieldPosition = SLOT_ARMOR;
 					}
 					else if(tmpStrValue == "legs")
 					{
+						it.slotPosition &= ~(SLOTP_HAND | SLOTP_AMMO);
 						it.slotPosition |= SLOTP_LEGS;
 						it.wieldPosition = SLOT_LEGS;
 					}
 					else if(tmpStrValue == "feet")
 					{
+						it.slotPosition &= ~(SLOTP_HAND | SLOTP_AMMO);
 						it.slotPosition |= SLOTP_FEET;
 						it.wieldPosition = SLOT_FEET;
 					}
 					else if(tmpStrValue == "backpack")
 					{
+						// Keep default HAND flags so backpacks can still be held.
 						it.slotPosition |= SLOTP_BACKPACK;
 						it.wieldPosition = SLOT_BACKPACK;
 					}
 					else if(tmpStrValue == "two-handed")
 					{
+						it.slotPosition &= ~SLOTP_AMMO;
 						it.slotPosition |= SLOTP_TWO_HAND;
 						it.wieldPosition = SLOT_TWO_HAND;
 					}
 					else if(tmpStrValue == "necklace")
 					{
+						it.slotPosition &= ~(SLOTP_HAND | SLOTP_AMMO);
 						it.slotPosition |= SLOTP_NECKLACE;
 						it.wieldPosition = SLOT_NECKLACE;
 					}
 					else if(tmpStrValue == "ring")
 					{
+						it.slotPosition &= ~(SLOTP_HAND | SLOTP_AMMO);
 						it.slotPosition |= SLOTP_RING;
 						it.wieldPosition = SLOT_RING;
 					}
 					else if(tmpStrValue == "ammo")
+					{
+						// Keep HAND so arrows/bolts can still be held.
+						it.slotPosition |= SLOTP_AMMO;
 						it.wieldPosition = SLOT_AMMO;
+					}
 					else if(tmpStrValue == "hand")
 						it.wieldPosition = SLOT_HAND;
 					else
