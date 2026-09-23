@@ -11665,7 +11665,6 @@
     <attribute key="weight" value="2500" />
     <attribute key="armor" value="800" />
     <attribute key="absorbPercentDeath" value="25" />
-    <attribute key="absorbPercentHoly" value="10" />
     <attribute key="slotType" value="body" />
   </item>
   <item id="6096" article="a"
