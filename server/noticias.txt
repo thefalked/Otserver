@@ -1,6 +1,6 @@
 * Notícias e Atualizações *
 
-Magias high level (EK / RP / ED)
+Magias high level (EK / RP / ED) + corpos
 
 Elite Knight
 - Sudden Death (SD): knights não usam mais
@@ -13,6 +13,10 @@ Royal Paladin
 Elder Druid
 - Eternal Winter (exevo gran mas frigo): AoE mais forte
 - Continua abaixo de flam / vis / mort
+
+Corpos no chão
+- Demon e Capeta: ~9 minutos (antes ~45m)
+- Mesmo padrão frost/hydra/reaper/nightmare
 
 Comente no site (Últimas Notícias) como ficou.
 Digite !notice para ver de novo.
