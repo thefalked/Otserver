@@ -89,6 +89,7 @@
   <talkaction words="!backpack" script="backpack.lua" />
   <talkaction words="!spells" script="spells.lua" />
   <talkaction words="!tp" script="teleportvip.lua" />
+  <talkaction words="!autoloot;/autoloot" event="script" value="autoloot.lua" />
 
   <!-- Houses -->
   <talkaction words="!buyhouse" filter="word-spaced" event="function" value="houseBuy" />
