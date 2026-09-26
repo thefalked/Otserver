@@ -505,6 +505,19 @@ bool TalkAction::houseBuy(Creature* creature, const std::string&, const std::str
 	ret += "depot of this town for rent.";
 	player->sendTextMessage(MSG_INFO_DESCR, ret.c_str());
 
+	const int32_t cleanOld = g_config.getNumber(ConfigManager::HOUSE_CLEAN_OLD);
+	if(cleanOld > 0)
+	{
+		int32_t days = cleanOld / (24 * 60 * 60);
+		if(days < 1)
+			days = 1;
+
+		char buffer[160];
+		sprintf(buffer, "If you stay offline for %d day%s, this house will be cleared and your items moved to your depot.",
+			days, (days != 1 ? "s" : ""));
+		player->sendTextMessage(MSG_INFO_DESCR, buffer);
+	}
+
 	g_game.addMagicEffect(player->getPosition(), MAGIC_EFFECT_WRAPS_BLUE);
 	return false;
 }
