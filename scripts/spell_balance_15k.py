@@ -23,11 +23,12 @@ ML_RP = 40
 ML_EK = 12
 EK_SKILL = 140
 EK_WEAPON_ATK = 55
+RP_DIST_SKILL = 120
 
 # --- Planned / current formulas (tweak here for what-if) ---
 FORMULAS = {
     # name, words, kind, args, vocation_ml_key
-    # kind: raw4 | attack_af | heal_af | mana_raw4 | fierce
+    # kind: raw4 | attack_af | heal_af | mana_raw4 | fierce | spear | sd_rune
     "Wound Cleansing (exana mort) NEW": ("heal_raw4", (4.5, 0, 2.7, 0), "ek"),
     "Wound Cleansing (exana mort) OLD": ("heal_af", (5, 5, 11, 15), "ek"),
     "Mana Rune (id 2276)": ("mana_raw4", (5, 4, 3, 2), "ek"),
@@ -40,8 +41,14 @@ FORMULAS = {
     "Eternal Winter (exevo gran mas frigo) OLD": ("attack_af", (5, 5, 6, 12), "mage"),
     "Divine Caldera (exevo mas san) NEW": ("attack_af", (5, 5, 14, 17), "rp"),
     "Divine Caldera (exevo mas san) OLD": ("attack_af", (15, 15, 14, 17), "rp"),
-    "Fierce Berserk (exori gran) NEW": ("fierce", (5,), "ek"),
-    "Fierce Berserk (exori gran) OLD": ("fierce", (8,), "ek"),
+    # fierce args: (level_div, level_mul). Pre-SD-removal NEW was (5, 1).
+    "Fierce Berserk (exori gran) NEW": ("fierce", (5, 7.5), "ek"),
+    "Fierce Berserk (exori gran) OLD": ("fierce", (5, 1), "ek"),
+    # spear args: (level_mul,). Pre-buff was (1,).
+    "Ethereal Spear (exori con) NEW": ("spear", (5.5,), "rp"),
+    "Ethereal Spear (exori con) OLD": ("spear", (1,), "rp"),
+    "Sudden Death rune (id 2268)": ("sd_rune", (), "ek"),
+    "Sudden Death rune RP (id 2268)": ("sd_rune", (), "rp"),
     "Divine Healing (exura san)": ("heal_af", (5, 5, 20, 40), "rp"),
 }
 
@@ -77,12 +84,21 @@ def eval_spell(kind: str, args: tuple, level: int, ml: int) -> float:
         minl, maxl, minm, maxm = args[:4]
         return avg_heal(lm(level, ml, 1, 0, 1, 0, minl, maxl, minm, maxm))
     if kind == "fierce":
-        (level_div,) = args
+        level_div, level_mul = args[0], args[1] if len(args) > 1 else 1.0
         st = EK_SKILL + EK_WEAPON_ATK * 3
-        lt = level / level_div
+        lt = (level / level_div) * level_mul
         lo = abs(-(st * 2.2 + lt))
         hi = abs(-(st * 6 + lt))
         return (lo + hi) / 2.0
+    if kind == "spear":
+        (level_mul,) = args
+        lt = (level / 5.0) * level_mul
+        lo = abs(-(((RP_DIST_SKILL + 35) / 5.0) + lt))
+        hi = abs(-((RP_DIST_SKILL + 25) + lt))
+        return (lo + hi) / 2.0
+    if kind == "sd_rune":
+        # setCombatFormula(-8, -35, -10, -35, 3, 3, 2, 1)
+        return avg_mag(lm(level, ml, -8, -35, -10, -35, 3, 3, 2, 1))
     raise ValueError(kind)
 
 
@@ -98,6 +114,7 @@ def print_matrix(levels: list[int], ml_mage: int, ml_rp: int, ml_ek: int) -> Non
         ("Rage of the Skies (exevo gran mas vis)", "Rage of the Skies (exevo gran mas vis) OLD", "Rage of the Skies (exevo gran mas vis) NEW"),
         ("Eternal Winter (exevo gran mas frigo)", "Eternal Winter (exevo gran mas frigo) OLD", "Eternal Winter (exevo gran mas frigo) NEW"),
         ("Fierce Berserk (exori gran)", "Fierce Berserk (exori gran) OLD", "Fierce Berserk (exori gran) NEW"),
+        ("Ethereal Spear (exori con)", "Ethereal Spear (exori con) OLD", "Ethereal Spear (exori con) NEW"),
         ("Divine Caldera (exevo mas san)", "Divine Caldera (exevo mas san) OLD", "Divine Caldera (exevo mas san) NEW"),
     ]
     header = f"{'Spell':<42} {'L':>6} {'Before':>10} {'After':>10} {'Delta':>10}"
@@ -164,6 +181,22 @@ def check_pass(levels: list[int], ml_mage: int, ml_rp: int, ml_ek: int) -> list[
         ratio = wound / mana if mana else 0.0
         if not (0.88 <= ratio <= 0.92):
             errors.append(f"L{level}: Wound/Mana ratio {ratio:.3f} not in [0.88, 0.92]")
+
+        sd_ek = eval_spell(*FORMULAS["Sudden Death rune (id 2268)"][:2], level, ml_ek)
+        fierce = eval_spell(*FORMULAS["Fierce Berserk (exori gran) NEW"][:2], level, ml_ek)
+        fierce_ratio = fierce / sd_ek if sd_ek else 0.0
+        if not (0.50 <= fierce_ratio <= 0.70):
+            errors.append(
+                f"L{level}: Fierce/SD(EK) ratio {fierce_ratio:.3f} not in [0.50, 0.70]"
+            )
+
+        sd_rp = eval_spell(*FORMULAS["Sudden Death rune RP (id 2268)"][:2], level, ml_rp)
+        spear = eval_spell(*FORMULAS["Ethereal Spear (exori con) NEW"][:2], level, ml_rp)
+        spear_ratio = spear / sd_rp if sd_rp else 0.0
+        if not (0.28 <= spear_ratio <= 0.42):
+            errors.append(
+                f"L{level}: Spear/SD(RP) ratio {spear_ratio:.3f} not in [0.28, 0.42]"
+            )
     return errors
 
 
@@ -179,7 +212,8 @@ def main() -> int:
 
     print(
         f"Assumptions: ML mage={args.ml_mage}, RP={args.ml_rp}, EK={args.ml_ek}; "
-        f"EK skill={EK_SKILL} atk={EK_WEAPON_ATK}; formulaLevel={FL} formulaMagic={FM}\n"
+        f"EK skill={EK_SKILL} atk={EK_WEAPON_ATK}; RP dist={RP_DIST_SKILL}; "
+        f"formulaLevel={FL} formulaMagic={FM}\n"
     )
     print_matrix(levels, args.ml_mage, args.ml_rp, args.ml_ek)
     errors = check_pass(levels, args.ml_mage, args.ml_rp, args.ml_ek)
@@ -188,7 +222,10 @@ def main() -> int:
         for e in errors:
             print(f"  - {e}")
         return 1
-    print("PASS: mort > flam > vis > frigo; Wound Cleansing ≈ 90% Mana Rune")
+    print(
+        "PASS: mort > flam > vis > frigo; Wound ≈ 90% Mana Rune; "
+        "Fierce ≈ 50-70% SD; Spear ≈ 28-42% SD"
+    )
     return 0
 
 

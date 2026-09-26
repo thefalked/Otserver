@@ -33,7 +33,14 @@
     blocktype="solid" event="script" value="attack/explosion.lua" />
   <rune name="Sudden Death" id="2268" allowfaruse="1" charges="3" lvl="45" maglv="15"
     exhaustion="1000" needtarget="1" blocktype="solid" event="script"
-    value="attack/sudden_death.lua" />
+    value="attack/sudden_death.lua">
+    <vocation id="1" />
+    <vocation id="2" />
+    <vocation id="3" />
+    <vocation id="5" />
+    <vocation id="6" />
+    <vocation id="7" />
+  </rune>
   <rune name="Icicle" id="2271" allowfaruse="1" charges="5" lvl="28" maglv="4" exhaustion="2000"
     needtarget="1" event="script" value="attack/icicle.lua" />
   <rune name="Avalanche" id="2274" allowfaruse="1" charges="4" lvl="30" maglv="4" exhaustion="2000"
