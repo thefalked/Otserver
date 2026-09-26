@@ -8080,6 +8080,7 @@
     <attribute key="weaponType" value="distance" />
     <attribute key="shootType" value="huntingspear" />
     <attribute key="range" value="5" />
+    <attribute key="maxHitChance" value="100" />
     <attribute key="breakChance" value="0" />
     <attribute key="ammoAction" value="removecount" />
   </item>
