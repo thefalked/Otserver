@@ -411,6 +411,8 @@ if ($action == 'show') {
     include 'pot/InvitesDriver.php';
     new InvitesDriver($guild);
     $invited_list = $guild->listInvites();
+    $show_accept_invite = 0;
+    $show_accept_invite_offline = 0;
     if (count($invited_list) == 0) {
       $main_content .=
         '<BR><BR><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
@@ -423,13 +425,15 @@ if ($action == 'show') {
         '<BR><BR><TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
         $config['site']['vdarkborder'] .
         '><TD COLSPAN=2 CLASS=white><B>Invited Characters</B></TD></TR>';
-      $show_accept_invite = 0;
       $showed_invited = 1;
       foreach ($invited_list as $invited_player) {
         if (count($account_players) > 0) {
           foreach ($account_players as $player_from_acc) {
             if ($player_from_acc->getName() == $invited_player->getName()) {
               $show_accept_invite++;
+              if (!$player_from_acc->isOnline()) {
+                $show_accept_invite_offline++;
+              }
             }
           }
         }
@@ -447,6 +451,11 @@ if ($action == 'show') {
           '">' .
           $invited_player->getName() .
           '</a>';
+        if ($invited_player->isOnline()) {
+          $main_content .= ' <font color="red"><b>(Online)</b></font>';
+        } else {
+          $main_content .= ' <font color="green"><b>(Offline)</b></font>';
+        }
         if ($guild_vice) {
           $main_content .=
             '  (<a href="?subtopic=guilds&action=deleteinvite&guild=' .
@@ -477,16 +486,26 @@ if ($action == 'show') {
 			</TD></TR></FORM></TABLE></TD>';
     } else {
       if ($show_accept_invite > 0) {
-        $main_content .=
-          '<TD ALIGN=center><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION="?subtopic=guilds&action=acceptinvite&guild=' .
-          $guild_name .
-          '" METHOD=post>' .
-          csrf_field() .
-          '<TR><TD>
+        if ($show_accept_invite_offline > 0) {
+          $main_content .=
+            '<TD ALIGN=center><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION="?subtopic=guilds&action=acceptinvite&guild=' .
+            $guild_name .
+            '" METHOD=post>' .
+            csrf_field() .
+            '<TR><TD>
 				<INPUT TYPE=image NAME="Accept Invite" ALT="Accept Invite" SRC="' .
-          $layout_name .
-          '/images/buttons/sbutton_acceptinvite.png" BORDER=0 WIDTH=120 HEIGHT=18>
+            $layout_name .
+            '/images/buttons/sbutton_acceptinvite.png" BORDER=0 WIDTH=120 HEIGHT=18>
 				</TD></TR></FORM></TABLE></TD>';
+        } else {
+          $main_content .=
+            '<TD ALIGN=center><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><TR><TD style="text-align:center; max-width:180px;">
+				<img src="' .
+            $layout_name .
+            '/images/buttons/sbutton_acceptinvite.png" BORDER=0 WIDTH=120 HEIGHT=18 style="opacity:0.4; filter:alpha(opacity=40);" alt="Accept Invite (disabled)" title="Logout from the game first" /><br>
+				<small><font color="red">Logout invited character first</font></small>
+				</TD></TR></TABLE></TD>';
+        }
       }
       if ($guild_vice) {
         $main_content .=
@@ -1112,7 +1131,7 @@ if ($action == 'invite') {
 if ($action == 'acceptinvite') {
   //set rights in guild
   $guild_name = (int) $_REQUEST['guild'];
-  $name = stripslashes($_REQUEST['name']);
+  $name = isset($_REQUEST['name']) ? stripslashes($_REQUEST['name']) : '';
   if (!$logged) {
     $guild_errors[] = 'You are not logged in. You can\'t accept invitations.';
   }
@@ -1124,7 +1143,7 @@ if ($action == 'acceptinvite') {
     }
   }
 
-  if ($_REQUEST['todo'] == 'save') {
+  if (isset($_REQUEST['todo']) && $_REQUEST['todo'] == 'save') {
     if (!check_name($name)) {
       $guild_errors[] = 'Invalid name format.';
     }
@@ -1134,8 +1153,14 @@ if ($action == 'acceptinvite') {
       if (!$player->isLoaded()) {
         $guild_errors[] = 'Player with name <b>' . $name . '</b> doesn\'t exist.';
       } else {
+        if ($player->isOnline()) {
+          $guild_errors[] =
+            'Character <b>' .
+            $name .
+            '</b> is online. Logout from the game before accepting the invite.';
+        }
         $rank_of_player = $player->getRank();
-        if (!empty($rank_of_player)) {
+        if ($rank_of_player !== null && $rank_of_player->isLoaded()) {
           $guild_errors[] =
             'Character with name <b>' .
             $name .
@@ -1144,10 +1169,10 @@ if ($action == 'acceptinvite') {
       }
     }
   }
-  if ($_REQUEST['todo'] == 'save') {
+  if (isset($_REQUEST['todo']) && $_REQUEST['todo'] == 'save') {
     if (empty($guild_errors)) {
       $is_invited = false;
-      include 'pot/InvitesDriver.php';
+      include_once 'pot/InvitesDriver.php';
       new InvitesDriver($guild);
       $invited_list = $guild->listInvites();
       if (count($invited_list) > 0) {
@@ -1159,15 +1184,16 @@ if ($action == 'acceptinvite') {
       }
       if (!$is_invited) {
         $guild_errors[] =
-          'Character ' . $player->getName . ' isn\'t invited to guild <b>' . $guild->getName() . '</b>.';
+          'Character ' . $player->getName() . ' isn\'t invited to guild <b>' . $guild->getName() . '</b>.';
       }
     }
   } else {
     //co jesli nei save
     if (empty($guild_errors)) {
       $acc_invited = false;
+      $list_of_invited_players = array();
       $account_players = $account_logged->getPlayers();
-      include 'pot/InvitesDriver.php';
+      include_once 'pot/InvitesDriver.php';
       new InvitesDriver($guild);
       $invited_list = $guild->listInvites();
       if (count($invited_list) > 0) {
@@ -1175,13 +1201,13 @@ if ($action == 'acceptinvite') {
           foreach ($account_players as $player_from_acc) {
             if ($invited->getName() == $player_from_acc->getName()) {
               $acc_invited = true;
-              $list_of_invited_players[] = $player_from_acc->getName();
+              $list_of_invited_players[] = $player_from_acc;
             }
           }
         }
       }
     }
-    if (!$acc_invited) {
+    if (empty($acc_invited)) {
       $guild_errors[] = 'Any character from your account isn\'t invited to <b>' . $guild->getName() . '</b>.';
     }
   }
@@ -1218,7 +1244,7 @@ if ($action == 'acceptinvite') {
       $layout_name .
       '/images/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18></center></TD></TR></FORM></TABLE>';
   } else {
-    if ($_REQUEST['todo'] == 'save') {
+    if (isset($_REQUEST['todo']) && $_REQUEST['todo'] == 'save') {
       $guild->acceptInvite($player);
       $main_content .=
         '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
@@ -1237,34 +1263,72 @@ if ($action == 'acceptinvite') {
         $layout_name .
         '/images/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18></center></TD></TR></FORM></TABLE>';
     } else {
+      usort($list_of_invited_players, function ($a, $b) {
+        return strcasecmp($a->getName(), $b->getName());
+      });
+      $offline_invites = 0;
+      foreach ($list_of_invited_players as $invited_player_obj) {
+        if (!$invited_player_obj->isOnline()) {
+          $offline_invites++;
+        }
+      }
       $main_content .=
         '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
         $config['site']['vdarkborder'] .
         '><TD CLASS=white><B>Accept invitation</B></TD></TR>';
       $main_content .=
-        '<TR BGCOLOR=' . $config['site']['lightborder'] . '><TD WIDTH=100%>Select character to join guild:</TD></TR>';
+        '<TR BGCOLOR=' .
+        $config['site']['lightborder'] .
+        '><TD WIDTH=100%>Select character to join guild. Character must be <b>offline</b> in the game.</TD></TR>';
       $main_content .=
         '<TR BGCOLOR=' .
         $config['site']['darkborder'] .
-        '><TD>
-<form action="?subtopic=guilds&action=acceptinvite&guild=' .
-        $guild_name .
-        '&todo=save" METHOD="post">' .
-        csrf_field() .
-        '';
-      sort($list_of_invited_players);
-      foreach ($list_of_invited_players as $invited_player_from_list) {
+        '><TD>';
+      if ($offline_invites > 0) {
         $main_content .=
-          '<input type="radio" name="name" value="' .
-          $invited_player_from_list .
-          '" />' .
-          $invited_player_from_list .
-          '<br>';
+          '<form action="?subtopic=guilds&action=acceptinvite&guild=' .
+          $guild_name .
+          '&todo=save" METHOD="post">' .
+          csrf_field();
+      }
+      foreach ($list_of_invited_players as $invited_player_obj) {
+        $invited_name = $invited_player_obj->getName();
+        $is_online = $invited_player_obj->isOnline();
+        if ($is_online) {
+          $main_content .=
+            '<input type="radio" name="name" value="' .
+            htmlspecialchars($invited_name) .
+            '" disabled="disabled" />' .
+            htmlspecialchars($invited_name) .
+            ' <font color="red"><b>(Online - logout first)</b></font><br>';
+        } else {
+          $main_content .=
+            '<input type="radio" name="name" value="' .
+            htmlspecialchars($invited_name) .
+            '" />' .
+            htmlspecialchars($invited_name) .
+            ' <font color="green"><b>(Offline)</b></font><br>';
+        }
+      }
+      if ($offline_invites > 0) {
+        $main_content .=
+          '<br><INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="' .
+          $layout_name .
+          '/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></form>';
+      } else {
+        $main_content .=
+          '<br><font color="red"><b>All invited characters from your account are online. Logout from the game, then refresh this page to accept.</b></font>';
+        $main_content .=
+          '<br><br><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION="?subtopic=guilds&action=acceptinvite&guild=' .
+          $guild_name .
+          '" METHOD=post>' .
+          csrf_field() .
+          '<TR><TD><INPUT TYPE=image NAME="Refresh" ALT="Refresh" SRC="' .
+          $layout_name .
+          '/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></TD></TR></FORM></TABLE>';
       }
       $main_content .=
-        '<br><INPUT TYPE=image NAME="Submit" ALT="Submit" SRC="' .
-        $layout_name .
-        '/images/buttons/sbutton_submit.gif" BORDER=0 WIDTH=120 HEIGHT=18></form></TD></TR></TABLE><br/><center><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH=100%><TR><FORM ACTION="?subtopic=guilds&action=show&guild=' .
+        '</TD></TR></TABLE><br/><center><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH=100%><TR><FORM ACTION="?subtopic=guilds&action=show&guild=' .
         $guild_name .
         '" METHOD=post>' .
         csrf_field() .
@@ -2493,12 +2557,13 @@ if ($action == 'addrank') {
 //-----------------------------------------------------------------------------//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------//-----------------------------------------------------------------------------
 if ($action == 'changedescription') {
-  $guild_name = (int) $_REQUEST['guild'];
+  $guild_id = (int) $_REQUEST['guild'];
+  $saved = false;
   if (empty($guild_errors)) {
     $guild = $ots->createObject('Guild');
-    $guild->load($guild_name);
+    $guild->load($guild_id);
     if (!$guild->isLoaded()) {
-      $guild_errors[] = 'Guild with name <b>' . $guild_name . '</b> doesn\'t exist.';
+      $guild_errors[] = 'Guild with ID <b>' . $guild_id . '</b> doesn\'t exist.';
     }
   }
   if (empty($guild_errors)) {
@@ -2516,9 +2581,9 @@ if ($action == 'changedescription') {
         }
       }
       if ($guild_leader) {
-        if ($_REQUEST['todo'] == 'save') {
-          $description = htmlspecialchars(
-            stripslashes(substr(trim($_REQUEST['description']), 0, $config['site']['guild_description_chars_limit']))
+        if (isset($_REQUEST['todo']) && $_REQUEST['todo'] == 'save') {
+          $description = stripslashes(
+            substr(trim($_REQUEST['description'] ?? ''), 0, $config['site']['guild_description_chars_limit'])
           );
           $guild->setCustomField('description', $description);
           $saved = true;
@@ -2527,18 +2592,19 @@ if ($action == 'changedescription') {
         if ($saved) {
           $main_content .= '<center><font color="red" size="3"><b>CHANGES HAS BEEN SAVED!</b></font></center><br>';
         }
+        $description_rows = max(1, (int) $config['site']['guild_description_lines_limit'] - 1);
         $main_content .= 'Here you can change description of your guild.<BR>';
         $main_content .=
           '<form enctype="multipart/form-data" action="?subtopic=guilds&guild=' .
-          $guild_name .
+          $guild_id .
           '&action=changedescription" method="POST">' .
           csrf_field() .
           '
 				<input type="hidden" name="todo" value="save" />
 				    <textarea name="description" cols="60" rows="' .
-          bcsub($config['site']['guild_description_lines_limit'], 1) .
+          $description_rows .
           '">' .
-          $guild->getCustomField('description') .
+          htmlspecialchars((string) $guild->getCustomField('description')) .
           '</textarea><br>
 				    (max. ' .
           $config['site']['guild_description_lines_limit'] .
@@ -2547,7 +2613,7 @@ if ($action == 'changedescription') {
           ' chars) <input type="submit" value="Save description" /></form><br>';
         $main_content .=
           '<br/><center><form action="?subtopic=guilds&guild=' .
-          $guild_name .
+          $guild_id .
           '&action=manager" METHOD=post>' .
           csrf_field() .
           '<div class="BigButton" style="background-image:url(' .
@@ -2821,12 +2887,15 @@ if ($action == 'passleadership') {
 //-----------------------------------------------------------------------------//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------//-----------------------------------------------------------------------------
 if ($action == 'deleteguild') {
-  $guild_name = (int) $_REQUEST['guild'];
+  $guild_id = (int) $_REQUEST['guild'];
+  $guild_display_name = '';
   if (empty($guild_errors)) {
     $guild = $ots->createObject('Guild');
-    $guild->load($guild_name);
+    $guild->load($guild_id);
     if (!$guild->isLoaded()) {
-      $guild_errors[] = 'Guild with ID <b>' . $guild_name . '</b> doesn\'t exist.';
+      $guild_errors[] = 'Guild with ID <b>' . $guild_id . '</b> doesn\'t exist.';
+    } else {
+      $guild_display_name = $guild->getName();
     }
   }
   if (empty($guild_errors)) {
@@ -2844,11 +2913,11 @@ if ($action == 'deleteguild') {
         }
       }
       if ($guild_leader) {
-        if ($_POST['todo'] == 'save') {
+        if (isset($_POST['todo']) && $_POST['todo'] == 'save') {
           delete_guild($guild->getId());
           $saved = true;
         }
-        if ($saved) {
+        if (!empty($saved)) {
           $main_content .=
             '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url(' .
             $layout_name .
@@ -2867,7 +2936,7 @@ if ($action == 'deleteguild') {
             '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' .
             $layout_name .
             '/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td>Guild with name <b>' .
-            $guild_name .
+            htmlspecialchars($guild_display_name) .
             '</b> has been deleted.</td></tr>          </table>        </div>  </table></div></td></tr>';
           $main_content .=
             '<br/><center><form action="?subtopic=guilds" METHOD=post>' .
@@ -2898,17 +2967,17 @@ if ($action == 'deleteguild') {
             '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' .
             $layout_name .
             '/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td>Are you sure you want delete guild <b>' .
-            $guild_name .
+            htmlspecialchars($guild_display_name) .
             '</b>?<br>
 					<form action="?subtopic=guilds&guild=' .
-            $guild_name .
+            $guild_id .
             '&action=deleteguild" METHOD=post>' .
             csrf_field() .
             '<input type="hidden" name="todo" value="save"><input type="submit" value="Yes, delete"></form>
 					</td></tr>          </table>        </div>  </table></div></td></tr>';
           $main_content .=
             '<br/><center><form action="?subtopic=guilds&guild=' .
-            $guild_name .
+            $guild_id .
             '&action=manager" METHOD=post>' .
             csrf_field() .
             '<div class="BigButton" style="background-image:url(' .
@@ -2970,18 +3039,21 @@ if ($action == 'deleteguild') {
 //-----------------------------------------------------------------------------//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------//-----------------------------------------------------------------------------
 if ($action == 'deletebyadmin') {
-  $guild_name = (int) $_REQUEST['guild'];
+  $guild_id = (int) $_REQUEST['guild'];
+  $guild_display_name = '';
   if (empty($guild_errors)) {
     $guild = $ots->createObject('Guild');
-    $guild->load($guild_name);
+    $guild->load($guild_id);
     if (!$guild->isLoaded()) {
-      $guild_errors[] = 'Guild with name <b>' . $guild_name . '</b> doesn\'t exist.';
+      $guild_errors[] = 'Guild with ID <b>' . $guild_id . '</b> doesn\'t exist.';
+    } else {
+      $guild_display_name = $guild->getName();
     }
   }
   if (empty($guild_errors)) {
     if ($logged) {
       if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
-        if ($_POST['todo'] == 'save') {
+        if (isset($_POST['todo']) && $_POST['todo'] == 'save') {
           delete_guild($guild->getId());
           $main_content .=
             '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url(' .
@@ -3000,8 +3072,8 @@ if ($action == 'deletebyadmin') {
             $layout_name .
             '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' .
             $layout_name .
-            '/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td>Guild with ID <b>' .
-            $guild_name .
+            '/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td>Guild with name <b>' .
+            htmlspecialchars($guild_display_name) .
             '</b> has been deleted.</td></tr>          </table>        </div>  </table></div></td></tr><br/><center><form action="?subtopic=guilds" METHOD=post>' .
             csrf_field() .
             '<div class="BigButton" style="background-image:url(' .
@@ -3030,10 +3102,10 @@ if ($action == 'deletebyadmin') {
             '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' .
             $layout_name .
             '/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td>Are you sure you want delete guild <b>' .
-            $guild->getName() .
+            htmlspecialchars($guild_display_name) .
             '</b>?<br>
 					<form action="?subtopic=guilds&guild=' .
-            $guild_name .
+            $guild_id .
             '&action=deletebyadmin" METHOD=post>' .
             csrf_field() .
             '<input type="hidden" name="todo" value="save"><input type="submit" value="Yes, delete"></form>

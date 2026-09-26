@@ -25,72 +25,75 @@
 
 class InvitesDriver implements IOTS_GuildAction
 {
-    // assigned guild
-    private $guild;
-	
-    // database
-    private $db;
-	
-    // initializes driver
-    public function __construct(OTS_Guild $guild)
-    {
-        $this->guild = $guild;
-        $this->db = POT::getInstance()->getDBHandle();
-        $this->guild->invitesDriver = $this;
+  // assigned guild
+  private $guild;
+
+  // database
+  private $db;
+
+  // initializes driver
+  public function __construct(OTS_Guild $guild)
+  {
+    $this->guild = $guild;
+    $this->db = POT::getInstance()->getDBHandle();
+    $this->guild->invitesDriver = $this;
+  }
+
+  // returns all invited players to current guild
+  public function listRequests()
+  {
+    $invites = array();
+    foreach ($this->db->query('SELECT ' . $this->db->fieldName('player_id') . ' FROM ' . $this->db->tableName('guild_invites') . ' WHERE ' . $this->db->fieldName('guild_id') . ' = ' . $this->db->quote($this->guild->id)) as $invite) {
+      $player = new OTS_Player();
+      $player->load($invite['player_id']);
+      if ($player->isLoaded()) {
+        $invites[] = $player;
+      }
+    }
+    return $invites;
+  }
+
+  // invites player to current guild
+  public function addRequest(OTS_Player $player)
+  {
+    $this->db->query('INSERT INTO ' . $this->db->tableName('guild_invites') . ' (' . $this->db->fieldName('player_id') . ', ' . $this->db->fieldName('guild_id') . ') VALUES (' . $this->db->quote($player->getId()) . ', ' . $this->db->quote($this->guild->id) . ')');
+  }
+
+  // un-invites player
+  public function deleteRequest(OTS_Player $player)
+  {
+    $this->db->query('DELETE FROM ' . $this->db->tableName('guild_invites') . ' WHERE ' . $this->db->fieldName('player_id') . ' = ' . $this->db->quote($player->getId()) . ' AND ' . $this->db->fieldName('guild_id') . ' = ' . $this->db->quote($this->guild->id));
+  }
+
+  // commits invitation
+  public function submitRequest(OTS_Player $player)
+  {
+    $rank = null;
+
+    // finds normal member rank (level 1)
+    foreach ($this->guild as $guildRank) {
+      if ($guildRank->isLoaded() && $guildRank->getLevel() == 1) {
+        $rank = $guildRank;
+        break;
+      }
+    }
+    if ($rank === null) {
+      $rank = new OTS_GuildRank();
+      $rank->setGuild($this->guild);
+      $rank->setName('New Members');
+      $rank->setLevel(1);
+      $rank->save();
     }
 
-    // returns all invited players to current guild
-    public function listRequests()
-    {
-        $invites = array();
-        foreach( $this->db->query('SELECT ' . $this->db->fieldName('player_id') . ' FROM ' . $this->db->tableName('guild_invites') . ' WHERE ' . $this->db->fieldName('guild_id') . ' = '.$this->db->quote($this->guild->id)) as $invite)
-        {
-            $player = new OTS_Player();
-            $player->load($invite['player_id']);
-            $invites[] = $player;
-        }
-        return $invites;
-    }
+    // Set membership with a direct UPDATE so we do not rewrite the whole player row.
+    $this->db->query(
+      'UPDATE ' . $this->db->tableName('players') .
+        ' SET ' . $this->db->fieldName('rank_id') . ' = ' . (int) $rank->getId() .
+        ' WHERE ' . $this->db->fieldName('id') . ' = ' . (int) $player->getId()
+    );
+    $player->setRank($rank);
 
-    // invites player to current guild
-    public function addRequest(OTS_Player $player)
-    {
-        $this->db->query('INSERT INTO ' . $this->db->tableName('guild_invites') .' (' . $this->db->fieldName('player_id') . ', ' . $this->db->fieldName('guild_id') . ') VALUES ('.$this->db->quote($player->getId()).', '.$this->db->quote($this->guild->id).')');
-    }
-
-    // un-invites player
-    public function deleteRequest(OTS_Player $player)
-    {
-        $this->db->query('DELETE FROM ' . $this->db->tableName('guild_invites') . ' WHERE ' . $this->db->fieldName('player_id') . ' = '.$this->db->quote($player->getId()).' AND ' . $this->db->fieldName('guild_id') . ' = '.$this->db->quote($this->guild->id));
-    }
-
-    // commits invitation
-    public function submitRequest(OTS_Player $player)
-    {
-        $rank = null;
-
-        // finds normal member rank
-        foreach($this->guild as $guildRank)
-        {
-            if($guildRank->level == 1)
-            {
-                $rank = $guildRank;
-                break;
-            }
-        }
-		if(empty($rank)) {
-		$rank = new OTS_GuildRank();
-		$rank->setGuild($this->guild);
-		$rank->setName('New Members');
-		$rank->setLevel(1);
-		$rank->save();
-		}
-        $player->setRank($rank);
-        $player->save();
-
-        // clears invitation
-        $this->deleteRequest($player);
-    }
+    // clears invitation
+    $this->deleteRequest($player);
+  }
 }
-
-?>
