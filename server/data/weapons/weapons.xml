@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <weapons>
   <!-- Rods -->
   <wand id="2182" level="7" mana="2" min="10" max="15" type="earth" event="function" value="default">
@@ -9,7 +9,8 @@
     <!-- Moonlight Rod -->
     <vocation id="2" />
   </wand>
-  <wand id="2185" level="19" mana="5" min="20" max="30" type="death" event="function" value="default">
+  <wand id="2185" level="19" mana="5" min="20" max="30" type="death" event="function"
+    value="default">
     <!-- Necrotic Rod -->
     <vocation id="2" />
   </wand>
@@ -17,7 +18,8 @@
     <!-- Northwind Rod -->
     <vocation id="2" />
   </wand>
-  <wand id="2181" level="26" mana="8" min="30" max="40" type="earth" event="function" value="default">
+  <wand id="2181" level="26" mana="8" min="30" max="40" type="earth" event="function"
+    value="default">
     <!-- Terra Rod -->
     <vocation id="2" />
   </wand>
@@ -25,56 +27,67 @@
     <!-- Hailstorm Rod -->
     <vocation id="2" />
   </wand>
-  <wand id="8912" level="37" mana="13" min="50" max="60" type="earth" event="function" value="default">
+  <wand id="8912" level="37" mana="13" min="50" max="60" type="earth" event="function"
+    value="default">
     <!-- Springsprout Rod -->
     <vocation id="2" />
   </wand>
-  <wand id="8910" level="42" mana="13" min="60" max="70" type="death" event="function" value="default">
+  <wand id="8910" level="42" mana="13" min="60" max="70" type="death" event="function"
+    value="default">
     <!-- Underworld Rod -->
     <vocation id="2" />
   </wand>
-  <wand id="7958" level="100" mana="15" min="550" max="550" type="holy" event="function" value="default">
+  <wand id="7958" level="100" mana="15" min="550" max="550" type="holy" event="function"
+    value="default">
     <!-- Vip Rod -->
     <vocation id="2" />
     <vocation id="6" />
   </wand>
-  <wand id="7424" level="100" mana="20" min="1200" max="1200" type="holy" event="function" value="default">
+  <wand id="7424" level="100" mana="20" min="1200" max="1200" type="holy" event="function"
+    value="default">
     <!-- Baiakzik Staff -->
     <vocation id="2" />
     <vocation id="1" />
   </wand>
-  <wand id="7754" level="150" mana="20" min="1500" max="2200" type="holy" event="function" value="default">
+  <wand id="7754" level="150" mana="20" min="1500" max="2200" type="holy" event="function"
+    value="default">
     <!-- Baiakzik Staff -->
     <vocation id="2" />
     <vocation id="1" />
   </wand>
-  <wand id="2453" level="100" mana="20" min="750" max="750" type="holy" event="function" value="default">
+  <wand id="2453" level="100" mana="20" min="750" max="750" type="holy" event="function"
+    value="default">
     <!-- Master Vip Staff -->
     <vocation id="2" />
     <vocation id="1" />
   </wand>
-  <wand id="12609" level="120" mana="20" min="450" max="450" type="holy" event="function" value="default">
+  <wand id="12609" level="120" mana="20" min="450" max="450" type="holy" event="function"
+    value="default">
     <!-- staff of Baiak -->
     <vocation id="2" />
     <vocation id="1" />
   </wand>
-  <wand id="7414" level="100" mana="15" min="550" max="550" type="holy" event="function" value="default">
+  <wand id="7414" level="100" mana="15" min="550" max="550" type="holy" event="function"
+    value="default">
     <!-- Vip Wand -->
     <vocation id="2" />
     <vocation id="1" />
   </wand>
-  <wand id="7429" level="200" mana="50" min="110" max="160" type="holy" event="function" value="default">
+  <wand id="7429" level="200" mana="50" min="110" max="160" type="holy" event="function"
+    value="default">
     <!-- Vip Wand -->
     <vocation id="2" />
     <vocation id="6" />
   </wand>
-  <wand id="2436" level="200" mana="50" min="110" max="160" type="holy" event="function" value="default">
+  <wand id="2436" level="200" mana="50" min="110" max="160" type="holy" event="function"
+    value="default">
     <!-- Vip Wand -->
     <vocation id="1" />
     <vocation id="5" />
   </wand>
-  <wand id="7735" level="200" mana="50" min="2000" max="2900" type="holy" event="function" value="default">
-    <!-- Vip Wand -->
+  <wand id="7735" level="200" mana="50" min="3000" max="4900" type="holy" event="function"
+    value="default">
+    <!-- Master Rod -->
     <vocation id="2" />
     <vocation id="6" />
   </wand>
@@ -88,7 +101,8 @@
     <!-- Wand of Dragonbreath -->
     <vocation id="1" />
   </wand>
-  <wand id="2188" level="19" mana="5" min="20" max="30" type="death" event="function" value="default">
+  <wand id="2188" level="19" mana="5" min="20" max="30" type="death" event="function"
+    value="default">
     <!-- Wand of Decay -->
     <vocation id="1" />
   </wand>
@@ -96,24 +110,29 @@
     <!-- Wand of Draconia -->
     <vocation id="1" />
   </wand>
-  <wand id="2189" level="26" mana="8" min="40" max="30" type="energy" event="function" value="default">
+  <wand id="2189" level="26" mana="8" min="40" max="30" type="energy" event="function"
+    value="default">
     <!-- Wand of Cosmic Energy -->
     <vocation id="1" />
   </wand>
-  <wand id="2187" level="33" mana="13" min="30" max="40" type="fire" event="function" value="default">
+  <wand id="2187" level="33" mana="13" min="30" max="40" type="fire" event="function"
+    value="default">
     <!-- Wand of Inferno -->
     <vocation id="1" />
   </wand>
-  <wand id="8920" level="37" mana="13" min="40" max="50" type="energy" event="function" value="default">
+  <wand id="8920" level="37" mana="13" min="40" max="50" type="energy" event="function"
+    value="default">
     <!-- Wand of Starmstorm -->
     <vocation id="1" />
   </wand>
-  <wand id="8922" level="42" mana="13" min="2000" max="2900" type="holy" event="function" value="default">
+  <wand id="8922" level="42" mana="13" min="3000" max="4900" type="holy" event="function"
+    value="default">
     <!-- Master Wand -->
     <vocation id="1" />
     <vocation id="5" />
   </wand>
-  <wand id="2184" level="100" mana="15" min="79" max="100" type="death" event="function" value="default">
+  <wand id="2184" level="100" mana="15" min="79" max="100" type="death" event="function"
+    value="default">
     <!-- Wand of Baiak -->
     <vocation id="1" />
   </wand>

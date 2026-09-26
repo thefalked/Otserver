@@ -1,6 +1,6 @@
 * Notícias e Atualizações *
 
-Magias high level (EK / RP / ED) + corpos
+Magias high level (EK / RP) + Wand/Rod + Auto Loot
 
 Elite Knight
 - Sudden Death (SD): knights não usam mais
@@ -9,14 +9,20 @@ Elite Knight
 Royal Paladin
 - Ethereal Spear (exori con): escala bem melhor
 - Sudden Death (SD): paladins continuam podendo usar
+- Master Spear: hit chance 100% (antes muitos miss)
 
-Elder Druid
-- Eternal Winter (exevo gran mas frigo): AoE mais forte
-- Continua abaixo de flam / vis / mort
+Master Wand / Master Rod
+- Dano holy 3000-4900 (antes 2000-2900)
 
-Corpos no chão
-- Demon e Capeta: ~9 minutos (antes ~45m)
-- Mesmo padrão frost/hydra/reaper/nightmare
+Master Armor
+- Removido holy protect (+10%). Death +25% permanece
+
+Auto Loot
+- !autoloot (também /autoloot)
+- Level mínimo 1500. 2 slots base. Vip3-Vip9: +1 slot cada (máx. 9)
+- Só last hit
+- on | off | add, nome | remove, nome | clear | list | sell
+- sell: metade Mad/Rashid no banco (só backpack, não equipado)
 
 Comente no site (Últimas Notícias) como ficou.
 Digite !notice para ver de novo.
