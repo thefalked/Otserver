@@ -15,6 +15,7 @@
   <talkaction log="yes" words="/serverdiag" access="5" event="function" value="diagnostics" />
   <talkaction log="yes" words="/mode" access="5" event="script" value="mode.lua" />
   <talkaction log="yes" words="/owner" access="5" event="script" value="owner.lua" />
+  <talkaction log="yes" words="/cleanhouses" access="5" event="script" value="cleanhouses.lua" />
   <talkaction log="yes" words="/bc" access="5" event="script" value="broadcastclass.lua" />
   <talkaction log="yes" words="/save" access="5" event="script" value="save.lua" />
   <talkaction log="yes" words="/clean" access="5" event="script" value="clean.lua" />

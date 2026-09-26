@@ -48,10 +48,24 @@ Flow:
 1. Skip if `houseCleanOld <= 0`.
 2. Select owned houses that are orphaned or past the inactivity cutoff.
 3. Skip owners who are online.
-4. Call `setHouseOwner(houseId, 0, true)`.
-5. That cleans the house and moves pickupable items to the owner depot when the player can be loaded.
+4. Call `doCleanHouse(houseId)` while the owner is still set (moves pickupable items to depot).
+5. Call `setHouseOwner(houseId, 0, false)` to clear the owner without cleaning again.
+6. If any house was cleared, run `doSaveServer(true)` so house tiles are written and loot cannot come back after a restart.
 
 Console log when any house is cleared: `> Cleared N inactive house(s).`
+
+## One-shot free-house loot strip
+
+God command: `/cleanhouses` → `server/data/talkactions/scripts/cleanhouses.lua`
+
+Access: same as `/owner` (`access="5"`).
+
+Runs a scan or cleanup on free houses (`owner = 0`). Leftover pickupable items are removed on confirm (no owner to receive a depot transfer). Use once to clear houses left dirty by the old clear-owner-first bug.
+
+Usage:
+
+- `/cleanhouses` — scan only. Reports how many free houses exist and how many still have removable loot.
+- `/cleanhouses confirm` — clean those dirty free houses, then save.
 
 ## Player reclaim (`!myhouse`)
 
@@ -72,7 +86,7 @@ Same threshold and activity rules as automatic cleanup.
 
 ## What happens to items
 
-`setHouseOwner(..., 0, true)` calls `House::setOwnerEx` with clean enabled. That runs `House::clean()` and `transferToDepot()` while the old owner is still set. Pickupable items go to the owner depot when the character can be loaded. If the owner cannot be loaded, those items are removed.
+Cleanup calls `doCleanHouse` while the old owner is still set, then clears the owner with `setHouseOwner(..., false)`. Pickupable items go to the owner depot when the character can be loaded. If the owner cannot be loaded, those items are removed. A server save follows so the emptied house is stored.
 
 ## How to change the delay
 

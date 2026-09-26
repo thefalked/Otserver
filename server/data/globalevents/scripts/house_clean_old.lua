@@ -31,14 +31,29 @@ local function cleanInactiveHouses()
   result:free()
 
   local cleared = 0
+  local cleanFailed = 0
+  local cleanedUnowned = 0
   for i = 1, #toClear do
-    if setHouseOwner(toClear[i], 0, true) then
+    local houseId = toClear[i]
+    -- Clean while owner is still set (moves loot to depot), then clear owner.
+    if not doCleanHouse(houseId) then
+      cleanFailed = cleanFailed + 1
+    elseif setHouseOwner(houseId, 0, false) then
       cleared = cleared + 1
+    else
+      cleanedUnowned = cleanedUnowned + 1
+      print("> House " .. houseId .. " was cleaned but owner clear failed.")
     end
   end
 
+  if cleared > 0 or cleanedUnowned > 0 then
+    doSaveServer(true)
+  end
   if cleared > 0 then
     print("> Cleared " .. cleared .. " inactive house(s).")
+  end
+  if cleanFailed > 0 then
+    print("> Failed to clean " .. cleanFailed .. " inactive house(s).")
   end
   return true
 end

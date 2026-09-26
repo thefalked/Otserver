@@ -66,10 +66,21 @@ function onSay(cid, words, param)
     return true
   end
 
-  if setHouseOwner(houseId, 0, true) then
+  if not doCleanHouse(houseId) then
+    doPlayerSendTextMessage(cid, 27, "Nao foi possivel limpar esta casa. Tente novamente.")
+    return true
+  end
+
+  local cleared = setHouseOwner(houseId, 0, false)
+  doSaveServer(true)
+  if cleared then
     doPlayerSendTextMessage(cid, 27, "A Casa agora esta sem dono, voc\234 ou outro jogador pode compra-la")
   else
-    doPlayerSendTextMessage(cid, 27, "Nao foi possivel liberar esta casa. Tente novamente.")
+    doPlayerSendTextMessage(
+      cid,
+      27,
+      "Os itens foram movidos ao depot, mas nao foi possivel liberar o dono da casa. Avise um administrador."
+    )
   end
   return true
 end
