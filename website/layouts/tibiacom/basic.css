@@ -1804,11 +1804,19 @@ body {
 .Content #News .NewsHeadlineBackground,
 .Content #latestnews .NewsHeadlineBackground {
   position: relative;
-  height: 28px;
+  min-height: 28px;
+  height: auto;
   margin-bottom: 5px;
-  background-repeat: repeat-x;
+  padding-bottom: 4px;
+  background-repeat: repeat;
   border-left: 1px solid #000000;
   border-right: 1px solid #000000;
+  cursor: default;
+}
+
+.Content #News .NewsHeadlineBackground.NewsHeadlineExpandable,
+.Content #latestnews .NewsHeadlineBackground.NewsHeadlineExpandable {
+  cursor: pointer;
 }
 
 .Content #News .NewsHeadlineIcon,
@@ -1831,19 +1839,42 @@ body {
   line-height: 10px;
 }
 
+.Content #News .NewsHeadlineExtend,
+.Content #latestnews .NewsHeadlineExtend {
+  position: absolute;
+  top: 8px;
+  right: 6px;
+  height: 12px;
+  width: 12px;
+  background-repeat: no-repeat;
+  z-index: 10;
+}
+
 .Content #News .NewsHeadlineText,
 .Content #latestnews .NewsHeadlineText {
   position: relative;
   top: 7px;
-  left: 150px;
-  margin-right: 10px;
+  margin-left: 150px;
+  margin-right: 24px;
   font-size: 10pt;
   font-weight: bold;
   color: white;
   line-height: 14px;
-  white-space: nowrap;
+}
+
+.Content #News .NewsHeadlineShortText,
+.Content #latestnews .NewsHeadlineShortText {
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.Content #News .NewsHeadlineFullText,
+.Content #latestnews .NewsHeadlineFullText {
+  display: none;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* News Archive */
