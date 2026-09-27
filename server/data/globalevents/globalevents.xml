@@ -13,7 +13,10 @@
     value="house_clean_old.lua" />
 
   <!-- Timed events: times are UTC. São Paulo = UTC-3 (no DST).
-       zombie 21:00/01:00 UTC = 18:00/22:00 SP -->
+       zombie 21:00/01:00 UTC = 18:00/22:00 SP
+       bug 17:55/22:55 UTC = countdown for 15:00/20:00 SP spawn -->
   <globalevent name="zombie_18" time="21:00" event="script" value="zombie_event.lua" />
   <globalevent name="zombie_22" time="01:00" event="script" value="zombie_event.lua" />
+  <globalevent name="event_bug_15" time="17:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_20" time="22:55" event="script" value="event_bug.lua" />
 </globalevents>

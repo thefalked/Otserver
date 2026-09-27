@@ -2,6 +2,7 @@
 <monsters>
   <!--8.54-->
   <monster name="Event Zombie" file="event_zombie.xml" />
+  <monster name="Event Bug" file="event_bug.xml" />
   <monster name="Draken Spellweaver" file="8.54/draken_spellweaver.xml" />
   <monster name="Draken Warmaster" file="8.54/draken_warmaster.xml" />
   <monster name="Gnarlhound" file="8.54/gnarlhound.xml" />
