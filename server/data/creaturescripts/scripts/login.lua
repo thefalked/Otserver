@@ -62,6 +62,8 @@ function onLogin(cid)
 
   registerCreatureEvent(cid, "PlayerKill")
   registerCreatureEvent(cid, "ZombieEvent")
+  registerCreatureEvent(cid, "ZombieLogout")
+  registerCreatureEvent(cid, "ZombieNoPvp")
   if InitArenaScript ~= 0 then
     InitArenaScript = 1
     -- make arena rooms free

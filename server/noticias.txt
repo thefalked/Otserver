@@ -1,6 +1,6 @@
 * Notícias e Atualizações *
 
-Magias high level (EK / RP) + Wand/Rod + Auto Loot
+Magias high level + Auto Loot + Eventos + War
 
 Elite Knight
 - Sudden Death (SD): knights não usam mais
@@ -23,6 +23,20 @@ Auto Loot
 - Só last hit
 - on | off | add, nome | remove, nome | clear | list | sell
 - sell: metade Mad/Rashid no banco (só backpack, não equipado)
+
+Zombie Event
+- 18:00 e 22:00 (horário de São Paulo)
+- TP no temple (~2 min). Mínimo 4 jogadores
+- Winner: taça + arma Vip9 aleatória + 100 gold nuggets
+
+Event Bug
+- Spawn 15:00 e 20:00 SP (aviso 5 min antes), perto do temple
+- 15 minutos para matar
+- Reward compartilhado perto do kill: arma+50 nuggets OU set Master
+
+War entre guilds
+- Sistema de war ativo (emblemas no client)
+- Encerrar: /war end, guild e /war finish, guild (ver página War)
 
 Comente no site (Últimas Notícias) como ficou.
 Digite !notice para ver de novo.

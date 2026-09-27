@@ -16,71 +16,94 @@ local config = {
   toPosition = { x = 70, y = 539, z = 7 },
 }
 
-function onStatsChange(cid, attacker, type, combat, value)
-  if isPlayer(cid) and isMonster(attacker) then
-    if isInArea(getPlayerPosition(cid), config.fromPosition, config.toPosition) then
-      if getGlobalStorageValue(config.playerCount) >= 2 then
-        doBroadcastMessage(getPlayerName(cid) .. " Foi Comido Por Zombies!", MESSAGE_STATUS_CONSOLE_RED)
-        local corpse = doCreateItem(3058, 1, getPlayerPosition(cid))
-        doItemSetAttribute(
-          corpse,
-          "description",
-          "You recognize "
-            .. getCreatureName(cid)
-            .. ". He was killed by "
-            .. (isMonster(attacker) and "a " .. string.lower(getCreatureName(attacker)) or isCreature(attacker) and getCreatureName(
-              attacker
-            ) or "a field item")
-            .. "."
-        )
-        doSendMagicEffect(getPlayerPosition(cid), CONST_ME_POFF)
-        doTeleportThing(cid, getTownTemplePosition(getPlayerTown(cid)), false)
-        doSendMagicEffect(getPlayerPosition(cid), CONST_ME_TELEPORT)
-        setGlobalStorageValue(config.playerCount, getGlobalStorageValue(config.playerCount) - 1)
-      elseif getGlobalStorageValue(config.playerCount) == 1 then
-        if isInArea(getPlayerPosition(cid), config.fromPosition, config.toPosition) then
-          doBroadcastMessage(getPlayerName(cid) .. " Ganhou o Zombie Event! Parab\233ns!", MESSAGE_STATUS_WARNING)
-          local goblet = doPlayerAddItem(cid, config.goblet, 1)
-          doItemSetAttribute(
-            goblet,
-            "description",
-            "Consedido A " .. getPlayerName(cid) .. " Por ganhar o Zombie event."
-          )
-          local corpse = doCreateItem(3058, 1, getPlayerPosition(cid))
-          doItemSetAttribute(
-            corpse,
-            "description",
-            "You recognize "
-              .. getCreatureName(cid)
-              .. ". He was killed by "
-              .. (isMonster(attacker) and "a " .. string.lower(getCreatureName(attacker)) or isCreature(attacker) and getCreatureName(
-                attacker
-              ) or "a field item")
-              .. "."
-          )
-          doSendMagicEffect(getPlayerPosition(cid), CONST_ME_POFF)
-          doTeleportThing(cid, getTownTemplePosition(getPlayerTown(cid)), false)
-          doSendMagicEffect(getPlayerPosition(cid), CONST_ME_TELEPORT)
-          doPlayerAddItem(cid, config.vip9Weapons[math.random(1, #config.vip9Weapons)], 1)
-          if config.moneyReward[3] == 1 then
-            doPlayerAddItem(cid, config.moneyReward[1], config.moneyReward[2])
-          end
-        end
+local function inZombieArena(cid)
+  return isInArea(getCreaturePosition(cid), config.fromPosition, config.toPosition)
+end
 
-        for x = config.fromPosition.x, config.toPosition.x do
-          for y = config.fromPosition.y, config.toPosition.y do
-            for z = config.fromPosition.z, config.toPosition.z do
-              areapos = { x = x, y = y, z = z, stackpos = 253 }
-              getMonsters = getThingfromPos(areapos)
-              if isMonster(getMonsters.uid) then
-                doRemoveCreature(getMonsters.uid)
-              end
-            end
-          end
+local function clearArenaMonsters()
+  for x = config.fromPosition.x, config.toPosition.x do
+    for y = config.fromPosition.y, config.toPosition.y do
+      for z = config.fromPosition.z, config.toPosition.z do
+        local areapos = { x = x, y = y, z = z, stackpos = 253 }
+        local thing = getThingfromPos(areapos)
+        if isMonster(thing.uid) then
+          doRemoveCreature(thing.uid)
         end
       end
+    end
+  end
+end
+
+-- No logout while standing in the arena (waiting or mid-event).
+function onLogout(cid, forceLogout)
+  if not forceLogout and inZombieArena(cid) then
+    doPlayerSendCancel(cid, "You cannot logout during the Zombie event.")
+    return false
+  end
+  return true
+end
+
+-- Arena is non-PvP: players cannot attack each other there.
+function onCombat(cid, target)
+  if isPlayer(cid) and isPlayer(target) then
+    if inZombieArena(cid) or inZombieArena(target) then
       return false
     end
   end
   return true
+end
+
+function onStatsChange(cid, attacker, type, combat, value)
+  if type ~= STATSCHANGE_HEALTHLOSS then
+    return true
+  end
+  if not isPlayer(cid) or not isMonster(attacker) then
+    return true
+  end
+  if not inZombieArena(cid) then
+    return true
+  end
+
+  local count = getGlobalStorageValue(config.playerCount)
+  if count >= 2 then
+    doBroadcastMessage(getPlayerName(cid) .. " Foi Comido Por Zombies!", MESSAGE_STATUS_CONSOLE_RED)
+    local corpse = doCreateItem(3058, 1, getPlayerPosition(cid))
+    doItemSetAttribute(
+      corpse,
+      "description",
+      "You recognize "
+        .. getCreatureName(cid)
+        .. ". He was killed by a "
+        .. string.lower(getCreatureName(attacker))
+        .. "."
+    )
+    doSendMagicEffect(getPlayerPosition(cid), CONST_ME_POFF)
+    doTeleportThing(cid, getTownTemplePosition(getPlayerTown(cid)), false)
+    doSendMagicEffect(getPlayerPosition(cid), CONST_ME_TELEPORT)
+    setGlobalStorageValue(config.playerCount, count - 1)
+  elseif count == 1 then
+    doBroadcastMessage(getPlayerName(cid) .. " Ganhou o Zombie Event! Parab\233ns!", MESSAGE_STATUS_WARNING)
+    local goblet = doPlayerAddItem(cid, config.goblet, 1)
+    doItemSetAttribute(goblet, "description", "Consedido A " .. getPlayerName(cid) .. " Por ganhar o Zombie event.")
+    local corpse = doCreateItem(3058, 1, getPlayerPosition(cid))
+    doItemSetAttribute(
+      corpse,
+      "description",
+      "You recognize "
+        .. getCreatureName(cid)
+        .. ". He was killed by a "
+        .. string.lower(getCreatureName(attacker))
+        .. "."
+    )
+    doSendMagicEffect(getPlayerPosition(cid), CONST_ME_POFF)
+    doTeleportThing(cid, getTownTemplePosition(getPlayerTown(cid)), false)
+    doSendMagicEffect(getPlayerPosition(cid), CONST_ME_TELEPORT)
+    doPlayerAddItem(cid, config.vip9Weapons[math.random(1, #config.vip9Weapons)], 1)
+    if config.moneyReward[3] == 1 then
+      doPlayerAddItem(cid, config.moneyReward[1], config.moneyReward[2])
+    end
+    clearArenaMonsters()
+    setGlobalStorageValue(config.playerCount, 0)
+  end
+  return false
 end

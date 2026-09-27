@@ -1,10 +1,10 @@
--- Shared reward for everyone near the Event Bug when it dies.
--- Each player rolls: one Baiakzik/Master weapon + 50 nuggets, OR a full Master set.
+-- Damagers only. Items drop on the map if the backpack is full.
+EventBugDamagers = EventBugDamagers or {}
+
 local config = {
-  rewardRadius = 15,
+  bugCidStorage = 2005,
   nuggetId = 2157,
   nuggetCount = 50,
-  -- Baiakzik + Master weapons (one random pick)
   weapons = {
     7417, -- Baiakzik Sword
     8926, -- Baiakzik Axe
@@ -18,7 +18,6 @@ local config = {
     8922, -- Master Wand
     2399, -- New Master Star
   },
-  -- Master set (no weapon, no nuggets)
   masterSet = {
     6096, -- Master Helmet
     6095, -- Master Armor
@@ -28,10 +27,22 @@ local config = {
   },
 }
 
+local function giveItemDropOk(uid, itemId, count)
+  count = count or 1
+  if isItemStackable(itemId) then
+    local item = doCreateItemEx(itemId, count)
+    doPlayerAddItemEx(uid, item, true)
+    return
+  end
+  for _ = 1, count do
+    local item = doCreateItemEx(itemId, 1)
+    doPlayerAddItemEx(uid, item, true)
+  end
+end
+
 local function giveWeaponReward(uid)
-  local weaponId = config.weapons[math.random(1, #config.weapons)]
-  doPlayerAddItem(uid, weaponId, 1)
-  doPlayerAddItem(uid, config.nuggetId, config.nuggetCount)
+  giveItemDropOk(uid, config.weapons[math.random(1, #config.weapons)], 1)
+  giveItemDropOk(uid, config.nuggetId, config.nuggetCount)
   doPlayerSendTextMessage(
     uid,
     MESSAGE_EVENT_ADVANCE,
@@ -41,7 +52,7 @@ end
 
 local function giveMasterSetReward(uid)
   for _, itemId in pairs(config.masterSet) do
-    doPlayerAddItem(uid, itemId, 1)
+    giveItemDropOk(uid, itemId, 1)
   end
   doPlayerSendTextMessage(
     uid,
@@ -50,33 +61,52 @@ local function giveMasterSetReward(uid)
   )
 end
 
-function onDeath(cid, corpse, lastHitKiller, mostDamageKiller)
-  local pos = getCreaturePosition(cid)
-  local specs = getSpectators(pos, config.rewardRadius, config.rewardRadius, false)
-  local rewarded = 0
+function onStatsChange(cid, attacker, type, combat, value)
+  if type ~= STATSCHANGE_HEALTHLOSS then
+    return true
+  end
+  if not isPlayer(attacker) then
+    return true
+  end
+  EventBugDamagers[cid] = EventBugDamagers[cid] or {}
+  EventBugDamagers[cid][attacker] = true
+  return true
+end
 
-  if specs then
-    for _, uid in pairs(specs) do
-      if isPlayer(uid) then
-        if math.random(1, 2) == 1 then
-          giveWeaponReward(uid)
-        else
-          giveMasterSetReward(uid)
-        end
-        rewarded = rewarded + 1
+function onDeath(cid, corpse, deathList)
+  local damagers = EventBugDamagers[cid] or {}
+  local rewarded = 0
+  local killerName = "someone"
+
+  if type(deathList) == "table" then
+    for _, uid in ipairs(deathList) do
+      if isCreature(uid) then
+        killerName = getCreatureName(uid)
+        break
       end
     end
   end
 
-  local killerName = "someone"
-  if lastHitKiller and isPlayer(lastHitKiller) then
-    killerName = getCreatureName(lastHitKiller)
-  elseif mostDamageKiller and isPlayer(mostDamageKiller) then
-    killerName = getCreatureName(mostDamageKiller)
+  for uid, _ in pairs(damagers) do
+    if isPlayer(uid) then
+      if math.random(1, 2) == 1 then
+        giveWeaponReward(uid)
+      else
+        giveMasterSetReward(uid)
+      end
+      rewarded = rewarded + 1
+    end
   end
 
+  EventBugDamagers[cid] = nil
+  setGlobalStorageValue(config.bugCidStorage, 0)
+
   doBroadcastMessage(
-    "[Event Bug] The Event Bug was slain by " .. killerName .. "! " .. rewarded .. " player(s) nearby received rewards.",
+    "[Event Bug] The Event Bug was slain by "
+      .. killerName
+      .. "! "
+      .. rewarded
+      .. " player(s) who dealt damage received rewards.",
     MESSAGE_STATUS_WARNING
   )
   return true

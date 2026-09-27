@@ -2,6 +2,7 @@
 -- Despawns if not killed in time.
 local config = {
   monsterName = "Event Bug",
+  bugCidStorage = 2005, -- live Event Bug creature id
   positions = {
     { x = 155, y = 57, z = 7 },
     { x = 138, y = 54, z = 7 },
@@ -9,21 +10,43 @@ local config = {
     { x = 158, y = 37, z = 7 },
     { x = 183, y = 58, z = 7 },
   },
-  checkRadius = 8,
+  checkRadius = 8, -- spectators around the live bug, not spawn tiles
   lifetimeMinutes = 15,
   countdownMinutes = 5,
   areaName = "the temple area",
 }
 
+local function clearEventBugState(cid)
+  setGlobalStorageValue(config.bugCidStorage, 0)
+  if EventBugDamagers and cid then
+    EventBugDamagers[cid] = nil
+  end
+end
+
+local function getLiveEventBug()
+  local cid = getGlobalStorageValue(config.bugCidStorage)
+  if not cid or cid < 1 or not isCreature(cid) then
+    return nil
+  end
+  if getCreatureName(cid) ~= config.monsterName then
+    return nil
+  end
+  return cid
+end
+
 local function eventBugAlive()
-  for _, pos in pairs(config.positions) do
-    local specs = getSpectators(pos, config.checkRadius, config.checkRadius, false)
-    if specs then
-      for _, uid in pairs(specs) do
-        if isMonster(uid) and getCreatureName(uid) == config.monsterName then
-          return true
-        end
-      end
+  local cid = getLiveEventBug()
+  if not cid then
+    return false
+  end
+  local pos = getCreaturePosition(cid)
+  local specs = getSpectators(pos, config.checkRadius, config.checkRadius, false)
+  if not specs then
+    return false
+  end
+  for _, uid in pairs(specs) do
+    if isMonster(uid) and getCreatureName(uid) == config.monsterName then
+      return true
     end
   end
   return false
@@ -34,6 +57,7 @@ function despawnEventBug(cid)
     doRemoveCreature(cid)
     doBroadcastMessage("[Event Bug] Time is up! The Event Bug escaped. Try again next time.", MESSAGE_STATUS_WARNING)
   end
+  clearEventBugState(cid)
 end
 
 function announceEventBugCountdown(minutesLeft)
@@ -62,6 +86,10 @@ function spawnEventBug()
     print("[Event Bug] Failed to summon at " .. pos.x .. "," .. pos.y .. "," .. pos.z)
     return
   end
+
+  setGlobalStorageValue(config.bugCidStorage, cid)
+  EventBugDamagers = EventBugDamagers or {}
+  EventBugDamagers[cid] = {}
 
   doSendMagicEffect(pos, CONST_ME_GROUNDSHAKER)
   doBroadcastMessage(

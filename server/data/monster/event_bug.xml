@@ -32,5 +32,6 @@
   </voices>
   <script>
     <event name="EventBugDeath" />
+    <event name="EventBugDamage" />
   </script>
 </monster>

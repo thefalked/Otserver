@@ -26,5 +26,8 @@
   <event type="login" name="AutoLootLogin" event="script" value="autoloot.lua" />
   <event type="kill" name="AutoLootKill" event="script" value="autoloot.lua" />
   <event type="statschange" name="ZombieEvent" event="script" value="zombie.lua" />
+  <event type="logout" name="ZombieLogout" event="script" value="zombie.lua" />
+  <event type="combat" name="ZombieNoPvp" event="script" value="zombie.lua" />
   <event type="death" name="EventBugDeath" event="script" value="event_bug_death.lua" />
+  <event type="statschange" name="EventBugDamage" event="script" value="event_bug_death.lua" />
 </creaturescripts>

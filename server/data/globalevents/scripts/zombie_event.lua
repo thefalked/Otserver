@@ -130,6 +130,7 @@ function startEvent()
         end
       end
     end
+    setGlobalStorageValue(config.playerCount, 0)
   end
 end
 
