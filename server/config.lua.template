@@ -181,7 +181,7 @@ ghostModeSpellEffects = true
 idleWarningTime = 14 * 60 * 1000
 idleKickTime = 1000 * 1000 * 10000
 expireReportsAfterReads = 1
-playerQueryDeepness = 2
+playerQueryDeepness = 30
 maxItemsPerPZTile = 0
 maxItemsPerHouseTile = 0
 
