@@ -1,5 +1,6 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
-<monster name="event zombie" nameDescription="an event zombie" race="undead" experience="280" speed="100" manacost="0">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<monster name="Event Zombie" nameDescription="an event zombie" race="undead" experience="280"
+  speed="100" manacost="0">
   <health now="500" max="500" />
   <look type="311" corpse="9875" />
   <targetchange interval="5000" chance="50" />

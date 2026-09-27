@@ -2,13 +2,13 @@ local config = {
   playerCount = 2001, -- Global storage for counting the players left/entered in the event
   zombieCount = 2002, -- Global storage for counting the zombies in the event
   teleportActionId = 2000, -- Action id of the teleport needed for the movement script
-  teleportPosition = { x = 151, y = 43, z = 7, stackpos = 1 }, -- Where the teleport will be created
+  teleportPosition = { x = 156, y = 48, z = 7, stackpos = 1 }, -- Where the teleport will be created
   teleportToPosition = { x = 56, y = 525, z = 7 }, -- Where the teleport will take you
   teleportId = 1387, -- Id of the teleport
   timeToStartEvent = 2, -- Minutes, after these minutes the teleport will be removed and the event will be declared started
   timeBetweenSpawns = 20, -- Seconds between each spawn of zombie
-  zombieName = "event zombie", -- Name of the zombie that should be summoned
-  playersNeededToStartEvent = 4, -- O13: was 1 (solo farm)
+  zombieName = "Event Zombie", -- Must match monsters.xml name
+  playersNeededToStartEvent = 4,
 
   -- Should be the same as in the creaturescript!
   -- The zombies will spawn randomly inside this area

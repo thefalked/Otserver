@@ -8,6 +8,7 @@
   <movevent type="StepIn" itemid="4828-4831" event="script" value="swimming.lua" />
   <movevent type="StepIn" itemid="7943-7954" event="script" value="swimming.lua" />
   <movevent type="StepIn" actionid="5555" event="script" value="onenter.lua" />
+  <movevent type="StepIn" actionid="2000" event="script" value="zombie_event.lua" />
   <movevent type="StepOut" actionid="12350" event="script" value="war_arena_movement1.lua" />
   <movevent type="StepIn" actionid="12351" event="script" value="war_arena_movement2.lua" />
   <movevent type="StepIn" actionid="12352" event="script" value="war_arena_movement3.lua" />

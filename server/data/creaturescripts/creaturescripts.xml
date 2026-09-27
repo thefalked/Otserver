@@ -25,4 +25,5 @@
   <event type="advance" name="PlayerAdvance" event="script" value="playeradvance.lua" />
   <event type="login" name="AutoLootLogin" event="script" value="autoloot.lua" />
   <event type="kill" name="AutoLootKill" event="script" value="autoloot.lua" />
+  <event type="statschange" name="ZombieEvent" event="script" value="zombie.lua" />
 </creaturescripts>

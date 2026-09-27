@@ -11,4 +11,9 @@
   <globalevent name="init" type="startup" event="script" value="init.lua" />
   <globalevent name="house_clean_old" interval="1800000" event="script"
     value="house_clean_old.lua" />
+
+  <!-- Timed events: times are UTC. São Paulo = UTC-3 (no DST).
+       zombie 21:00/01:00 UTC = 18:00/22:00 SP -->
+  <globalevent name="zombie_18" time="21:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_22" time="01:00" event="script" value="zombie_event.lua" />
 </globalevents>
