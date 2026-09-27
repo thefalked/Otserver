@@ -1,15 +1,19 @@
 local config = {
   playerCount = 2001, -- Global storage for counting the players left/entered in the event
 
-  goblet = 5805, -- id of the gold goblet you'll get when finishing the event.
-  rewards = { 7735, 2157 }, -- You will get this +  a gold goblet with your name on.
-  --		{moneyId, count, using? 1 for using moneyReward, 0 for not using.}
-  moneyReward = { 2157, 100, 1 },
+  goblet = 5805, -- gold goblet with winner name
+  moneyReward = { 2157, 100, 1 }, -- gold nuggets
+  vip9Weapons = {
+    7391, -- Baiak Vip9 Sword
+    7456, -- Baiak Vip9 Axe
+    7425, -- Baiak Vip9 Mace
+    7754, -- Baiak Vip9 Staff
+    7367, -- Baiak Vip9 Spear
+  },
 
   -- Should be same as in the globalevent!
-  -- The zombies will spawn randomly inside this area
-  fromPosition = { x = 44, y = 514, z = 7 }, -- top left cornor of the playground
-  toPosition = { x = 70, y = 539, z = 7 }, -- bottom right cornor of the playground
+  fromPosition = { x = 44, y = 514, z = 7 },
+  toPosition = { x = 70, y = 539, z = 7 },
 }
 
 function onStatsChange(cid, attacker, type, combat, value)
@@ -57,9 +61,7 @@ function onStatsChange(cid, attacker, type, combat, value)
           doSendMagicEffect(getPlayerPosition(cid), CONST_ME_POFF)
           doTeleportThing(cid, getTownTemplePosition(getPlayerTown(cid)), false)
           doSendMagicEffect(getPlayerPosition(cid), CONST_ME_TELEPORT)
-          for _, items in ipairs(config.rewards) do
-            doPlayerAddItem(cid, items, 1)
-          end
+          doPlayerAddItem(cid, config.vip9Weapons[math.random(1, #config.vip9Weapons)], 1)
           if config.moneyReward[3] == 1 then
             doPlayerAddItem(cid, config.moneyReward[1], config.moneyReward[2])
           end
