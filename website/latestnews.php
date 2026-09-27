@@ -597,7 +597,7 @@ foreach ($zapytanie as $row) {
   );
   // Same smileys as forum (images/smile/*.gif). post_smile=1 disables them.
   $message = replaceSmile($message, (int) ($row['post_smile'] ?? 0));
-  // Long topics: one title in the green bar. Expand toggles wrap and grows the bar.
+  // Match tibia CSS. Long titles: + expands full title inside the green bar.
   if (!isset($news_headline_n)) {
     $news_headline_n = 0;
   }
@@ -605,21 +605,16 @@ foreach ($zapytanie as $row) {
   $topicExpandable = strlen($row['post_topic']) > 60;
   $headlineId = 'NewsHeadline-' . $news_headline_n;
   $news_headline_n++;
-  $headlineBgClass = 'NewsHeadlineBackground' . ($topicExpandable ? ' NewsHeadlineExpandable' : '');
-  $headlineOnclick = $topicExpandable
-    ? ' onclick="HeadlineAction(\'' . $headlineId . '\')"'
-    : '';
+  $main_content .= '<div class=\'NewsHeadline' . ($topicExpandable ? ' NewsHeadlineExpandable' : '') . '\'';
+  if ($topicExpandable) {
+    $main_content .=
+      ' id=\'' . $headlineId . '\' onclick="TickerAction(\'' . $headlineId . '\')"';
+  }
   $main_content .=
-    '<div class=\'NewsHeadline\'>
-		<div id=\'' .
-    $headlineId .
-    '\' class=\'' .
-    $headlineBgClass .
-    '\' style=\'background-image:url(' .
-    $layout_name .
-    '/images/content/title-background-green.gif)\'' .
-    $headlineOnclick .
     '>
+		<div class=\'NewsHeadlineBackground\' style=\'background-image:url(' .
+    $layout_name .
+    '/images/content/title-background-green.gif)\'>
 		<img src="' .
     $layout_name .
     '/images/news/icon_' .
@@ -634,14 +629,27 @@ foreach ($zapytanie as $row) {
       $headlineId .
       '-Button\' class=\'NewsHeadlineExtend\' style=\'background-image:url(' .
       $layout_name .
-      '/images/general/plus.gif)\'></div>';
+      '/images/general/plus.gif)\'></div>
+		<div id=\'' .
+      $headlineId .
+      '-ShortText\' class=\'NewsHeadlineText\'>' .
+      $topicFull .
+      '</div>
+		<div id=\'' .
+      $headlineId .
+      '-FullText\' class=\'NewsHeadlineFullText\'>' .
+      $topicFull .
+      '</div>
+		</div>';
+  } else {
+    $main_content .=
+      '<div class=\'NewsHeadlineText\'>' .
+      $topicFull .
+      '</div>
+		</div>';
   }
   $main_content .=
-    '<div class=\'NewsHeadlineText\'>' .
-    $topicFull .
     '</div>
-		</div>
-		</div>
 		<table style=\'clear:both\' border=0 cellpadding=0 cellspacing=0 width=\'100%\'><tr>
 		<td><img src="' .
     $layout_name .

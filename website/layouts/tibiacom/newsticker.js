@@ -16,6 +16,17 @@ function TickerAction(id) {
   }
 }
 
+function headlineBar(id) {
+  var el = document.getElementById(id);
+  if (!el) {
+    return null;
+  }
+  if (el.className.indexOf("NewsHeadlineBackground") !== -1) {
+    return el;
+  }
+  return el.querySelector(".NewsHeadlineBackground");
+}
+
 function OpenNews(id) {
   var idShort = id.concat("-ShortText");
   var idMore = id.concat("-FullText");
@@ -24,6 +35,10 @@ function OpenNews(id) {
   document.getElementById(idMore).style.display = "block";
   document.getElementById(idButton).style.backgroundImage =
     "url('" + IMAGES + "/general/minus.gif')";
+  var bar = headlineBar(id);
+  if (bar && bar.className.indexOf("NewsHeadlineOpen") === -1) {
+    bar.className += " NewsHeadlineOpen";
+  }
 }
 
 function CloseNews(id) {
@@ -34,27 +49,8 @@ function CloseNews(id) {
   document.getElementById(idMore).style.display = "none";
   document.getElementById(idButton).style.backgroundImage =
     "url('" + IMAGES + "/general/plus.gif')";
-}
-
-/** News headline: grow the green bar; title stays inside it. */
-function HeadlineAction(id) {
-  var el = document.getElementById(id);
-  var idButton = id.concat("-Button");
-  var btn = document.getElementById(idButton);
-  if (!el) {
-    return;
-  }
-  if (state[id] != "1") {
-    state[id] = "1";
-    el.className += " NewsHeadlineOpen";
-    if (btn) {
-      btn.style.backgroundImage = "url('" + IMAGES + "/general/minus.gif')";
-    }
-  } else {
-    state[id] = "0";
-    el.className = el.className.replace(/\s*NewsHeadlineOpen\b/g, "");
-    if (btn) {
-      btn.style.backgroundImage = "url('" + IMAGES + "/general/plus.gif')";
-    }
+  var bar = headlineBar(id);
+  if (bar) {
+    bar.className = bar.className.replace(/\s*NewsHeadlineOpen\b/g, "");
   }
 }

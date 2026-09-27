@@ -1805,27 +1805,28 @@ body {
 .Content #latestnews .NewsHeadlineBackground {
   position: relative;
   height: 28px;
-  min-height: 28px;
+  width: 100%;
+  max-width: 100%;
   margin-bottom: 5px;
   background-repeat: repeat-x;
   border-left: 1px solid #000000;
   border-right: 1px solid #000000;
-  cursor: default;
   overflow: hidden;
   box-sizing: border-box;
-}
-
-.Content #News .NewsHeadlineBackground.NewsHeadlineExpandable,
-.Content #latestnews .NewsHeadlineBackground.NewsHeadlineExpandable {
-  cursor: pointer;
 }
 
 .Content #News .NewsHeadlineBackground.NewsHeadlineOpen,
 .Content #latestnews .NewsHeadlineBackground.NewsHeadlineOpen {
   height: auto;
+  min-height: 28px;
   padding-top: 7px;
   padding-bottom: 7px;
   background-repeat: repeat;
+}
+
+.Content #News .NewsHeadlineExpandable,
+.Content #latestnews .NewsHeadlineExpandable {
+  cursor: pointer;
 }
 
 .Content #News .NewsHeadlineIcon,
@@ -1835,6 +1836,7 @@ body {
   left: 0px;
   margin-left: 5px;
   margin-right: 5px;
+  z-index: 1;
 }
 
 .Content #News .NewsHeadlineDate,
@@ -1846,6 +1848,7 @@ body {
   width: 95px;
   color: white;
   line-height: 10px;
+  z-index: 1;
 }
 
 .Content #News .NewsHeadlineExtend,
@@ -1856,33 +1859,43 @@ body {
   height: 12px;
   width: 12px;
   background-repeat: no-repeat;
-  z-index: 10;
+  z-index: 2;
 }
 
 .Content #News .NewsHeadlineText,
 .Content #latestnews .NewsHeadlineText {
-  position: relative;
+  position: absolute;
   top: 7px;
-  margin-left: 150px;
-  margin-right: 24px;
+  left: 150px;
+  right: 10px;
   font-size: 10pt;
   font-weight: bold;
   color: white;
   line-height: 14px;
-  overflow: hidden;
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.Content #News .NewsHeadlineOpen .NewsHeadlineText,
-.Content #latestnews .NewsHeadlineOpen .NewsHeadlineText {
-  top: 0;
+.Content #News .NewsHeadlineExpandable .NewsHeadlineText,
+.Content #latestnews .NewsHeadlineExpandable .NewsHeadlineText {
+  right: 24px;
+}
+
+/* Full title inside the green bar when expanded */
+.Content #News .NewsHeadlineFullText,
+.Content #latestnews .NewsHeadlineFullText {
+  display: none;
+  margin: 0 24px 0 150px;
+  max-width: calc(100% - 174px);
+  font-size: 10pt;
+  font-weight: bold;
+  color: white;
+  line-height: 18px;
   white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  line-height: 18px;
+  box-sizing: border-box;
 }
 
 /* News Archive */
