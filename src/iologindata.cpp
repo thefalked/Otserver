@@ -895,15 +895,14 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 		query << "`blessings` = " << player->blessings << ", ";
 
 	query << "`marriage` = " << player->marriage << ", ";
-	if(g_config.getBool(ConfigManager::INGAME_GUILD_MANAGEMENT))
+	// Only overwrite guild columns when this session has a guild loaded.
+	// If guildId is 0, leave DB rank_id/guildnick alone so website create/join
+	// while the player is online is not wiped by autosave. leaveGuild() clears DB itself.
+	if(g_config.getBool(ConfigManager::INGAME_GUILD_MANAGEMENT) && player->getGuildId() > 0)
 	{
 		query << "`guildnick` = " << db->escapeString(player->guildNick) << ", ";
-		// Prefer in-memory guild membership. If the player has no guild loaded,
-		// keep the existing rankId (may have been set by the website while offline).
-		uint32_t rankIdToSave = player->rankId;
-		if(player->getGuildId() > 0)
-			rankIdToSave = IOGuild::getInstance()->getRankIdByLevel(player->getGuildId(), player->getGuildLevel());
-		query << "`rank_id` = " << rankIdToSave << ", ";
+		query << "`rank_id` = " << IOGuild::getInstance()->getRankIdByLevel(
+			player->getGuildId(), player->getGuildLevel()) << ", ";
 	}
 
 	Vocation* tmpVoc = player->vocation;
@@ -1015,25 +1014,8 @@ bool IOLoginData::savePlayer(Player* player, bool preSave/* = true*/, bool shall
 	if(!query_insert.execute())
 		return false;
 
-	if(g_config.getBool(ConfigManager::INGAME_GUILD_MANAGEMENT))
-	{
-		//save guild invites
-		query.str("");
-		query << "DELETE FROM `guild_invites` WHERE player_id = " << player->getGUID();
-		if(!db->query(query.str()))
-			return false;
-
-		query_insert.setQuery("INSERT INTO `guild_invites` (`player_id`, `guild_id`) VALUES ");
-		for(InvitedToGuildsList::const_iterator it = player->invitedToGuildsList.begin(); it != player->invitedToGuildsList.end(); ++it)
-		{
-			sprintf(buffer, "%d, %d", player->getGUID(), *it);
-			if(!query_insert.addRow(buffer))
-				return false;
-		}
-
-		if(!query_insert.execute())
-			return false;
-	}
+	// Guild invites are written by invite/revoke/join paths, not on every player save.
+	// Rewriting them here wiped website invites while the player was online.
 
 	//save vip list- FIXME: merge it to one config query?
 	query.str("");

@@ -587,13 +587,15 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 				{
 					if(paramPlayer->getGuildId() == 0)
 					{
-						if(!paramPlayer->isGuildInvited(player->getGuildId()))
+						if(!IOGuild::getInstance()->isInvited(player->getGuildId(), paramPlayer->getGUID()))
 						{
+							IOGuild::getInstance()->invitePlayer(player->getGuildId(), paramPlayer->getGUID());
 							sprintf(buffer, "%s has invited you to join the guild, %s. You may join this guild by writing: !joinguild %s", player->getName().c_str(), player->getGuildName().c_str(), player->getGuildName().c_str());
 							paramPlayer->sendTextMessage(MSG_INFO_DESCR, buffer);
 							sprintf(buffer, "%s has invited %s to the guild.", player->getName().c_str(), paramPlayer->getName().c_str());
 							channel->talk(player, SPEAK_CHANNEL_W, buffer);
-							paramPlayer->invitedToGuildsList.push_back(player->getGuildId());
+							if(!paramPlayer->isGuildInvited(player->getGuildId()))
+								paramPlayer->invitedToGuildsList.push_back(player->getGuildId());
 						}
 						else
 							player->sendCancel("A player with that name has already been invited to your guild.");
@@ -667,13 +669,15 @@ bool Chat::talkToChannel(Player* player, SpeakClasses type, const std::string& t
 					if(paramPlayer->getGuildId() == 0)
 					{
 						InvitedToGuildsList::iterator it = std::find(paramPlayer->invitedToGuildsList.begin(),paramPlayer->invitedToGuildsList.end(), player->getGuildId());
-						if(it != paramPlayer->invitedToGuildsList.end())
+						if(IOGuild::getInstance()->isInvited(player->getGuildId(), paramPlayer->getGUID()) || it != paramPlayer->invitedToGuildsList.end())
 						{
+							IOGuild::getInstance()->revokeInvite(player->getGuildId(), paramPlayer->getGUID());
 							sprintf(buffer, "%s has revoked your invite to %s guild.", player->getName().c_str(), (player->getSex(false) ? "his" : "her"));
 							paramPlayer->sendTextMessage(MSG_INFO_DESCR, buffer);
 							sprintf(buffer, "%s has revoked the guildinvite of %s.", player->getName().c_str(), paramPlayer->getName().c_str());
 							channel->talk(player, SPEAK_CHANNEL_W, buffer);
-							paramPlayer->invitedToGuildsList.erase(it);
+							if(it != paramPlayer->invitedToGuildsList.end())
+								paramPlayer->invitedToGuildsList.erase(it);
 							return true;
 						}
 						else

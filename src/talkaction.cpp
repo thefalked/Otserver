@@ -748,7 +748,8 @@ bool TalkAction::guildJoin(Creature* creature, const std::string&, const std::st
 		uint32_t guildId;
 		if(IOGuild::getInstance()->getGuildId(guildId, param_))
 		{
-			if(player->isGuildInvited(guildId))
+			// Trust DB so website invite/revoke while online is honored.
+			if(IOGuild::getInstance()->isInvited(guildId, player->getGUID()))
 			{
 				IOGuild::getInstance()->joinGuild(player, guildId);
 				player->sendTextMessage(MSG_INFO_DESCR, "You have joined the guild.");

@@ -4940,6 +4940,9 @@ void Player::leaveGuild()
 	g_game.updateCreatureEmblem(this);
 
 #endif
+	if(getGUID())
+		IOLoginData::getInstance()->resetGuildInformation(getGUID());
+
 	guildLevel = GUILDLEVEL_NONE;
 	guildId = rankId = 0;
 	guildName = rankName = guildNick = std::string();

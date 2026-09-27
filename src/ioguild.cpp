@@ -240,6 +240,10 @@ bool IOGuild::joinGuild(Player* player, uint32_t guildId, bool creation/* = fals
 
 	player->setGuildLevel(level, rankId);
 	player->invitedToGuildsList.clear();
+
+	query.str("");
+	query << "DELETE FROM `guild_invites` WHERE `player_id` = " << player->getGUID();
+	db->query(query.str());
 	return true;
 }
 

@@ -360,30 +360,92 @@ function delete_player($name)
 }
 
 //delete guild with id
-function delete_guild($id)
+// Returns true on success. On failure sets $error to 'online' or 'missing'.
+function delete_guild($id, &$error = null)
 {
+  $error = null;
   $guild = new OTS_Guild();
   $guild->load($id);
-  if ($guild->isLoaded()) {
-    $rank_list = $guild->getGuildRanksList();
-    if (count($rank_list) > 0) {
-      $rank_list->orderBy('level');
-      foreach ($rank_list as $rank_in_guild) {
-        $players_with_rank = $rank_in_guild->getPlayersList();
-        if (count($players_with_rank) > 0) {
-          foreach ($players_with_rank as $player_in_guild) {
-            $player_in_guild->setRank();
-            $player_in_guild->save();
-          }
-        }
-        $rank_in_guild->delete();
-      }
-    }
-    $guild->delete();
-    return true;
-  } else {
+  if (!$guild->isLoaded()) {
+    $error = 'missing';
     return false;
   }
+  $rank_list = $guild->getGuildRanksList();
+  if (count($rank_list) > 0) {
+    $rank_list->orderBy('level');
+    foreach ($rank_list as $rank_in_guild) {
+      $players_with_rank = $rank_in_guild->getPlayersList();
+      if (count($players_with_rank) > 0) {
+        foreach ($players_with_rank as $player_in_guild) {
+          if ($player_in_guild->isOnline()) {
+            $error = 'online';
+            return false;
+          }
+        }
+      }
+    }
+    foreach ($rank_list as $rank_in_guild) {
+      $players_with_rank = $rank_in_guild->getPlayersList();
+      if (count($players_with_rank) > 0) {
+        foreach ($players_with_rank as $player_in_guild) {
+          save_player_guild_membership($player_in_guild);
+        }
+      }
+      $rank_in_guild->delete();
+    }
+  }
+  $guild->delete();
+  return true;
+}
+
+function delete_guild_error_message($error)
+{
+  if ($error === 'online') {
+    return 'Cannot delete guild while any member is online. Ask members to logout first.';
+  }
+  return 'Guild could not be deleted.';
+}
+
+// Error text when a guild action needs an offline character.
+function guild_online_error($player_name)
+{
+  return (
+    'Character <b>' .
+    htmlspecialchars($player_name) .
+    '</b> is online. Logout from the game before changing guild membership.'
+  );
+}
+
+// Only touch rank_id/guildnick so an online race cannot rewrite XP/skills via full player save.
+function save_player_guild_membership(OTS_Player $player, $rank = null, $guildnick = null)
+{
+  $db = POT::getInstance()->getDBHandle();
+  if ($rank instanceof OTS_GuildRank) {
+    $rank_id = (int) $rank->getId();
+    $player->setRank($rank);
+  } else {
+    $rank_id = 0;
+    $player->setRank();
+    // Match in-game leaveGuild: clear nick when clearing membership.
+    if ($guildnick === null) {
+      $guildnick = '';
+    }
+  }
+  $sets = $db->fieldName('rank_id') . ' = ' . $rank_id;
+  if ($guildnick !== null) {
+    $sets .= ', ' . $db->fieldName('guildnick') . ' = ' . $db->quote($guildnick);
+    $player->setGuildNick($guildnick);
+  }
+  $db->query(
+    'UPDATE ' .
+      $db->tableName('players') .
+      ' SET ' .
+      $sets .
+      ' WHERE ' .
+      $db->fieldName('id') .
+      ' = ' .
+      (int) $player->getId()
+  );
 }
 
 //is it valid nick?

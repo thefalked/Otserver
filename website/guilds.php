@@ -702,8 +702,12 @@ if ($action == 'changerank') {
           }
         }
         if (empty($change_errors)) {
-          $player_to_change->setRank($rank);
-          $player_to_change->save();
+          if ($player_to_change->isOnline()) {
+            $change_errors[] = guild_online_error($player_to_change->getName());
+          }
+        }
+        if (empty($change_errors)) {
+          save_player_guild_membership($player_to_change, $rank);
           $main_content .=
             '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url(' .
             $layout_name .
@@ -1412,6 +1416,9 @@ if ($action == 'kickplayer') {
       $guild_errors[] = 'It\'s not possible to kick guild owner!';
     }
   }
+  if (empty($guild_errors) && $player->isOnline()) {
+    $guild_errors[] = guild_online_error($player->getName());
+  }
   if (!empty($guild_errors)) {
     $main_content .=
       '<div class="SmallBox" >  <div class="MessageContainer" >    <div class="BoxFrameHorizontal" style="background-image:url(' .
@@ -1445,8 +1452,7 @@ if ($action == 'kickplayer') {
       $layout_name .
       '/images/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18></center></TD></TR></FORM></TABLE>';
   } elseif ($_REQUEST['todo'] == 'save') {
-    $player->setRank();
-    $player->save();
+    save_player_guild_membership($player);
     $main_content .=
       '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
       $config['site']['vdarkborder'] .
@@ -1537,14 +1543,23 @@ if ($action == 'leaveguild') {
           $guild_errors[] = 'You can\'t leave guild. You are an owner of guild.';
         }
       }
+      if (empty($guild_errors) && $player->isOnline()) {
+        $guild_errors[] = guild_online_error($player->getName());
+      }
     } else {
       $account_players = $account_logged->getPlayers();
+      $array_of_player_ig = array();
+      $array_of_player_ig_online = array();
       foreach ($account_players as $player_fac) {
         $player_rank = $player_fac->getRank();
         if (!empty($player_rank)) {
           if ($player_rank->getGuild()->getId() == $guild->getId()) {
             if ($guild_owner_id != $player_fac->getId()) {
-              $array_of_player_ig[] = $player_fac->getName();
+              if ($player_fac->isOnline()) {
+                $array_of_player_ig_online[] = $player_fac->getName();
+              } else {
+                $array_of_player_ig[] = $player_fac->getName();
+              }
             }
           }
         }
@@ -1585,8 +1600,7 @@ if ($action == 'leaveguild') {
       '/images/buttons/sbutton_back.gif" BORDER=0 WIDTH=120 HEIGHT=18></center></TD></TR></FORM></TABLE>';
   } else {
     if ($_REQUEST['todo'] == 'save') {
-      $player->setRank();
-      $player->save();
+      save_player_guild_membership($player);
       $main_content .=
         '<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=4 WIDTH=100%><TR BGCOLOR=' .
         $config['site']['vdarkborder'] .
@@ -1612,7 +1626,7 @@ if ($action == 'leaveguild') {
         $main_content .=
           '<TR BGCOLOR=' .
           $config['site']['lightborder'] .
-          '><TD WIDTH=100%>Select character to leave guild:</TD></TR>';
+          '><TD WIDTH=100%>Select character to leave guild. Character must be <b>offline</b>.</TD></TR>';
         $main_content .=
           '<TR BGCOLOR=' .
           $config['site']['darkborder'] .
@@ -1625,9 +1639,29 @@ if ($action == 'leaveguild') {
         sort($array_of_player_ig);
         foreach ($array_of_player_ig as $player_to_leave) {
           $main_content .=
-            '<input type="radio" name="name" value="' . $player_to_leave . '" />' . $player_to_leave . '<br>';
+            '<input type="radio" name="name" value="' .
+            htmlspecialchars($player_to_leave) .
+            '" />' .
+            htmlspecialchars($player_to_leave) .
+            ' <font color="green"><b>(Offline)</b></font><br>';
+        }
+        if (!empty($array_of_player_ig_online)) {
+          sort($array_of_player_ig_online);
+          foreach ($array_of_player_ig_online as $player_online_leave) {
+            $main_content .=
+              '<input type="radio" name="name" value="' .
+              htmlspecialchars($player_online_leave) .
+              '" disabled="disabled" />' .
+              htmlspecialchars($player_online_leave) .
+              ' <font color="red"><b>(Online - logout first)</b></font><br>';
+          }
         }
         $main_content .= '</TD></TR><br></TABLE>';
+      } elseif (!empty($array_of_player_ig_online)) {
+        $main_content .=
+          '<TR BGCOLOR=' .
+          $config['site']['lightborder'] .
+          '><TD WIDTH=100%>All characters that can leave this guild are online. Logout first, then refresh this page.</TD></TR>';
       } else {
         $main_content .=
           '<TR BGCOLOR=' .
@@ -1672,7 +1706,9 @@ if ($action == 'createguild') {
       if (empty($player_rank)) {
         if ($player->getLevel() >= $config['site']['guild_need_level']) {
           if (!$config['site']['guild_need_pacc'] || $account_logged->isPremium()) {
-            $array_of_player_nig[] = $player->getName();
+            if (!$player->isOnline()) {
+              $array_of_player_nig[] = $player->getName();
+            }
           }
         }
       }
@@ -1681,7 +1717,8 @@ if ($action == 'createguild') {
 
   if (empty($todo)) {
     if (count($array_of_player_nig) == 0) {
-      $guild_errors[] = 'On your account all characters are in guilds or have too low level to create new guild.';
+      $guild_errors[] =
+        'On your account all characters are in guilds, online, or have too low level to create new guild. Logout the leader character first.';
     }
   }
   if ($todo == 'save') {
@@ -1719,6 +1756,9 @@ if ($action == 'createguild') {
       }
     }
     if (empty($guild_errors)) {
+      if ($player->isOnline()) {
+        $guild_errors[] = guild_online_error($player->getName());
+      }
       if ($player->getLevel() < $config['site']['guild_need_level']) {
         $guild_errors[] =
           'Character <b>' .
@@ -1775,8 +1815,7 @@ if ($action == 'createguild') {
     $ranks->orderBy('level', POT::ORDER_DESC);
     foreach ($ranks as $rank) {
       if ($rank->getLevel() == 3) {
-        $player->setRank($rank);
-        $player->save();
+        save_player_guild_membership($player, $rank);
       }
     }
     $main_content .=
@@ -2300,6 +2339,14 @@ if ($action == 'deleterank') {
               $players_with_rank = $rank->getPlayersList();
               $players_with_rank_number = count($players_with_rank);
               if ($players_with_rank_number > 0) {
+                foreach ($players_with_rank as $player_online_check) {
+                  if ($player_online_check->isOnline()) {
+                    $guild_errors2[] = guild_online_error($player_online_check->getName());
+                    break;
+                  }
+                }
+              }
+              if (empty($guild_errors2) && $players_with_rank_number > 0) {
                 foreach ($rank_list as $checkrank) {
                   if ($checkrank->getId() != $rank->getId()) {
                     if ($checkrank->getLevel() <= $rank->getLevel()) {
@@ -2315,12 +2362,13 @@ if ($action == 'deleterank') {
                   $new_rank->save();
                 }
                 foreach ($players_with_rank as $player_in_guild) {
-                  $player_in_guild->setRank($new_rank);
-                  $player_in_guild->save();
+                  save_player_guild_membership($player_in_guild, $new_rank);
                 }
               }
-              $rank->delete();
-              $saved = true;
+              if (empty($guild_errors2)) {
+                $rank->delete();
+                $saved = true;
+              }
             }
           }
         }
@@ -2705,6 +2753,15 @@ if ($action == 'passleadership') {
             $guild_errors2[] = 'Player with name <b>' . $to_player->getName() . '</b> isn\'t from your guild.';
           }
         }
+        if (empty($guild_errors2) && $to_player->isOnline()) {
+          $guild_errors2[] = guild_online_error($to_player->getName());
+        }
+        if (empty($guild_errors2)) {
+          $old_owner = $guild->getOwner();
+          if ($old_owner->isLoaded() && $old_owner->isOnline()) {
+            $guild_errors2[] = guild_online_error($old_owner->getName());
+          }
+        }
       }
     }
   }
@@ -2722,8 +2779,44 @@ if ($action == 'passleadership') {
       }
       if ($guild_leader) {
         if ($_POST['todo'] == 'save') {
+          // New owner takes Leader. Old owner takes the new owner's previous rank (swap).
+          // Fallback: Vice, then Member, then create Vice-Leader if ranks were deleted.
+          $leader_rank = null;
+          $demote_rank = null;
+          if (!empty($to_player_rank) && $to_player_rank->isLoaded() && $to_player_rank->getLevel() < 3) {
+            $demote_rank = $to_player_rank;
+          }
+          foreach ($guild->getGuildRanksList() as $guild_rank) {
+            if ($guild_rank->getLevel() == 3) {
+              $leader_rank = $guild_rank;
+            }
+            if ($demote_rank === null && $guild_rank->getLevel() == 2) {
+              $demote_rank = $guild_rank;
+            }
+          }
+          if ($demote_rank === null) {
+            foreach ($guild->getGuildRanksList() as $guild_rank) {
+              if ($guild_rank->getLevel() == 1) {
+                $demote_rank = $guild_rank;
+                break;
+              }
+            }
+          }
+          if ($demote_rank === null) {
+            $demote_rank = new OTS_GuildRank();
+            $demote_rank->setGuild($guild);
+            $demote_rank->setLevel(2);
+            $demote_rank->setName('Vice-Leader');
+            $demote_rank->save();
+          }
           $guild->setOwner($to_player);
           $guild->save();
+          if ($leader_rank) {
+            save_player_guild_membership($to_player, $leader_rank);
+          }
+          if ($guild_leader_char->isLoaded()) {
+            save_player_guild_membership($guild_leader_char, $demote_rank);
+          }
           $saved = true;
           $main_content .=
             '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url(' .
@@ -2914,8 +3007,12 @@ if ($action == 'deleteguild') {
       }
       if ($guild_leader) {
         if (isset($_POST['todo']) && $_POST['todo'] == 'save') {
-          delete_guild($guild->getId());
-          $saved = true;
+          $delete_error = null;
+          if (!delete_guild($guild->getId(), $delete_error)) {
+            $guild_errors[] = delete_guild_error_message($delete_error);
+          } else {
+            $saved = true;
+          }
         }
         if (!empty($saved)) {
           $main_content .=
@@ -2948,7 +3045,7 @@ if ($action == 'deleteguild') {
             '/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="' .
             $layout_name .
             '/images/buttons/_sbutton_back.gif" ></div></div></form></center>';
-        } else {
+        } elseif (empty($guild_errors)) {
           $main_content .=
             '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url(' .
             $layout_name .
@@ -3054,35 +3151,39 @@ if ($action == 'deletebyadmin') {
     if ($logged) {
       if ($group_id_of_acc_logged >= $config['site']['access_admin_panel']) {
         if (isset($_POST['todo']) && $_POST['todo'] == 'save') {
-          delete_guild($guild->getId());
-          $main_content .=
-            '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightTop" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionBorderTop" style="background-image:url(' .
-            $layout_name .
-            '/images/content/table-headline-border.gif);" ></span>        <span class="CaptionVerticalLeft" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-vertical.gif);" /></span>        <div class="Text" >Guild Deleted</div>        <span class="CaptionVerticalRight" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-vertical.gif);" /></span>        <span class="CaptionBorderBottom" style="background-image:url(' .
-            $layout_name .
-            '/images/content/table-headline-border.gif);" ></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' .
-            $layout_name .
-            '/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td>Guild with name <b>' .
-            htmlspecialchars($guild_display_name) .
-            '</b> has been deleted.</td></tr>          </table>        </div>  </table></div></td></tr><br/><center><form action="?subtopic=guilds" METHOD=post>' .
-            csrf_field() .
-            '<div class="BigButton" style="background-image:url(' .
-            $layout_name .
-            '/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url(' .
-            $layout_name .
-            '/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="' .
-            $layout_name .
-            '/images/buttons/_sbutton_back.gif" ></div></div></form></center>';
+          $delete_error = null;
+          if (!delete_guild($guild->getId(), $delete_error)) {
+            $guild_errors[] = delete_guild_error_message($delete_error);
+          } else {
+            $main_content .=
+              '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url(' .
+              $layout_name .
+              '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightTop" style="background-image:url(' .
+              $layout_name .
+              '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionBorderTop" style="background-image:url(' .
+              $layout_name .
+              '/images/content/table-headline-border.gif);" ></span>        <span class="CaptionVerticalLeft" style="background-image:url(' .
+              $layout_name .
+              '/images/content/box-frame-vertical.gif);" /></span>        <div class="Text" >Guild Deleted</div>        <span class="CaptionVerticalRight" style="background-image:url(' .
+              $layout_name .
+              '/images/content/box-frame-vertical.gif);" /></span>        <span class="CaptionBorderBottom" style="background-image:url(' .
+              $layout_name .
+              '/images/content/table-headline-border.gif);" ></span>        <span class="CaptionEdgeLeftBottom" style="background-image:url(' .
+              $layout_name .
+              '/images/content/box-frame-edge.gif);" /></span>        <span class="CaptionEdgeRightBottom" style="background-image:url(' .
+              $layout_name .
+              '/images/content/box-frame-edge.gif);" /></span>      </div>    </div>    <tr>      <td>        <div class="InnerTableContainer" >          <table style="width:100%;" ><tr><td>Guild with name <b>' .
+              htmlspecialchars($guild_display_name) .
+              '</b> has been deleted.</td></tr>          </table>        </div>  </table></div></td></tr><br/><center><form action="?subtopic=guilds" METHOD=post>' .
+              csrf_field() .
+              '<div class="BigButton" style="background-image:url(' .
+              $layout_name .
+              '/images/buttons/sbutton.gif)" ><div onMouseOver="MouseOverBigButton(this);" onMouseOut="MouseOutBigButton(this);" ><div class="BigButtonOver" style="background-image:url(' .
+              $layout_name .
+              '/images/buttons/sbutton_over.gif);" ></div><input class="ButtonText" type="image" name="Back" alt="Back" src="' .
+              $layout_name .
+              '/images/buttons/_sbutton_back.gif" ></div></div></form></center>';
+          }
         } else {
           $main_content .=
             '<div class="TableContainer" >  <table class="Table1" cellpadding="0" cellspacing="0" >    <div class="CaptionContainer" >      <div class="CaptionInnerContainer" >        <span class="CaptionEdgeLeftTop" style="background-image:url(' .
@@ -3513,15 +3614,23 @@ if ($action == 'change_nick') {
             }
           }
           if ($player_from_account) {
-            $player->setGuildNick($new_nick);
-            $player->save();
-            $main_content .=
-              'Guild nick of player <b>' .
-              $player->getName() .
-              '</b> changed to <b>' .
-              htmlentities($new_nick) .
-              '</b>.';
-            $addtolink = '&action=show&guild=' . $player->getRank()->getGuild()->getId();
+            if ($player->isOnline()) {
+              $main_content .= guild_online_error($player->getName());
+            } else {
+              $current_rank = $player->getRank();
+              if ($current_rank === null || !$current_rank->isLoaded()) {
+                $main_content .= 'This player is not in a guild.';
+              } else {
+                save_player_guild_membership($player, $current_rank, $new_nick);
+                $main_content .=
+                  'Guild nick of player <b>' .
+                  $player->getName() .
+                  '</b> changed to <b>' .
+                  htmlentities($new_nick) .
+                  '</b>.';
+                $addtolink = '&action=show&guild=' . $current_rank->getGuild()->getId();
+              }
+            }
           } else {
             $main_content .= 'This player is not from your account.';
           }
