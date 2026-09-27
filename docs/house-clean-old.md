@@ -50,7 +50,7 @@ Flow:
 3. Skip owners who are online.
 4. Call `doCleanHouse(houseId)` while the owner is still set (moves pickupable items to depot).
 5. Call `setHouseOwner(houseId, 0, false)` to clear the owner without cleaning again.
-6. If any house was cleared, run `doSaveServer(true)` so house tiles are written and loot cannot come back after a restart.
+6. If any house was cleared, run `doSaveServer()` so house tiles are written and loot cannot come back after a restart.
 
 Console log when any house is cleared: `> Cleared N inactive house(s).`
 
@@ -60,7 +60,7 @@ God command: `/cleanhouses` → `server/data/talkactions/scripts/cleanhouses.lua
 
 Access: same as `/owner` (`access="5"`).
 
-Runs a scan or cleanup on free houses (`owner = 0`). Leftover pickupable items are removed on confirm (no owner to receive a depot transfer). Use once to clear houses left dirty by the old clear-owner-first bug.
+Runs a scan or cleanup on free houses (`owner = 0`). Leftover pickupable items are removed on confirm (no owner to receive a depot transfer). Use once to clear houses left dirty by the old clear-owner-first bug. Strips in Lua (does not need `doCleanHouse`). Engine `doCleanHouse` still needs a rebuild for owned-house reclaim/auto-clean when `townid="0"` (depot needs a town; free/unloadable-owner delete does not).
 
 Usage:
 

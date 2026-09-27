@@ -9581,10 +9581,7 @@ int32_t LuaInterface::luaDoCleanHouse(lua_State* L)
 	//doCleanHouse(houseId)
 	uint32_t houseId = popNumber(L);
 	if(House* house = Houses::getInstance()->getHouse(houseId))
-	{
-		house->clean();
-		lua_pushboolean(L, true);
-	}
+		lua_pushboolean(L, house->clean());
 	else
 		lua_pushboolean(L, false);
 

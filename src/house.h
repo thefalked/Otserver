@@ -216,7 +216,7 @@ class House
 
 		bool kickPlayer(Player* player, Player* target);
 		void updateDoorDescription(std::string _name = "");
-		void clean();
+		bool clean();
 
 		void addDoor(Door* door);
 		void removeDoor(Door* door);

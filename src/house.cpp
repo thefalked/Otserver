@@ -222,7 +222,7 @@ bool House::kickPlayer(Player* player, Player* target)
 	return true;
 }
 
-void House::clean()
+bool House::clean()
 {
 	for(HouseBedList::iterator bit = bedsList.begin(); bit != bedsList.end(); ++bit)
 	{
@@ -231,14 +231,11 @@ void House::clean()
 	}
 
 	removePlayers(true);
-	transferToDepot();
+	return transferToDepot();
 }
 
 bool House::transferToDepot()
 {
-	if(!townId)
-		return false;
-
 	Player* player = NULL;
 	if(owner)
 	{
@@ -249,6 +246,10 @@ bool House::transferToDepot()
 		if(tmp)
 			player = g_game.getPlayerByGuidEx(tmp);
 	}
+
+	// Depot transfer needs a town. Free / unloadable-owner delete does not.
+	if(player && !townId)
+		return false;
 
 	Item* item = NULL;
 	Container* tmpContainer = NULL;
@@ -265,8 +266,8 @@ bool House::transferToDepot()
 				moveList.push_back(item);
 			else if((tmpContainer = item->getContainer()))
 			{
-				for(ItemList::const_iterator it = tmpContainer->getItems(); it != tmpContainer->getEnd(); ++it)
-					moveList.push_back(*it);
+				for(ItemList::const_iterator cit = tmpContainer->getItems(); cit != tmpContainer->getEnd(); ++cit)
+					moveList.push_back(*cit);
 			}
 		}
 	}
@@ -274,8 +275,8 @@ bool House::transferToDepot()
 	if(player)
 	{
 		Depot* depot = player->getDepot(townId, true);
-		for(ItemList::iterator it = moveList.begin(); it != moveList.end(); ++it)
-			g_game.internalMoveItem(NULL, (*it)->getParent(), depot, INDEX_WHEREEVER, (*it), (*it)->getItemCount(), NULL, FLAG_NOLIMIT);
+		for(ItemList::iterator mit = moveList.begin(); mit != moveList.end(); ++mit)
+			g_game.internalMoveItem(NULL, (*mit)->getParent(), depot, INDEX_WHEREEVER, (*mit), (*mit)->getItemCount(), NULL, FLAG_NOLIMIT);
 
 		if(player->isVirtual())
 		{
@@ -285,8 +286,8 @@ bool House::transferToDepot()
 	}
 	else
 	{
-		for(ItemList::iterator it = moveList.begin(); it != moveList.end(); ++it)
-			g_game.internalRemoveItem(NULL, (*it), (*it)->getItemCount(), false, FLAG_NOLIMIT);
+		for(ItemList::iterator mit = moveList.begin(); mit != moveList.end(); ++mit)
+			g_game.internalRemoveItem(NULL, (*mit), (*mit)->getItemCount(), false, FLAG_NOLIMIT);
 	}
 
 	return true;

@@ -47,7 +47,7 @@ local function cleanInactiveHouses()
   end
 
   if cleared > 0 or cleanedUnowned > 0 then
-    doSaveServer(true)
+    doSaveServer()
   end
   if cleared > 0 then
     print("> Cleared " .. cleared .. " inactive house(s).")

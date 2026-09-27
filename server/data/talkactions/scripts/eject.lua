@@ -72,7 +72,7 @@ function onSay(cid, words, param)
   end
 
   local cleared = setHouseOwner(houseId, 0, false)
-  doSaveServer(true)
+  doSaveServer()
   if cleared then
     doPlayerSendTextMessage(cid, 27, "A Casa agora esta sem dono, voc\234 ou outro jogador pode compra-la")
   else
