@@ -17,7 +17,6 @@ function TickerAction(id) {
 }
 
 function OpenNews(id) {
-  var div = document.getElementById(id);
   var idShort = id.concat("-ShortText");
   var idMore = id.concat("-FullText");
   var idButton = id.concat("-Button");
@@ -28,7 +27,6 @@ function OpenNews(id) {
 }
 
 function CloseNews(id) {
-  var div = document.getElementById(id);
   var idShort = id.concat("-ShortText");
   var idMore = id.concat("-FullText");
   var idButton = id.concat("-Button");
@@ -36,4 +34,27 @@ function CloseNews(id) {
   document.getElementById(idMore).style.display = "none";
   document.getElementById(idButton).style.backgroundImage =
     "url('" + IMAGES + "/general/plus.gif')";
+}
+
+/** News headline: grow the green bar; title stays inside it. */
+function HeadlineAction(id) {
+  var el = document.getElementById(id);
+  var idButton = id.concat("-Button");
+  var btn = document.getElementById(idButton);
+  if (!el) {
+    return;
+  }
+  if (state[id] != "1") {
+    state[id] = "1";
+    el.className += " NewsHeadlineOpen";
+    if (btn) {
+      btn.style.backgroundImage = "url('" + IMAGES + "/general/minus.gif')";
+    }
+  } else {
+    state[id] = "0";
+    el.className = el.className.replace(/\s*NewsHeadlineOpen\b/g, "");
+    if (btn) {
+      btn.style.backgroundImage = "url('" + IMAGES + "/general/plus.gif')";
+    }
+  }
 }

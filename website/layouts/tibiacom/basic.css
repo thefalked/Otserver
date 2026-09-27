@@ -1804,19 +1804,28 @@ body {
 .Content #News .NewsHeadlineBackground,
 .Content #latestnews .NewsHeadlineBackground {
   position: relative;
+  height: 28px;
   min-height: 28px;
-  height: auto;
   margin-bottom: 5px;
-  padding-bottom: 4px;
-  background-repeat: repeat;
+  background-repeat: repeat-x;
   border-left: 1px solid #000000;
   border-right: 1px solid #000000;
   cursor: default;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .Content #News .NewsHeadlineBackground.NewsHeadlineExpandable,
 .Content #latestnews .NewsHeadlineBackground.NewsHeadlineExpandable {
   cursor: pointer;
+}
+
+.Content #News .NewsHeadlineBackground.NewsHeadlineOpen,
+.Content #latestnews .NewsHeadlineBackground.NewsHeadlineOpen {
+  height: auto;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  background-repeat: repeat;
 }
 
 .Content #News .NewsHeadlineIcon,
@@ -1860,21 +1869,20 @@ body {
   font-weight: bold;
   color: white;
   line-height: 14px;
-}
-
-.Content #News .NewsHeadlineShortText,
-.Content #latestnews .NewsHeadlineShortText {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.Content #News .NewsHeadlineFullText,
-.Content #latestnews .NewsHeadlineFullText {
-  display: none;
+.Content #News .NewsHeadlineOpen .NewsHeadlineText,
+.Content #latestnews .NewsHeadlineOpen .NewsHeadlineText {
+  top: 0;
   white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  line-height: 18px;
 }
 
 /* News Archive */

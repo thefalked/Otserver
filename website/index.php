@@ -92,17 +92,15 @@ if (!$logged && $login_account !== '' && $login_password !== '') {
 }
 
 //#### LOAD PAGE ##########
-// Canonical homepage is "/". Redirect explicit latestnews query to avoid duplicates.
+// Canonical homepage is "/". Redirect bare latestnews GET to "/" (same host).
 if (
   isset($_GET['subtopic']) &&
   (string) $_GET['subtopic'] === 'latestnews' &&
-  strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'GET'
+  strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'GET' &&
+  !isset($_GET['action'])
 ) {
-  $seo_redirect_base = rtrim((string) ($config['site']['site_url'] ?? ''), '/');
-  if ($seo_redirect_base !== '') {
-    header('Location: ' . $seo_redirect_base . '/', true, 301);
-    exit;
-  }
+  header('Location: /', true, 301);
+  exit;
 }
 if (empty($_REQUEST['subtopic'])) {
   $_REQUEST['subtopic'] = 'latestnews';

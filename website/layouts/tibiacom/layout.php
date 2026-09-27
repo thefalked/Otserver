@@ -242,7 +242,7 @@ if ($seo_subtopic === 'latestnews') {
   <link rel="icon" href="<?php echo h($seo_site_url); ?>/images/server.ico" type="image/x-icon" />
   <link rel="apple-touch-icon" href="<?php echo h($seo_site_url); ?>/images/apple-touch-icon.png" sizes="180x180" />
   <?php echo $layout_header; ?>
-  <link href="<?php echo $layout_name; ?>/basic.css?v=5" rel="stylesheet" type="text/css">
+  <link href="<?php echo $layout_name; ?>/basic.css?v=14" rel="stylesheet" type="text/css">
   <script type="text/javascript">
     var IMAGES = 0;
     IMAGES = '<?php echo $layout_name; ?>/images';
@@ -1075,7 +1075,7 @@ if ($seo_subtopic === 'latestnews') {
         <div id="ContentColumn">
           <div class="Content">
             <div id="ContentHelper">
-              <script type="text/javascript" src="<?php echo $layout_name; ?>/newsticker.js"></script>
+              <script type="text/javascript" src="<?php echo $layout_name; ?>/newsticker.js?v=6"></script>
               <?php echo $news_content; ?>
               <div id="<?php echo $subtopic; ?>" class="Box">
                 <div class="Corner-tl"

@@ -597,18 +597,17 @@ foreach ($zapytanie as $row) {
   );
   // Same smileys as forum (images/smile/*.gif). post_smile=1 disables them.
   $message = replaceSmile($message, (int) ($row['post_smile'] ?? 0));
-  // Match tibia CSS: absolute icon + NewsHeadlineDate/Text (needs #News or #latestnews).
-  // Long topics use ticker-style short preview + expand (+), same JS as Notícias rápidas.
+  // Long topics: one title in the green bar. Expand toggles wrap and grows the bar.
   if (!isset($news_headline_n)) {
     $news_headline_n = 0;
   }
   $topicFull = h($row['post_topic']);
-  $topicExpandable = strlen($row['post_topic']) > 55;
+  $topicExpandable = strlen($row['post_topic']) > 60;
   $headlineId = 'NewsHeadline-' . $news_headline_n;
   $news_headline_n++;
   $headlineBgClass = 'NewsHeadlineBackground' . ($topicExpandable ? ' NewsHeadlineExpandable' : '');
   $headlineOnclick = $topicExpandable
-    ? ' onclick="TickerAction(\'' . $headlineId . '\')"'
+    ? ' onclick="HeadlineAction(\'' . $headlineId . '\')"'
     : '';
   $main_content .=
     '<div class=\'NewsHeadline\'>
@@ -635,24 +634,13 @@ foreach ($zapytanie as $row) {
       $headlineId .
       '-Button\' class=\'NewsHeadlineExtend\' style=\'background-image:url(' .
       $layout_name .
-      '/images/general/plus.gif)\'></div>
-		<div class=\'NewsHeadlineText\'>
-		<div id=\'' .
-      $headlineId .
-      '-ShortText\' class=\'NewsHeadlineShortText\'>' .
-      short_text($topicFull, 55) .
-      '</div>
-		<div id=\'' .
-      $headlineId .
-      '-FullText\' class=\'NewsHeadlineFullText\'>' .
-      $topicFull .
-      '</div>
-		</div>';
-  } else {
-    $main_content .= '<div class=\'NewsHeadlineText\'>' . $topicFull . '</div>';
+      '/images/general/plus.gif)\'></div>';
   }
   $main_content .=
+    '<div class=\'NewsHeadlineText\'>' .
+    $topicFull .
     '</div>
+		</div>
 		</div>
 		<table style=\'clear:both\' border=0 cellpadding=0 cellspacing=0 width=\'100%\'><tr>
 		<td><img src="' .
