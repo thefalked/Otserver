@@ -2,13 +2,17 @@ local config = {
   playerCount = 2001, -- Global storage for counting the players left/entered in the event
   zombieCount = 2002, -- Global storage for counting the zombies in the event
   teleportActionId = 2000, -- Action id of the teleport needed for the movement script
-  teleportPosition = { x = 156, y = 48, z = 7, stackpos = 1 }, -- Where the teleport will be created
+  teleportPosition = { x = 151, y = 54, z = 7 }, -- Where the teleport will be created
   teleportToPosition = { x = 56, y = 525, z = 7 }, -- Where the teleport will take you
   teleportId = 1387, -- Id of the teleport
   timeToStartEvent = 2, -- Minutes, after these minutes the teleport will be removed and the event will be declared started
   timeBetweenSpawns = 20, -- Seconds between each spawn of zombie
   zombieName = "Event Zombie", -- Must match monsters.xml name
   playersNeededToStartEvent = 4,
+  tpOpenStorage = 2003,
+  labelTokenStorage = 2004, -- bumps each open so old text loops die
+  labelInterval = 1500,
+  labelText = "Zombie Event",
 
   -- Should be the same as in the creaturescript!
   -- The zombies will spawn randomly inside this area
@@ -16,8 +20,50 @@ local config = {
   toPosition = { x = 70, y = 539, z = 7 }, -- bottom right cornor of the playground
 }
 
+local function getZombieTeleport()
+  return getTileItemById(config.teleportPosition, config.teleportId)
+end
+
+local function removeZombieTeleport()
+  local tp = getZombieTeleport()
+  if tp and tp.uid and tp.uid > 0 then
+    doRemoveItem(tp.uid)
+  end
+  setGlobalStorageValue(config.tpOpenStorage, 0)
+end
+
+function showZombieTpLabel(token)
+  if getGlobalStorageValue(config.labelTokenStorage) ~= token then
+    return
+  end
+  if getGlobalStorageValue(config.tpOpenStorage) ~= 1 then
+    return
+  end
+  local tp = getZombieTeleport()
+  if not tp or not tp.uid or tp.uid <= 0 then
+    setGlobalStorageValue(config.tpOpenStorage, 0)
+    return
+  end
+  doSendAnimatedText(config.teleportPosition, config.labelText, math.random(1, 255))
+  addEvent(showZombieTpLabel, config.labelInterval, token)
+end
+
 function onTime()
+  removeZombieTeleport()
+
   local tp = doCreateTeleport(config.teleportId, config.teleportToPosition, config.teleportPosition)
+  if not tp or tp == false then
+    print(
+      "[Zombie] Failed to create teleport at "
+        .. config.teleportPosition.x
+        .. ","
+        .. config.teleportPosition.y
+        .. ","
+        .. config.teleportPosition.z
+    )
+    return true
+  end
+
   doItemSetAttribute(tp, "aid", config.teleportActionId)
   doBroadcastMessage(
     "Zombie event starting in "
@@ -27,16 +73,22 @@ function onTime()
   )
   setGlobalStorageValue(config.playerCount, 0)
   setGlobalStorageValue(config.zombieCount, 0)
+  setGlobalStorageValue(config.tpOpenStorage, 1)
+
+  local token = getGlobalStorageValue(config.labelTokenStorage)
+  if not token or token < 0 then
+    token = 0
+  end
+  token = token + 1
+  setGlobalStorageValue(config.labelTokenStorage, token)
+  showZombieTpLabel(token)
+
   addEvent(startEvent, config.timeToStartEvent * 1000 * 60)
-  print(getGlobalStorageValue(2001))
   return true
 end
 
 function startEvent()
-  local get = getThingfromPos(config.teleportPosition)
-  if get.itemid == config.teleportId then
-    doRemoveItem(get.uid, 1)
-  end
+  removeZombieTeleport()
 
   local fromp, top = config.fromPosition, config.toPosition
 

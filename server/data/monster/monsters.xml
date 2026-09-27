@@ -1,4 +1,4 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <monsters>
   <!--8.54-->
   <monster name="Event Zombie" file="event_zombie.xml" />
@@ -62,7 +62,8 @@
   <monster name="Undead gladiator" file="8.4/undead_gladiator.xml" />
   <monster name="The Incendier" file="custom/the_incendier.xml" />
 
-  <!--10th anniversary-->
+  <!--10th
+  anniversary-->
   <monster name="Bones" file="10th_anniversary/bones.xml" />
   <monster name="Fluffy" file="10th_anniversary/fluffy.xml" />
   <monster name="Grynch Clan Goblin" file="10th_anniversary/grynch_clan_goblin.xml" />
@@ -446,7 +447,8 @@
   <monster name="Pirate Cutthroat" file="pirates/pirate_cutthroat.xml" />
   <monster name="Pirate Marauder" file="pirates/pirate_marauder.xml" />
 
-  <!--Poi Bosses-->
+  <!--Poi
+  Bosses-->
   <monster name="The plasmother" file="poi_bosses/the_plasmother.xml" />
   <monster name="Dracola" file="poi_bosses/dracola.xml" />
   <monster name="The Handmaiden" file="poi_bosses/the_handmaiden.xml" />
