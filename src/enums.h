@@ -18,7 +18,10 @@
 #ifndef __ENUMS__
 #define __ENUMS__
 
+#include "definitions.h"
+
 #include <string>
+#include <cstring>
 #include <list>
 
 enum DatabaseEngine_t
