@@ -33,6 +33,9 @@
 #define VERSION_BUILD 0
 #define VERSION_DATABASE 27
 
+// Guild wars: enemy tracking, frag scoring, client guild emblems (green/red/blue)
+#define __WAR_SYSTEM__
+
 #undef MULTI_SQL_DRIVERS
 #define SQL_DRIVERS __USE_SQLITE__+__USE_MYSQL__+__USE_PGSQL__
 

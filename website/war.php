@@ -20,6 +20,8 @@ tmp.style.display = tmp.style.display == 'none' ? '' : 'none';
 
 <tr style=\"background: #D4C0A1;\"><td><b>/war reject, nome da guild</b></td><td>Rejeita o Convite para iniciar a War Exemplo: <font color=red><BR>/war reject, Chickens</font><BR><B>(Rejeita o Convite de Chickens.)</B></td></tr>
 <tr style=\"background: #F1E0C6;\"><td><b>/war cancel, nome da guild</b></td><td>Cancela o Convite. Exemplo: <font color=red><BR>/war cancel, Chickens</font><br><b>(Cancela o Convite da Sua guilda contra Chickens.)</b></td></tr>
+<tr style=\"background: #D4C0A1;\"><td><b>/war end, nome da guild</b></td><td>Pede o fim da guerra ativa (armistício). A outra guilda precisa confirmar com <b>/war finish</b>. Exemplo: <font color=red><BR>/war end, Chickens</font><BR><B>(Assina o armistício contra Chickens.)</B></td></tr>
+<tr style=\"background: #F1E0C6;\"><td><b>/war finish, nome da guild</b></td><td>Confirma o fim da guerra após o armistício, ou encerra a guerra que a sua guilda iniciou. Exemplo: <font color=red><BR>/war finish, Chickens</font><BR><B>(Finaliza a war contra Chickens.)</B></td></tr>
 <tr style=\"background: #D4C0A1;\"><td><b>/balance</b></td><td><B>Mostra o Dinheiro da Guild<B></td></tr>
 <tr style=\"background: #F1E0C6;\"><td><b>/balance donate value</b></td><td>Deposita o dinheiro na conta do banco da guilda. Todos os players podem doar. Exemplo: <font color=red><BR>/balance donate 100000 </font><BR><B>(Você doou 100k para o banco da guilda.)</B></td></tr>
 <tr style=\"background: #D4C0A1;\"><td><b>/balance pick value</b></td><td>Retira o dinheiro da conta da guilda. Somente o líder pode usar o comando. Exemplo: <font color=red><BR>/balance pick 100000 </font><BR><B>(Você pegou 100k do banco da guilda.)</B></td></tr>
