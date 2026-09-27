@@ -240,6 +240,10 @@ bool IOGuild::joinGuild(Player* player, uint32_t guildId, bool creation/* = fals
 
 	player->setGuildLevel(level, rankId);
 	player->invitedToGuildsList.clear();
+#ifdef __WAR_SYSTEM__
+	loadEnemyMap(player);
+#endif
+	g_game.updateGuildEmblems(player);
 
 	query.str("");
 	query << "DELETE FROM `guild_invites` WHERE `player_id` = " << player->getGUID();
@@ -407,6 +411,41 @@ std::string IOGuild::getMotd(uint32_t guild)
 	return motd;
 }
 #ifdef __WAR_SYSTEM__
+
+void IOGuild::loadEnemyMap(Player* player)
+{
+	if(!player || !player->getGuildId())
+		return;
+
+	Database* db = Database::getInstance();
+	DBResult* result;
+
+	DBQuery query;
+	query << "SELECT `id`, `guild_id`, `enemy_id` FROM `guild_wars` WHERE (`guild_id` = "
+		<< player->getGuildId() << " OR `enemy_id` = " << player->getGuildId() << ") AND `status` IN (1,4)";
+	if(!(result = db->storeQuery(query.str())))
+		return;
+
+	War_t war;
+	do
+	{
+		uint32_t guild = result->getDataInt("guild_id");
+		if(player->getGuildId() == guild)
+		{
+			war.type = WAR_ENEMY;
+			war.war = result->getDataInt("id");
+			player->addEnemy(result->getDataInt("enemy_id"), war);
+		}
+		else
+		{
+			war.type = WAR_GUILD;
+			war.war = result->getDataInt("id");
+			player->addEnemy(guild, war);
+		}
+	}
+	while(result->next());
+	result->free();
+}
 
 void IOGuild::checkWars()
 {

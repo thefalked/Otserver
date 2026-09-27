@@ -543,32 +543,7 @@ bool IOLoginData::loadPlayer(Player* player, const std::string& name, bool preLo
 			player->guildNick = nick;
 			result->free();
 #ifdef __WAR_SYSTEM__
-
-			query.str("");
-			query << "SELECT `id`, `guild_id`, `enemy_id` FROM `guild_wars` WHERE (`guild_id` = "
-				<< player->guildId << " OR `enemy_id` = " << player->guildId << ") AND `status` IN (1,4)";
-			if((result = db->storeQuery(query.str())))
-			{
-				War_t war;
-				do
-				{
-					uint32_t guild = result->getDataInt("guild_id");
-					if(player->guildId == guild)
-					{
-						war.type = WAR_ENEMY;
-						war.war = result->getDataInt("id");
-						player->addEnemy(result->getDataInt("enemy_id"), war);
-					}
-					else
-					{
-						war.type = WAR_GUILD;
-						war.war = result->getDataInt("id");
-						player->addEnemy(guild, war);
-					}
-				}
-				while(result->next());
-				result->free();
-			}
+			IOGuild::getInstance()->loadEnemyMap(player);
 #endif
 		}
 	}

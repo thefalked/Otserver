@@ -70,6 +70,7 @@ class IOGuild
 		bool updateOwnerId(uint32_t guild, uint32_t guid);
 #ifdef __WAR_SYSTEM__
 
+		void loadEnemyMap(Player* player);
 		void checkWars();
 		bool updateWar(War_t& enemy);
 		void finishWar(War_t enemy, bool finished);

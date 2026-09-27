@@ -1387,8 +1387,12 @@ bool MagicField::isBlocking(const Creature* creature) const
 	if(!ownerId)
 		return false;
 
+	// Emblems always show for guild members now. Field pass-through stays war-only.
 	if(Creature* owner = g_game.getCreatureByID(ownerId))
-		return creature->getPlayer()->getGuildEmblem(owner) != EMBLEM_NONE;
+	{
+		if(const Player* ownerPlayer = owner->getPlayer())
+			return ownerPlayer->hasEnemy();
+	}
 #endif
 
 	return false;

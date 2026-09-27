@@ -5293,6 +5293,34 @@ void Game::updateCreatureEmblem(Creature* creature)
 	}
 }
 
+void Game::updateGuildEmblems(Player* player)
+{
+	if(!player || player->isRemoved())
+		return;
+
+	const SpectatorVec& list = getSpectators(player->getPosition());
+	for(SpectatorVec::const_iterator it = list.begin(); it != list.end(); ++it)
+	{
+		Player* spectator = (*it)->getPlayer();
+		if(!spectator)
+			continue;
+
+		if(spectator != player)
+		{
+			spectator->sendCreatureEmblem(player);
+			continue;
+		}
+
+		// Refresh how this player sees nearby guilded players after join/leave.
+		for(SpectatorVec::const_iterator other = list.begin(); other != list.end(); ++other)
+		{
+			Player* otherPlayer = (*other)->getPlayer();
+			if(otherPlayer && otherPlayer != player)
+				player->sendCreatureEmblem(otherPlayer);
+		}
+	}
+}
+
 void Game::updateCreatureImpassable(Creature* creature)
 {
 	const SpectatorVec& list = getSpectators(creature->getPosition());

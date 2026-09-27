@@ -562,6 +562,7 @@ class Game
 		void updateCreatureSkull(Creature* creature);
 		void updateCreatureShield(Creature* creature);
 		void updateCreatureEmblem(Creature* creature);
+		void updateGuildEmblems(Player* player);
 		void updateCreatureImpassable(Creature* creature);
 
 		GameState_t getGameState() const {return gameState;}

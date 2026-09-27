@@ -3786,13 +3786,17 @@ void Player::onTargetCreatureGainHealth(Creature* target, int32_t points)
 GuildEmblems_t Player::getGuildEmblem(const Creature* creature) const
 {
 	const Player* player = creature->getPlayer();
-	if(!player || !player->hasEnemy())
+	if(!player || !player->getGuildId())
 		return Creature::getGuildEmblem(creature);
 
-	if(player->isEnemy(this, false))
+	// Red if either side is at war with the other.
+	if(player->isEnemy(this, false) || isEnemy(player, false))
 		return EMBLEM_RED;
 
-	return player->getGuildId() == guildId ? EMBLEM_GREEN : EMBLEM_BLUE;
+	if(guildId && player->getGuildId() == guildId)
+		return EMBLEM_GREEN;
+
+	return EMBLEM_BLUE;
 }
 
 bool Player::getEnemy(const Player* player, War_t& data) const
@@ -4937,8 +4941,6 @@ void Player::leaveGuild()
 	sendClosePrivate(CHANNEL_GUILD);
 #ifdef __WAR_SYSTEM__
 	warMap.clear();
-	g_game.updateCreatureEmblem(this);
-
 #endif
 	if(getGUID())
 		IOLoginData::getInstance()->resetGuildInformation(getGUID());
@@ -4946,6 +4948,9 @@ void Player::leaveGuild()
 	guildLevel = GUILDLEVEL_NONE;
 	guildId = rankId = 0;
 	guildName = rankName = guildNick = std::string();
+#ifdef __WAR_SYSTEM__
+	g_game.updateGuildEmblems(this);
+#endif
 }
 
 bool Player::isPremium() const
