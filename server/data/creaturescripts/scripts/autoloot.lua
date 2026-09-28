@@ -39,12 +39,9 @@ function onKill(cid, target, damage, flags)
   -- onKill runs before dropCorpse, so this list is only older stacked bodies.
   local beforeEncoded = AutoLoot.encodeUids(AutoLoot.listCorpseUids(position))
 
-  local corpseItemId = 0
-  local info = getMonsterInfo(getCreatureName(target))
-  if info and info.lookCorpse then
-    corpseItemId = info.lookCorpse
-  end
-
-  addEvent(AutoLoot.collect, AutoLoot.CorpseDelay, cid, position, beforeEncoded, corpseItemId)
+  -- lookCorpse via getMonsterInfo is skipped: many monster XMLs use a display
+  -- name that is not registered in monsters.xml, and getMonsterInfo logs
+  -- "Monster not found" on every kill. UID snapshot already finds the new corpse.
+  addEvent(AutoLoot.collect, AutoLoot.CorpseDelay, cid, position, beforeEncoded, 0)
   return true
 end
