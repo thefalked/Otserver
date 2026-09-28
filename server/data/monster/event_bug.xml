@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <monster name="Event Bug" nameDescription="an event bug" race="venom" experience="0" speed="80"
   manacost="0">
-  <health now="15000000" max="15000000" />
+  <health now="150000000" max="150000000" />
   <look type="45" head="20" body="30" legs="40" feet="50" corpse="5990" />
   <targetchange interval="5000" chance="10" />
   <strategy attack="100" defense="0" />

@@ -40,17 +40,19 @@ local function giveItemDropOk(uid, itemId, count)
   end
 end
 
-local function giveWeaponReward(uid)
-  giveItemDropOk(uid, config.weapons[math.random(1, #config.weapons)], 1)
-  giveItemDropOk(uid, config.nuggetId, config.nuggetCount)
-  doPlayerSendTextMessage(
-    uid,
-    MESSAGE_EVENT_ADVANCE,
-    "Event Bug reward: 1 weapon + " .. config.nuggetCount .. " gold nuggets."
-  )
-end
-
-local function giveMasterSetReward(uid)
+-- Equal weight: each weapon(+nuggets) and the Master set are one option each.
+local function giveRandomReward(uid)
+  local roll = math.random(1, #config.weapons + 1)
+  if roll <= #config.weapons then
+    giveItemDropOk(uid, config.weapons[roll], 1)
+    giveItemDropOk(uid, config.nuggetId, config.nuggetCount)
+    doPlayerSendTextMessage(
+      uid,
+      MESSAGE_EVENT_ADVANCE,
+      "Event Bug reward: 1 weapon + " .. config.nuggetCount .. " gold nuggets."
+    )
+    return
+  end
   for _, itemId in pairs(config.masterSet) do
     giveItemDropOk(uid, itemId, 1)
   end
@@ -89,11 +91,7 @@ function onDeath(cid, corpse, deathList)
 
   for uid, _ in pairs(damagers) do
     if isPlayer(uid) then
-      if math.random(1, 2) == 1 then
-        giveWeaponReward(uid)
-      else
-        giveMasterSetReward(uid)
-      end
+      giveRandomReward(uid)
       rewarded = rewarded + 1
     end
   end
