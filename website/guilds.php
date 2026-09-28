@@ -1693,9 +1693,10 @@ if ($action == 'leaveguild') {
 //-----------------------------------------------------------------------------//-----------------------------------------------------------------------------
 //create guild
 if ($action == 'createguild') {
-  $guild_name = $_REQUEST['guild'];
-  $name = stripslashes($_REQUEST['name']);
-  $todo = $_REQUEST['todo'];
+  $guild_name = $_REQUEST['guild'] ?? '';
+  $name = stripslashes($_REQUEST['name'] ?? '');
+  $todo = $_REQUEST['todo'] ?? '';
+  $array_of_player_nig = [];
   if (!$logged) {
     $guild_errors[] = 'You are not logged in. You can\'t create guild.';
   }
@@ -1716,7 +1717,7 @@ if ($action == 'createguild') {
   }
 
   if (empty($todo)) {
-    if (count($array_of_player_nig) == 0) {
+    if ($logged && count($array_of_player_nig) == 0) {
       $guild_errors[] =
         'On your account all characters are in guilds, online, or have too low level to create new guild. Logout the leader character first.';
     }
@@ -1802,9 +1803,9 @@ if ($action == 'createguild') {
     unset($todo);
   }
 
-  if ($todo == 'save') {
+  if (($todo ?? '') == 'save') {
     $new_guild = new OTS_Guild();
-    $new_guild->setCreationData($time);
+    $new_guild->setCreationData(time());
     $new_guild->setName($guild_name);
     $new_guild->setOwner($player);
     $new_guild->save();
