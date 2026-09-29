@@ -6,17 +6,12 @@ local config = {
   nuggetId = 2157,
   nuggetCount = 50,
   weapons = {
-    7417, -- Baiakzik Sword
-    8926, -- Baiakzik Axe
-    7368, -- Baiakzik Star
-    7451, -- Baiakzik Club
-    7424, -- Baiakzik Staff
-    2453, -- Master Vip Staff
-    7432, -- Master Vip Club
-    8849, -- Master Vip Crossbow
-    7735, -- Master Rod
+    7407, -- Master Sword
+    3962, -- Master Axe
+    7450, -- Master Club
+    3965, -- Master Spear
     8922, -- Master Wand
-    2399, -- New Master Star
+    7735, -- Master Rod
   },
   masterSet = {
     6096, -- Master Helmet
