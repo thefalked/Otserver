@@ -8,9 +8,10 @@ local config = {
   timeToStartEvent = 5, -- Minutes, after these minutes the teleport will be removed and the event will be declared started
   timeBetweenSpawns = 20, -- Seconds between each spawn of zombie
   zombieName = "Event Zombie", -- Must match monsters.xml name
-  playersNeededToStartEvent = 4,
+  playersNeededToStartEvent = 2,
   tpOpenStorage = 2003,
   labelTokenStorage = 2004, -- bumps each open so old text loops die
+  startPlayerCountStorage = 2006, -- players at start; <4 => reduced reward
   labelInterval = 1500,
   labelText = "Zombie Event",
 
@@ -90,6 +91,7 @@ function onTime()
   doItemSetAttribute(tp, "aid", config.teleportActionId)
   setGlobalStorageValue(config.playerCount, 0)
   setGlobalStorageValue(config.zombieCount, 0)
+  setGlobalStorageValue(config.startPlayerCountStorage, 0)
   setGlobalStorageValue(config.tpOpenStorage, 1)
 
   local token = getGlobalStorageValue(config.labelTokenStorage)
@@ -113,7 +115,9 @@ function startEvent()
 
   local fromp, top = config.fromPosition, config.toPosition
 
-  if getGlobalStorageValue(config.playerCount) >= config.playersNeededToStartEvent then
+  local joined = getGlobalStorageValue(config.playerCount)
+  if joined >= config.playersNeededToStartEvent then
+    setGlobalStorageValue(config.startPlayerCountStorage, joined)
     addEvent(spawnZombie, config.timeBetweenSpawns * 1000)
     doBroadcastMessage("Good luck in the zombie event people! The teleport has closed!", MESSAGE_STATUS_WARNING)
 
@@ -152,6 +156,7 @@ function startEvent()
       end
     end
     setGlobalStorageValue(config.playerCount, 0)
+    setGlobalStorageValue(config.startPlayerCountStorage, 0)
   end
 end
 

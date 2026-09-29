@@ -1,26 +1,18 @@
 * Notícias e Atualizações *
 
-Master armas + Event Bug + countdowns
-
-Armas Master
-- Level mínimo 1500 para usar (Sword/Axe/Club/Spear/Wand/Rod)
-
-Master Spear (Pala/RP)
-- Ataque 550 (antes 600)
-- Dano holy (antes físico)
-
-Event Bug
-- Sorteio: arma Master + 50 nuggets, OU set Master, OU Double Xp
-- Não sai mais Baiakzik/Vip/Star nessa pool
-- Avisos nos últimos 3 minutos da luta
+Zombie Event: mínimo 2 + rewards
 
 Zombie Event
-- Countdown a cada minuto enquanto o TP está aberto
-- TP no temple (posição ajustada)
+- Mínimo 2 jogadores (antes 4)
+- 2-3 jogadores: taça + Stamina Potion + 50 gold nuggets
+- 4+ jogadores: taça + arma Vip9 + 100 gold nuggets (igual antes)
+- TP 5 min no temple. Horário SP: horas pares
 
-NPCs
-- Vip9: vende Master Shield
+PvP Bounty
+- A cada 15 min. Mate o alvo Vip9 (IP diferente)
+- Sem pick perto de trainer / Saco de Pancada
 
-Horários SP seguem: pares = Zombie, ímpares = Event Bug
+Porta VIP2
+- Aviso claro para promover no Johnny
 
 Digite !notice no jogo para ver este resumo.

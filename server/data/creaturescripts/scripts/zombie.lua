@@ -1,8 +1,12 @@
 local config = {
   playerCount = 2001, -- Global storage for counting the players left/entered in the event
+  startPlayerCountStorage = 2006, -- players when event started (set by zombie_event.lua)
+  fullRewardMinPlayers = 4,
 
   goblet = 5805, -- gold goblet with winner name
-  moneyReward = { 2157, 100, 1 }, -- gold nuggets
+  staminaPotion = 5468,
+  moneyReward = { 2157, 100 }, -- gold nuggets (full reward)
+  reducedMoneyReward = { 2157, 50 }, -- gold nuggets (2-3 players)
   vip9Weapons = {
     7391, -- Baiak Vip9 Sword
     7456, -- Baiak Vip9 Axe
@@ -98,12 +102,22 @@ function onStatsChange(cid, attacker, type, combat, value)
     doSendMagicEffect(getPlayerPosition(cid), CONST_ME_POFF)
     doTeleportThing(cid, getTownTemplePosition(getPlayerTown(cid)), false)
     doSendMagicEffect(getPlayerPosition(cid), CONST_ME_TELEPORT)
-    doPlayerAddItem(cid, config.vip9Weapons[math.random(1, #config.vip9Weapons)], 1)
-    if config.moneyReward[3] == 1 then
-      doPlayerAddItem(cid, config.moneyReward[1], config.moneyReward[2])
+
+    local startedWith = getGlobalStorageValue(config.startPlayerCountStorage)
+    if not startedWith or startedWith < 0 then
+      startedWith = 0
     end
+    if startedWith >= config.fullRewardMinPlayers then
+      doPlayerAddItem(cid, config.vip9Weapons[math.random(1, #config.vip9Weapons)], 1)
+      doPlayerAddItem(cid, config.moneyReward[1], config.moneyReward[2])
+    else
+      doPlayerAddItem(cid, config.staminaPotion, 1)
+      doPlayerAddItem(cid, config.reducedMoneyReward[1], config.reducedMoneyReward[2])
+    end
+
     clearArenaMonsters()
     setGlobalStorageValue(config.playerCount, 0)
+    setGlobalStorageValue(config.startPlayerCountStorage, 0)
   end
   return false
 end

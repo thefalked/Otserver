@@ -3,7 +3,7 @@
 Use depois de publicar:
 
 - Globalevent `bounty` a cada 15 minutos (`bounty.lua`, `globalevents.xml`)
-- Claim no kill com mesmo pool do Event Bug (`bounty_kill.lua`, `creaturescripts.xml`, `login.lua`)
+- Claim no kill com reward do Bounty (`bounty_kill.lua`, `creaturescripts.xml`, `login.lua`)
 
 Recarregue globalevents e creaturescripts, ou reinicie o servidor de jogo.
 
@@ -26,7 +26,7 @@ Recarregue globalevents e creaturescripts, ou reinicie o servidor de jogo.
 A cada [b]15 minutos[/b] o servidor escolhe [b]1 jogador Vip9[/b] em área de PvP (fora de PZ, house, trainer e no-PvP).
 O nome sai no chat com o [b]level[/b].
 
-Quem matar o alvo (IP diferente) leva o mesmo sorteio do Event Bug:
+Quem matar o alvo (IP diferente) leva um sorteio de reward do Bounty:
 [b]arma Master + 50 nuggets[/b], OU [b]set Master completo[/b], OU [b]Double Xp[/b].
 
 ⚠️ Matar com o [b]mesmo IP[/b] não vale. Aviso só para quem matou. A bounty continua.
@@ -43,7 +43,7 @@ Comente nesta notícia como ficou. Feedback ajuda a ajustar. 🙂
 ## Ticker de notícias (colar no ticker)
 
 ```text
-🎯 PvP Bounty a cada 15 min (Vip9 em PvP). Mate o alvo (IP diferente) e leve reward do Event Bug.
+🎯 PvP Bounty a cada 15 min. Mate o alvo e leve reward do evento.
 ```
 
 ---
