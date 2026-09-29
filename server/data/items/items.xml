@@ -8076,7 +8076,7 @@
   <item id="3965" article="a"
     name="Master Spear" plural="Mater Spears">
     <attribute key="weight" value="2200" />
-    <attribute key="attack" value="600" />
+    <attribute key="attack" value="550" />
     <attribute key="weaponType" value="distance" />
     <attribute key="shootType" value="huntingspear" />
     <attribute key="range" value="5" />
