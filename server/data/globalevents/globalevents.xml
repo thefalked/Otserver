@@ -13,10 +13,32 @@
     value="house_clean_old.lua" />
 
   <!-- Timed events: times are UTC. São Paulo = UTC-3 (no DST).
-       zombie 21:00/01:00 UTC = 18:00/22:00 SP
-       bug 17:55/22:55 UTC = countdown for 15:00/20:00 SP spawn -->
+       One event per hour SP, alternating:
+         even hours Zombie TP open (00/02/.../22)
+         odd hours  Bug spawn (01/03/.../23), countdown 5 min before -->
+  <globalevent name="zombie_00" time="03:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_02" time="05:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_04" time="07:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_06" time="09:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_08" time="11:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_10" time="13:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_12" time="15:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_14" time="17:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_16" time="19:00" event="script" value="zombie_event.lua" />
   <globalevent name="zombie_18" time="21:00" event="script" value="zombie_event.lua" />
+  <globalevent name="zombie_20" time="23:00" event="script" value="zombie_event.lua" />
   <globalevent name="zombie_22" time="01:00" event="script" value="zombie_event.lua" />
+
+  <globalevent name="event_bug_01" time="03:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_03" time="05:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_05" time="07:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_07" time="09:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_09" time="11:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_11" time="13:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_13" time="15:55" event="script" value="event_bug.lua" />
   <globalevent name="event_bug_15" time="17:55" event="script" value="event_bug.lua" />
-  <globalevent name="event_bug_20" time="22:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_17" time="19:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_19" time="21:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_21" time="23:55" event="script" value="event_bug.lua" />
+  <globalevent name="event_bug_23" time="01:55" event="script" value="event_bug.lua" />
 </globalevents>
