@@ -1,20 +1,24 @@
 --[[
   /reload <type>. hot-reload without restarting the server.
 
-  Works at runtime:
+  Docs: docs/reload.md
+
+  Works:
     actions, chat, config, creatureevents/creaturescripts, globalevents,
     highscores, monsters, moveevents/movements, npcs, quests, raids,
     spells, stages/experience, talkactions/commands, mods, all
 
-  Listed but broken / no-op (do not rely on these):
-    items, outfits, weapons (TODO stubs), groups (disabled), vocations
-    (often fails), houseprices (no C++ handler), gameservers (login-server
-    build only)
+  Does not work (blocked here; C++ left unchanged):
+    items, outfits, weapons (TODO stubs)
+    groups (disabled; Group* dangling risk)
+    vocations (unsafe; Vocation* dangling risk)
+    houseprices (no C++ handler; use /reload config)
+    gameservers (login-server build only)
 
   Still needs a full restart:
     map/.otbm and existing map spawns, binary/C++ changes, items.otb,
-    outfits/weapons/groups as above, some config.lua options that only
-    apply at startup (ports, DB, core engine flags)
+    broken types above, some config.lua options that only apply at
+    startup (ports, DB, core engine flags)
 
   Notes:
     - Already-spawned NPCs may keep old state until replaced.
@@ -58,16 +62,31 @@ local reloadInfo = {
   { RELOAD_ALL, "all", "everything" },
 }
 
+-- Types that look valid in the command list but must not call doReloadInfo.
+local brokenReasons = {
+  [RELOAD_GAMESERVERS] = "login-server build only",
+  [RELOAD_GROUPS] = "disabled (online players keep Group* pointers)",
+  [RELOAD_HOUSEPRICES] = "no C++ handler (use /reload config)",
+  [RELOAD_ITEMS] = "TODO stub in engine",
+  [RELOAD_OUTFITS] = "TODO stub in engine",
+  [RELOAD_VOCATIONS] = "unsafe (online players keep Vocation* pointers)",
+  [RELOAD_WEAPONS] = "TODO stub in engine",
+}
+
 local workingTypes =
   "actions, chat, config, creatureevents, globalevents, highscores, monsters, moveevents, npcs, quests, raids, spells, stages, talkactions, mods, all"
 
-local function sendWorkingList(cid, prefix)
-  doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, (prefix or "") .. "Working reload types: " .. workingTypes)
+local brokenTypes = "items, outfits, weapons, groups, vocations, houseprices, gameservers"
+
+local function sendReloadLists(cid, prefix)
+  local head = prefix or ""
+  doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, head .. "Working: " .. workingTypes)
+  doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, "Does not work: " .. brokenTypes)
 end
 
 function onSay(cid, words, param, channel)
   if param == "" then
-    sendWorkingList(cid, "Command param required. ")
+    sendReloadLists(cid, "Command param required. ")
     return true
   end
 
@@ -76,16 +95,22 @@ function onSay(cid, words, param, channel)
   local found = false
   for _, v in ipairs(reloadInfo) do
     if table.isStrIn(param, v) then
-      doReloadInfo(v[1], cid)
-      str = "Reloading " .. v[2] .. "..."
       found = true
+      local reason = brokenReasons[v[1]]
+      if reason then
+        str = "Reload type " .. v[2] .. " does not work: " .. reason .. "."
+        sendReloadLists(cid)
+      else
+        doReloadInfo(v[1], cid)
+        str = "Reloading " .. v[2] .. "..."
+      end
       break
     end
   end
 
   doPlayerSendTextMessage(cid, MESSAGE_STATUS_CONSOLE_BLUE, str)
   if not found then
-    sendWorkingList(cid)
+    sendReloadLists(cid)
   end
   return true
 end
