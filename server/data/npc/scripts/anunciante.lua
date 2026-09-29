@@ -208,11 +208,11 @@ function onThink()
     end
   elseif focus ~= 0 then
     distFocus = getDistanceToCreature(focus)
-    if distFocus ~= nil and distFocus > 5 then
+    if not distFocus or distFocus > 5 then
       selfSay(msgBye)
       if next_focus > 0 then
         distFocus = getDistanceToCreature(next_focus)
-        if distFocus ~= nil and distFocus < 4 then
+        if distFocus and distFocus < 4 then
           selfSay(msgHi)
           talk_start = os.clock()
           focus = next_focus

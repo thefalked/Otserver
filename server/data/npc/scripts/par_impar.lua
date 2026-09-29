@@ -122,7 +122,8 @@ function onThink()
     focus = 0
   end
   if focus ~= 0 then
-    if getDistanceToCreature(focus) > 3 then
+    local dist = getDistanceToCreature(focus)
+    if not dist or dist > 3 then
       selfSay("Tchau.")
       focus = 0
     end

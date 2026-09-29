@@ -85,7 +85,8 @@ function onThink()
     talk_start = 0
   end
   if focus ~= 0 then
-    if getDistanceToCreature(focus) > 5 then
+    local dist = getDistanceToCreature(focus)
+    if not dist or dist > 5 then
       selfSay("Good Bye")
       focus = 0
       talk_start = 0
