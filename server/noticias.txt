@@ -1,18 +1,10 @@
 * Notícias e Atualizações *
 
-Zombie Event: mínimo 2 + rewards
-
-Zombie Event
-- Mínimo 2 jogadores (antes 4)
-- 2-3 jogadores: taça + Stamina Potion + 50 gold nuggets
-- 4+ jogadores: taça + arma Vip9 + 100 gold nuggets (igual antes)
-- TP 5 min no temple. Horário SP: horas pares
+PvP Bounty: level 4000+
 
 PvP Bounty
-- A cada 15 min. Mate o alvo Vip9 (IP diferente)
+- Sorteio por level 4000+ (não precisa Vip9)
+- A cada 15 min. Mate o alvo (IP diferente)
 - Sem pick perto de trainer / Saco de Pancada
-
-Porta VIP2
-- Aviso claro para promover no Johnny
 
 Digite !notice no jogo para ver este resumo.

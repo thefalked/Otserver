@@ -1,7 +1,8 @@
--- PvP bounty: every 15 min pick one Vip9 player in open PvP.
+-- PvP bounty: every 15 min pick one level 4000+ player in open PvP.
 local config = {
   storage = 2100, -- bounty target player GUID
-  vip9Storage = 13589,
+  lastStorage = 2101, -- last pick (survives claim clear; avoids back-to-back)
+  minLevel = 4000, -- same as Vip7 entry gate
   trainerRadius = 5,
 }
 
@@ -39,7 +40,7 @@ local function isEligible(tid)
   then
     return false
   end
-  if getPlayerStorageValue(tid, config.vip9Storage) == -1 then
+  if getPlayerLevel(tid) < config.minLevel then
     return false
   end
   local tile = getTileInfo(getCreaturePosition(tid))
@@ -55,18 +56,27 @@ end
 function onThink(interval, lastExecution)
   setGlobalStorageValue(config.storage, 0)
 
-  local list = {}
+  local lastGuid = getGlobalStorageValue(config.lastStorage)
+  local list, fallback = {}, {}
   for _, tid in ipairs(getPlayersOnline()) do
     if isEligible(tid) then
-      list[#list + 1] = tid
+      fallback[#fallback + 1] = tid
+      if getPlayerGUID(tid) ~= lastGuid then
+        list[#list + 1] = tid
+      end
     end
+  end
+  if #list == 0 then
+    list = fallback
   end
   if #list == 0 then
     return true
   end
 
   local target = list[math.random(1, #list)]
-  setGlobalStorageValue(config.storage, getPlayerGUID(target))
+  local guid = getPlayerGUID(target)
+  setGlobalStorageValue(config.storage, guid)
+  setGlobalStorageValue(config.lastStorage, guid)
   doBroadcastMessage(
     "[BOUNTY] " .. playerLabel(target) .. " has a bounty on their head for 15 minutes!",
     MESSAGE_STATUS_CONSOLE_RED
