@@ -5,7 +5,7 @@ local config = {
   teleportPosition = { x = 151, y = 54, z = 7 }, -- Where the teleport will be created
   teleportToPosition = { x = 56, y = 525, z = 7 }, -- Where the teleport will take you
   teleportId = 1387, -- Id of the teleport
-  timeToStartEvent = 2, -- Minutes, after these minutes the teleport will be removed and the event will be declared started
+  timeToStartEvent = 5, -- Minutes, after these minutes the teleport will be removed and the event will be declared started
   timeBetweenSpawns = 20, -- Seconds between each spawn of zombie
   zombieName = "Event Zombie", -- Must match monsters.xml name
   playersNeededToStartEvent = 4,
