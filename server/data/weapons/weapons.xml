@@ -85,7 +85,7 @@
     <vocation id="1" />
     <vocation id="5" />
   </wand>
-  <wand id="7735" level="200" mana="50" min="3000" max="4900" type="holy" event="function"
+  <wand id="7735" level="1500" mana="50" min="3000" max="4900" type="holy" event="function"
     value="default">
     <!-- Master Rod -->
     <vocation id="2" />
@@ -125,7 +125,7 @@
     <!-- Wand of Starmstorm -->
     <vocation id="1" />
   </wand>
-  <wand id="8922" level="42" mana="13" min="3000" max="4900" type="holy" event="function"
+  <wand id="8922" level="1500" mana="13" min="3000" max="4900" type="holy" event="function"
     value="default">
     <!-- Master Wand -->
     <vocation id="1" />
@@ -165,7 +165,8 @@
   <melee id="2392" level="30" unproperly="1" event="function" value="default" />
   <melee id="2407" level="30" unproperly="1" event="function" value="default" />
   <melee id="2438" level="30" unproperly="1" event="function" value="default" />
-  <melee id="7450" level="30" unproperly="1" event="function" value="default">
+  <melee id="7450" level="1500" unproperly="1" event="function" value="default">
+    <!-- Master Club -->
     <vocation id="4" />
     <vocation id="8" showInDescription="0" />
   </melee>
@@ -173,7 +174,8 @@
     <vocation id="4" />
     <vocation id="8" showInDescription="0" />
   </melee>
-  <melee id="7407" level="30" unproperly="1" event="function" value="default">
+  <melee id="7407" level="1500" unproperly="1" event="function" value="default">
+    <!-- Master Sword -->
     <vocation id="4" />
     <vocation id="8" showInDescription="0" />
   </melee>
@@ -274,7 +276,8 @@
   <melee id="2440" level="25" unproperly="1" event="function" value="default" />
   <melee id="2426" level="25" unproperly="1" event="function" value="default" />
   <melee id="11317" level="25" unproperly="1" event="function" value="default" />
-  <melee id="3962" level="30" unproperly="1" event="function" value="default">
+  <melee id="3962" level="1500" unproperly="1" event="function" value="default">
+    <!-- Master Axe -->
     <vocation id="4" />
     <vocation id="8" showInDescription="0" />
   </melee>
@@ -501,7 +504,8 @@
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance swing="1" id="3965" level="80" unproperly="1" event="function" value="default">
+  <distance swing="1" id="3965" level="1500" unproperly="1" event="function" value="default">
+    <!-- Master Spear -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
