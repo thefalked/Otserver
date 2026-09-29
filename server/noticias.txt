@@ -1,19 +1,26 @@
 * Notícias e Atualizações *
 
-Zombie + Event Bug: de hora em hora
+Master armas + Event Bug + countdowns
 
-Horário de São Paulo. Um evento por hora, alternando:
-- Horas pares (00, 02, 04... 22): Zombie Event
-- Horas ímpares (01, 03, 05... 23): Event Bug
+Armas Master
+- Level mínimo 1500 para usar (Sword/Axe/Club/Spear/Wand/Rod)
 
-Zombie Event
-- TP no temple aberto por 5 minutos (antes 2)
-- Mínimo 4 jogadores
-- Winner: taça + arma Vip9 aleatória + 100 gold nuggets
+Master Spear (Pala/RP)
+- Ataque 550 (antes 600)
+- Dano holy (antes físico)
 
 Event Bug
-- Aviso 5 min antes. Spawn perto do temple
-- 15 minutos para matar
-- Reward compartilhado perto do kill: arma+50 nuggets OU set Master
+- Sorteio de arma: só armas Master + 50 nuggets, OU set Master
+- Não sai mais Baiakzik/Vip/Star nessa pool
+- Avisos nos últimos 3 minutos da luta
+
+Zombie Event
+- Countdown a cada minuto enquanto o TP está aberto
+- TP no temple (posição ajustada)
+
+NPCs
+- Vip9: vende Master Shield
+
+Horários SP seguem: pares = Zombie, ímpares = Event Bug
 
 Digite !notice no jogo para ver este resumo.
