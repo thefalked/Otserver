@@ -13,6 +13,7 @@ local config = {
   checkRadius = 8, -- spectators around the live bug, not spawn tiles
   lifetimeMinutes = 15,
   countdownMinutes = 5,
+  remainingWarnMinutes = 3, -- last N minutes of the fight
   areaName = "the temple area",
 }
 
@@ -71,6 +72,23 @@ function announceEventBugCountdown(minutesLeft)
   )
 end
 
+function announceEventBugRemaining(minutesLeft, cid)
+  if not isCreature(cid) or getCreatureName(cid) ~= config.monsterName then
+    return
+  end
+  local unit = minutesLeft == 1 and "minute" or "minutes"
+  doBroadcastMessage(
+    "[Event Bug] "
+      .. minutesLeft
+      .. " "
+      .. unit
+      .. " remaining! Find it around "
+      .. config.areaName
+      .. " before it escapes!",
+    MESSAGE_STATUS_WARNING
+  )
+end
+
 function spawnEventBug()
   if eventBugAlive() then
     doBroadcastMessage(
@@ -100,6 +118,10 @@ function spawnEventBug()
       .. " minutes. Group up, find it, and kill it for shared rewards!",
     MESSAGE_STATUS_WARNING
   )
+  for minutesLeft = config.remainingWarnMinutes, 1, -1 do
+    local delay = (config.lifetimeMinutes - minutesLeft) * 60 * 1000
+    addEvent(announceEventBugRemaining, delay, minutesLeft, cid)
+  end
   addEvent(despawnEventBug, config.lifetimeMinutes * 60 * 1000, cid)
 end
 

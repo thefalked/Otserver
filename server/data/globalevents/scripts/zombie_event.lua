@@ -2,7 +2,7 @@ local config = {
   playerCount = 2001, -- Global storage for counting the players left/entered in the event
   zombieCount = 2002, -- Global storage for counting the zombies in the event
   teleportActionId = 2000, -- Action id of the teleport needed for the movement script
-  teleportPosition = { x = 151, y = 54, z = 7 }, -- Where the teleport will be created
+  teleportPosition = { x = 158, y = 52, z = 7 }, -- Where the teleport will be created
   teleportToPosition = { x = 56, y = 525, z = 7 }, -- Where the teleport will take you
   teleportId = 1387, -- Id of the teleport
   timeToStartEvent = 5, -- Minutes, after these minutes the teleport will be removed and the event will be declared started
@@ -48,6 +48,29 @@ function showZombieTpLabel(token)
   addEvent(showZombieTpLabel, config.labelInterval, token)
 end
 
+function announceZombieCountdown(minutesLeft)
+  if getGlobalStorageValue(config.tpOpenStorage) ~= 1 then
+    return
+  end
+  local unit = minutesLeft == 1 and "minute" or "minutes"
+  local joined = getGlobalStorageValue(config.playerCount)
+  if not joined or joined < 0 then
+    joined = 0
+  end
+  doBroadcastMessage(
+    "[Zombie Event] Teleport closes in "
+      .. minutesLeft
+      .. " "
+      .. unit
+      .. "! Need "
+      .. config.playersNeededToStartEvent
+      .. " players to start (currently "
+      .. joined
+      .. "). Enter at the temple!",
+    MESSAGE_STATUS_WARNING
+  )
+end
+
 function onTime()
   removeZombieTeleport()
 
@@ -65,12 +88,6 @@ function onTime()
   end
 
   doItemSetAttribute(tp, "aid", config.teleportActionId)
-  doBroadcastMessage(
-    "Zombie event starting in "
-      .. config.timeToStartEvent
-      .. " minutes! The teleport will be closed when the event start!",
-    MESSAGE_STATUS_WARNING
-  )
   setGlobalStorageValue(config.playerCount, 0)
   setGlobalStorageValue(config.zombieCount, 0)
   setGlobalStorageValue(config.tpOpenStorage, 1)
@@ -83,6 +100,10 @@ function onTime()
   setGlobalStorageValue(config.labelTokenStorage, token)
   showZombieTpLabel(token)
 
+  for minutesLeft = config.timeToStartEvent, 1, -1 do
+    local delay = (config.timeToStartEvent - minutesLeft) * 60 * 1000
+    addEvent(announceZombieCountdown, delay, minutesLeft)
+  end
   addEvent(startEvent, config.timeToStartEvent * 1000 * 60)
   return true
 end
