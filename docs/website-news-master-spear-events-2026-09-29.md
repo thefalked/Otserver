@@ -4,7 +4,7 @@ Use depois de publicar:
 
 - Master weapons level 1500 (`weapons.xml`)
 - Master Spear: attack 550 + dano holy (`items.xml`, `weapons.xml`)
-- Event Bug: reward só armas Master (`event_bug_death.lua`)
+- Event Bug: reward Master armas / set Master / Double Xp (`event_bug_death.lua`)
 - Countdowns Zombie / Event Bug + TP Zombie no temple (`zombie_event.lua`, `event_bug.lua`)
 - NPC Vip9: Master Shield. NPC New Master: nome Master Wand
 
@@ -21,7 +21,7 @@ Referência: [master-gear.md](master-gear.md)
 **Tópico:**
 
 ```text
-⚔️ Master lvl 1500 + 🏹 Spear holy + 🐛 Event Bug Master + ⏱️ countdowns
+⚔️ Master lvl 1500 + 🏹 Spear holy + 🐛 Event Bug + Double Xp + ⏱️ countdowns
 ```
 
 **Texto (BBCode + emoji Unicode):**
@@ -37,7 +37,7 @@ Ataque [b]550[/b] (antes 600).
 Dano passa a ser [b]holy[/b] (antes físico).
 
 🐛 [b]Event Bug[/b]
-Sorteio de arma: só [b]armas Master[/b] (Sword/Axe/Club/Spear/Wand/Rod) + 50 nuggets, OU set Master completo.
+Sorteio por jogador (peso igual): [b]arma Master[/b] + 50 nuggets, OU [b]set Master completo[/b], OU [b]Double Xp[/b].
 Não sai mais Baiakzik / Vip / Throwing Star nessa pool.
 
 ⏱️ [b]Avisos de evento[/b]
@@ -60,7 +60,7 @@ Digite [b]!notice[/b] no jogo para ver o resumo.
 ## Ticker de notícias (colar no ticker)
 
 ```text
-⚔️ Master armas lvl 1500. 🏹 Master Spear atk 550 holy. 🐛 Event Bug só Master. ⏱️ Countdown Zombie + Bug.
+⚔️ Master armas lvl 1500. 🏹 Master Spear atk 550 holy. 🐛 Event Bug: Master / set / Double Xp. ⏱️ Countdown Zombie + Bug.
 ```
 
 ---
@@ -73,7 +73,7 @@ Descrições curtas (máx. 150 caracteres).
 
 1. `Armas Master: level mínimo 1500 para usar (Sword/Axe/Club/Spear/Wand/Rod).`
 2. `Master Spear: ataque 550 (antes 600) e dano holy.`
-3. `Event Bug: sorteio de arma só Master (sem Baiakzik/Vip/Star).`
+3. `Event Bug: sorteio Master arma+nuggets, set Master ou Double Xp.`
 4. `Zombie/Event Bug: countdowns (Zombie a cada min no TP; Bug nos últimos 3 min).`
 
 ### SQL opcional (banco do site)
@@ -82,7 +82,7 @@ Descrições curtas (máx. 150 caracteres).
 INSERT INTO `z_changelog` (`type`, `where`, `date`, `description`) VALUES
 ('Change', 'Server', UNIX_TIMESTAMP(), 'Armas Master: level mínimo 1500 para usar (Sword/Axe/Club/Spear/Wand/Rod).'),
 ('Change', 'Server', UNIX_TIMESTAMP(), 'Master Spear: ataque 550 (antes 600) e dano holy.'),
-('Change', 'Server', UNIX_TIMESTAMP(), 'Event Bug: sorteio de arma só Master (sem Baiakzik/Vip/Star).'),
+('Change', 'Server', UNIX_TIMESTAMP(), 'Event Bug: sorteio Master arma+nuggets, set Master ou Double Xp.'),
 ('Change', 'Server', UNIX_TIMESTAMP(), 'Zombie/Event Bug: countdowns (Zombie a cada min no TP; Bug nos últimos 3 min).'),
 ('Change', 'Server', UNIX_TIMESTAMP(), 'NPC Vip9: vende Master Shield. New Master: nome Master Wand.');
 ```

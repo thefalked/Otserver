@@ -10,7 +10,7 @@ Master Spear (Pala/RP)
 - Dano holy (antes físico)
 
 Event Bug
-- Sorteio de arma: só armas Master + 50 nuggets, OU set Master
+- Sorteio: arma Master + 50 nuggets, OU set Master, OU Double Xp
 - Não sai mais Baiakzik/Vip/Star nessa pool
 - Avisos nos últimos 3 minutos da luta
 

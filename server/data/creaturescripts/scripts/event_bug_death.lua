@@ -20,6 +20,7 @@ local config = {
     5462, -- Master Boots
     6433, -- Master Shield
   },
+  doubleXpId = 9109,
 }
 
 local function giveItemDropOk(uid, itemId, count)
@@ -35,9 +36,9 @@ local function giveItemDropOk(uid, itemId, count)
   end
 end
 
--- Equal weight: each weapon(+nuggets) and the Master set are one option each.
+-- Equal weight: each weapon(+nuggets), Master set, and Double Xp are one option each.
 local function giveRandomReward(uid)
-  local roll = math.random(1, #config.weapons + 1)
+  local roll = math.random(1, #config.weapons + 2)
   if roll <= #config.weapons then
     giveItemDropOk(uid, config.weapons[roll], 1)
     giveItemDropOk(uid, config.nuggetId, config.nuggetCount)
@@ -48,14 +49,19 @@ local function giveRandomReward(uid)
     )
     return
   end
-  for _, itemId in pairs(config.masterSet) do
-    giveItemDropOk(uid, itemId, 1)
+  if roll == #config.weapons + 1 then
+    for _, itemId in pairs(config.masterSet) do
+      giveItemDropOk(uid, itemId, 1)
+    end
+    doPlayerSendTextMessage(
+      uid,
+      MESSAGE_EVENT_ADVANCE,
+      "Event Bug reward: full Master set (helmet, armor, legs, boots, shield)."
+    )
+    return
   end
-  doPlayerSendTextMessage(
-    uid,
-    MESSAGE_EVENT_ADVANCE,
-    "Event Bug reward: full Master set (helmet, armor, legs, boots, shield)."
-  )
+  giveItemDropOk(uid, config.doubleXpId, 1)
+  doPlayerSendTextMessage(uid, MESSAGE_EVENT_ADVANCE, "Event Bug reward: Double Xp.")
 end
 
 function onStatsChange(cid, attacker, type, combat, value)
