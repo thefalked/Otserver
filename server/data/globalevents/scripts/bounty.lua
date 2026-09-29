@@ -15,11 +15,15 @@ local function nearTrainer(cid)
   if not specs then
     return false
   end
+  -- Covers Vip Trainer, Training Monk, Treiner ("Saco de Pancada"), Trainedr, typos.
+  local hints = { "trainer", "training", "trainig", "treiner", "trainedr", "saco", "pancada" }
   for _, uid in pairs(specs) do
     if isMonster(uid) then
       local name = string.lower(getCreatureName(uid))
-      if string.find(name, "trainer", 1, true) or string.find(name, "training", 1, true) then
-        return true
+      for _, hint in ipairs(hints) do
+        if string.find(name, hint, 1, true) then
+          return true
+        end
       end
     end
   end
