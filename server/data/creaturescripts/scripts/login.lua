@@ -61,6 +61,7 @@ function onLogin(cid)
   registerCreatureEvent(cid, "ReportBug")
 
   registerCreatureEvent(cid, "PlayerKill")
+  registerCreatureEvent(cid, "BountyKill")
   registerCreatureEvent(cid, "ZombieEvent")
   registerCreatureEvent(cid, "ZombieLogout")
   registerCreatureEvent(cid, "ZombieNoPvp")

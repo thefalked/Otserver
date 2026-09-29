@@ -30,4 +30,5 @@
   <event type="combat" name="ZombieNoPvp" event="script" value="zombie.lua" />
   <event type="death" name="EventBugDeath" event="script" value="event_bug_death.lua" />
   <event type="statschange" name="EventBugDamage" event="script" value="event_bug_death.lua" />
+  <event type="kill" name="BountyKill" event="script" value="bounty_kill.lua" />
 </creaturescripts>
