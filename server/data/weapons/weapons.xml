@@ -504,7 +504,8 @@
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
   </distance>
-  <distance swing="1" id="3965" level="1500" unproperly="1" event="function" value="default">
+  <distance swing="1" id="3965" level="1500" type="holy" unproperly="1" event="function"
+    value="default">
     <!-- Master Spear -->
     <vocation id="3" />
     <vocation id="7" showInDescription="0" />
