@@ -25,9 +25,20 @@ function onThink(interval, lastExecution)
     return true
   end
 
+  -- Logged-in players only. Skip GM+ and Account Manager. Tutors and multi-client OK.
   local list = {}
-  for i, tid in ipairs(getPlayersOnline()) do
-    list[i] = tid
+  for _, tid in ipairs(getPlayersOnline()) do
+    if
+      hasPlayerClient(tid)
+      and not isPlayerGhost(tid)
+      and getPlayerAccountManager(tid) == MANAGER_NONE
+      and getPlayerAccess(tid) < 3
+    then
+      list[#list + 1] = tid
+    end
+  end
+  if #list == 0 then
+    return true
   end
 
   local winner = list[math.random(1, #list)]
