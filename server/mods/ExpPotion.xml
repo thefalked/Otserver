@@ -36,6 +36,26 @@ function endExpPotion(cid, baseRate)
 	setPlayerStorageValue(cid, configs.storage, 0)
 	doPlayerSendCancel(cid, "The effect of the exp potion end.")
 end
+
+function scheduleExpPotionCountdown(cid, minutesLeft)
+	minutesLeft = math.floor(minutesLeft)
+	if minutesLeft < 1 then
+		return
+	end
+	for i = minutesLeft, 1, -1 do
+		local a = i .. ":00"
+		if #a < 4 then
+			a = string.sub(a, 1, 2) .. "0" .. string.sub(a, 3)
+		end
+		local delay = (minutesLeft - i) * 60 * 1000
+		creatureEvent(
+			doPlayerSendCancel,
+			delay,
+			cid,
+			"The effect of the exp potion will end in " .. a .. "."
+		)
+	end
+end
 ]]></config>
 
   <!-- exppotion.lua -->
@@ -71,6 +91,7 @@ local baseRate = getPlayerRates(cid)[8]
 local duration = configs.time * 60 * 1000
 doPlayerSetExperienceRate(cid, baseRate + (configs.addrate / 100))
 setPlayerStorageValue(cid, configs.storage, os.time())
+scheduleExpPotionCountdown(cid, configs.time)
 creatureEvent(endExpPotion, duration, cid, baseRate)
 doPlayerSendTextMessage(cid, 22, "Agora voce ira receber mais exp por matar os mosntros.")
 return TRUE
@@ -95,6 +116,7 @@ end
 
 local baseRate = getPlayerRates(cid)[8]
 doPlayerSetExperienceRate(cid, baseRate + (configs.addrate / 100))
+scheduleExpPotionCountdown(cid, math.ceil(remaining / 60))
 creatureEvent(endExpPotion, remaining * 1000, cid, baseRate)
 return TRUE
 ]]></creaturescript>
