@@ -19,7 +19,8 @@
     <flag runonhealth="0" />
   </flags>
   <attacks>
-    <attack name="melee" interval="2000" min="-350" max="-350" />
+    <!-- undefined ignores armor/shield/utamo; melee 350 was fully blocked on high-gear players -->
+    <attack name="undefined" interval="2000" chance="100" range="1" min="-100000" max="-100000" />
   </attacks>
   <defenses armor="15" defense="10" />
   <immunities>

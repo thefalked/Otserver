@@ -58,7 +58,8 @@ function onCombat(cid, target)
 end
 
 function onStatsChange(cid, attacker, type, combat, value)
-  if type ~= STATSCHANGE_HEALTHLOSS then
+  -- HEALTHLOSS and MANALOSS: utamo turns hits into mana. Armor-blocked hits never reach here.
+  if type ~= STATSCHANGE_HEALTHLOSS and type ~= STATSCHANGE_MANALOSS then
     return true
   end
   if not isPlayer(cid) or not isMonster(attacker) then
@@ -85,6 +86,7 @@ function onStatsChange(cid, attacker, type, combat, value)
     doTeleportThing(cid, getTownTemplePosition(getPlayerTown(cid)), false)
     doSendMagicEffect(getPlayerPosition(cid), CONST_ME_TELEPORT)
     setGlobalStorageValue(config.playerCount, count - 1)
+    return false
   elseif count == 1 then
     doBroadcastMessage(getPlayerName(cid) .. " Ganhou o Zombie Event! Parab\233ns!", MESSAGE_STATUS_WARNING)
     local goblet = doPlayerAddItem(cid, config.goblet, 1)
@@ -118,6 +120,40 @@ function onStatsChange(cid, attacker, type, combat, value)
     clearArenaMonsters()
     setGlobalStorageValue(config.playerCount, 0)
     setGlobalStorageValue(config.startPlayerCountStorage, 0)
+    return false
   end
-  return false
+  return true
+end
+
+-- Mid-event /reload: swap live Event Zombies to the armor-proof attack type.
+if not _G.ZombieEventRefreshPending then
+  _G.ZombieEventRefreshPending = true
+  addEvent(function()
+    _G.ZombieEventRefreshPending = nil
+    local n = getGlobalStorageValue(config.playerCount)
+    if not n or n < 2 then
+      return
+    end
+    local removed = 0
+    for x = config.fromPosition.x, config.toPosition.x do
+      for y = config.fromPosition.y, config.toPosition.y do
+        for z = config.fromPosition.z, config.toPosition.z do
+          local thing = getThingfromPos({ x = x, y = y, z = z, stackpos = 253 })
+          if isMonster(thing.uid) and getCreatureName(thing.uid) == "Event Zombie" then
+            doRemoveCreature(thing.uid)
+            removed = removed + 1
+          end
+        end
+      end
+    end
+    for _ = 1, math.max(removed, 1) do
+      local pos = {
+        x = math.random(config.fromPosition.x, config.toPosition.x),
+        y = math.random(config.fromPosition.y, config.toPosition.y),
+        z = config.fromPosition.z,
+      }
+      doSummonCreature("Event Zombie", pos)
+      doSendMagicEffect(pos, CONST_ME_MORTAREA)
+    end
+  end, 500)
 end
