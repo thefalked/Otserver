@@ -264,6 +264,10 @@ if ($action == 'show') {
     $rank_list->orderBy('level', POT::ORDER_DESC);
     $guild_leader = false;
     $guild_vice = false;
+    $level_in_guild = 0;
+    $account_players = [];
+    $players_from_account_ids = [];
+    $players_from_account_in_guild = [];
     if ($logged) {
       $account_players = $account_logged->getPlayers();
       foreach ($account_players as $player) {
@@ -529,7 +533,7 @@ if ($action == 'show') {
           '/images/buttons/sbutton_changerank.png" BORDER=0 WIDTH=120 HEIGHT=18>
 				</TD></TR></FORM></TABLE></TD>';
       }
-      if ($players_from_account_in_guild > 0) {
+      if (count($players_from_account_in_guild) > 0) {
         $main_content .=
           '<TD ALIGN=center><TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0><FORM ACTION="?subtopic=guilds&action=leaveguild&guild=' .
           $guild_name .
