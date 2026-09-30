@@ -6563,9 +6563,29 @@ bool Game::reloadInfo(ReloadInfo_t reload, uint32_t playerId/* = 0*/)
 
 		case RELOAD_ALL:
 		{
+			// Loops RELOAD_FIRST..RELOAD_LAST (mods included, ALL itself excluded).
+			// Block every dangerous/broken type until fixed. Ids must match
+			// brokenReasons in reload.lua. Unblock only in both places together.
+			// This path also covers SIGCONT.
+			// Unsafe: groups/vocations (players hold dangling Group*/Vocation*).
+			// Stubs/no-op: items, outfits, weapons, gameservers, houseprices (id 9).
 			done = true;
 			for(int32_t i = RELOAD_FIRST; i <= RELOAD_LAST; i++)
 			{
+				switch(i)
+				{
+					case RELOAD_GAMESERVERS:
+					case RELOAD_GROUPS:
+					case 9: // Lua RELOAD_HOUSEPRICES; C++ slot unused
+					case RELOAD_ITEMS:
+					case RELOAD_OUTFITS:
+					case RELOAD_VOCATIONS:
+					case RELOAD_WEAPONS:
+						continue;
+					default:
+						break;
+				}
+
 				if(!reloadInfo((ReloadInfo_t)i) && done)
 					done = false;
 			}

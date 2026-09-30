@@ -8,7 +8,7 @@
     highscores, monsters, moveevents/movements, npcs, quests, raids,
     spells, stages/experience, talkactions/commands, mods, all
 
-  Does not work (blocked here; C++ left unchanged):
+  Blocked until fixed (must match RELOAD_ALL skip in game.cpp):
     items, outfits, weapons (TODO stubs)
     groups (disabled; Group* dangling risk)
     vocations (unsafe; Vocation* dangling risk)
@@ -24,6 +24,9 @@
     - Already-spawned NPCs may keep old state until replaced.
     - Reloading spells also reloads monsters. Reloading raids restarts
       the raid system. SIGCONT on the process also reloads all.
+    - /reload all and SIGCONT skip the same broken/unsafe types.
+    - Do not remove a type from brokenReasons until the engine path is safe
+      and the matching skip case in game.cpp RELOAD_ALL is removed too.
 ]]
 
 local reloadInfo = {
@@ -62,7 +65,9 @@ local reloadInfo = {
   { RELOAD_ALL, "all", "everything" },
 }
 
--- Types that look valid in the command list but must not call doReloadInfo.
+-- Dangerous / broken types. Block every one until the engine path is fixed.
+-- Keep ids identical to the RELOAD_ALL skip switch in game.cpp.
+-- Layer 1 (here): direct /reload <type>. Layer 2 (C++): /reload all + SIGCONT.
 local brokenReasons = {
   [RELOAD_GAMESERVERS] = "login-server build only",
   [RELOAD_GROUPS] = "disabled (online players keep Group* pointers)",
@@ -100,8 +105,9 @@ function onSay(cid, words, param, channel)
       if reason then
         str = "Reload type " .. v[2] .. " does not work: " .. reason .. "."
         sendReloadLists(cid)
+      elseif not doReloadInfo(v[1], cid) then
+        str = "Reload type " .. v[2] .. " rejected by engine (id out of range)."
       else
-        doReloadInfo(v[1], cid)
         str = "Reloading " .. v[2] .. "..."
       end
       break

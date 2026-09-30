@@ -103,7 +103,9 @@ enum ReloadInfo_t
 	RELOAD_WEAPONS = 21,
 	RELOAD_MODS = 22,
 	RELOAD_ALL = 23,
-	RELOAD_LAST = RELOAD_WEAPONS
+	// LAST is the end of the RELOAD_ALL loop. Include MODS so /reload all
+	// and SIGCONT reload mods. Exclude ALL so the loop does not recurse.
+	RELOAD_LAST = RELOAD_MODS
 };
 
 struct RuleViolation

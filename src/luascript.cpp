@@ -9550,7 +9550,9 @@ int32_t LuaInterface::luaDoReloadInfo(lua_State* L)
 		cid = popNumber(L);
 
 	uint32_t id = popNumber(L);
-	if(id >= RELOAD_FIRST && id <= RELOAD_LAST)
+	// Accept FIRST..ALL. RELOAD_LAST stops at MODS (ALL loop bound).
+	// Without this, /reload mods (22) and /reload all (23) are no-ops.
+	if(id >= RELOAD_FIRST && id <= RELOAD_ALL)
 	{
 		// we're passing it to scheduler since talkactions reload will
 		// re-init our lua state and crash due to unfinished call
