@@ -1,10 +1,8 @@
 * Notícias e Atualizações *
 
-PvP Bounty: level 4000+
+Vip9: caves mais balanceadas
 
-PvP Bounty
-- Sorteio por level 4000+ (não precisa Vip9)
-- A cada 15 min. Mate o alvo (IP diferente)
-- Sem pick perto de trainer / Saco de Pancada
+Vip9 hunts
+- XP e respawn ajustados para ficar mais equilibrado
 
 Digite !notice no jogo para ver este resumo.
