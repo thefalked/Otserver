@@ -1,11 +1,10 @@
 function executeClean()
   doCleanMap()
-  doBroadcastMessage("Clear")
   return true
 end
 
 function onThink(interval, lastExecution, thinkInterval)
-  doBroadcastMessage("Retirando Lixo Do Ot, Retire Seus Itens Do Ch\227o")
+  doBroadcastMessage("The OT will be cleaned. Pick up your items from the floor.")
   addEvent(executeClean, 50000)
   return true
 end

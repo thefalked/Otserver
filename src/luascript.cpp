@@ -9593,6 +9593,7 @@ int32_t LuaInterface::luaDoCleanHouse(lua_State* L)
 int32_t LuaInterface::luaDoCleanMap(lua_State* L)
 {
 	//doCleanMap()
+	// Returns tiles touched (sync) or tiles queued (procedural). Never item count.
 	uint32_t count = 0;
 	g_game.cleanMapEx(count);
 	lua_pushnumber(L, count);

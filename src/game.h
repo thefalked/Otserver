@@ -581,7 +581,7 @@ class Game
 		void cancelPendingRemoval(uint32_t playerId);
 		void safeRemovePlayer(uint32_t playerId, bool isLogout = true, bool forceRemove = false, bool forceLogout = false);
 
-		void cleanMapEx(uint32_t& count);
+		void cleanMapEx(uint32_t& count, bool forceSync = false);
 		void cleanMap();
 
 		void refreshMap(RefreshTiles::iterator* it = NULL, uint32_t limit = 0);
@@ -713,6 +713,16 @@ class Game
 
 		RefreshTiles refreshTiles;
 		Trash trash;
+		Trash cleanQueue;
+		uint32_t cleanRemoved;
+		uint32_t cleanTiles;
+		uint64_t cleanStart;
+		int32_t cleanMarked;
+		bool cleaningMap;
+
+		void proceduralClean();
+		// limit 0 = no item cap. Returns false if the tile still has removable trash.
+		bool cleanTileTrash(Tile* tile, uint32_t limit, uint32_t& removed);
 
 		StageList stages;
 		uint32_t lastStageLevel;

@@ -86,6 +86,10 @@ Game::Game()
 	lightState = LIGHT_STATE_DAY;
 
 	lastBucket = checkCreatureLastIndex = checkLightEvent = checkCreatureEvent = checkDecayEvent = saveEvent = 0;
+	cleanRemoved = cleanTiles = 0;
+	cleanStart = 0;
+	cleanMarked = -1;
+	cleaningMap = false;
 #ifdef __WAR_SYSTEM__
 	checkWarsEvent = 0;
 #endif
@@ -635,162 +639,219 @@ int32_t Game::loadMap(std::string filename)
 	return map->loadMap(file);
 }
 
-void Game::cleanMapEx(uint32_t& count)
+void Game::cleanMapEx(uint32_t& count, bool forceSync/* = false*/)
 {
-	uint64_t start = OTSYS_TIME();
-	uint32_t tiles = 0; count = 0;
-
-	int32_t marked = -1;
-	if(gameState == GAMESTATE_NORMAL)
-		setGameState(GAMESTATE_MAINTAIN);
-
-	Tile* tile = NULL;
-	ItemVector::iterator tit;
-	if(g_config.getBool(ConfigManager::STORE_TRASH))
+	// count always means tiles touched/queued (not items removed).
+	count = 0;
+	if(cleaningMap)
 	{
-		marked = trash.size();
-		Trash::iterator it = trash.begin();
-		if(g_config.getBool(ConfigManager::CLEAN_PROTECTED_ZONES))
+		std::clog << "> CLEAN: Already in progress, skipped." << std::endl;
+		return;
+	}
+
+	if(!g_config.getBool(ConfigManager::STORE_TRASH))
+	{
+		// Full map walk freezes the server. Only allow it when forced / not live.
+		if(!forceSync && gameState == GAMESTATE_NORMAL)
 		{
-			for(; it != trash.end(); ++it)
+			std::clog << "> CLEAN: Skipped full-map scan while online (enable storeTrash)." << std::endl;
+			return;
+		}
+
+		uint64_t start = OTSYS_TIME();
+		uint32_t tiles = 0, removed = 0, tileRemoved = 0;
+		const bool cleanProtectionZones = g_config.getBool(ConfigManager::CLEAN_PROTECTED_ZONES);
+		Tile* tile = NULL;
+
+		if(gameState == GAMESTATE_NORMAL)
+			setGameState(GAMESTATE_MAINTAIN);
+
+		for(uint16_t z = 0; z < (uint16_t)MAP_MAX_LAYERS; z++)
+		{
+			for(uint16_t y = 1; y <= map->mapHeight; y++)
 			{
-				if(!(tile = getTile(*it)))
-					continue;
-
-				tile->resetFlag(TILESTATE_TRASHED);
-				if(tile->hasFlag(TILESTATE_HOUSE) || !tile->getItemList())
-					continue;
-
-				++tiles;
-				tit = tile->getItemList()->begin();
-				while(tile->getItemList() && tit != tile->getItemList()->end())
+				for(uint16_t x = 1; x <= map->mapWidth; x++)
 				{
-					if((*tit)->isMovable() && !(*tit)->isLoadedFromMap()
-						&& !(*tit)->isScriptProtected())
-					{
-						internalRemoveItem(NULL, *tit);
-						if(tile->getItemList())
-							tit = tile->getItemList()->begin();
+					if(!(tile = getTile(x, y, z)) || !tile->getItemList())
+						continue;
+					if(tile->hasFlag(TILESTATE_HOUSE))
+						continue;
+					if(!cleanProtectionZones && tile->hasFlag(TILESTATE_PROTECTIONZONE))
+						continue;
 
-						++count;
-					}
-					else
-						++tit;
+					++tiles;
+					cleanTileTrash(tile, 0, tileRemoved);
+					removed += tileRemoved;
 				}
 			}
+		}
 
-			trash.clear();
+		if(gameState == GAMESTATE_MAINTAIN)
+			setGameState(GAMESTATE_NORMAL);
+
+		count = tiles;
+		std::clog << "> CLEAN: Removed " << removed << " item" << (removed != 1 ? "s" : "")
+			<< " from " << tiles << " tile" << (tiles != 1 ? "s" : "")
+			<< " in " << (OTSYS_TIME() - start) / (1000.) << " seconds." << std::endl;
+		if(gameState == GAMESTATE_NORMAL)
+			broadcastMessage("Map cleaned.", MSG_STATUS_WARNING);
+		return;
+	}
+
+	const int32_t marked = (int32_t)trash.size();
+	cleanQueue.splice(cleanQueue.end(), trash);
+	if(cleanQueue.empty())
+	{
+		std::clog << "> CLEAN: Nothing to remove." << std::endl;
+		if(gameState == GAMESTATE_NORMAL)
+			broadcastMessage("Map cleaned.", MSG_STATUS_WARNING);
+		return;
+	}
+
+	// Keep live cleans off the hot path when trash is large.
+	const bool sync = forceSync || gameState != GAMESTATE_NORMAL || cleanQueue.size() <= 25;
+	if(sync)
+	{
+		uint64_t start = OTSYS_TIME();
+		uint32_t tiles = 0, removed = 0, tileRemoved = 0;
+		const bool cleanProtectionZones = g_config.getBool(ConfigManager::CLEAN_PROTECTED_ZONES);
+
+		while(!cleanQueue.empty())
+		{
+			Position pos = cleanQueue.front();
+			cleanQueue.pop_front();
+			Tile* tile = getTile(pos);
+			if(!tile)
+				continue;
+
+			tile->resetFlag(TILESTATE_TRASHED);
+			if(tile->hasFlag(TILESTATE_HOUSE) || !tile->getItemList())
+				continue;
+			if(!cleanProtectionZones && tile->hasFlag(TILESTATE_PROTECTIONZONE))
+				continue;
+
+			++tiles;
+			cleanTileTrash(tile, 0, tileRemoved);
+			removed += tileRemoved;
+		}
+
+		count = tiles;
+		std::clog << "> CLEAN: Removed " << removed << " item" << (removed != 1 ? "s" : "")
+			<< " from " << tiles << " tile" << (tiles != 1 ? "s" : "")
+			<< " (" << marked << " were marked)"
+			<< " in " << (OTSYS_TIME() - start) / (1000.) << " seconds." << std::endl;
+		if(gameState == GAMESTATE_NORMAL)
+			broadcastMessage("Map cleaned.", MSG_STATUS_WARNING);
+		return;
+	}
+
+	cleaningMap = true;
+	cleanRemoved = 0;
+	cleanTiles = 0;
+	cleanMarked = marked;
+	cleanStart = OTSYS_TIME();
+	count = cleanQueue.size();
+	std::clog << "> CLEAN: Started procedural clean of " << count
+		<< " marked tile" << (count != 1 ? "s" : "") << "." << std::endl;
+	proceduralClean();
+}
+
+bool Game::cleanTileTrash(Tile* tile, uint32_t limit, uint32_t& removed)
+{
+	removed = 0;
+	if(!tile || !tile->getItemList())
+		return true;
+
+	ItemVector::iterator tit = tile->getItemList()->begin();
+	while(tile->getItemList() && tit != tile->getItemList()->end())
+	{
+		if((*tit)->isMovable() && !(*tit)->isLoadedFromMap()
+			&& !(*tit)->isScriptProtected())
+		{
+			if(limit && removed >= limit)
+				return false;
+
+			internalRemoveItem(NULL, *tit);
+			if(tile->getItemList())
+				tit = tile->getItemList()->begin();
+			++removed;
 		}
 		else
-		{
-			for(; it != trash.end(); ++it)
-			{
-				if(!(tile = getTile(*it)))
-					continue;
-
-				tile->resetFlag(TILESTATE_TRASHED);
-				if(tile->hasFlag(TILESTATE_PROTECTIONZONE) || !tile->getItemList())
-					continue;
-
-				++tiles;
-				tit = tile->getItemList()->begin();
-				while(tile->getItemList() && tit != tile->getItemList()->end())
-				{
-					if((*tit)->isMovable() && !(*tit)->isLoadedFromMap()
-						&& !(*tit)->isScriptProtected())
-					{
-						internalRemoveItem(NULL, *tit);
-						if(tile->getItemList())
-							tit = tile->getItemList()->begin();
-
-						++count;
-					}
-					else
-						++tit;
-				}
-			}
-
-			trash.clear();
-		}
+			++tit;
 	}
-	else if(g_config.getBool(ConfigManager::CLEAN_PROTECTED_ZONES))
+	return true;
+}
+
+void Game::proceduralClean()
+{
+	if(!cleaningMap)
+		return;
+
+	const bool cleanProtectionZones = g_config.getBool(ConfigManager::CLEAN_PROTECTED_ZONES);
+	const uint32_t batchItemLimit = 150;
+	const uint32_t batchTileLimit = 200; // ponytail: empty/skip markers can dominate the queue
+	uint32_t removedThisBatch = 0;
+	uint32_t tilesThisBatch = 0;
+
+	while(removedThisBatch < batchItemLimit && tilesThisBatch < batchTileLimit && !cleanQueue.empty())
 	{
-		for(uint16_t z = 0; z < (uint16_t)MAP_MAX_LAYERS; z++)
+		Position pos = cleanQueue.front();
+		cleanQueue.pop_front();
+		++tilesThisBatch;
+
+		Tile* tile = getTile(pos);
+		if(!tile)
+			continue;
+
+		if(tile->hasFlag(TILESTATE_HOUSE) || !tile->getItemList())
 		{
-			for(uint16_t y = 1; y <= map->mapHeight; y++)
-			{
-				for(uint16_t x = 1; x <= map->mapWidth; x++)
-				{
-					if(!(tile = getTile(x, y, z)) || tile->hasFlag(TILESTATE_HOUSE) || !tile->getItemList())
-						continue;
-
-					++tiles;
-					tit = tile->getItemList()->begin();
-					while(tile->getItemList() && tit != tile->getItemList()->end())
-					{
-						if((*tit)->isMovable() && !(*tit)->isLoadedFromMap()
-							&& !(*tit)->isScriptProtected())
-						{
-							internalRemoveItem(NULL, *tit);
-							if(tile->getItemList())
-								tit = tile->getItemList()->begin();
-
-							++count;
-						}
-						else
-							++tit;
-					}
-				}
-			}
+			tile->resetFlag(TILESTATE_TRASHED);
+			continue;
 		}
+		if(!cleanProtectionZones && tile->hasFlag(TILESTATE_PROTECTIONZONE))
+		{
+			tile->resetFlag(TILESTATE_TRASHED);
+			continue;
+		}
+
+		uint32_t tileRemoved = 0;
+		const bool finished = cleanTileTrash(tile, batchItemLimit - removedThisBatch, tileRemoved);
+		cleanRemoved += tileRemoved;
+		removedThisBatch += tileRemoved;
+
+		if(!finished)
+		{
+			// Keep TILESTATE_TRASHED set so new drops on this tile are not re-queued.
+			cleanQueue.push_front(pos);
+			break;
+		}
+
+		++cleanTiles;
+		tile->resetFlag(TILESTATE_TRASHED);
 	}
-	else
+
+	if(!cleanQueue.empty())
 	{
-		for(uint16_t z = 0; z < (uint16_t)MAP_MAX_LAYERS; z++)
-		{
-			for(uint16_t y = 1; y <= map->mapHeight; y++)
-			{
-				for(uint16_t x = 1; x <= map->mapWidth; x++)
-				{
-					if(!(tile = getTile(x, y, z)) || tile->hasFlag(TILESTATE_PROTECTIONZONE) || !tile->getItemList())
-						continue;
-
-					++tiles;
-					tit = tile->getItemList()->begin();
-					while(tile->getItemList() && tit != tile->getItemList()->end())
-					{
-						if((*tit)->isMovable() && !(*tit)->isLoadedFromMap()
-							&& !(*tit)->isScriptProtected())
-						{
-							internalRemoveItem(NULL, *tit);
-							if(tile->getItemList())
-								tit = tile->getItemList()->begin();
-
-							++count;
-						}
-						else
-							++tit;
-					}
-				}
-			}
-		}
+		Scheduler::getInstance().addEvent(createSchedulerTask(50,
+			boost::bind(&Game::proceduralClean, this)));
+		return;
 	}
 
-	if(gameState == GAMESTATE_MAINTAIN)
-		setGameState(GAMESTATE_NORMAL);
-
-	std::clog << "> CLEAN: Removed " << count << " item" << (count != 1 ? "s" : "")
-		<< " from " << tiles << " tile" << (tiles != 1 ? "s" : "");
-	if(marked >= 0)
-		std::clog << " (" << marked << " were marked)";
-
-	std::clog << " in " << (OTSYS_TIME() - start) / (1000.) << " seconds." << std::endl;
+	cleaningMap = false;
+	std::clog << "> CLEAN: Removed " << cleanRemoved << " item"
+		<< (cleanRemoved != 1 ? "s" : "") << " from " << cleanTiles << " tile"
+		<< (cleanTiles != 1 ? "s" : "");
+	if(cleanMarked >= 0)
+		std::clog << " (" << cleanMarked << " were marked)";
+	std::clog << " in " << (OTSYS_TIME() - cleanStart) / (1000.) << " seconds." << std::endl;
+	broadcastMessage("Map cleaned.", MSG_STATUS_WARNING);
 }
 
 void Game::cleanMap()
 {
 	uint32_t dummy;
-	cleanMapEx(dummy);
+	// Sync when server is not live. Chunk while players are online.
+	cleanMapEx(dummy, gameState != GAMESTATE_NORMAL);
 }
 
 void Game::proceduralRefresh(RefreshTiles::iterator* it/* = NULL*/)
@@ -6667,9 +6728,12 @@ void Game::globalSave()
 
 	//close server
 	Dispatcher::getInstance().addTask(createTask(boost::bind(&Game::setGameState, this, GAMESTATE_CLOSED)));
-	//clean map if configured to
+	// Force sync: CLOSED is queued on the dispatcher, so gameState may still be NORMAL here.
 	if(g_config.getBool(ConfigManager::CLEAN_MAP_AT_GLOBALSAVE))
-		cleanMap();
+	{
+		uint32_t cleaned = 0;
+		cleanMapEx(cleaned, true);
+	}
 
 	//pay houses
 	Houses::getInstance()->payHouses();
