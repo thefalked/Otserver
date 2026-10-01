@@ -12,6 +12,11 @@
 # Env (optional):
 #   BACKUP_KEEP_DAYS  how long to keep .sql.gz files (default 14)
 #   BACKUP_DIR        destination directory (default <repo>/backups/mysql)
+#   AWS_CLI_IMAGE     docker image for R2 upload (default amazon/aws-cli:2)
+#
+# Offsite (optional, all four required to upload):
+#   R2_ACCOUNT_ID R2_BUCKET R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY
+#   R2_PREFIX     object key prefix (default mysql/)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -20,6 +25,7 @@ ENV_FILE="${REPO_ROOT}/.env"
 CONTAINER="${MYSQL_CONTAINER:-otserver-mysql}"
 KEEP_DAYS="${BACKUP_KEEP_DAYS:-14}"
 BACKUP_DIR="${BACKUP_DIR:-${REPO_ROOT}/backups/mysql}"
+AWS_CLI_IMAGE="${AWS_CLI_IMAGE:-amazon/aws-cli:2}"
 
 if [ ! -f "${ENV_FILE}" ]; then
 	echo "Missing ${ENV_FILE}. Copy .env.example and set MYSQL_* first." >&2
@@ -88,7 +94,50 @@ trap - EXIT
 chmod 600 "${OUT}" || true
 echo "Wrote ${OUT} ($(du -h "${OUT}" | awk '{print $1}'))"
 
-# Rotate old dumps. -mtime is whole days; 14 means "older than 14 days".
+# Rotate old local dumps. -mtime is whole days; 14 means "older than 14 days".
 find "${BACKUP_DIR}" -type f -name '*.sql.gz' -mtime "+${KEEP_DAYS}" -delete
 echo "Kept dumps from the last ${KEEP_DAYS} days in ${BACKUP_DIR}"
-echo "Copy these files off the VPS (another machine, object storage). A dump that only lives here dies with the disk."
+
+R2_ACCOUNT_ID="$(env_val R2_ACCOUNT_ID)"
+R2_BUCKET="$(env_val R2_BUCKET)"
+R2_ACCESS_KEY_ID="$(env_val R2_ACCESS_KEY_ID)"
+R2_SECRET_ACCESS_KEY="$(env_val R2_SECRET_ACCESS_KEY)"
+R2_PREFIX="$(env_val R2_PREFIX)"
+R2_PREFIX="${R2_PREFIX:-mysql/}"
+case "${R2_PREFIX}" in
+	*/) ;;
+	*) R2_PREFIX="${R2_PREFIX}/" ;;
+esac
+
+r2_set=0
+for _r2 in "${R2_ACCOUNT_ID}" "${R2_BUCKET}" "${R2_ACCESS_KEY_ID}" "${R2_SECRET_ACCESS_KEY}"; do
+	if [ -n "${_r2}" ]; then
+		r2_set=1
+		break
+	fi
+done
+
+if [ "${r2_set}" -eq 1 ]; then
+	if [ -z "${R2_ACCOUNT_ID}" ] || [ -z "${R2_BUCKET}" ] || [ -z "${R2_ACCESS_KEY_ID}" ] || [ -z "${R2_SECRET_ACCESS_KEY}" ]; then
+		echo "R2 upload enabled but incomplete. Set R2_ACCOUNT_ID, R2_BUCKET, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY in .env." >&2
+		exit 1
+	fi
+	R2_KEY="${R2_PREFIX}$(basename "${OUT}")"
+	R2_ENDPOINT="https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
+	echo "Uploading to s3://${R2_BUCKET}/${R2_KEY} via ${AWS_CLI_IMAGE}"
+	# One-shot container. No compose service. First run pulls the image.
+	# Checksum env works around aws-cli v2 + R2 compatibility.
+	docker run --rm \
+		-e AWS_ACCESS_KEY_ID="${R2_ACCESS_KEY_ID}" \
+		-e AWS_SECRET_ACCESS_KEY="${R2_SECRET_ACCESS_KEY}" \
+		-e AWS_DEFAULT_REGION=auto \
+		-e AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED \
+		-e AWS_RESPONSE_CHECKSUM_VALIDATION=WHEN_REQUIRED \
+		-v "${OUT}:/backup/$(basename "${OUT}"):ro" \
+		"${AWS_CLI_IMAGE}" \
+		s3 cp "/backup/$(basename "${OUT}")" "s3://${R2_BUCKET}/${R2_KEY}" \
+		--endpoint-url "${R2_ENDPOINT}"
+	echo "Uploaded s3://${R2_BUCKET}/${R2_KEY}"
+else
+	echo "R2_* not set. Dump is local only. Copy it off this disk or set R2 credentials in .env."
+fi

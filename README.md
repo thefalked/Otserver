@@ -35,7 +35,7 @@ The setup then:
 - disables SSH **root** login (password SSH stays on until you switch to keys)
 - enables **UFW** (deny incoming; allow 22, 80, 443, 8080, 7171, 7172)
 - applies apt updates daily **without rebooting**; docker/ssh are not auto-restarted
-- installs a daily **MySQL hot dump** timer (`backups/mysql/`)
+- installs a daily **MySQL hot dump** timer (`backups/mysql/`, optional R2 upload via `.env`)
 - sets `SITE_DOMAIN` and `OT_IP` to the hostname you confirmed
 
 Compose uses `docker-compose.vps.yml` so **80** (ACME + redirect to HTTPS) and **443** are published. After the stack is up: `sudo bash scripts/setup-letsencrypt.sh`. Keep the root session open until you can `ssh` in as the new user.

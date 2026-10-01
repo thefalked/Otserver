@@ -305,9 +305,33 @@ queries. The game does **not** need to go down.
 ```
 
 Files land in `backups/mysql/` (`database-YYYYMMDDTHHMMSSZ.sql.gz`), mode `600`.
-Dumps older than 14 days are deleted (`BACKUP_KEEP_DAYS` to change).
+Dumps older than 14 days are deleted locally (`BACKUP_KEEP_DAYS` to change).
 
 `setup-vps.sh` installs a systemd timer that runs this daily at 04:15 UTC.
+
+### Offsite: Cloudflare R2
+
+Set these in `.env` (S3 credentials from R2 → Manage R2 API Tokens):
+
+```bash
+R2_ACCOUNT_ID=your_account_id
+R2_BUCKET=otserver-backup
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
+R2_PREFIX=mysql/
+```
+
+When all four required keys are set, the backup script runs a one-shot
+`amazon/aws-cli:2` container and uploads the new `.sql.gz`. No compose service
+is needed. First upload pulls the image. To refresh the client later:
+
+```bash
+docker pull amazon/aws-cli:2
+```
+
+Optional: in the Cloudflare dashboard, set an R2 lifecycle rule on the bucket
+(or prefix `mysql/`) to delete objects older than 14 days so remote retention
+matches local.
 
 **Restore** (this *does* interrupt the site/game. take them down first):
 
@@ -317,4 +341,5 @@ gunzip -c backups/mysql/ot-....sql.gz | docker exec -i otserver-mysql mysql -uro
 docker compose start otserver website
 ```
 
-Copy dumps **off the VPS**. A backup that only exists on the same disk is not a backup.
+Or download from R2 first, then pipe the same way. A dump that only lives on
+the VPS disk is not a backup.
