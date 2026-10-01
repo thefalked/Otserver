@@ -1,9 +1,8 @@
-# Build TFS for the *target* platform (amd64 on VPS, arm64 on Apple Silicon Docker).
-# Do not COPY a checked-in binary. that caused Exec format error on x86 VPS
-# when server/theforgottenserver was an aarch64 Mac build.
+# Builder: compile TFS (used by ./server/compile.sh with --platform).
+# Runtime: packages prebuilt server/theforgottenserver-{arm64,amd64}.
+# Entrypoint picks the matching binary. No make during compose build.
 #
-# Build from repo root: docker compose build otserver
-# Optional host copy of the binary: ./server/compile.sh
+# Order: ./server/compile.sh && docker compose build otserver
 
 FROM ubuntu:26.04 AS builder
 
@@ -64,9 +63,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	&& groupmod -n otserver ubuntu
 
 WORKDIR /ot
-COPY --from=builder /src/theforgottenserver /usr/local/bin/theforgottenserver
+COPY server/theforgottenserver-arm64 server/theforgottenserver-amd64 /usr/local/bin/
 COPY docker/render-config.sh docker/entrypoint-otserver.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/theforgottenserver \
+RUN chmod +x /usr/local/bin/theforgottenserver-arm64 \
+	/usr/local/bin/theforgottenserver-amd64 \
 	/usr/local/bin/render-config.sh \
 	/usr/local/bin/entrypoint-otserver.sh \
 	&& ln -sf entrypoint-otserver.sh /usr/local/bin/docker-entrypoint.sh \

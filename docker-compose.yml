@@ -52,7 +52,7 @@ services:
     networks:
       - otnet
 
-  # Compiles TFS inside the image for the host arch (see server/Dockerfile).
+  # Packages prebuilt server/theforgottenserver-{arm64,amd64} (see ./server/compile.sh).
   # H7: entrypoint drops to user otserver (uid 1000) after render-config.
   otserver:
     build:
@@ -79,7 +79,10 @@ services:
       - ./server/data:/ot/data
       - ./server/mods:/ot/mods
       - ./server/noticias.txt:/ot/noticias.txt:ro
+      - ./server/theforgottenserver-arm64:/ot/theforgottenserver-arm64:ro
+      - ./server/theforgottenserver-amd64:/ot/theforgottenserver-amd64:ro
       - ./docker/render-config.sh:/usr/local/bin/render-config.sh:ro
+      - ./docker/entrypoint-otserver.sh:/usr/local/bin/entrypoint-otserver.sh:ro
       - ot_logs:/ot/logs
     # Publish login/game on the host directly. If nginx streams these, TFS sees
     # the proxy's Docker IP and the charlist advertises 172.x (client times out).

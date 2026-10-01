@@ -30,8 +30,9 @@ src/config.log
 src/libtool
 src/stamp-h1
 
-# Host copy from ./server/compile.sh. image builds its own binary in Docker
+# Legacy single-arch host copy (use *-arm64 / *-amd64 instead)
 server/theforgottenserver
+# Arch binaries are tracked so VPS can: git pull && docker compose restart otserver
 
 # Generated headline caches
 website/images/head/h_*.png

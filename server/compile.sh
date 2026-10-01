@@ -1,28 +1,43 @@
 #!/usr/bin/env bash
-# Optional: compile TFS 0.4 and copy the binary to server/theforgottenserver.
-# docker compose build otserver compiles inside the image for the target arch;
-# you do not need this file on the VPS.
+# Compile TFS 0.4 for arm64 and amd64 into server/.
+# Runtime entrypoint picks the matching binary via uname -m.
+# docker compose build otserver only packages these files (no on-host make).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SRC="$ROOT/src"
-OUT="$ROOT/server/theforgottenserver"
-IMAGE="${OTSERVER_BUILDER_IMAGE:-otserver-builder:local}"
+OUT_DIR="$ROOT/server"
+IMAGE_BASE="${OTSERVER_BUILDER_IMAGE:-otserver-builder}"
 
-if [[ ! -d "$SRC" ]]; then
-	echo "error: sources not found at $SRC" >&2
+if [[ ! -d "$ROOT/src" ]]; then
+	echo "error: sources not found at $ROOT/src" >&2
 	exit 1
 fi
 
-echo "Building TFS from $SRC ..."
-docker build --target builder -t "$IMAGE" "$SRC"
+build_one() {
+	local platform="$1"
+	local suffix="$2"
+	local image="${IMAGE_BASE}:${suffix}"
+	local out="${OUT_DIR}/theforgottenserver-${suffix}"
 
-cid="$(docker create "$IMAGE")"
-cleanup() { docker rm -f "$cid" >/dev/null 2>&1 || true; }
-trap cleanup EXIT
+	echo "Building TFS (${platform}) ..."
+	docker build \
+		--platform "$platform" \
+		--target builder \
+		-f "$ROOT/server/Dockerfile" \
+		-t "$image" \
+		"$ROOT"
 
-docker cp "$cid:/src/theforgottenserver" "$OUT"
-chmod +x "$OUT"
-file "$OUT"
-ls -lh "$OUT"
-echo "Saved: $OUT"
+	local cid
+	cid="$(docker create --platform "$platform" "$image")"
+	docker cp "$cid:/src/theforgottenserver" "$out"
+	docker rm -f "$cid" >/dev/null
+	chmod +x "$out"
+	file "$out"
+	ls -lh "$out"
+	echo "Saved: $out"
+}
+
+build_one linux/arm64 arm64
+build_one linux/amd64 amd64
+
+echo "Done. Entrypoint selects theforgottenserver-\$(uname -m) at start."

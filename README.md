@@ -123,11 +123,18 @@ Game settings live in `server/config.lua.template` (tracked, no secrets). At con
 | Compose service | Image / role |
 | ----------------- | -------------- |
 | `mysql` | MySQL 8.4; schema + Gesior SQL on first init |
-| `otserver` | Ubuntu 26.04; compiles `theforgottenserver` from `src/` in the image |
+| `otserver` | Ubuntu 26.04; runs prebuilt `theforgottenserver-{arm64,amd64}` from `./server/compile.sh` |
 | `website` | PHP 8.5 Apache + Gesior AAC (internal port 80) |
 | `nginx` | Reverse proxy: HTTPS site + TCP stream for 7171/7172 |
 
-`otserver` builds the game binary **inside Docker** for the machine’s architecture. Do not rely on a checked-in `server/theforgottenserver` (an Apple Silicon build will fail on an amd64 VPS with `Exec format error`).
+`otserver` does **not** compile C++ during `compose build`. Binaries live in git as `server/theforgottenserver-arm64` and `server/theforgottenserver-amd64`. Build them with `./server/compile.sh`, commit both, then on the VPS:
+
+```bash
+git pull
+sudo docker compose restart otserver
+```
+
+The entrypoint picks the matching file from `uname -m`. Downtime is only the restart.
 
 Useful commands:
 
@@ -139,15 +146,13 @@ docker compose up --build -d website
 
 ## Rebuild the game binary
 
-`docker compose up --build -d otserver` recompiles when `src/` or `server/Dockerfile` change.
-
-Optional: write a host copy next to `data/` (same builder image):
-
 ```bash
 ./server/compile.sh
+# commit server/theforgottenserver-arm64 and server/theforgottenserver-amd64
+docker compose up --build -d otserver   # local: refresh image COPY; mounts also pick up host files
 ```
 
-`compile.sh` is optional for local tooling; the compose image does not use that file.
+`compile.sh` builds both arches (amd64 on Apple Silicon uses QEMU and is slow). After commit + `git pull` on the VPS, `docker compose restart otserver` is enough because compose bind-mounts the binaries from `server/`.
 
 ## Project layout
 
