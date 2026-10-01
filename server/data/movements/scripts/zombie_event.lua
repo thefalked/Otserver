@@ -3,8 +3,28 @@ local config = {
   maxPlayers = 15, -- Max players who can participate
 }
 
+-- Strip DoTs brought in from outside so they cannot tick during the event.
+local entryClearConditions = {
+  CONDITION_POISON,
+  CONDITION_FIRE,
+  CONDITION_ENERGY,
+  CONDITION_DROWN,
+  CONDITION_FREEZING,
+  CONDITION_DAZZLED,
+  CONDITION_CURSED,
+}
+
+local function clearEntryConditions(cid)
+  for _, condition in ipairs(entryClearConditions) do
+    if hasCondition(cid, condition) then
+      doRemoveCondition(cid, condition)
+    end
+  end
+end
+
 function onStepIn(cid, item, position, lastPosition, fromPosition, toPosition, actor)
   if getGlobalStorageValue(config.playerCount) < config.maxPlayers then
+    clearEntryConditions(cid)
     setGlobalStorageValue(config.playerCount, getGlobalStorageValue(config.playerCount) + 1)
     if getGlobalStorageValue(config.playerCount) == config.maxPlayers then
       doBroadcastMessage(
