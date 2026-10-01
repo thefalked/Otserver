@@ -42,6 +42,8 @@ Compose uses `docker-compose.vps.yml` so **80** (ACME + redirect to HTTPS) and *
 
 Keys-only SSH, Let's Encrypt, domain changes, and backups: **[docs/vps.md](docs/vps.md)**.
 
+Production runs on a **2-core / 2 GB** VPS. See **[docs/production-host.md](docs/production-host.md)** before adding heavy server work (map scans, big synchronous loops, large in-memory structures).
+
 ## Home-server (optional)
 
 When this repo sits next to [home-server](https://github.com/thefalked/home-server) (`tests/Otserver` beside `tests/home-server`), you can run the stack from home-server’s thin wrapper:

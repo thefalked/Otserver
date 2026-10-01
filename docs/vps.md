@@ -1,5 +1,7 @@
 # VPS ops: first boot, domain, updates, SSH keys, Let's Encrypt, MySQL backups
 
+**Capacity:** production is **2 CPU cores** and **2 GB RAM** (game + MySQL + web on one machine). Code and ops choices should assume that budget. Details for contributors and agents: **[production-host.md](production-host.md)**.
+
 ## Empty VPS (run setup from your PC)
 
 The repo is private. Do **not** anonymous-clone on the VPS. From this repo on your **laptop** (Git Bash / macOS / Linux / WSL):
