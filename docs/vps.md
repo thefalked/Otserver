@@ -322,11 +322,11 @@ R2_PREFIX=mysql/
 ```
 
 When all four required keys are set, the backup script runs a one-shot
-`amazon/aws-cli:2` container and uploads the new `.sql.gz`. No compose service
-is needed. First upload pulls the image. To refresh the client later:
+`amazon/aws-cli:latest` container and uploads the new `.sql.gz`. No compose
+service is needed. First upload pulls the image. To refresh the client later:
 
 ```bash
-docker pull amazon/aws-cli:2
+docker pull amazon/aws-cli:latest
 ```
 
 Optional: in the Cloudflare dashboard, set an R2 lifecycle rule on the bucket

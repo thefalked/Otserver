@@ -12,7 +12,7 @@
 # Env (optional):
 #   BACKUP_KEEP_DAYS  how long to keep .sql.gz files (default 14)
 #   BACKUP_DIR        destination directory (default <repo>/backups/mysql)
-#   AWS_CLI_IMAGE     docker image for R2 upload (default amazon/aws-cli:2)
+#   AWS_CLI_IMAGE     docker image for R2 upload (default amazon/aws-cli:latest)
 #
 # Offsite (optional, all four required to upload):
 #   R2_ACCOUNT_ID R2_BUCKET R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY
@@ -25,7 +25,7 @@ ENV_FILE="${REPO_ROOT}/.env"
 CONTAINER="${MYSQL_CONTAINER:-otserver-mysql}"
 KEEP_DAYS="${BACKUP_KEEP_DAYS:-14}"
 BACKUP_DIR="${BACKUP_DIR:-${REPO_ROOT}/backups/mysql}"
-AWS_CLI_IMAGE="${AWS_CLI_IMAGE:-amazon/aws-cli:2}"
+AWS_CLI_IMAGE="${AWS_CLI_IMAGE:-amazon/aws-cli:latest}"
 
 if [ ! -f "${ENV_FILE}" ]; then
 	echo "Missing ${ENV_FILE}. Copy .env.example and set MYSQL_* first." >&2
