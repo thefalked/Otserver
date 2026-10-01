@@ -12,11 +12,14 @@
 # Env (optional):
 #   BACKUP_KEEP_DAYS  how long to keep .sql.gz files (default 14)
 #   BACKUP_DIR        destination directory (default <repo>/backups/mysql)
-#   AWS_CLI_IMAGE     docker image for R2 upload (default amazon/aws-cli:latest)
+#   AWS_CLI_IMAGE     docker image for R2 fallback (default amazon/aws-cli:latest)
 #
 # Offsite (optional, all four required to upload):
 #   R2_ACCOUNT_ID R2_BUCKET R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY
 #   R2_PREFIX     object key prefix (default mysql/)
+# R2 upload prefers host `aws` (apt-installs awscli once if missing).
+# Docker amazon/aws-cli is only the fallback so Dockhand is not woken by a
+# one-shot container on the happy path.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -47,6 +50,50 @@ env_val() {
 		\'*\') raw="${raw#\'}"; raw="${raw%\'}" ;;
 	esac
 	printf '%s' "${raw}"
+}
+
+# Prefer host aws so Dockhand does not see a dying one-shot container.
+# Installs Debian/Ubuntu package awscli when missing (root or sudo).
+ensure_host_aws() {
+	if command -v aws >/dev/null 2>&1; then
+		return 0
+	fi
+	if ! command -v apt-get >/dev/null 2>&1; then
+		echo "aws CLI missing and apt-get is not available." >&2
+		return 1
+	fi
+	echo "aws CLI not found. Installing awscli via apt..."
+	local -a apt_cmd=(apt-get)
+	if [ "$(id -u)" -ne 0 ]; then
+		if ! command -v sudo >/dev/null 2>&1; then
+			echo "Need root or sudo to install awscli." >&2
+			return 1
+		fi
+		apt_cmd=(sudo apt-get)
+	fi
+	if ! "${apt_cmd[@]}" update -qq; then
+		echo "apt-get update failed." >&2
+		return 1
+	fi
+	if ! DEBIAN_FRONTEND=noninteractive "${apt_cmd[@]}" install -y -qq awscli; then
+		echo "apt-get install awscli failed." >&2
+		return 1
+	fi
+	command -v aws >/dev/null 2>&1
+}
+
+upload_r2_docker() {
+	# Checksum env works around aws-cli v2 + R2 compatibility.
+	docker run --rm \
+		-e AWS_ACCESS_KEY_ID="${R2_ACCESS_KEY_ID}" \
+		-e AWS_SECRET_ACCESS_KEY="${R2_SECRET_ACCESS_KEY}" \
+		-e AWS_DEFAULT_REGION=auto \
+		-e AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED \
+		-e AWS_RESPONSE_CHECKSUM_VALIDATION=WHEN_REQUIRED \
+		-v "${OUT}:/backup/$(basename "${OUT}"):ro" \
+		"${AWS_CLI_IMAGE}" \
+		s3 cp "/backup/$(basename "${OUT}")" "s3://${R2_BUCKET}/${R2_KEY}" \
+		--endpoint-url "${R2_ENDPOINT}"
 }
 
 MYSQL_ROOT_PASSWORD="$(env_val MYSQL_ROOT_PASSWORD)"
@@ -124,19 +171,19 @@ if [ "${r2_set}" -eq 1 ]; then
 	fi
 	R2_KEY="${R2_PREFIX}$(basename "${OUT}")"
 	R2_ENDPOINT="https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
-	echo "Uploading to s3://${R2_BUCKET}/${R2_KEY} via ${AWS_CLI_IMAGE}"
-	# One-shot container. No compose service. First run pulls the image.
-	# Checksum env works around aws-cli v2 + R2 compatibility.
-	docker run --rm \
-		-e AWS_ACCESS_KEY_ID="${R2_ACCESS_KEY_ID}" \
-		-e AWS_SECRET_ACCESS_KEY="${R2_SECRET_ACCESS_KEY}" \
-		-e AWS_DEFAULT_REGION=auto \
-		-e AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED \
-		-e AWS_RESPONSE_CHECKSUM_VALIDATION=WHEN_REQUIRED \
-		-v "${OUT}:/backup/$(basename "${OUT}"):ro" \
-		"${AWS_CLI_IMAGE}" \
-		s3 cp "/backup/$(basename "${OUT}")" "s3://${R2_BUCKET}/${R2_KEY}" \
-		--endpoint-url "${R2_ENDPOINT}"
+	if ensure_host_aws; then
+		echo "Uploading to s3://${R2_BUCKET}/${R2_KEY} via host aws"
+		AWS_ACCESS_KEY_ID="${R2_ACCESS_KEY_ID}" \
+			AWS_SECRET_ACCESS_KEY="${R2_SECRET_ACCESS_KEY}" \
+			AWS_DEFAULT_REGION=auto \
+			AWS_REQUEST_CHECKSUM_CALCULATION=WHEN_REQUIRED \
+			AWS_RESPONSE_CHECKSUM_VALIDATION=WHEN_REQUIRED \
+			aws s3 cp "${OUT}" "s3://${R2_BUCKET}/${R2_KEY}" \
+			--endpoint-url "${R2_ENDPOINT}"
+	else
+		echo "Falling back to ${AWS_CLI_IMAGE} (short-lived container)"
+		upload_r2_docker
+	fi
 	echo "Uploaded s3://${R2_BUCKET}/${R2_KEY}"
 else
 	echo "R2_* not set. Dump is local only. Copy it off this disk or set R2 credentials in .env."

@@ -321,12 +321,14 @@ R2_SECRET_ACCESS_KEY=...
 R2_PREFIX=mysql/
 ```
 
-When all four required keys are set, the backup script runs a one-shot
-`amazon/aws-cli:latest` container and uploads the new `.sql.gz`. No compose
-service is needed. First upload pulls the image. To refresh the client later:
+When all four required keys are set, the backup script uploads with host
+`aws`. If `aws` is missing it installs the `awscli` apt package (needs root
+or sudo, which the daily systemd timer has). Docker `amazon/aws-cli:latest`
+is only a fallback so Dockhand is not alerted by a one-shot container on the
+normal path.
 
 ```bash
-docker pull amazon/aws-cli:latest
+docker pull amazon/aws-cli:latest   # optional. only used if host aws fails
 ```
 
 Optional: in the Cloudflare dashboard, set an R2 lifecycle rule on the bucket
