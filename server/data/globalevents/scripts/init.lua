@@ -80,9 +80,7 @@ function onStartup()
             end
 
             db.query(
-              "UPDATE `players` SET `rank_id` = 0, `guildnick` = '', `guildjoin` = 0 WHERE `rank_id` IN ("
-                .. tmp:sub(1, -2)
-                .. ");"
+              "UPDATE `players` SET `rank_id` = 0, `guildnick` = '' WHERE `rank_id` IN (" .. tmp:sub(1, -2) .. ");"
             )
             db.query("DELETE FROM `guilds` WHERE `id` = " .. id .. ";")
           end
