@@ -4,6 +4,10 @@ local config = {
 }
 
 function onLogin(cid)
+  if kickIfMergeDepotBlocked(cid) then
+    return false
+  end
+
   local loss = getConfigValue("deathLostPercent")
   if loss ~= nil then
     doPlayerSetLossPercent(cid, PLAYERLOSS_EXPERIENCE, loss * 10)
