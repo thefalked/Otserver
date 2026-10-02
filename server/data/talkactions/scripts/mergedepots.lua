@@ -1,7 +1,7 @@
 -- Move orphan depot roots (pid ~= 1, pid < 100) into depot 1.
 -- Keep the orphan depot until every direct child is verified under depot 1, then delete it.
--- Affected players are kicked, server closed (if it was open), and kept offline until merge SQL finishes.
--- Login lock is Lua-only (lib/051-mergedepots-lock.lua + login.lua). No C++ rebuild required.
+-- Affected players are kicked and blocked from login. Server closed for new logins until SQL finishes.
+-- Other online players are left alone. Login lock is Lua-only (lib/051-mergedepots-lock.lua + login.lua).
 
 local TARGET_DEPOT = 1
 local POLL_MS = 500
@@ -250,25 +250,6 @@ local function kickAffectedOnline(affected)
     end
   end
   return kicked
-end
-
-local function kickAllOnline()
-  local kicked = 0
-  local ok, players = pcall(getPlayersOnline)
-  if not ok or not players then
-    return 0
-  end
-  for _, pid in ipairs(players) do
-    if pcall(doRemoveCreature, pid, true) then
-      kicked = kicked + 1
-    end
-  end
-  return kicked
-end
-
-local function anyPlayersOnline()
-  local ok, players = pcall(getPlayersOnline)
-  return ok and players and #players > 0
 end
 
 local function anyAffectedStillInWorld(affected)
@@ -564,25 +545,26 @@ local function abortMerge(reason, kicked)
   endMergeSession()
 end
 
-local function waitForEmptyWorldThenMerge(affected, kicked, poll, settle)
+-- Affected are offline. Settle so their logout saves finish, then SQL.
+-- Only re-kick affected if one somehow returns. Other online players stay.
+local function settleThenMerge(affected, kicked, poll, settle)
   settle = settle or 0
-  withSessionRescue("waitForEmptyWorldThenMerge", function()
-    if anyPlayersOnline() then
+  withSessionRescue("settleThenMerge", function()
+    if anyAffectedStillInWorld(affected) then
       if poll >= MAX_WAIT_POLLS then
-        abortMerge("timed out waiting for all players to leave before SQL merge", kicked)
+        abortMerge("timed out waiting for affected players to leave before SQL merge", kicked)
         return
       end
-      kicked = kicked + kickAllOnline()
+      kicked = kicked + kickAffectedOnline(affected)
       addEvent(function()
-        waitForEmptyWorldThenMerge(affected, kicked, poll + 1, 0)
+        settleThenMerge(affected, kicked, poll + 1, 0)
       end, POLL_MS)
       return
     end
 
-    -- World empty; wait a few more ticks so force-logout saves finish before SQL.
     if settle < SETTLE_POLLS then
       addEvent(function()
-        waitForEmptyWorldThenMerge(affected, kicked, poll, settle + 1)
+        settleThenMerge(affected, kicked, poll, settle + 1)
       end, POLL_MS)
       return
     end
@@ -592,16 +574,6 @@ local function waitForEmptyWorldThenMerge(affected, kicked, poll, settle)
       print("> /mergedepots: ERROR during merge: " .. tostring(err))
     end
     endMergeSession()
-  end)
-end
-
-local function startSqlMergePhase(affected, kicked)
-  withSessionRescue("startSqlMergePhase", function()
-    local extraKicked = kickAllOnline()
-    kicked = kicked + extraKicked
-    addEvent(function()
-      waitForEmptyWorldThenMerge(affected, kicked, 0, 0)
-    end, POLL_MS)
   end)
 end
 
@@ -620,7 +592,9 @@ local function waitForOfflineThenMerge(affected, kicked, poll)
       return
     end
 
-    startSqlMergePhase(affected, kicked)
+    addEvent(function()
+      settleThenMerge(affected, kicked, 0, 0)
+    end, POLL_MS)
   end)
 end
 
@@ -677,7 +651,7 @@ function onSay(cid, words, param, channel)
         .. #affected
         .. " player(s). Kicked "
         .. kicked
-        .. ". Server closed until merge completes. All players will be kicked before SQL runs. See console."
+        .. " affected. Logins closed until merge completes. Other online players stay. See console."
     )
 
     addEvent(function()
