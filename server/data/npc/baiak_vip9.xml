@@ -5,6 +5,6 @@
   <parameters>
     <parameter key="module_shop" value="1" />
     <parameter key="shop_buyable"
-      value="soft boots,6132,50000000;Baiak Helmet,6096,50000000;Baiak Armor,6095,50000000;Baiak Legs,5918,50000000;Master Shield,6433,50000000;" />
+      value="Master Boots,5462,50000000;Baiak Helmet,6096,50000000;Baiak Armor,6095,50000000;Baiak Legs,5918,50000000;Master Shield,6433,50000000;" />
   </parameters>
 </npc>
