@@ -23,6 +23,13 @@ local function clearEntryConditions(cid)
 end
 
 function onStepIn(cid, item, position, lastPosition, fromPosition, toPosition, actor)
+  -- CM access (4+) cannot take a participant slot
+  if getPlayerAccess(cid) >= 4 then
+    addEvent(tpBack, 1000, cid, fromPosition)
+    doPlayerSendCancel(cid, "Community Managers cannot join the Zombie event.")
+    return false
+  end
+
   if getGlobalStorageValue(config.playerCount) < config.maxPlayers then
     clearEntryConditions(cid)
     setGlobalStorageValue(config.playerCount, getGlobalStorageValue(config.playerCount) + 1)

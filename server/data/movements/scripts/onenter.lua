@@ -2,6 +2,12 @@ function onStepIn(cid, item, position, lastPosition, fromPosition, toPosition, a
   if not isPlayer(cid) then
     return true
   end
+  -- CM access (4+) cannot take a participant slot
+  if getPlayerAccess(cid) >= 4 then
+    doTeleportThing(cid, fromPosition, true)
+    doPlayerSendCancel(cid, "Community Managers cannot join the Zombie event.")
+    return true
+  end
   if getPlayerAccess(cid) >= ZE_ACCESS_TO_IGNORE_ARENA then
     addPlayerToZombiesArea(cid)
   elseif #getZombiesEventPlayers() < getZombiesEventPlayersLimit() and getStorage(ZE_STATUS) == 1 then
