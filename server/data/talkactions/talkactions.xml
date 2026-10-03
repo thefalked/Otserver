@@ -60,6 +60,7 @@
   <talkaction log="yes" words="/mute;/desmute" access="2" event="script" value="mute.lua" />
   <talkaction log="yes" words="/notations" access="2" event="script" value="notations.lua" />
   <talkaction log="yes" words="/info" access="2" event="script" value="playerinfo.lua" />
+  <talkaction log="yes" words="/deathlist" access="2" event="script" value="deathlist.lua" />
   <talkaction log="yes" words="/gethouse" access="2" event="script" value="gethouse.lua" />
   <talkaction log="yes" words="/b" access="2" event="script" value="broadcast.lua" />
 
