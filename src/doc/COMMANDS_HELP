@@ -473,6 +473,17 @@
 		Parameters
 			playerName
 
+	/deathlist
+		Shows a player's recent deaths and who killed them.
+		Needs deathListEnabled in config.lua.
+		Access
+			Senior Tutor (2) and above
+		Parameters
+			playerName
+
+		Examples
+			/deathlist Tester
+
 	/gethouse
 		Display player house.
 		Parameters

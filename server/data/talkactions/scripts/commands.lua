@@ -4,6 +4,7 @@ local config = {
 
 -- Short descriptions shown next to each command (like !spells).
 -- Keys must match the words attribute from talkactions.xml (first word if several).
+-- New talkactions in talkactions.xml need an entry here or !commands shows no description.
 local descriptions = {
   -- Players
   ["!commands"] = "List available commands",
@@ -64,6 +65,7 @@ local descriptions = {
   ["/desmute"] = "Unmute a player",
   ["/notations"] = "Manage notations",
   ["/info"] = "Show player info",
+  ["/deathlist"] = "Show a player's recent deaths and killers",
   ["/gethouse"] = "Show house owner",
   ["/b"] = "Broadcast a message",
   ["/goto"] = "Teleport to a player or position",
