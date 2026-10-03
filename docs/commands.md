@@ -24,10 +24,9 @@ A popup with up to 10 deaths, newest first. Each line includes:
 
 - Date and time
 - Level at death
-- Last-hit killer (`killed_by`)
-- Most-damage killer (`altkilled_by`), when different
+- Killers for that death (last hit first, then assists)
 
-Player killers are shown by name. Monster or environment killers are shown as names.
+Player killers are shown by name. Monster or environment killers use the stored name. Summons show as `monster summoned by Player`.
 
 ## Files
 
@@ -35,8 +34,10 @@ Player killers are shown by name. Monster or environment killers are shown as na
 | ------ | ---- |
 | Talkaction XML | `server/data/talkactions/talkactions.xml` (`words="/deathlist"`) |
 | Talkaction script | `server/data/talkactions/scripts/deathlist.lua` |
-| Death recorder | `server/data/creaturescripts/scripts/playerdeath.lua` (`PlayerDeath`) |
+| Death recorder | `IOLoginData::playerDeath` in `src/iologindata.cpp` |
 | Commands list text | `server/data/talkactions/scripts/commands.lua` |
+
+`server/data/creaturescripts/scripts/playerdeath.lua` is an old Lua recorder for a different schema. It is not registered on login and is not used by this command.
 
 ## Command descriptions (`!commands`)
 
@@ -58,21 +59,19 @@ In `config.lua`:
 
 ```lua
 deathListEnabled = true
-maxDeathRecords = 5
 ```
 
-`playerdeath.lua` writes rows into `player_deaths` only when `deathListEnabled` is true. If it is off, `/deathlist` reports no deaths.
+Default is true. When enabled, the engine writes deaths on player death. If it is off, `/deathlist` reports no deaths.
 
 ## Database
 
-Query source: `player_deaths`.
+Deaths use the engine schema (not the old `time` / `killed_by` columns).
 
-| Column | Meaning |
-| -------- | ------- |
-| `player_id` | Victim GUID |
-| `time` | Unix timestamp |
-| `level` | Victim level at death |
-| `killed_by` | Last hit (player GUID string, or creature name) |
-| `altkilled_by` | Most damage when different (same format) |
+| Table | Role |
+| ------ | ---- |
+| `player_deaths` | Victim, `date`, `level` |
+| `killers` | Links a death to killer rows (`final_hit`, `unjustified`) |
+| `player_killers` | Player GUID for a killer row |
+| `environment_killers` | Monster or environment name for a killer row |
 
-Old rows for a player are trimmed to `maxDeathRecords` after each insert.
+`/deathlist` joins those tables the same way as the website last-deaths page.
