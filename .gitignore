@@ -38,3 +38,5 @@ server/theforgottenserver
 website/images/head/h_*.png
 
 backup/Tibia
+# Removed from history (credential dump). Do not re-add.
+backup/sql-imports/04-baiak-from-s3db.sql
